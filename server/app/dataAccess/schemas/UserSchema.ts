@@ -30,17 +30,11 @@ class UserSchema {
             password: {
                 type: String
             },
-			companyName:{
-                type: String
-            },
-            previouscompanyName:{
-                type: String
-            },
-            roles:{
+			userName:{
                 type: String,
                 required: true
             },
-
+           
 			lastLogin:{
                 type: Date
 			},
@@ -50,21 +44,8 @@ class UserSchema {
 			status:{
                 type: String
 			},
-            paidExpirydate:{
-                type:Date
-            },
-            paidOn:{
-                type: Boolean
-            },
-            hrpaidOn:{
-                type: Boolean
-            },
-            amount:{
-                type:String
-            },
-            linkdinId:{
-                type:String
-            },
+            
+            
             createdOn: {
                 type: Date,
                 required: true

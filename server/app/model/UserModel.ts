@@ -15,6 +15,7 @@ class UserModel {
     get _id (): mongoose.Types.ObjectId {
         return this._userModel._id;
     }
+
     get firstName (): string {
         return this._userModel.firstName;
     }
@@ -31,16 +32,10 @@ class UserModel {
         return this._userModel.password;
     }
    
-    get companyName (): string {
-        return this._userModel.companyName;
+    get userName (): string {
+        return this._userModel.userName;
     }
-    get previouscompanyName():string{
-        return this._userModel.previouscompanyName;
-    }
-    get roles (): string {
-        return this._userModel.roles;
-    }
-
+    
 	get lastLogin (): Date {
         return this._userModel.lastLogin;
     }
@@ -51,21 +46,7 @@ class UserModel {
     get status (): string {
         return this._userModel.status;
     }
-	get paidExpirydate() :Date{
-        return this._userModel.paidExpirydate;
-    } 
-    get paidOn() :Boolean{
-        return this._userModel.paidOn;
-    }
-    get hrpaidOn() :Boolean{
-        return this._userModel.hrpaidOn;
-    }
-    get amount() :string{
-        return this._userModel.amount;
-    }
-    get linkdinId() :string{
-        return this._userModel.linkdinId;
-    }
+	
     get createdOn (): Date {
         return this._userModel.createdOn;
     }

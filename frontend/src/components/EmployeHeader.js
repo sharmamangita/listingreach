@@ -237,51 +237,51 @@ class EmployeHeader extends React.Component {
   }
 
   else {
-    $login= (<li><Link to="login">Login</Link></li>);
-    $rigister=(<li><Link to="register">Register</Link></li>);
+    $login= (<li><Link to="login" className="nav-link">Login</Link></li>);
+    $rigister=(<li><Link to="register" className="nav-link">Register</Link></li>);
     return (  
     <header>
-	  <nav class="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
-		<div class="container">
-		  <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarDefault"
+	  <nav className="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
+		<div className="container">
+		  <button className="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarDefault"
 			aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
 			<span></span>
 			<span></span>
 			<span></span>
 		  </button>
-		  <a class="navbar-brand text-brand" href="index.html"><img src="public/assets/images//listing-reach-logo.png" alt="" class="img-a img-fluid"/></a>
-		  <button type="button" class="btn btn-link nav-search navbar-toggle-box-collapse d-md-none" data-toggle="collapse"
+		  <a className="navbar-brand text-brand" href="index.html"><img src="public/assets/images//listing-reach-logo.png" alt="" className="img-a img-fluid"/></a>
+		  <button type="button" className="btn btn-link nav-search navbar-toggle-box-collapse d-md-none" data-toggle="collapse"
 			data-target="#navbarTogglerDemo01" aria-expanded="false">
-			<span class="fa fa-envelope-square" aria-hidden="true"></span>
+			<span className="fa fa-envelope-square" aria-hidden="true"></span>
 		  </button>
-		  <div class="navbar-collapse collapse justify-content-center" id="navbarDefault">
-			<ul class="navbar-nav">
-			  <li class="nav-item">
-				<a class="nav-link active" href="index.html">Home</a>
+		  <div className="navbar-collapse collapse justify-content-center" id="navbarDefault">
+			<ul className="navbar-nav">
+			  <li className="nav-item">
+				<a className="nav-link active" href="index.html">Home</a>
 			  </li>
-			  <li class="nav-item">
-				<a class="nav-link" href="about.html">About</a>
+			  <li className="nav-item">
+				<Link to="AboutPage" className="nav-link">About</Link>
 			  </li>
-			  <li class="nav-item">
-				<a class="nav-link" href="pricing.html">Pricing</a>
+			  <li className="nav-item">
+				<Link to="PricingPage" className="nav-link">Pricing</Link>
 			  </li>
-			  <li class="nav-item">
-				<a class="nav-link" href="testimonials.html">Testimonials</a>
+			  <li className="nav-item">
+				<a className="nav-link" href="testimonials.html">Testimonials</a>
 			  </li>
-			  <li class="nav-item">
-				<a class="nav-link" href="register.html">Register</a>
+			  <li className="nav-item">
+				{$rigister}
 			  </li> 
-			  <li class="nav-item">
-				<a class="nav-link" href="login.html">Login</a>
+			  <li className="nav-item">
+				{$login}
 			  </li> 
 			</ul>
 		  </div> 
-			<button type="button" class="btn btn-b-n navbar-toggle-box-collapse d-none d-md-block" data-toggle="collapse"
+			<button type="button" className="btn btn-b-n navbar-toggle-box-collapse d-none d-md-block" data-toggle="collapse"
 			data-target="#navbarTogglerDemo01" aria-expanded="false">
 			Subscribe Newsletter
 		  </button>
 		</div>
-	</nav>
+	</nav> 
   </header>
   );
  }

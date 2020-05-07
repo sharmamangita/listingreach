@@ -92,7 +92,7 @@ class RegisterPage extends React.Component {
 
     handleSubmit(event) {
     	event.preventDefault();
-
+        console.log("th=====");
     	this.setState({ submitted: true });
         if (this.state.user.confirmpassword && this.state.user.confirmpassword == this.state.user.password) {
             this.setState((prevState, props) => {
@@ -179,10 +179,12 @@ class RegisterPage extends React.Component {
                                     <form onSubmit={this.handleSubmit} className="form-a contactForm">
                                     
                                     <div className="row">
-                                        <div className="col-md-4 mb-3">
-                                            <div className="form-group">
-                                              <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="Your Username" data-rule="minlen:4" data-msg="Please enter unique username" />
-                                              <div className="validation"></div>
+                                          <div className="col-md-4 mb-3">
+                                            <div className={'form-group' + (submitted && !user.userName ? ' has-error' : '')}>
+                                            <input type="text" className="form-control form-control-lg form-control-a" name="userName" value={user.userName} onChange={this.handleChange}  placeholder="User Name"/>
+                                            {submitted && !user.userName &&
+                                                <div className="help-block red">User Name is required</div>
+                                            }
                                             </div>
                                         </div>
                                         <div className="col-md-4 mb-3">
@@ -242,9 +244,19 @@ class RegisterPage extends React.Component {
                                             {notmatached}
                                             </div>
                                         </div> 
-                                        
+                                        <div className="col-md-12 mb-3">
+
+                                            <div className="form-group">
+                                              <label className="check">Please confirm that you agree to our <a href="javascript:void(0);" className="" data-toggle-state="hidden" data-toggle-show="Show privacy policy" data-toggle-hide="Hide privacy policy">
+                                              privacy policy</a>
+                                              <input type="checkbox"   defaultChecked={this.state.isChecked} onChange={this.handleCheck}/>
+                                              <span className="checkmark"></span>
+                                              </label>       
+                                            </div>
+                                          </div>
                                         <div className="col-md-12">
-                                            <button type="submit" className="btn btn-a">Register</button>
+                                         <input type="submit" value="Register" className="btn btn-a" />
+                                            
                                         </div>
                                     </div>
                                     </form>

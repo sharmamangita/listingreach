@@ -58,46 +58,49 @@ class Footer extends React.Component {
     render() {
     const {shorttext} = this.state;
     return (
-		<footer className="site-footer">
-            <div className="container">
-            <div className="row">
-                <div className="col-md-5">
-                    <h3 className="footer-heading mb-4 text-white">About</h3>
-                  <p>{ReactHtmlParser(shorttext.substring(0,50))}</p>
-                    <p><Link to="AboutPage" className="btn btn-primary pill text-white px-4">Read More</Link></p>
-                </div>
-                <div className="col-md-5">            
-                    <h3 className="footer-heading mb-4 text-white">Quick Menu</h3>
-                    <ul className="list-unstyled">
-                    <li><Link to="AboutPage">About</Link></li>
-                    <li><Link to="Contact">Contact</Link></li>
-                    <li><Link to="PrivacyPage">Privacy</Link></li>
-                    <li><Link to="DisclaimerPage">Disclaimer</Link></li>
-                    <li><Link to="LegalPage">Legal</Link></li>                    
-                    </ul>            
-                </div>
-                <div className="col-md-2">
-                    <div className="col-md-12">
-                        <h3 className="footer-heading mb-4 text-white">Social Icons</h3>
-                    </div>
-                    <div className="col-md-12">
-                        <p>
-                          <a href="#" className="pb-2 pr-2 pl-0"><span className="icon-facebook"></span></a>
-                          <a href="#" className="p-2"><span className="icon-twitter"></span></a>
-                          <a href="#" className="p-2"><span className="icon-instagram"></span></a>
-                          <a href="#" className="p-2"><span className="icon-vimeo"></span></a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div className="row mt-5 text-center">
-              <div className="col-md-12">
-
-              </div>
-              
-            </div>
-           </div>
-        </footer>
+		<footer className="section-footer">
+			<div className="container">
+			  <div className="row">
+				<div className="col-md-12">
+				  <nav className="nav-footer">
+					<ul className="list-inline">
+					  <li className="list-inline-item">
+						{/*<a href="pricing.html">Pricing</a>*/}
+						<Link to="PricingPage">Pricing</Link>
+					  </li>
+					  <li className="list-inline-item">
+						<a href="databases.html">Databases</a>
+					  </li>              
+					  <li className="list-inline-item">
+					  {/*<a href="privacy-policy.html">Privacy Policy</a>*/}
+					  <Link to="PrivacyPage">Privacy Policy</Link>
+					  </li>
+					  <li className="list-inline-item">
+						<a href="refund-policy.html">Refund Policy</a>
+					  </li>
+					  <li className="list-inline-item">
+						<a href="#">Mail Preferences</a>
+					  </li>
+					  <li className="list-inline-item">
+						<a href="faq.html">FAQs</a>
+					  </li>
+					  <li className="list-inline-item">
+					  {/*<a href="contact.html">Contact Us</a>*/}
+					  <Link to="Contact">Contact Us</Link>
+					  </li>
+					</ul>
+				  </nav>
+				 
+				  <div className="copyright-footer">
+					<p className="copyright color-text-a">
+					  Copyright &copy; 2019 Listing Reach. All Rights Reserved.              
+					</p>
+				  </div>
+				  
+				</div>
+			  </div>
+			</div>
+		</footer>
     );
   }
 }

@@ -11,18 +11,10 @@ interface IUserModel extends mongoose.Document {
     middleName:string,
     email : string,
     password: string,
-    roles: string,
-    companyName: string,
-    previouscompanyName:string,
+    userName: string,
     status:string,
-    amount:string,
     lastLogin: Date,
     token: string,
-    paidExpirydate:Date,
-    paidOn:boolean,
-    hrpaidOn:boolean,
-	linkdinId: string,
-  
     createdOn: Date,
 }
 
