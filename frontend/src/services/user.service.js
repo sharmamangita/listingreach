@@ -10,20 +10,13 @@ export const userService = {
     getById,
     getVerification,
     update,
-    updateHr,
+    
     updatepassword,
     contactForm,
     deleteprofilepic,
     deleteprofileCover,
-    sendinvite,
+   
     delete: _delete,
-    savedCandidates,
-    viewdCandidates,
-    updateCandidateAmount,
-    getSavedCandidates,
-    getdownloadedby,
-    getapagecontent,
-    postreveiws,
     getReferences,
     updateStatus,
     unsetsrcid
@@ -63,14 +56,6 @@ function unsetsrcid(){
  localStorage.removeItem("srcid");
 }
 
-function postreveiws(postreveiws){
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(postreveiws)
-    };
-    return fetch(`${config.apiUrl}/users/postreveiw`, requestOptions).then(handleResponse);
-}
 
 function getAll() {
     const requestOptions = {
@@ -118,18 +103,7 @@ function register(user) {
     return fetch(`${config.apiUrl}/users/register`, requestOptions).then(handleResponse);
 }
 
-/*send Invite */
-function sendinvite(fullname,email,userid,logInFullname) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({fullname,email,userid,logInFullname})
-    };
-    return fetch(`${config.apiUrl}/users/sendinvite`, requestOptions).then(handleResponse)
-     .then(user => {
-        return user;
-    }).catch(this.handleError);
-}
+
 function forgotpassword(email) {
     const requestOptions = {
         method: 'POST',
@@ -175,31 +149,8 @@ function update(id,user) {
     // location.reload();  
     return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);;
 }
-function updateCandidateAmount(user){
-     const requestOptions = {
-        method: 'PUT',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    };
-    location.reload();
-    return fetch(`${config.apiUrl}/updateCandidateAmount`, requestOptions).then(handleResponse);;
-}
-//update hr
-function updateHr(user) {
-    const requestOptions = {
-        method: 'PUT',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    };
-    if (user.roles=='hr') {
-        localStorage.setItem('user', JSON.stringify(user));
-    }
-    console.log("user.roles=====",user.roles);
-    if(user.roles=='admin'){
-        location.reload();
-    }
-    return fetch(`${config.apiUrl}/hrUpdate`, requestOptions).then(handleResponse);;
-}
+
+
 function updateStatus(user) {
     console.log("updateStatus121",user);
     const requestOptions = {
@@ -210,43 +161,6 @@ function updateStatus(user) {
     return fetch(`${config.apiUrl}/updateStatus`, requestOptions).then(handleResponse);;
 }
 
-
-//viewdCandidates
-function viewdCandidates(user) {
-    const requestOptions = {
-        method: 'PUT',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    };
-    return fetch(`${config.apiUrl}/viewdCandidates`, requestOptions).then(handleResponse);;
-}
-
-//savedCandidates
-function savedCandidates(user) {
-    const requestOptions = {
-        method: 'PUT',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    };
-    return fetch(`${config.apiUrl}/savedCandidates`, requestOptions).then(handleResponse);;
-}
-
-// get saved candidates 
-function getSavedCandidates() {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-    return fetch(`${config.apiUrl}/getSavedCandidates`, requestOptions).then(handleResponse);
-}
-//get downloadedby resume
-function getdownloadedby(id) {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-    return fetch(`${config.apiUrl}/getdownloadedby/${id}`, requestOptions).then(handleResponse);
-}
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id,flag) {
     const requestOptions = {
@@ -301,13 +215,6 @@ var user = {"userid":uid};
 	}	
 
 
-function getapagecontent(page) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(page)
-    };
-    return fetch(`${config.apiUrl}/contentPage`, requestOptions).then(handleResponse);
-}	
+
     
 	

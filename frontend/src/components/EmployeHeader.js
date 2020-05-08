@@ -85,7 +85,7 @@ class EmployeHeader extends React.Component {
     let $rigister=null;
     $logout = (<Link to="login" className="dropdown-item" onClick={ this.logoutuser.bind(this) }>Logout</Link>); 
     
-    if(this.state.user && this.state.user.roles== 'candidate' && this.state.user.email !== null ){
+    if(this.state.user  && this.state.user.email !== null ){
     let profilepc ='/public/assets/images/dummy-profile-pic.png';
     let profileimage = localStorage.getItem('profileimage');
      
@@ -104,138 +104,42 @@ class EmployeHeader extends React.Component {
       }
     }
     return (
-    <header>
-        <div className="site-mobile-menu">
-            <div className="site-mobile-menu-header">
-                <div className="site-mobile-menu-close mt-3">
-                    <span className="icon-close2 js-menu-toggle"></span>
-                </div>
-            </div>
-            <div className="site-mobile-menu-body"></div>
-        </div>
-        <div className="site-navbar-wrap js-site-navbar bg-white">
-            <div className="container">
-                <div className="site-navbar bg-light">
-                    <div className="py-1">
-                        <div className="row align-items-center">
-                            <div className="col-2">
-                                <h2 className="mb-0 site-logo"><img src="/public/assets/images/logo1-free-img-1.png" alt="" className="img-fluid" /><Link to ="index">Employee<strong className="font-weight-bold">Mirror</strong> </Link></h2>
-                            </div>
-                            <div className="col-10">
-                                <nav className="site-navigation text-right" role="navigation">
-                                    <div className="container">
-                                        <div className="d-inline-block d-lg-none ml-md-0 mr-auto py-3"><a href="#" className="site-menu-toggle js-menu-toggle text-black"><span className="icon-menu h3"></span></a></div>
-                                        <ul className="site-menu js-clone-nav d-none d-lg-block">
-                                            <li>
-                                                <Link to="profilePage">Job Profile</Link>
-                                            </li>
-                                            <li>
-                                                <Link to="postresume">Post Resume</Link>
-                                            </li>
-                                            <li><Link to="SendInvitePage">Send Invite</Link></li>
-                                            <li>
-                                                <div className="dropdown">
-
-                                                    <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                                        My Account
-                                                    </button>
-                                                    <div className="dropdown-menu">
-                                                        <Link className="dropdown-item" to="changePassword">Change Password</Link>
-                                                        <a href="javascript:void(0)" className="dropdown-item" onClick={this.confirmbox} >Cancel Membership</a> {$logout}
-                                              
+      <header>
+      <nav className="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">
+        <div className="container">
+          <button className="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarDefault"
+            aria-controls="navbarDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <a className="navbar-brand text-brand" href="index.html"><img src="public/assets/images/listing-reach-logo.png" alt="" className="img-a img-fluid" /></a>
+          
+          <div className="navbar-collapse collapse justify-content-center" id="navbarDefault">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a className="nav-link" href="index.html">Home</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link " href="about.html">About</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="pricing.html">Pricing</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link " href="testimonials.html">Testimonials</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link active" href="dashboard.html">My Account</a>
+              </li>       
+            </ul>
+          </div> 
      
-
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                            <img src={profilepc} className="avtarimg img-fluid" ></img>
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-        <Modal show={this.state.show} onHide={this.handleClose}>
-          <Modal.Body>
-          <h4>Are you sure you want to Cancel your Membership?</h4>
-          </Modal.Body>
-          <Modal.Footer>
-        <button type="button" className="btn btn-secondary" name="cancel" onClick={this.handleClose}>Cancel</button>
-        <button type="button" className="btn btn-primary" name="confirm" onClick={() => this.cancelmembership('unverified')}>Confirm</button>
-        </Modal.Footer>
-        </Modal>
-
+      </nav>
     </header>
     );
   } 
-  else if(this.state.user && this.state.user.roles== 'hr' && this.state.user.email !== null ){
-    return(
-      <header>
-        <div className="site-mobile-menu">
-            <div className="site-mobile-menu-header">
-                <div className="site-mobile-menu-close mt-3">
-                    <span className="icon-close2 js-menu-toggle"></span>
-                </div>
-            </div>
-            <div className="site-mobile-menu-body"></div>
-        </div>
-        <div className="site-navbar-wrap js-site-navbar bg-white">
-
-            <div className="container">
-                <div className="site-navbar bg-light">
-                    <div className="py-1">
-                        <div className="row align-items-center">
-                            <div className="col-2">
-                                <h2 className="mb-0 site-logo">
-                                <img src="/public/assets/images/logo1-free-img-1.png" alt="" className="img-fluid" />
-                                <Link to ="index">Employee<strong className="font-weight-bold">Mirror</strong> </Link></h2>
-                            </div>
-                            <div className="col-10">
-                                <nav className="site-navigation text-right" role="navigation">
-                                    <div className="container">
-                                        <div className="d-inline-block d-lg-none ml-md-0 mr-auto py-3">
-                                          <a href="#" className="site-menu-toggle js-menu-toggle text-black" >
-                                            <span className="icon-menu h3"></span>
-                                          </a>
-                                        </div>
-
-                                        <ul className="site-menu js-clone-nav d-none d-lg-block">
-                                            <li><Link to ="hrprofile">My Profile</Link></li>
-                                            <li><Link to ="savedCandidates">Saved Candidates</Link></li>
-                                            <li><Link to ="savedCandidates?page=download">Downloaded Candidates</Link></li>
-                                            <li>
-                                                <div className="dropdown">
-                                                    <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                                        My Account
-                                                    </button>
-                                                    <div className="dropdown-menu">
-                                                        <Link className="dropdown-item" to="changePassword">Change Password</Link>
-                                                        {$logout}
-
-                                                    </div>
-                                                </div>
-                                            </li>
-
-                                        </ul>
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-      </header>
-    )
-
-  }
-
   else {
     $login= (<li><Link to="login" className="nav-link">Login</Link></li>);
     $rigister=(<li><Link to="register" className="nav-link">Register</Link></li>);
@@ -249,7 +153,7 @@ class EmployeHeader extends React.Component {
 			<span></span>
 			<span></span>
 		  </button>
-		  <a className="navbar-brand text-brand" href="index.html"><img src="public/assets/images//listing-reach-logo.png" alt="" className="img-a img-fluid"/></a>
+		  <a className="navbar-brand text-brand" href="index.html"><img src="public/assets/images/listing-reach-logo.png" alt="" className="img-a img-fluid"/></a>
 		  <button type="button" className="btn btn-link nav-search navbar-toggle-box-collapse d-md-none" data-toggle="collapse"
 			data-target="#navbarTogglerDemo01" aria-expanded="false">
 			<span className="fa fa-envelope-square" aria-hidden="true"></span>

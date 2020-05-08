@@ -29,14 +29,121 @@ import PlanBusiness = require("./../app/business/PlanBusiness");
 var moment = require('moment');
 var mammoth = require("mammoth");
 const fs = require('fs');
-var parseIt = require('../../utils/parseIt');
+
 var _          = require('underscore');
 var  mongoose = require('mongoose'); 
 var async = require('async');
 var base64Img = require('base64-img');
 var stripe = require("stripe")(Common.STRIPESECRETKEY);
 class UserController implements IBaseController <UserBusiness> {
- 	
+ 	//being called by client getEmailExists
+	getEmailExists(req: express.Request, res: express.Response): void {
+		try {
+			var query: string = req.params.query;
+			var _userBusiness = new UserBusiness();
+			_userBusiness.count({'email':{$regex : "^" + (query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')) + "$", $options: "i"}}, (error, result) => {
+				if(error){
+					console.log(error);
+					
+					res.send({"error": "error"});
+				}
+				else {
+					res.send(JSON.stringify(result))
+				};
+			});
+		}
+		catch (e)  {
+			console.log(e);
+			res.send({"error": "error in your request"});
+
+		}
+	}
+	register(req: express.Request, res: express.Response): void {
+		 try {
+            var user: IUserModel = < IUserModel > req.body.user;
+            user.createdOn = new Date();
+           
+			user.password = req.body.user.password;
+            user.firstName=req.body.user.firstName.toLowerCase();
+            user.lastName=req.body.user.lastName.toLowerCase();
+            user.paidOn= false;
+            var userBusiness = new UserBusiness();
+            var token = userBusiness.createToken(user);
+
+            userBusiness.create(user, (error, userdata) => {
+                if (error) {
+                    console.log("error==sss==", error);
+                    res.send({
+                        "error": error
+                    });
+                } else {
+                   
+                    var signupemailtemplatetouser = Common.SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER;
+                    var emailtemplate = signupemailtemplatetouser.replace(/#email#/g, userdata.email).replace(/#password#/g, userdata.password);
+                     Common.sendMail(userdata.email, Common.ADMIN_EMAIL, 'Welcome to Listingraech!', null, emailtemplate, function(error: any, response: any) {
+                        if (error) {
+                            console.log(error);
+                            res.send("error");
+                        }else{
+                        	res.send({ "success": "success"});
+                        }
+                    }); 
+                }
+            });
+        } catch (e) {
+            console.log(e);
+            res.send({
+                "error": "error in your request"
+            });
+
+        }
+
+    }
+	authenticate(req: express.Request, res: express.Response): void {
+        try {
+            var _user: IUserModel = <IUserModel>req.body;
+			//set the createdon to now
+            var _userBusiness = new UserBusiness();
+            _userBusiness.findOne({email: _user.email}, (error, result) => {
+                if(error) res.send({"error": "error"});
+                else {
+                	console.log("result===",result.password);
+                	console.log("_user===",_user.password);
+					if(result && result.password && result.password==_user.password) {
+						/*if(!result.isActive) {
+							return res.status(401).send({"error": "Your account is not active. Please contact admin."});
+						} else {*/
+							var token = _userBusiness.createToken(result);
+							var _updateData: IUserModel = <IUserModel>req.body;
+							_updateData.lastLogin = new Date();
+							_updateData.token = token;
+							var _id: string = result._id.toString();
+							var _userBusinessUpdate = new UserBusiness();
+							_userBusinessUpdate.update(_id, _updateData, (error, resultUpdate) => {
+								if(error) res.send({"error": "error", "message": "Authentication error"});//res.status(401).send({"error": "Authentication error"});
+								else {
+									res.send({
+										userId: result._id,
+										email: result.email,
+										firstName: result.firstName,
+										lastName: result.lastName,
+										token: token
+									});
+								}
+							});
+						//}
+					} else {
+						return res.status(401).send({"error": "The username or password don't match"});
+					}
+				}
+            });
+        }
+        catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+
+        }
+    }
     create(req: express.Request, res: express.Response): void {
         try {
         	var _userBusiness = new UserBusiness();
@@ -59,29 +166,7 @@ class UserController implements IBaseController <UserBusiness> {
             res.send({"error": "error in your request"});
 		}
     }
-    UpdateHr(req: express.Request, res: express.Response): void {
-	try {
-		var _userBusiness = new UserBusiness();
-		_userBusiness.verifyToken(req, res,  (UserData) => { 
-			var _user: IUserModel = <IUserModel>req.body;
-			//console.log("_user====",_user);
-			//_user.createdOn = new Date();
-	        var _userBusiness = new UserBusiness();
-	        var _id:string = req.body.userId.toString();
-			_userBusiness.update(mongoose.Types.ObjectId(_id), _user, (error:any, userdata:any) => {
-				 if(error) {
-					console.log(error);
-					res.send({"error": error});
-				}
-	            else res.send({"success": "success"});
-	       	}); 
-	    });
-	}
-	catch (e)  {
-	    console.log(e);
-	    res.send({"error": "error in your request"});
-	}
-}
+   
 
 
 updateStatus(req: express.Request, res: express.Response): void {
@@ -113,289 +198,6 @@ updateStatus(req: express.Request, res: express.Response): void {
 
 }
 
-viewdCandidates(req: express.Request, res: express.Response): void {
-	try {
-	var _userBusiness = new UserBusiness();
-	_userBusiness.verifyToken(req, res,  (companyUserData) => { 
-		var _candidates: ISavedCandidatesModel = <ISavedCandidatesModel>req.body;
-		var _user: IUserModel = <IUserModel>req.body;
-		var _userBusiness = new UserBusiness();
-        var _savedCandidateBusiness = new SavedCandidateBusiness();
-        _candidates.user_id=companyUserData._id;
-        _candidates.createdOn = new Date();
-        
-		if(req.body.flag=='viewed'){
-			_candidates.viewed='true';
-			_candidates.candidate_id=req.body.savedcandidates;
-			
-		}
-		_savedCandidateBusiness.findOne({'candidate_id':_candidates.candidate_id,'user_id': companyUserData._id}, (error:any, data:any) => {
-			if(error) {
-				console.log(error);
-				res.send({"error": error});
-			}else{
-				if(data){
-					_savedCandidateBusiness.update(data._id,_candidates, (error:any, candidatedata:any) => {
-							if(error) {
-								console.log(error);
-								//res.send({"error": error});
-							}
-				            else {
-				            	_userBusiness.update(mongoose.Types.ObjectId(req.body.user_id), _user, (error:any, resultUpdate:any) => {
-								 	if(error){
-									  console.log("error===",error);
-								 	}else{
-										//res.send({"success": "success"});
-									}
-								});
-						    }
-				       	});
-					
-				}else{
-					_savedCandidateBusiness.create(_candidates, (error:any, candidatedata:any) => {
-						 if(error) {
-							console.log(error);
-							res.send({"error": error});
-						}
-			            else {
-			            	//res.send({"success": "success"});
-						}
-			       	});
-				}
-			}	
-			}
-		});
-	});
-};
-SavedCandidates(req: express.Request, res: express.Response): void {
-
-	try {
-		//console.log("req.body.paid====",req.body.paid);
-		var _userBusiness = new UserBusiness();
-		_userBusiness.verifyToken(req, res,  (companyUserData) => { 
-			var _candidates: ISavedCandidatesModel = <ISavedCandidatesModel>req.body;
-			var _user: IUserModel = <IUserModel>req.body;
-			var _userBusiness = new UserBusiness();
-	        var _savedCandidateBusiness = new SavedCandidateBusiness();
-	        _candidates.user_id=companyUserData._id;
-	        _candidates.createdOn = new Date();
-	        if(req.body.flag=='saved'){
-				_candidates.saved='true';
-				_candidates.candidate_id=req.body.savedcandidates;
-			}
-			else{
-				 var _id = req.body.id;
-				 _candidates.saved="";
-				_candidates.amount = req.body.total;
-		    	_candidates.paidOn = req.body.paid;
-				_candidates.downloaded='true';
-				_candidates.candidate_id=req.body.id;
-				_user.hrpaidOn = req.body.paid;
-			}
-			console.log("req.body====",_user.hrpaidOn);
-			_savedCandidateBusiness.findOne({'candidate_id':_candidates.candidate_id,'user_id': companyUserData._id}, (error:any, data:any) => {
-				if(error) {
-					//console.log(error);
-					
-				}else{
-					if(data){
-						
-						_savedCandidateBusiness.update(data._id,_candidates, (error:any, candidatedata:any) => {
-							if(error) {
-								//console.log(error);
-							}
-				            else {
-				            	_userBusiness.update(mongoose.Types.ObjectId(req.body.user_id), _user, (error:any, resultUpdate:any) => {
-								 	if(error){
-									  //console.log("error===",error);
-								 	}else{
-								 		res.send({"success": "success"});
-									}
-								});
-						    }
-				       	});
-
-					}else{
-						//console.log("ddddd=====");
-						_savedCandidateBusiness.create(_candidates, (error:any, candidatedata:any) => {
-							 if(error) {
-								console.log(error);
-								
-							}
-				            else {
-				            	if(req.body.flag=='download'){
-				            		_userBusiness.update(mongoose.Types.ObjectId(req.body.user_id), _user, (error:any, resultUpdate:any) => {
-								 	if(error){
-									  console.log("error===",error);
-								 	}else{
-										//res.send({"success": "success"});
-									}
-								});
-				            	}
-				            }
-				       	});
-					}
-					
-				}
-			});
-	       	if(req.body.flag=='download'){
-
-		       	if(_candidates.user_id){
-		       		var _userBusiness = new UserBusiness();
-					var _employeeBusiness = new EmployeeBusiness();
-					var _id: string = _candidates.candidate_id;
-					var employeeAggregate = [
-				        {
-				            $lookup:                       
-				            {
-				                from: "employees",
-				                localField: "_id",   
-				                foreignField: "userId",        
-				                as: "employees"               
-				            }
-				        },
-				        {
-				      	  	$unwind:"$employees"
-				        
-				      	},
-				        {
-				            $project:                       
-				            {    
-				                "_id":1,
-				                "firstName":1,
-				                "lastName":1,
-				                "middleName":1,
-				                "email":1,
-				                "roles":1,
-				                "status":1,
-				                "paidOn":1,
-				                "companyName":1,
-				                "createdOn":1,
-				                "previouscompanyName":1,
-				                "employees.strengths":1,
-				                "employees.improvements":1,
-				                "employees.resume":1,
-				                "employees.summary":1,
-				                "employees.profilePic":1,
-				                "employees.profileCover":1,
-				                "employees.education":1,
-				                "employees.alternateEmail":1,
-				                "employees.dateofBirth":1,
-				                "employees.currentSalary":1,
-				                "employees.gender":1,
-				                "employees.expectedSalary":1,
-				                "employees.currentlyEmployed":1,
-				                "employees.openRelocation":1,
-				                "employees.openTravel":1,
-				                "employees.sponsorshipRequired":1,
-				                "employees.authorization":1,
-				                "employees.felony":1,
-				                "employees.phone":1,
-				                "employees.alternateMobile_number":1,
-				                "employees.currentaddress":1,
-				                "employees.permanentaddress":1,
-				                "employees.defoultsocial_media":1,
-				                "employees.skills":1,
-				                "employees.experienceYear":1,
-				                "employees.experienceMonth":1,
-				                "employees.social_media":1,
-				                "employees.professionalSummary":1,
-				                "employees.totaloverall":1,
-				                "employees.designation":1,
-				            }
-				        },
-				        {
-				            $match:
-				            {
-				                '_id':  mongoose.Types.ObjectId(_id)
-				               
-				            }
-				        }
-				    ]
-
-				    _userBusiness.aggregate( employeeAggregate, (error:any, result:any) => {
-				        if(error) {
-				            console.log('Error: manager case:', error);
-				        }
-				        else { 
-				        	var returnObj = result.map(function(obj: any): any {
-				        		var expernice=0;
-				        		if(obj.employees.experienceYear){
-				        			expernice=obj.employees.experienceYear;
-				        		}
-					      		
-					            return {
-							        id: obj._id,
-							        firstName:obj.firstName,
-							        lastName:obj.lastName,
-							        middleName:obj.middleName,
-							        email:obj.email,
-							        roles:obj.roles,
-							        paidOn:obj.paidOn,
-							        status:obj.status,
-							        createdOn:obj.createdOn,
-							        companyName:obj.companyName,
-							        previouscompanyName:obj.previouscompanyName,
-							        alternateEmail: obj.employees.alternateEmail,
-							        summary: obj.employees.summary,
-							        profilePic: obj.employees.profilePic,
-							        profileCover: obj.employees.profileCover,
-							        education:obj.employees.education,
-							        dateofBirth:obj.employees.dateofBirth,
-							        currentSalary:obj.employees.currentSalary,
-							        expectedSalary:obj.employees.expectedSalary,
-				                    currentlyEmployed:obj.employees.currentlyEmployed,
-				                    openRelocation:obj.employees.openRelocation,
-				                    openTravel:obj.employees.openTravel,
-				                    sponsorshipRequired:obj.employees.sponsorshipRequired,
-				                    felony:obj.employees.felony,
-				                    phone:obj.employees.phone,
-				                    gender:obj.employees.gender,
-				                    resume:obj.employees.resume,
-				                    alternateMobile_number:obj.employees.alternateMobile_number,
-				                    currentaddress:obj.employees.currentaddress,
-				                    permanentaddress:obj.employees.permanentaddress,
-				                    defoultsocial_media:obj.employees.defoultsocial_media,
-				                    skills:obj.employees.skills,
-				                    authorization:obj.employees.authorization,
-							        experienceMonth:obj.employees.experienceMonth,
-							        experienceYear:expernice,
-							        social_media:obj.employees.social_media,
-							        professionalSummary:obj.employees.professionalSummary,
-							        strengths:obj.employees.strengths,
-							        improvements:obj.employees.improvements,
-							       	totaloverall:obj.employees.totaloverall,
-							        designation:obj.employees.designation,
-							        
-							    }
-				   			});
-				   			var imageData = null;
-				   			if(returnObj && returnObj.length>0) {
-								try {
-									if(returnObj[0].profilePic){
-										imageData = base64Img.base64Sync(process.cwd() + '/public/upload/'+returnObj[0].profilePic);
-									}
-								}
-								catch (e)  {
-									console.log(e);
-								}
-							}
-							_userBusiness.generateUserPdf(returnObj,imageData);
-							//res.send({"success": "success"});
-				        }
-				    });
-		       	} 
-	        }
-	        if(req.body.flag=='saved'){
-	        	res.send({"success": "success"});
-	        }
-	    });
-	}
-	catch (e)  {
-	    console.log(e);
-	    res.send({"error": "error in your request"});
-	}
-}
 
 update(req: express.Request, res: express.Response): void {
 	var employe=[];
@@ -725,35 +527,7 @@ update(req: express.Request, res: express.Response): void {
     });
 }
  
-updateCandidateAmount(req: express.Request, res: express.Response): void {
-	try {
-		var _userBusiness = new UserBusiness();
-		var _user: IUserModel = <IUserModel>req.body;
-		var _userBusiness = new UserBusiness();
-		var currdate = new moment();
-		var nexttwomonth = currdate.add(2, 'month');
-		console.log("nexttwomonth===",nexttwomonth);
-	    _user.amount = req.body.total;
-		_user.paidOn = req.body.paid;
-		_user.paidExpirydate=nexttwomonth;
-		var _id = req.body.id;
-		if(req.body.user){
-			_user.status = req.body.user.status;
-			_id=req.body.user.id;
-		}
-		
-		console.log("_user==",req.body);
-		_userBusiness.update(_id,_user, (error:any, candidatedata:any) => {
-			 if(error) {
-				console.log(error);
-				res.send({"error": error});
-			}
-	        else {
-	        	return res.json("sucfully");
-	        }
-	   	});
-	}
-}
+
     updateprofilepic(data:any,id:any, res: express.Response): void {
     	var _employeeBusiness = new EmployeeBusiness();
     	var _emplloye: IEmployeeModel = <IEmployeeModel>data;
@@ -799,222 +573,7 @@ updateCandidateAmount(req: express.Request, res: express.Response): void {
 		});
 
     }
-    
-    sendinvite(req: express.Request, res: express.Response): void {
-    	
-        try {
-        	console.log("inviat",req.body);
-            var max = 999999999;
-            var min = 1111111111;
-            var autoGeneratedToken = Math.floor(Math.random() * (max - min) + min);
-            var autotoken = 'tok' + autoGeneratedToken;
-			var _invitationBusiness = new InvitationBusiness();
-            var _invitation: IInvitationModel = < IInvitationModel > req.body;
-            var _user: IUserModel = <IUserModel>req.body;
-			var _userBusiness = new UserBusiness();
-
-            _invitationBusiness.findOne({email:req.body.email,userId:req.body.userid},(error, result) => {
-			if(error){
-				console.log("error not find");
-			} else {
-		 	  if(result==null){
-		 	  	var  loginfull = req.body.logInFullname
-		 	  	var logInFullname = loginfull.charAt(0).toUpperCase() + loginfull.slice(1);
-	            _invitation.fullName = req.body.fullname.charAt(0).toUpperCase() + req.body.fullname.slice(1);
-	            _invitation.email = req.body.email;
-	            _invitation.status = "unverified";
-	            _invitation.userId = req.body.userid;
-	            _invitation.websiteref = "True";
-	            _invitation.token = autotoken;
-	            _invitation.linkdinId = "false";
-	            _invitation.createdOn = new Date();
-	            var _userBusiness = new UserBusiness();
-	            _invitationBusiness.create(_invitation, (error, result) => {
-	                if (error) {
-	                    console.log(error);
-	                    res.send({
-	                        "error": error
-	                    });
-	                } else { 
-	                		_userBusiness.findOne({'email':_invitation.email}, (error, results) => {
-									if(error){
-										console.log("ueser");
-									} else {
-
-										if(results==null){
-											var invatitionemail = Common.EMAIL_FOR_NEW_USER_INVITATION;
-						                    var emailtemplate = invatitionemail.replace(/#email#/g, _invitation.email).replace(/#loginfullname#/g,logInFullname).replace(/#first_lastname#/g, _invitation.fullName).replace(/#autotoken#/g, _invitation.token);
-						                    Common.sendMail(_invitation.email, Common.ADMIN_EMAIL, 'Welcome to EmployeMirrior!', null, emailtemplate, function(error: any, response: any) {
-						                        if (error) {
-						                            console.log(error);
-						                            res.end("error");
-						                        } else {
-						                        	 res.send(result);
-
-						                        }
-						                    });
-
-										} else {
-											var invatitionemail = Common.EMAIL_FOR_LOGIN_USER_INVITATION;
-						                    var emailtemplate = invatitionemail.replace(/#email#/g, _invitation.email).replace(/#loginfullname#/g,logInFullname).replace(/#first_lastname#/g, _invitation.fullName).replace(/#autotoken#/g, _invitation.token);
-						                    Common.sendMail(_invitation.email, Common.ADMIN_EMAIL, 'Welcome to EmployeMirrior!', null, emailtemplate, function(error: any, response: any) {
-						                        if (error) {
-						                            console.log(error);
-						                            res.end("error");
-						                        } else {
-						                        	 res.send(result);
-
-						                        }
-						                    });
-										}
-
-									}
-							});
-
-	                }
-
-	            });
-
-				} else {
-					console.log('not send error');
-                  res.send({'error':'error'});
-				 }
-
-		 }	
-	});
-
-        } catch (e) {
-            console.log(e);
-            res.send({
-                "error": "error in your request"
-            });
-        }
-    }
-
-   getinvitationKey(req: express.Request, res: express.Response): void {
-
-        try {
-            var _invitationBusiness = new InvitationBusiness();
-            var _invitation: IInvitationModel = < IInvitationModel > req.body;
-            _invitationBusiness.findOne({
-                'token': req.body.token
-            }, (error, result) => {
-                if (error) {
-                    console.log("ueser");
-                } else {
-                    res.json(result);
-                }
-            });
-        } catch (e) {
-            console.log(e);
-            res.send({
-                "error": "error in your request"
-            });
-        }
-
-    }
-
-
-    getinvitation(req: express.Request, res: express.Response): void {
-    	
-        try {
-        	var _employeeBusiness = new EmployeeBusiness();
-            var _invitationBusiness = new InvitationBusiness();
-            var _invitation: IInvitationModel = < IInvitationModel > req.body;
-            console.log("token",req.body.token);
-
-             var employeeAggregate = [
-	            {
-	                $lookup:                       
-	                {
-	                    from: "invitations",
-	                    localField: "userId",   
-	                    foreignField: "userId",        
-	                    as: "invitations"               
-	                }
-	            },
-
-	            {
-	                $lookup:                       
-	                {
-	                    from: "postreviews",
-	                    localField: "userId",   
-	                    foreignField: "userId",        
-	                    as: "postreviews"               
-	                }
-	            },
-
-
-	            {
-	                $lookup:                       
-	                {
-	                    from: "employees",
-	                    localField: "userId",   
-	                    foreignField: "userId",        
-	                    as: "employees"               
-	                }
-	            },
-
-
-	            {
-	                $lookup:                       
-	                {
-	                    from: "users",
-	                    localField: "userId",   
-	                    foreignField: "_id",        
-	                    as: "users"               
-	                }
-	            },
-	          	
-	            {
-	                $project:                       
-	                {    
-	                    "_id":1,
-	                    "skills":1,
-	                    "userId":1,
-	                    "invitations.email":1,
-	                    "invitations._id":1,   
-	                    "invitations.token" :1,
-	                    "postreviews.overall":1,
-	                    "postreviews.userId":1,
-	                    "postreviews.postuserId":1,
-	                    "employees.totaloverall":1,
-	                    "users":1,
-	                    
-
-				    }
-	            },
-	            {
-	                $match:
-                    {
-                        $and: [
-							{'invitations.token':req.body.token},	          
-						]
-					}
-	            }
-	        ];
-
-		  _employeeBusiness.aggregate(employeeAggregate, (error:any, result:any) => {
-		       		if(error) {
-						res.send({"error": error});
-					}
-					else {
-					
-					res.send({"result": result}); 
-		    		}
-				});
-
-        } catch (e) {
-            console.log(e);
-            res.send({
-                "error": "error in your request"
-            });
-        }
-
-    }
-
-
-    deleteprofilepic(req: express.Request, res: express.Response): void {
+   deleteprofilepic(req: express.Request, res: express.Response): void {
 		try {
 		var _employeeBusiness = new EmployeeBusiness();
 		var userid =  req.body.userid;
@@ -1068,302 +627,6 @@ updateCandidateAmount(req: express.Request, res: express.Response): void {
     }
     
     
-	upload(data:any,id:any, res: express.Response): void {
-		//var user: IUserModel = <IUserModel>req.body.user;
-    	var _employeeBusiness = new EmployeeBusiness();
-    	data.forEach(function(singleResult:any) {
-	    	var _emplloye: IEmployeeModel = <IEmployeeModel>singleResult;
-	    	var type= singleResult.mimetype.split("/");
-	    	if(type[0]=='image'){
-	    		_emplloye.profilePic=singleResult.filename;
-	    		 var userid:string = id.toString();
-	    		_employeeBusiness.findOne({'userId':userid}, (error, result) => {
-					if(error){
-						console.log("ueser");
-					}
-					else {
-						var _id:string = result._id.toString();
-						_employeeBusiness.update(_id, _emplloye, (error:any, resultUpdate:any) => {
-							if(error){
-							}else {
-								return res.json(_emplloye.profilePic);
-							}
-						});
-					};
-				});
-	    	}else{
-	    		_emplloye.resume=singleResult.filename;
-	    		parseIt.parseResume("./public/upload/"+singleResult.filename, './compiled');
-	    		let jsonData = {}
-	    		setTimeout(() => {
-				var fileurl='./compiled/'+singleResult.filename+'.json';
-				fs.readFile(fileurl, 'utf-8', (err:any, data:any) => {
-				if (err) throw err
-					jsonData = JSON.parse(data);
-				    
-					var birthdate='';
-					if(jsonData.birthdate){
-						var str = jsonData.birthdate;
-						var resdata = str.split(":");
-						
-						var dobregx= /^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](19|20)\d\d/g; 
-						if(resdata.length>0){
-							if(resdata[0].match(dobregx)){
-								birthdate=resdata[0].replace(/th/g, '').replace(/nd/g, '').match(dobregx);
-							}else{
-
-								birthdate=resdata[1].replace(/th/g, '').replace(/nd/g, '');
-							}
-							if(birthdate){
-								console.log("else  ====");
-								_emplloye.dateofBirth=birthdate;
-							}
-	  						
-				  		}
-	  				}
-	  				if(jsonData.address){
-	  					console.log("jsonData.address====",jsonData.address);
-		  				var addressregx= /([\s\S][^\\n])*\n/g; 
-						console.log("jsonData.address=11===",jsonData.address.match(addressregx));	
-		  				if(jsonData.address){
-							_emplloye.currentaddress=[{"street":jsonData.address.match(addressregx),"building":'',"city":'','postcode':0,'state':'','country':'US'}];
-							
-						}
-	  				}
-	  				
-					if(jsonData.gender){
-						var gendervalue =jsonData.gender;
-						var gendervalueregex=gendervalue.match(/(?<![\w\d])(Male|Female)(?![\w\d])/g);
-						if(gendervalueregex){
-							gendervalueregex.forEach(function(value:any,index:any) {
-							 _emplloye.gender=value.trim();
-						    });	
-						}
-	  					
-					}
-
-					var skilval=[];
-					if(jsonData.skills){
-						var skills = jsonData.skills.split(",");
-						skills.forEach(function(skill:any) {
-							if(skill && skill.length<15){
-								skilval.push({keywordval:skill});
-							}
-						});
-						var skilArray = skilval.reduce(function (item, e1) {  
-				            var matches = item.filter(function (e2)  
-				            { 
-				            	return typeof e2.keywordval !=='undefined' &&  e1.keywordval.trim() == e2.keywordval.trim();
-				            });  
-				            if (matches.length == 0) {  
-				                item.push(e1);  
-				            }  
-				            return item;  
-				        }, []);  
-				       _emplloye.skills=skilArray;
-					}
-					   	 
-				   _emplloye.alternateEmail=jsonData.email;
-				    if(jsonData.summary){
-				   		_emplloye.summary=jsonData.summary;
-				    }
-				   
-				    if(jsonData.mobile){
-				   		_emplloye.phone=jsonData.mobile;
-				    }else{
-				   		_emplloye.phone=jsonData.phone;
-				    }
-				   var education=jsonData.education;
-				   var yerasreg = /(\b(19|20)\d{2}\b)/g;
-				   var percentregex =/\b(?<!\.)(?!0+(?:\.0+)?%)(?:\d|[1-9]\d|100)(?:(?<!100)\.\d+)?%/g;
-				   
-				   var percentregex =/\b(?<!\.)(?!0+(?:\.0+)?%)(?:\d|[1-9]\d|100)(?:(?<!100)\.\d+)?%/g;
-				   var schoolregex=  /([A-Z][^\s,.]+[.]?\s[(]?)*(College|University|Institute|Law School|School of|Academy|School|Board)[^,\d]*(?=,|\d)/g;
-				   var degreeregex= /([A-Z][^\s,.]+[.]?\s[(]?)*(MBA|MSc|BCS|M.B.A|Bachelor of Computers|B.A|B.tec|B.C.A|MCA|BCA|10th)[^,\d]*(?=,|\d)/g;
-				   if(education){
-				   	var degreename='';
-				   	degreename=education.match(degreeregex);
-				    var foundyears = '';
-			   	    var foundpercentage='';
-			   	    var institutename='';
-			   	    foundyears=education.match(yerasreg);
-			   	    foundpercentage= education.match(percentregex);
-			        institutename=education.match(schoolregex);
-			        var educationval:any = [];
-				    if(foundyears){
-				    	foundyears.forEach(function(foundyear:any,index:any) {
-				      	    if(foundpercentage){
-				    	   	    foundpercentage=foundpercentage[index];
-				    	    }
-				    	    educationval.push({"institute_name":institutename?institutename[index]:'', "degree_name":'', "duration":foundyear ? foundyear[index]:'',"percentage":foundpercentage,"major":""});
-					       _emplloye.education=educationval;
-						});
-				    }else{
-				    	if(institutename){
-				    		institutename.forEach(function(institutenameval:any,index:any) {
-					      	    if(foundpercentage){
-					    	   	    foundpercentage=foundpercentage[index];
-					    	    }
-					    	    if(foundyears){
-					    	    	foundyears=foundyears[index];
-					    	    }
-					    	    educationval.push({"institute_name":institutenameval, "degree_name":'', "duration":foundyears,"percentage":foundpercentage,"major":""});
-						        _emplloye.education=educationval;
-							});
-				    	}
-				    }
-
-				   }
-				   var userid:string = id.toString();
-				  	_employeeBusiness.findOne({'userId':userid}, (error, rmployeresult) => {
-						if(error){
-							console.log("ueser");
-						}
-						else {
-							var _id:string = rmployeresult._id.toString();
-							_employeeBusiness.update(mongoose.Types.ObjectId(_id), _emplloye, (error:any, resultUpdate:any) => {
-								if(error){
-									console.log("error====",error);
-								}else {
-									return res.json('updated succfully');
-								}
-							});
-						};
-					});
-				})
-				}, 5000);
-	    	}
-	    });
-	}
-	getKeyword(req: express.Request, res: express.Response): void {
-		var strval = req.params.query;
-		var str = strval.replace(/^"(.*)"$/, '$1').toLowerCase().trim();
-		str= str.split(" ")
-		str =str[0];
-		
-		var _userBusiness = new UserBusiness();
-
-		var employeeAggregate = [
-            
-        	{
-                $lookup:                       
-                {
-                    from: "employees",
-                    localField: "_id",   
-                    foreignField: "userId",        
-                    as: "employees"               
-                }
-            },
-
-             {
-            $unwind:"$employees"
-            
-          	 },
-
-          	{
-                $lookup:                       
-                {
-                    from: "postreviews",
-                    localField: "_id",   
-                    foreignField:"userId",        
-                    as: "postreviews"               
-                }
-            },
-
-          	{
-                $lookup:                       
-                {
-                    from: "saved_candidates",
-                    localField: "_id",   
-                    foreignField: "candidate_id",        
-                    as: "saved_candidates"               
-                }
-            },
-        	{
-                $project:                       
-                {    
-                    "_id":1,
-                    "firstName":1,
-                    "lastName":1,
-                    "middleName":1,
-                    "email":1,
-                    "roles":1,
-                    "status":1,
-                    "paidOn":1,
-                    "previouscompanyName":1,
-                    "employees.profilePic":1,
-                    "employees.dateofBirth":1,
-                    "employees.currentSalary":1,
-                    "employees.expectedSalary":1,
-                    "employees.phone":1,
-                    "employees.currentaddress":1,
-                    "employees.permanentaddress":1,
-                    "employees.defoultsocial_media":1,
-                    "employees.experienceYear":1,
-                    "employees.experienceMonth":1,
-                    "employees.professionalSummary":1,
-                    "employees.totaloverall":1,
-                    "employees.social_media":1,
-                    "employees.currentsalaryflag":1,
-				    "employees.expectedsalaryflag":1,
-				    "employees.designation":1, 
-	                "saved_candidates.saved":1,
-	                "saved_candidates.downloaded":1,
-	                "saved_candidates.candidate_id":1,
-	                "saved_candidates.user_id":1,
-	                "saved_candidates.createdOn":1,
-                    "postreviews":1, 
-                    //"postreviews.selfdrive":1,
-                    //"postreviews.ownership":1,
-                   // "postreviews.communication":1,
-                    //"postreviews.technicalexp":1,
-                    
-     
-			    }
-            },
-            {
-                $match:
-                { 
-                	$or:[ {firstName:{$regex:str},firstName:{$regex:str}}, {lastName:{$regex:str},lastName:{$regex:str}},{"employees.professionalSummary.company_name":{$regex:str}}],
-                	$and:[{roles:'candidate'},{status:'verified'}]
-                	
-                }
-            }
-        ]
-        _userBusiness.aggregate( employeeAggregate, (error:any, result:any) => {
-       		if(error) {
-				res.send({"error": error});
-			}
-			else {
-				if(result.length > 0){
-					var totalstar = 0;
-					result.forEach(function(item,i){
-
-						if(item.postreviews.length>0){
-							var b =0;
-							for(var a=0; a<item.postreviews.length;a++){
-								if(item.postreviews[a].status=="verified"){
-								totalstar =parseFloat(item.postreviews[a].overall)+totalstar;
-								b++;
-							}
-
-							let multi = b*5;
-							let data = (totalstar*5)/ multi;
-							console.log("texttotal",data);
-							result[i]['overall'] = data;
-							
-							
-						}
-
-					}
-				});
-					
-			}
-				
-			res.send({"result": result}); 
-    		}
-		});
-	}
 	
 	
     delete(req: express.Request, res: express.Response): void {
@@ -1467,20 +730,7 @@ updateCandidateAmount(req: express.Request, res: express.Response): void {
 		}
     }
 
-    Pagesretrieve(req: express.Request, res: express.Response): void {
-    	 try {
-    	 	var _pagesBusiness = new PagesBusiness();
-    			_pagesBusiness.retrieve(req.body, (error, result) => {
-				if(error){ res.send({"error": "error"});
-				console.log(result);}
-				else{ res.send(result);}
-			});
-        }
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
-		}
-    }
+   
 
     findById(req: express.Request, res: express.Response): void {
         
@@ -1708,312 +958,7 @@ updateCandidateAmount(req: express.Request, res: express.Response): void {
 		});
     }
 	
-	//being called by client getEmailExists
-	getEmailExists(req: express.Request, res: express.Response): void {
-		try {
-			var query: string = req.params.query;
-			var _userBusiness = new UserBusiness();
-			_userBusiness.count({'email':{$regex : "^" + (query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')) + "$", $options: "i"}}, (error, result) => {
-				if(error){
-					console.log(error);
-					
-					res.send({"error": "error"});
-				}
-				else {
-					res.send(JSON.stringify(result))
-				};
-			});
-		}
-		catch (e)  {
-			console.log(e);
-			res.send({"error": "error in your request"});
-
-		}
-	}
-	register(req: express.Request, res: express.Response): void {
-		console.log("asfsafasff====");
-        try {
-            var user: IUserModel = < IUserModel > req.body.user;
-            user.createdOn = new Date();
-           
-			user.password = req.body.user.password;
-            user.firstName=req.body.user.firstName.toLowerCase();
-            user.lastName=req.body.user.lastName.toLowerCase();
-            user.paidOn= false;
-            var userBusiness = new UserBusiness();
-            var token = userBusiness.createToken(user);
-
-            userBusiness.create(user, (error, userdata) => {
-                if (error) {
-                    console.log("error==sss==", error);
-                    res.send({
-                        "error": error
-                    });
-                } else {
-                    res.send({
-                        userId: result._id,
-                        email: user.email,
-                        firstName: userdata.firstName,
-                        lastName: userdata.lastName,
-                        createdOn: result.createdOn,
-                        token: token
-
-                    });
-                }
-            });
-        } catch (e) {
-            console.log(e);
-            res.send({
-                "error": "error in your request"
-            });
-
-        }
-
-    }
-	 /*register(req: express.Request, res: express.Response): void {
-        try {
-            var user: IUserModel = < IUserModel > req.body.user;
-            user.createdOn = new Date();
-           	var autoGeneratedPassword = Math.random().toString(36).slice(-8);
-			user.password = 'P' + autoGeneratedPassword;
-            user.firstName=req.body.user.firstName.toLowerCase();
-            user.lastName=req.body.user.lastName.toLowerCase();
-            user.paidOn= false;
-            var userBusiness = new UserBusiness();
-            var token = userBusiness.createToken(user);
-
-            userBusiness.create(user, (error, userdata) => {
-                if (error) {
-                    console.log("error====", error);
-                    res.send({
-                        "error": error
-                    });
-                } else {
-                    var _employee: IEmployeeModel = < IEmployeeModel > req.body;
-                    var _employeeBusiness = new EmployeeBusiness();
-                    //set the default values
-                    _employee.userId = mongoose.Types.ObjectId(userdata._id);
-                    _employee.createdDate = new Date();
-                    if (req.body.data) {
-                        _employee.summary = req.body.data.bio;
-                        _employee.profilePic = req.body.data.avatar;
-                        _employee.professionalSummary = req.body.data.positions;
-                    }
-                    _employeeBusiness.create(_employee, (error, result) => {
-                        if (error) {
-                            console.log(error);
-                            res.send({
-                                "error": error
-                            });
-                        } else {
-                            if (!user.linkdinId) {
-                                var signupemailtemplatetouser = Common.SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER;
-                                var emailtemplate = signupemailtemplatetouser.replace(/#email#/g, userdata.email).replace(/#password#/g, userdata.password);
-                                 Common.sendMail(userdata.email, Common.ADMIN_EMAIL, 'Welcome to EmployeMirrior!', null, emailtemplate, function(error: any, response: any) {
-                                    if (error) {
-                                        console.log(error);
-                                        res.end("error");
-                                    }
-                                });
-                                var _invitationBusiness = new InvitationBusiness();
-                                var _invitation: IInvitationModel = < IInvitationModel > req.body;
-                                _invitationBusiness.findOne({
-                                    'email': userdata.email
-                                }, (error, result) => {
-                                    if (error) {
-                                        console.log("error==1");
-                                    } else { 
-                                       if(result){
-	                                        var _id: string = result._id.toString();
-	                                        _invitation.status = 'verified';
-	                                        _invitationBusiness.update(mongoose.Types.ObjectId(_id),_invitation, (error: any, resultUpdate: any) => {
-	                                            if (error) {
-	                                                console.log("error===2");
-	                                            }
-	                                        });
-                                    	}
-                                    }
-                                });
-								res.send({
-                                    userId: result._id,
-                                    email: user.email,
-                                    firstName: userdata.firstName,
-                                    lastName: userdata.lastName,
-                                    createdOn: result.createdOn,
-                                    token: token
-
-                                });
-                            }
-                        }
-                    });
-                }
-            });
-        } catch (e) {
-            console.log(e);
-            res.send({
-                "error": "error in your request"
-            });
-
-        }
-
-    }*/
-    authenticate(req: express.Request, res: express.Response): void {
-        try {
-        	var _user: IUserModel = <IUserModel>req.body;
-            var _userBusiness = new UserBusiness();
-        	var _employeeBusiness = new EmployeeBusiness();
-			var _employeeBusinessDataValue = [
-			{
-                $lookup:                        // For fetch data from another model as well ... join
-                {
-                    from: "employees",
-                    localField: "_id",   // this is "companyId" which is in  instalment business model for join with "companies" model.
-                    foreignField: "userId",        // this is "_id" in "companies" model .
-                    as: "employees"               // used as alias.
-                }
-            },
-            {
-				$unwind: "$employees"
-			},
-         	{
-                $project:                       // For sepecific field that we want to fetch
-                {	
-						"email": 1,
-						"firstName":1,
-						"lastName": 1,
-						"createdOn": 1,
-						"status":1,
-						"roles": 1,
-						"password":1,
-						"linkdinId":1,
-						"employees.resume":1,
-						"employees.profilePic":1,
-						"companyName":1,
-						"token": 1,
-						"paidOn":1,
-						"hrpaidOn":1,
-                }
-            },
-            {
-				$match: {
-					email: {$regex : "^" + (_user.email.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')) + "$", $options: "i"}
-        		}
-        	}
-            ];
-            _userBusiness.aggregate(_employeeBusinessDataValue, (error, result) => {
-				if(error) {
-					console.log(error);
-					res.send({"error": error});
-				}
-				else {
-					
-					if(result.length>0){
-						var returnObj = result.map(function(obj: any): any {
-						
-						//console.log("obj.linkdinId===",obj);
-						
-						if(_user.password==obj.linkdinId && _user.email ==obj.email){
-						   if(_user){
-						   
-					        	var _userBusinessUpdate = new UserBusiness();
-								var _id: string = obj._id.toString();
-								var token = _userBusiness.createToken(obj);	
-								_user.token=token;
-								_user.lastLogin = new Date();
-								
-					           _userBusinessUpdate.update(_id, _user, (error, resultUpdate) => {
-									if(error){
-										res.send({"error": "error", "message": error});//res.status(401).send({"error": "Authentication error"});
-									} 
-									else{
-										console.log("fgfgfgf");
-										if(obj.employees.resume){
-											var isresume = "true";
-										} 
-										else {
-										 var isresume = "false"; 
-										}
-										res.send({
-											userId: obj._id,
-											email: obj.email,
-											firstName: obj.firstName,
-											lastName: obj.lastName,
-											createdOn: obj.createdOn,
-											roles: obj.roles,
-											token: token,
-											paidOn:obj.paidOn,
-											hrpaidOn:obj.hrpaidOn,
-											companyName: obj.companyName,
-											resume:isresume,
-											profilePic:obj.employees.profilePic
-										});
-									}
-								});
-					        }else{
-					        	return res.status(401).send({"error": "The username or password don't match"});
-							}
-						}
-						else if(obj && obj.password && obj.password==_user.password  ) {
-						 	 	
-						 	 	if(obj.status!='unverified') {
-						 		var _employeeBusiness = new EmployeeBusiness();
-								_employeeBusiness.findById(obj._id, (error:any, resultEmployee:any) => {
-									if(error) res.send({"error": "error", "message": "Authentication error"});
-									else {
-										var token = _userBusiness.createToken(result);
-										var _updateData: IUserModel = <IUserModel>req.body;
-										_updateData.lastLogin = new Date();
-										_updateData.token = token;
-										_updateData.email=obj.email;
-										var _id: string = obj._id.toString();
-										var _userBusinessUpdate = new UserBusiness();
-										_userBusinessUpdate.update(_id, _updateData, (error, resultUpdate) => {
-											if(error) res.send({"error": "error", "message": error});//res.status(401).send({"error": "Authentication error"});
-											else {
-												if(obj.employees.resume){
-													var isresume = "true";
-												} 
-												else {
-												 var isresume = "false"; 
-												}
-												res.send({
-													userId: obj._id,
-													email: obj.email,
-													firstName: obj.firstName,
-													lastName: obj.lastName,
-													createdOn: obj.createdOn,
-													roles: obj.roles,
-													token: token,
-													paidOn:obj.paidOn,
-													hrpaidOn:obj.hrpaidOn,
-													companyName: obj.companyName,
-													resume:isresume,
-													profilePic:obj.employees.profilePic
-												});
-											}
-										});
-									}
-									});
-								}else{
-									return res.status(401).send({"error": "This account is not active now, please contact Website Admin to activate the account."});
-								}
-						} 
-						else {
-							console.log("=====9999");
-							return res.status(401).send({"error": "The username or password don't match"});
-						}
-						});
-					}else{
-						return res.status(401).send({"error": "No registration is there with this Email Id."});
-					}
-	     		}
- 			});
-		}
-		catch (e)  {
-			console.log(e);
-			res.send({"error": "error in your request"});
-		}
-    }
+	
     
     contactForm(req: express.Request, res: express.Response): void { 
 		try {
@@ -2194,199 +1139,7 @@ updateCandidateAmount(req: express.Request, res: express.Response): void {
         }
     }
 
-    advanceSearch(req: express.Request, res: express.Response): void {
-    	try {
-    		console.log(req.body);
-            var name='';
-            var email='';
-            var previouscompanyName='';
-            var city='';
-            var phone='';
-            var companyName='';
-            var educational='';
-            var professionalExp='';
-            var totalreview='';
-         	var userreviews =[];
-            if(req.body.name){
-            	name=req.body.name.replace(/^"(.*)"$/,'$1').toLowerCase();
-            	var fullname = name.split(" ");
-            }
-            if(req.body.email){
-            	email=req.body.email;
-            }
-            if(req.body.totalreview && req.body.totalreview > 0){
-            	totalreview=req.body.totalreview;
-            }
-            if(req.body.phone){
-            	phone=req.body.phone;
-            }
-            if(req.body.previouscompanyName){
-            	previouscompanyName=req.body.previouscompanyName.replace(/^"(.*)"$/, '$1').toLowerCase();
-            }
-            if(req.body.companyName){
-            	companyName=req.body.companyName;
-            }
-            if(req.body.city){
-            	city=req.body.city.toLowerCase();
-            }
-            if(req.body.educational){
-            	educational=req.body.educational;
-            }
-            if(req.body.expernice){
-            	professionalExp=req.body.expernice;
-            }
-            var queryParams = [];
-            if(name) {
-            	queryParams.push({ $or: [{'firstName': fullname[0]}, {'lastName': fullname[1]}]});
-            }
-            if(email){
-            	queryParams.push({  'email': email});
-            }
-            if(phone){
-            	queryParams.push({  'employees.phone': phone});
-            }
-            if(previouscompanyName){
-            	queryParams.push({'employees.professionalSummary.company_name': previouscompanyName });             
-            }
-            if(companyName){
-            	queryParams.push(
-            		{$and: [
-                        {'employees.professionalSummary.currentlyEmployed':'Yes'},{'employees.professionalSummary.company_name': companyName}
-                    ] });  
-            }
-            if(city){
-            	queryParams.push({  'employees.currentaddress.0.city': city});
-            }
-            if(educational){
-            	queryParams.push({  'employees.education.0.degree_name': educational});
-            }
-            if(professionalExp){
-            	queryParams.push({  'employees.experienceYear': professionalExp});
-            }
-
-            if(totalreview){
-            	var review = totalreview.toString();
-            	queryParams.push({  'employees.totaloverall':review});
-            /*	
-            	var _postreviewBusiness = new PostreviewBusiness();
-            	_postreviewBusiness.retrieve("",(error, result) => {
-					if(error){
-					res.send({"error": "error"});
-					} else { 
-
-					console.log("result",result);	
-	
-					var totalstar = 0;
-					result.forEach(function(item,i){
-						if(item.postreviews.length>0){
-							var b =0;
-							for(var a=0; a<item.postreviews.length;a++){
-								if(item.postreviews[a].status=="verified"){
-								totalstar =parseFloat(item.postreviews[a].overall)+totalstar;
-								b++;
-								}
-
-							let multi = b*5;
-							let data = (totalstar*5)/ multi;
-							console.log("texttotal",data);
-							result[i]['overall'] = data;
-							userreviews = result
-							}
-
-						}
-					});
-
-				}
-				});
-            	*/
-			}
-
-	        console.log("queryParams-----",queryParams);
-            var _userBusiness = new UserBusiness();
-				var employeeAggregate = [
-	            {
-	                $lookup:                       
-	                {
-	                    from: "employees",
-	                    localField: "_id",   
-	                    foreignField: "userId",        
-	                    as: "employees"               
-	                }
-	            },
-	            {
-	          	  	$unwind:"$employees"
-	            
-	          	},
-	            {
-	                $project:                       
-	                {    
-	                    "_id":1,
-	                    "firstName":1,
-	                    "lastName":1,
-	                    "middleName":1,
-	                    "email":1,
-	                    "roles":1,
-	                    "status":1,
-	                    "companyName":1,
-	                    "previouscompanyName":1,
-	                    "employees.strengths":1,
-	                    "employees.improvements":1,
-	                    "employees.summary":1,
-	                    "employees.profilePic":1,
-	                    "employees.education":1,
-	                    "employees.alternateEmail":1,
-	                    "employees.dateofBirth":1,
-	                    "employees.currentSalary":1,
-	                    "employees.gender":1,
-	                    "employees.expectedSalary":1,
-	                    "employees.currentlyEmployed":1,
-	                    "employees.openRelocation":1,
-	                    "employees.openTravel":1,
-	                    "employees.sponsorshipRequired":1,
-	                    "employees.authorization":1,
-	                    "employees.felony":1,
-	                    "employees.phone":1,
-	                    "employees.alternateMobile_number":1,
-	                    "employees.currentaddress":1,
-	                    "employees.permanentaddress":1,
-	                    "employees.defoultsocial_media":1,
-	                    "employees.skills":1,
-	                    "employees.experienceYear":1,
-	                    "employees.experienceMonth":1,
-	                    "employees.social_media":1,
-	                    "employees.professionalSummary":1,
-	                    "employees.totaloverall":1,
-	                    "employees.designation":1  
-	                    
-				    }
-	            },
-	            {
-	                $match:
-	                {
-	                    $and: queryParams
-	                }
-	            }
-	        ]
-
-	        _userBusiness.aggregate( employeeAggregate, (error:any, result:any) => {
-	       		if(error) {
-					res.send({"error": error});
-				}
-				else {
-					console.log("result====",result);
-				
-					console.log("result====",result);
-					res.send({"result": result});  
-	    		}
-			});
-		} catch (e) {
-            console.log(e);
-            res.send({
-                "error": "error in your request"
-            });
-        }
-	}
-	
+   
 	verifytoken(req: express.Request, res: express.Response): void {
 		var _userBusiness = new UserBusiness();
 		_userBusiness.verifyToken(req, res, (companyUserData) => {
@@ -2575,178 +1328,7 @@ updateCandidateAmount(req: express.Request, res: express.Response): void {
 
 
 
-	/* get saved candidates */
-	getSavedCandidates(req: express.Request, res: express.Response): void {
-    	try {
-			var _userBusiness = new UserBusiness();
-            _userBusiness.verifyToken(req, res, (userData) => {
-            	var _candidates: ISavedCandidatesModel = <ISavedCandidatesModel>req.body;
-				var _savedCandidateBusiness = new SavedCandidateBusiness();
-				var _postreviewBusiness = new PostreviewBusiness();
-		        var candidatesAggregate = [
-	            {
-	                $lookup:                       
-	                {
-	                    from: "users",
-	                    localField: "candidate_id",   
-	                    foreignField: "_id",        
-	                    as: "users"               
-	                }
-	            },
-	          	{
-	                $lookup:                       
-	                {
-	                    from: "employees",
-	                    localField: "candidate_id",   
-	                    foreignField: "userId",        
-	                    as: "employees"               
-	                }
-	            },
-	            {
-	                $lookup:                       
-	                {
-	                    from: "postreviews",
-	                    localField: "candidate_id",   
-	                    foreignField: "userId",        
-	                    as: "postreviews"               
-	                }
-	            },
-	            {
-	                $project:                       
-	                {    
-	                    "_id":1,
-	                    "user_id":1,
-	                    "downloaded":1,
-	                    "candidate_id":1,
-	                    "saved":1,
-	                    "createdOn":1,
-	                    "users._id":1,
-						"users.firstName":1,
-	                    "users.lastName":1,
-	                    "users.email":1,
-	                    "users.companyName":1,
-	                    "users.paidOn":1,
-	                    "users.previouscompanyName":1,
-	                    "employees.strengths":1,
-						"employees.improvements":1,
-						"employees.resume":1,
-						"employees.summary":1,
-						"employees.profilePic":1,
-						"employees.profileCover":1,
-						"employees.education":1,
-						"employees.alternateEmail":1,
-						"employees.dateofBirth":1,
-						"employees.currentSalary":1,
-						"employees.gender":1,
-						"employees.expectedSalary":1,
-						"employees.currentlyEmployed":1,
-						"employees.expectedsalaryflag":1,
-						"employees.currentsalaryflag":1,
-						"employees.openRelocation":1,
-						"employees.openTravel":1,
-						"employees.sponsorshipRequired":1,
-						"employees.authorization":1,
-						"employees.felony":1,
-						"employees.phone":1,
-						"employees.designation":1,
-						"employees.alternateMobile_number":1,
-						"employees.currentaddress":1,
-						"employees.permanentaddress":1,
-						"employees.defoultsocial_media":1,
-						"employees.skills":1,
-						"employees.experienceYear":1,
-						"employees.experienceMonth":1,
-						"employees.social_media":1,
-						"employees.professionalSummary":1,
-						"postreviews.overall":1,
-						"postreviews.status":1
-
-
-				    }
-	            },
-	            {
-	                $match:
-                    {
-                        $and: [
-							 { 'user_id': mongoose.Types.ObjectId(userData._id) }         
-						]
-					}	
-	            },
-	            
-	            { 
-	            	$sort : { createdOn : -1}
-
-	       		}
-	        ]
-	        _savedCandidateBusiness.aggregate( candidatesAggregate, (error:any, result:any) => {
-	       		if(error) {
-					res.send({"error": error});
-				}
-				else {
-					var returnObj = result.map(function(obj: any): any {
-					var datevalue = new moment(obj.createdOn, "YYYY-MM-DD");
-    				var createdOn = moment(datevalue).format("MM DD YYYY");
-    				var expernice=0;
-    				if(obj.employees[0] && obj.employees[0].experienceYear){
-    					expernice = obj.employees[0] && obj.employees[0].experienceYear
-   					}
-   					return {
-				        id: obj._id,
-				        saved:obj.saved,
-				        downloaded:obj.downloaded,
-				        candidate_id:obj.candidate_id,
-				        createdOn:createdOn,
-				        userId:obj.users[0] && obj.users[0]._id,
-				        firstName:obj.users[0] && obj.users[0].firstName,
-				        lastName:obj.users[0] && obj.users[0].lastName,
-				        email:obj.users[0] && obj.users[0].email,
-				        paidOn:obj.users[0] && obj.users[0].paidOn,
-				        companyName:obj.users[0] && obj.users[0].companyName,
-				        previouscompanyName:obj.users[0] && obj.users[0].previouscompanyName,
-						alternateEmail: obj.employees[0] && obj.employees[0].alternateEmail,
-						summary: obj.employees[0] && obj.employees[0].summary,
-						profilePic: obj.employees[0] && obj.employees[0].profilePic,
-						profileCover: obj.employees[0] && obj.employees[0].profileCover,
-						education: obj.employees[0] && obj.employees[0].education,
-						dateofBirth: obj.employees[0] && obj.employees[0].dateofBirth,
-						currentSalary: obj.employees[0] && obj.employees[0].currentSalary,
-						expectedSalary: obj.employees[0]&& obj.employees[0].expectedSalary,
-						currentlyEmployed:obj.employees[0] && obj.employees[0].currentlyEmployed,
-						openRelocation:obj.employees[0] && obj.employees[0].openRelocation,
-						openTravel:obj.employees[0] && obj.employees[0].openTravel,
-						sponsorshipRequired:obj.employees[0] && obj.employees[0].sponsorshipRequired,
-						felony:obj.employees[0] && obj.employees[0].felony,
-						phone:obj.employees[0] && obj.employees[0].phone,
-						gender: obj.employees[0] && obj.employees[0].gender,
-						resume:obj.employees[0] && obj.employees[0].resume,
-						alternateMobile_number:obj.employees[0] && obj.employees[0].alternateMobile_number,
-						currentaddress:obj.employees[0] && obj.employees[0].currentaddress,
-						permanentaddress:obj.employees[0] && obj.employees[0].permanentaddress,
-						defoultsocial_media:obj.employees[0] && obj.employees[0].defoultsocial_media,
-						skills:obj.employees[0] && obj.employees[0].skills,
-						authorization:obj.employees[0] && obj.employees[0].authorization,
-						experienceMonth:obj.employees[0] && obj.employees[0].experienceMonth,
-						experienceYear:expernice,
-						social_media:obj.employees[0] && obj.employees[0].social_media,
-						professionalSummary:obj.employees[0] && obj.employees[0].professionalSummary,
-						strengths:obj.employees[0] && obj.employees[0].strengths,
-						improvements:obj.employees[0] && obj.employees[0].improvements,
-						overall:obj.postreviews,
-						designation:obj.employees[0] && obj.employees[0].designation
-						
-					}
-		   		}); 
-				//	console.log("returnObj====",returnObj);
-				res.send({"result": returnObj}); 
-	    		}
-			});
-		  });
-        }
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
-		}
-    }
+	
 
 	
 }

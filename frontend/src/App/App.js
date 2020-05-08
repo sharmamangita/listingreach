@@ -37,6 +37,7 @@ import { ContentPage } from './../features/admin/ContentPage';
 import { AdminChangePasswordPage } from './../features/admin/AdminChangePasswordPage';
 import AdminLayout from '../layouts/AdminLayout';   
 import Footer from '../components/Footer';
+import { AgentDashboardPage } from '../features/AgentDashboardPage';
 
 
 
@@ -87,6 +88,7 @@ class App extends React.Component {
           <Route path ="/LegalPage" component={LegalPage} />
           <Route path ="/PostreviewsPage" component={PostreviewsPage} />
           <Route path ="/PricingPage" component={PricingPage} /> 
+		  <Route path ="/AgentDashboardPage" component={AgentDashboardPage} /> 
            
           <Route path ="/postresume" component={PostresumePage} />
           </PublicLayout>
@@ -118,6 +120,7 @@ class App extends React.Component {
           <Route path ="/postresume" component={PostresumePage} />
           <Route path ="/profilePage" component={ProfilePage} />
           <Route path ="/PostreviewsPage" component={PostreviewsPage} />
+		  <Route path ="/AgentDashboardPage" component={AgentDashboardPage} />
           </PublicLayout >
         }
       }
@@ -139,7 +142,8 @@ class App extends React.Component {
         <Route path ="/postresume" component={PostresumePage} />
         <Route path ="/PostreviewsPage" component={PostreviewsPage} />
         <Route path ="/profilePage" component={ProfilePage} />
-        <Route path="/forgotpassword" component={ForgotPasswordPage} />
+        <Route path="/forgotpassword" component={ForgotPasswordPage} /> 
+		<Route path="/AgentDashboardPage" component={AgentDashboardPage} />
             
         </PublicLayout >
       }

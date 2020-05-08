@@ -30,16 +30,7 @@ class Common {
         tls: {
             rejectUnauthorized: false
         }
-		/*pool: true,
-		host: "smtp.inteleagent.io",
-		port: 587,
-		auth: {
-			user: "info@inteleagent.io",
-			pass: "Stefano84"
-		},
-		tls: {
-			rejectUnauthorized: false
-		}*/
+		
 	};
 	
 	/*static MAIL_CONFIG: any = {
@@ -1276,7 +1267,7 @@ static EMAIL_FOR_NEW_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
 	<h2>You've been invited!</h2>
 	<p></p>
 	<p>Hi #first_lastname#,</p>
-		<p>#loginfullname# invite you on employeemirror for post reviews.</p>
+		<p>#loginfullname# invite you on listingreach for post reviews.</p>
 		These are your secret weapons:
 		<ul>
 			<li>Your Account Email: #email#</li>
@@ -1291,7 +1282,7 @@ static EMAIL_FOR_LOGIN_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
 	<h2>You've been invited!</h2>
 	<p></p>
 	<p>Hi #first_lastname#,</p>
-	<p>#loginfullname# invite you on employeemirror for post reviews.</p>	
+	<p>#loginfullname# invite you on listingreach for post reviews.</p>	
 		These are your secret weapons:
 		<ul>
 			<li>Your Account Email: #email#</li>
@@ -1314,7 +1305,7 @@ static CONTACT_FORM:string = Common.EMAIL_TEMPLATE_HEADER+`
   <li>Message: #message#</li>
   <li>Date:#date#</li>
 </ul>
-<p>Thank you for using EmployeeMirror</p>      
+<p>Thank you for using listingreach</p>      
 `+Common.EMAIL_TEMPLATE_FOOTER;
 
 

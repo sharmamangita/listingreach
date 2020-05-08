@@ -92,12 +92,12 @@ class RegisterPage extends React.Component {
 
     handleSubmit(event) {
     	event.preventDefault();
-        console.log("th=====");
+        console.log("th=====",this.state);
     	this.setState({ submitted: true });
-        if (this.state.user.confirmpassword && this.state.user.confirmpassword == this.state.user.password) {
+        if (this.state.user.confirmpassword && this.state.user.confirmpassword != this.state.user.password) {
             this.setState((prevState, props) => {
               return { 
-                showerror: true 
+                showerror: false 
               }
             })
         }
@@ -131,7 +131,7 @@ class RegisterPage extends React.Component {
         }
         var  notmatached='';
         if(this.state.showerror==false){
-         notmatached = (<div className="help-block red">Password not matcehed</div>);
+         notmatached = (<div className="help-block red">Password not matched</div>);
         } 
         const { registering  } = this.props;
         const { user, submitted } = this.state;
@@ -228,12 +228,15 @@ class RegisterPage extends React.Component {
                                                 </div>
                                             </div>
                                         </div>
+                                        
                                         <div className="col-md-12 mb-3">
-                                            <div className="form-group">
-                                              <input type="password" name="password" className="form-control form-control-lg form-control-a" placeholder="Password" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
-                                              <div className="validation"></div>
+                                            <div className={'form-group mb-3' + (submitted && !user.password ? ' has-error' : '')}>
+                                            <input type="password" className="form-control form-control-lg form-control-a" name="password" minLength={6}  value={user.password} onChange={this.handleChange} placeholder="Password"/>
+                                            {submitted && !user.password &&
+                                                <div className="help-block red">Password Number is required</div>
+                                            }
                                             </div>
-                                        </div>
+                                        </div> 
                                         <div className="col-md-12 mb-3">
                                             
                                             <div className={'form-group mb-3' + (submitted && !user.confirmpassword ? ' has-error' : '')}>

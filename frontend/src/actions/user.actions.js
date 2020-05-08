@@ -9,27 +9,39 @@ export const userActions = {
     logout,
     register,
     update,
-    updateCandidateAmount,
+  
     getVerification,
     getAll,
     getById,
     updatepassword,
     contactForm,
     deleteprofilepic,
-    sendinvite,
+    
     deleteprofileCover,
     delete: _delete,
-    updateHr,
-    savedCandidates,
-    getSavedCandidates,
-    getdownloadedby,
-	getapagecontent,
-    postreveiws,
     getReferences,
-    updateStatus,
-    viewdCandidates
+    updateStatus
 };
-
+/* Get References */
+function getReferences(userid){
+        console.log("userdata");
+        return dispatch => {
+        dispatch(request(userid));
+        userService.getReferences(userid)
+            .then(
+                users => { 
+                    dispatch(success(users)); 
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                }
+            );
+    };
+    function request(users) { return { type: userConstants.GETALL_REQUEST, users } }
+    function success(users) { return { type: userConstants.GETALL_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.GETAL_FAILURE, error } }
+}
+/* end References */
 /* 
 * this logs in the user and gets the user's details including the menus to be displayed
 */
@@ -110,26 +122,7 @@ function contactForm(fullname,email,phone,message){
  function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }	
 }
 
-/* Get References */
-function getReferences(userid){
-        console.log("userdata");
-        return dispatch => {
-        dispatch(request(userid));
-        userService.getReferences(userid)
-            .then(
-                users => { 
-                    dispatch(success(users)); 
-                },
-                error => {
-                    dispatch(failure(error.toString()));
-                }
-            );
-    };
-    function request(users) { return { type: userConstants.GETALL_REQUEST, users } }
-    function success(users) { return { type: userConstants.GETALL_SUCCESS, users } }
-    function failure(error) { return { type: userConstants.GETAL_FAILURE, error } }
-}
-/* end References */
+
 
 /*forgot password*/
 function forgotpassword(email) {
@@ -185,55 +178,8 @@ function register(user) {
     function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
 }
 
-/* post reveiws */
-function postreveiws(user){
-    return dispatch => {
-            dispatch(request(user));
-            userService.postreveiws(user)
-            .then(
-                user => { 
-                console.log("retunndata",user);
-                dispatch(success(user));
-                dispatch(alertActions.success('Review posted successfully.'));
-                window.scrollTo(0,0);
-           
-            },
-            error => {
-                dispatch(failure(error.toString()));
-                dispatch(alertActions.error('Review not posted, please check details.'));
-            }
-        );
-    };
-    function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
-    function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
-    function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
-}
-/*send invite */
 
-function sendinvite(fullname,email,userid,logInFullname) {
-    return dispatch => {
-        dispatch(request(fullname,email,userid,logInFullname));
-        userService.sendinvite(fullname,email,userid,logInFullname)
-            .then(
-                user => { 
-                    dispatch(success());
-                    if(user.error){
-                        dispatch(alertActions.error('This email address is alreday added, please try with another email.'));
-                    } else {
-                        dispatch(alertActions.success('Invitation has been sent successfully.'));
-                    }
-				}, 
-                error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error('Invitation not send.'));
-                }
-            );
-    };
 
-    function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
-    function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
-    function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
-	}
 	
 /*update password */
 function updatepassword(user,currentpassword,newspassword) {
@@ -286,27 +232,7 @@ function update(user,employee) {
     function failure(error) { return { type: userConstants.GETAL_FAILURE, error } }
 }
 
-/* Hr update */
-function updateHr(user) {
-    return dispatch => {
-        dispatch(request(user));
-        userService.updateHr(user)
-            .then(
-                users => { 
-                    dispatch(success(users));
-                    dispatch(alertActions.success('Updated successfully.'));
-                   
-                },
-                error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error('Not updated, please try again.'));
-                }
-            );
-    };
-    function request(users) { return { type: userConstants.GETALL_REQUEST, users } }
-    function success(users) { return { type: userConstants.UPDATE_SUCCESS, users } }
-    function failure(error) { return { type: userConstants.GETAL_FAILURE, error } }
-}
+
 
 /* update status */
 function updateStatus(status) {
@@ -330,134 +256,6 @@ function updateStatus(status) {
 }
 
 /* End update status */
-
-/*updateCandidateAmount*/
-function updateCandidateAmount(user){
-   return dispatch => {
-        dispatch(request(user));
-        userService.updateCandidateAmount(user)
-            .then(
-                savedval => { 
-                    if(savedval.error){
-                        history.push('/login');
-                        window.scrollTo(0,0);
-                       // dispatch(alertActions.success(''));
-                    }else{
-                        dispatch(success(savedval));
-                        history.push('/profilePage');
-                        dispatch(alertActions.success('Payment done successfully.'));
-                        window.scrollTo(0,0);
-                    }
-                },
-                error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error('Payment not done, please try again.'));
-                }
-            );
-    };
-    function request(savedval) { return { type: userConstants.GETALL_REQUEST, savedval } }
-    function success(savedval) { return { type: userConstants.UPDATESAVED_SUCCESS, savedval } }
-    function failure(error) { return { type: userConstants.GETAL_FAILURE, error } }
- 
-}
-
-/* viewdCandidates  */
-function viewdCandidates(user) {
-    return dispatch => {
-        dispatch(request(user));
-        userService.viewdCandidates(user)
-            .then(
-                savedval => { 
-                    if(savedval.error){
-                        history.push('/login');
-                        window.scrollTo(0,0);
-                    }else{
-                        dispatch(success(savedval));
-                        history.push('/profilePage?id='+user.savedcandidates);
-                    }
-                },
-                error => {
-                    if(error && typeof error !=="undefined"){
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error('Not saved.'));
-                    }  
-                }
-            );
-    };
-    function request(savedval) { return { type: userConstants.GETALL_REQUEST, savedval } }
-    function success(savedval) { return { type: userConstants.UPDATESAVED_SUCCESS, savedval } }
-    function failure(error) { return { type: userConstants.GETAL_FAILURE, error } }
-}
-
-/* SavedCandidates  */
-function savedCandidates(user) {
-    return dispatch => {
-        dispatch(request(user));
-        console.log("user====",user);
-        userService.savedCandidates(user)
-            .then(
-                savedval => { 
-                    if(savedval.error){
-                        history.push('/login');
-                        window.scrollTo(0,0);
-                        dispatch(alertActions.success('Please login/signup first to download candidates profile.'));
-                    }else{
-                        dispatch(success(savedval));
-                        if(user.flag=='saved'){
-                            history.push('/profilePage?id='+user.savedcandidates);
-                            dispatch(alertActions.success('Added in your Saved list.'));
-                 
-                        
-                        }else{
-                            setTimeout(() => {
-                                window.open(`${config.uploadapiUrl}/uploads/user${user.id}.pdf`, '_blank', 'location=no,height=700,width=850,scrollbars=yes,status=yes');
-                            }, 2000);
-                            history.push('/profilePage?id='+user.id);
-                        
-                        }
-                        dispatch(alertActions.success('Added in your Saved list.'));
-                    }
-                },
-                error => {
-                    dispatch(failure(error.toString()));
-                    dispatch(alertActions.error('Not saved.'));
-                }
-            );
-    };
-    function request(savedval) { return { type: userConstants.GETALL_REQUEST, savedval } }
-    function success(savedval) { return { type: userConstants.UPDATESAVED_SUCCESS, savedval } }
-    function failure(error) { return { type: userConstants.GETAL_FAILURE, error } }
-}
-
-/* get saved candidates*/
-function getSavedCandidates() {
-    return dispatch => {
-        dispatch(request());
-        userService.getSavedCandidates()
-            .then(
-                users => dispatch(success(users)),
-                error => dispatch(failure(error.toString()))
-            );
-    };
-    function request() { return { type: userConstants.GETALL_REQUEST } }
-    function success(users) { return { type: userConstants.GETSAVEDALL_SUCCESS, users } }
-    function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
-}
-
-/* get saved candidates*/
-function getdownloadedby(id) {
-    return dispatch => {
-        dispatch(request());
-        userService.getdownloadedby(id)
-            .then(
-                downloaded => dispatch(success(downloaded)),
-                error => dispatch(failure(error.toString()))
-            );
-    };
-    function request() { return { type: userConstants.GETDOWNLOADEDALL_REQUEST } }
-    function success(downloaded) { return { type: userConstants.GETDOWNLOADEDALL_SUCCESS, downloaded } }
-    function failure(error) { return { type: userConstants.GETDOWNLOADEDALL_FAILURE, error } }
-}
 
 function getVerification(token) {
     return dispatch => {
@@ -580,20 +378,3 @@ function _delete(id,flag) {
     function failure(id, error) { return { type: userConstants.DELETE_FAILURE, id, error } }
 }
 
-
-
-
-function getapagecontent(page){
-     return dispatch => {
-        dispatch(request());
-        userService.getapagecontent(page)
-            .then(
-                users => dispatch(success(users)),
-                error => dispatch(failure(error.toString()))
-            );
-    };
-
-    function request() { return { type: userConstants.GETALL_REQUEST } }
-    function success(users) { return { type: userConstants.GETALL_SUCCESS, users } }
-    function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
-}

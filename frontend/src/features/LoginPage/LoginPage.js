@@ -18,7 +18,7 @@ class LoginPage extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.responseLinkedin = this.responseLinkedin.bind(this);
+      
     }
 
     componentDidMount(){
@@ -46,20 +46,7 @@ class LoginPage extends React.Component {
             window.scrollTo(0,0);
         }
     }
-    responseLinkedin(response) {
-        var thisobj=this;
-        OAuth.initialize('cBzDnFqPnj0K7v6yq4tHf2T1zNA');
-        OAuth.popup('linkedin2').then(linkedin => {
-        const {password } = this.state;
-        linkedin.me().then(data => {
-            thisobj.setState({ submitted: true });
-            const { dispatch } = thisobj.props;
-             if (data.email && data.id ) {
-               dispatch(userActions.login(data.email, data.id));
-            }
-        })
-        });
-    }
+    
     render() {
 
         const { loggingIn } = this.props;
@@ -72,61 +59,88 @@ class LoginPage extends React.Component {
         	this.alermsg = alert;
         }
         return (
-            <div className="site-section bg-light">
-            <div className="container">
-                   {this.alermsg.message &&
-            <div className={`alert ${this.alermsg.type}`}>{this.alermsg.message}</div>
-            }
-            <div className="text-center mb-5 section-heading">
-                    <h2>Login</h2>
-            </div>
-            <div className="row">
-                <div className="col-md-12 col-lg-2">
+            <div>
+            <section className="intro-single">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-12 col-lg-8">
+                            <div className="title-single-box">
+                                <h1 className="title-single">Login</h1> 
+                                <span className="color-text-a"> Agents Brokers can login your account.</span>   
+                            </div>
+                        </div>
+                        <div className="col-md-12 col-lg-4">
+                            <nav aria-label="breadcrumb" className="breadcrumb-box d-flex justify-content-lg-end">
+                                <ol className="breadcrumb">
+                                  <li className="breadcrumb-item">
+                                    <a href="index.html">Home</a>
+                                  </li>
+                                  <li className="breadcrumb-item active" aria-current="page">
+                                    Login
+                                  </li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
                 </div>
-                <div className="col-md-12 col-lg-4 mb-5">
-                    <form  className="p-5 bg-white" onSubmit={this.handleSubmit}>
-                        <div className="row form-group">
-                            <label className="font-weight-bold" htmlFor="fullname">Enter Username & Password</label>
+            </section>
+            <section className="contact">
+            <div className="container">
+
+              <div className="row">       
+                <div className="col-sm-12 section-t2">
+                  <div className="row">
+                    <div className="col-md-7">
+                      <form className="form-a contactForm"  onSubmit={this.handleSubmit}>
+                        <div id="sendmessage">Your message has been sent. Thank you!</div>
+                        <div id="errormessage">
+                        {this.alermsg.message &&
+                        <div className={`alert ${this.alermsg.type}`}>{this.alermsg.message}</div>
+                        }</div>
+                        <div className="row">
+                            
+                          <div className="col-md-12 mb-3">
                             <div className={'col-md-12 mb-3 mb-md-0' + (submitted && !email ? ' has-error' : '')}>
-                                <input type="text" className="form-control mb-3" name="email" value={email} onChange={this.handleChange} placeholder="Email Address"/>
+                              <input type="text" className="form-control form-control-lg form-control-a" name="email" value={email} onChange={this.handleChange} placeholder="Email Address"/>
                                 {submitted && !email &&
                                     <div className="help-block red">Email is required</div>
                                 }
-                                 <input type="password" className="form-control mb-3" name="password" value={password} onChange={this.handleChange} placeholder="Password"/>
+                            </div>
+                          </div>
+                          
+                          <div className="col-md-12 mb-3">
+                            <div className="form-group">
+                                <input type="password" className="form-control form-control-lg form-control-a" name="password" value={password} onChange={this.handleChange} placeholder="Password"/>
                                 {submitted && !password &&
                                     <div className="help-block red">Password is required</div>
                                 }
                             </div>
-                        </div>
-                        <div className="row form-group">
-                            <div className="col-md-4">
-                                <input type="submit" value="Login" className="btn btn-primary pill px-4 py-2" />
+                          </div>
+                         
+                          <div className="col-md-12 mb-3">
+                            <div className="form-group">
+                                <label className="check">Keep me signed in
+                                    <input type="checkbox" />
+                                    <span className="checkmark"></span>
+                                </label>       
                             </div>
-                            <div className="col-md-8 text-right">
-                                <span className="font-13"><Link to="/forgotpassword"> Forgot Your Password?</Link></span>
-                            </div>
+                          </div>
+                          <div className="col-md-12">
+                            <button type="submit" className="btn btn-a  mb-3">Login</button>
+                            <br></br>
+                            <a href="forgot.html">Forgot Password?</a>
+                          </div>
                         </div>
-                        <div className="row form-group">
-                            <div className="col-md-12">
-                                <span>Don't have an account yet?<br></br> <Link to="/register">Sign Up</Link></span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div className="col-lg-4">
-                    <div className="p-4 mb-3 bg-white">
-                        <h3 className="h5 text-black mb-3">OR</h3>
-                        <p className="mb-0 font-weight-bold">Use your existing online profile</p>
-                        <a id="linkedin-button"  onClick={this.responseLinkedin.bind(this)}>
-                        <img src="/public/assets/images/Linkedin-customized-button.png" alt="" className="img-fluid"  style={registerStyle} />
-                        </a>
+                      </form>
+                      
                     </div>
+                   
+                  </div>
                 </div>
-                <div className="col-md-12 col-lg-2">
-                </div>
+              </div>
             </div>
-            </div>
-        </div>
+          </section>
+          </div>
         );
     }
 }
