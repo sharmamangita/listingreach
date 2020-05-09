@@ -65,6 +65,7 @@ class UserController implements IBaseController <UserBusiness> {
            
 			user.password = req.body.user.password;
             user.firstName=req.body.user.firstName.toLowerCase();
+            user.roles='users';
             user.lastName=req.body.user.lastName.toLowerCase();
             user.paidOn= false;
             var userBusiness = new UserBusiness();
@@ -107,7 +108,7 @@ class UserController implements IBaseController <UserBusiness> {
             _userBusiness.findOne({email: _user.email}, (error, result) => {
                 if(error) res.send({"error": "error"});
                 else {
-                	console.log("result===",result.password);
+                	console.log("result===",result.roles);
                 	console.log("_user===",_user.password);
 					if(result && result.password && result.password==_user.password) {
 						/*if(!result.isActive) {
@@ -122,12 +123,14 @@ class UserController implements IBaseController <UserBusiness> {
 							_userBusinessUpdate.update(_id, _updateData, (error, resultUpdate) => {
 								if(error) res.send({"error": "error", "message": "Authentication error"});//res.status(401).send({"error": "Authentication error"});
 								else {
+									console.log("here i am login ")
 									res.send({
 										userId: result._id,
 										email: result.email,
 										firstName: result.firstName,
 										lastName: result.lastName,
-										token: token
+										token: token,
+										roles:result.roles
 									});
 								}
 							});

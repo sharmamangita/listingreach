@@ -34,7 +34,10 @@ class UserSchema {
                 type: String,
                 required: true
             },
-           
+           roles:{
+                type: String,
+                required: true
+            },
 			lastLogin:{
                 type: Date
 			},

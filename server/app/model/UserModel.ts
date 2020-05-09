@@ -39,7 +39,10 @@ class UserModel {
 	get lastLogin (): Date {
         return this._userModel.lastLogin;
     }
-    
+     get roles (): string {
+        return this._userModel.roles;
+    }
+
 	get token (): string {
         return this._userModel.token;
     }

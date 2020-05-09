@@ -1317,7 +1317,7 @@ static EMAIL_TEMPLATE_RESET_USER_PASSWORD: string = Common.EMAIL_TEMPLATE_HEADER
   <li>Temporary Password: #password#</li>
 </ul>
 <p>To change your temporary password, please go to Settings &gt; My Account and choose a new password that is easy to remember.</p>
-<p>Thank you for using Employee Mirrior.</p>  
+<p>Thank you for using Listingreach.</p>  
 <p><a href="`+Common.SITE_URL+`/login">Login Now</a> to see the application.</p>          
 `+Common.EMAIL_TEMPLATE_FOOTER;
 
@@ -1329,11 +1329,11 @@ static EMAIL_TEMPLATE_RESET_ADMIN_PASSWORD: string = Common.EMAIL_TEMPLATE_HEADE
   <li>Temporary Password: #password#</li>
 </ul>
 <p>To change your temporary password, please go to Settings &gt; My Account and choose a new password that is easy to remember.</p>
-<p>Thank you for using Employee Mirrior.</p>  
+<p>Thank you for using Listingreach.</p>  
 <p><a href="`+Common.SITE_URL+`/#/admin/login">Admin Login Now</a> to see the application.</p>          
 `+Common.EMAIL_TEMPLATE_FOOTER;
 static SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER: string = Common.EMAIL_TEMPLATE_HEADER+`
-    <h2>Congrats for setting up your account on Employee Mirrior</h2><br/><br/>
+    <h2>Congrats for setting up your account on Listingreach</h2><br/><br/>
     Here are your login details:  <br/>
     <b></b><br/>
     <ul>
@@ -1344,7 +1344,7 @@ static SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER: string = Common.EMAIL_TEMPLATE_
     <b></b><br/>
     For any questions, please contact us  at <br/><br/>
     Best Regards,<br/>
-    The Employee Mirrior Team
+    The Listingreach Team
 <p></p>
 <p></p>
 <p><a href="`+Common.SITE_URL+`/login">Click here to login to your account.</a></p>

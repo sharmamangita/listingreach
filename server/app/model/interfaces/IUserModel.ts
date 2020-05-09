@@ -12,6 +12,7 @@ interface IUserModel extends mongoose.Document {
     email : string,
     password: string,
     userName: string,
+ 	roles: string,
     status:string,
     lastLogin: Date,
     token: string,
