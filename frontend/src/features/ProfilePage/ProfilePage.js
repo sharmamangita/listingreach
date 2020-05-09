@@ -3,19 +3,10 @@ import config from 'config';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions } from '../../actions';
-/*import {Modal,Button} from 'react-bootstrap';*/
-import ProfileModal from '../../components/ProfileModal';
-import ViewedProfile from '../../components/ViewedProfile';
-import EducationModal from '../../components/EducationModal';
-import ProfesionalModal from '../../components/ProfesionalModal';
-import ImprovementsModal from '../../components/ImprovementsModal';
+
+
 import ProfileimageModal from '../../components/ProfileimageModal';
-import ProfilecoverModal from '../../components/ProfilecoverModal';
-import StrengthsModal from '../../components/StrengthsModal';
-import KeywordskillModal from '../../components/KeywordskillModal'
-import CommonDownload from '../../components/CommonDownload'
-import StarRatings from 'react-star-ratings';
-import StarRatingComponent from 'react-star-rating-component';
+
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 const Entities = require('html-entities').XmlEntities;
@@ -28,6 +19,7 @@ import queryString from 'query-string';
 
 import PaypalExpressBtn from 'react-paypal-express-checkout';
 import PaypalButton from '../../components/PaypalButton';
+import ListingSubmenu from '../../components/ListingSubmenu';
 var QRCode = require('qrcode.react');
 import { Button,Modal } from 'react-bootstrap';
 import { Alert } from 'reactstrap';
@@ -35,205 +27,188 @@ import { Alert } from 'reactstrap';
 class ProfilePage extends React.Component {
 constructor(props) {
   super(props);
-  let id='';
-    this.dymskill = {};
-  if(this.props.user){
-     id= this.props.user.userId; 
-  }
-  
-  const { dispatch } = this.props;
-  const values = queryString.parse(this.props.location.search);
-  this.candidateId='';
-  if(!$.isEmptyObject(values ) ){
-     id=values.id;
-     this.candidateId=values.id;
-  }
-
-  var user  = JSON.parse(localStorage.getItem('user'));
-  this.planPrice=''; 
-  this.social_mediaicon=[];
-  this.candidatesplanPrice='';
-  this.props.dispatch(userActions.getById(id));
-  
-  this.props.dispatch(userActions.getReferences(id));  
-  this.navId = '';
-  this.dispatchval = ({
-      tagName : 'span',
-      className : '',
-      children : null,
-      dispatch :this.props
-  });
-  this.state = {
-    appdis:false,
-    revupdate:true,
-    visible : false,
-    heratbeat:false,
-    showconfirm:false,
-    showEduItem:3,
-    showKeyskillItem:3,
-    showKeyskillDes:4,
-    user: this.props.user,
-    showProItem:3, 
-    expanded:false,
-    expandedrew:false,
-    expandededu:false,
-    expandedskill:false,
-    showMore:'none',   
-    showprofile:'',  
-    profile:this.props.profile,
-    review:this.props.review,
-    downloaded:this.props.downloaded,
-    show: false,
-    showeducation:false,
-    showstrengths:false,
-    showkeywordskill:false,
-    showprofesional:false,
-    showimprovements:false,
-    showprofileimage:false,
-    showprofilecover:false,
-    selectedMenu:'',
-    reviewref:this.props.items,
-    showsharelinks:false,
-    showrewitem:3,
-    statusid:'',
-    user:  Object.assign({
-        firstName: '',
-        lastName: '',
-        email: '',
-        companyName:'',
-        fullName:'',
-        savedcandidates:'',
-        flag:''
-      },user)
-  }; 
-  
- // this.updatetotalreview = this.updatetotalreview.bind(this);
-  
-  //this.skillsreviews = this.skillsreviews.bind(this);
- if(localStorage.getItem('srcid') && localStorage.getItem('srcid') !== "undefined"){
-   localStorage.removeItem("srcid"); 
- }
+ 
 }
 
 
 
  componentDidMount(){
-  if(this.candidateId){
-    const {user} = this.state;
-    const { dispatch } = this.props;
-   
-  }
+  
  }
 
-  
-  handlesharelinks(e){
-  	this.setState({
-  	showsharelinks: !this.state.showsharelinks
-  	})
-  }
-
-  
-
-  saveProfiles(flag,paidOn,id){
-    const {user} = this.state;
-    const { dispatch } = this.props;
-    user.savedcandidates=this.candidateId;
-    user.flag=flag;
-    this.setState({visible:true,heratbeat:true});
-    this.onShowAlert();
-    if(flag=='downloaded'){
-      setTimeout(() => {
-        setTimeout(() => {
-          window.open(`${config.uploadapiUrl}/uploads/user${this.candidateId}.pdf`, '_blank', 'location=no,height=700,width=850,scrollbars=yes,status=yes');
-          
-        }, 200);
-      }, 100);
-    }else{
-
-      dispatch(userActions.savedCandidates(user));
-    }
-  }
-  
-  onShowAlert(){
-    this.setState({visible:true},()=>{
-      window.setTimeout(()=>{
-        this.setState({visible:false})
-      },2000)
-    });
-  }
 
 render() {
-  const { profile,review,plan, user,downloaded,items,downloadHr} = this.props;
-  
- 
-  var profileuser='';
-  let profilepc ='/public/assets/images/dummy-profile-pic.png';
-  let address='';
-  var downloadedby='';
-  if(this.props.downloaded){
-    downloadedby=this.props.downloaded
-  }
-  var qrcode='';
-
-  if(this.props.profile && typeof this.props.profile !=="undefined"){
-
-    profileuser=this.props.profile;
-    var street='';
-    var building='';
-    var state='';
-    var country='';
-    var postcode='';
-    var socialmidea='';
-    qrcode=profileuser.firstName+profileuser.lastName+profileuser.email;
-    if(profileuser.defoultsocial_media){
-        socialmidea=profileuser.defoultsocial_media[0];
-    }
-    if(profileuser.currentaddress){
-        if(profileuser.currentaddress[0].street){
-           street = profileuser.currentaddress[0].street+', '
-        }
-        if(profileuser.currentaddress[0].building){
-           building = profileuser.currentaddress[0].building+', '
-        }
-        if(profileuser.currentaddress[0].state){
-           state = profileuser.currentaddress[0].state+', '
-        }
-        if(profileuser.currentaddress[0].country){
-           country = profileuser.currentaddress[0].country+', '
-        }
-        if(profileuser.currentaddress[0].postcode){
-           postcode= profileuser.currentaddress[0].postcode+', '
-        }
-        address=street +building+state+country+postcode;
-    }
-
-    if(profileuser.profilePic){
-        var tarea = profileuser.profilePic;
-        if (tarea.indexOf("http://") == 0 || tarea.indexOf("https://") == 0) {
-            profilepc=profileuser.profilePic;
-        }else{
-            profilepc=`${config.uploadapiUrl}/uploads/${profileuser.profilePic}`;
-        }
-    }
-    
-    
-  }
-
-
-
-  
-
-
-
-
-    return (
-     <div className="site-section bg-light">
-        <div className="container">
-           
-            </div>
+  return (
+  <div>
+    <ListingSubmenu/>
+    <section>
+      <div className="container">
+        <div className="title-box-d">
+            <h3 className="title-d">Account Details</h3>
+          </div>
         </div>
-      );
+    </section>
+    <section className="news-grid grid">
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-12 section-t2">
+            <div className="row">
+              <div className="col-md-6 border-rt">
+                <h4 className="mb-4">Update Your Account Details</h4>
+                <form className="form-a contactForm" action="" method="post" role="form">
+                  <div className="row">
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="Company Name" data-rule="minlen:4" data-msg="Please enter unique username" />
+                        <div className="validation"></div>
+                      </div>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <div className="form-group">
+                        <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="First Name" data-rule="minlen:4" data-msg="Please enter your first name" />
+                        <div className="validation"></div>
+                      </div>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <div className="form-group">
+                        <input name="text" type="phone" className="form-control form-control-lg form-control-a" placeholder="Last Name" data-rule="phone" data-msg="Please enter your last name" />
+                        <div className="validation"></div>
+                      </div>
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <input name="email" type="email" className="form-control form-control-lg form-control-a" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
+                        <div className="validation"></div>
+                      </div>
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <input name="phone" type="phone" className="form-control form-control-lg form-control-a" placeholder="Your Phone Number" data-rule="phone" data-msg="Please enter a valid phone" />
+                        <div className="validation"></div>
+                      </div>
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <input name="phone" type="phone" className="form-control form-control-lg form-control-a" placeholder="Your Mobile Number" data-rule="phone" data-msg="Please enter a valid phone" />
+                        <div className="validation"></div>
+                      </div>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                        <div className="form-group">
+                          <input type="text" name="City" className="form-control form-control-lg form-control-a" placeholder="City" data-rule="minlen:4" data-msg="Please enter your City" />
+                        </div>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <div className="form-group">
+                        <select className="form-control form-control-lg form-control-a" id="Type">
+                          <option>Select State</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <div className="form-group">
+                        <input type="text" name="City" className="form-control form-control-lg form-control-a" placeholder="Zip Code" data-rule="minlen:4" data-msg="Please enter your City" />
+                        </div>
+                      </div>
+                      <div className="col-md-6 mb-3">
+                        <div className="form-group">
+                          <div className="form-group">
+                            <select className="form-control form-control-lg form-control-a" id="city">
+                              <option>Select Country</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-md-12">
+                        <button type="submit" className="btn btn-a">Save</button>
+                      </div>
+                  </div>
+                </form>
+              </div>
+              <div className="col-md-6 padding-lt">
+                <h4 className="mb-4">Auto Populate Your Agent Details</h4>
+                <p className="mb-4">The information below will auto populate in the 'Fill in the Blank' Style Templates (optional)</p>
+                <form className="form-a contactForm" action="" method="post" role="form">
+                  <div className="row">
+                    <div className="col-md-6 mb-3">
+                      <div className="form-group">
+                        <label className="check">Use Agent Photo 
+                          <input type="checkbox" />
+                          <span className="checkmark"></span>
+                        </label>
+                        <img alt="Photo" className="img-circle logo"  src="img/dummy-profile.png" />
+                        <br></br>
+                        <span>
+                          <a href="">Upload Agent Photo</a>
+                        </span>
+                      </div>
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <div className="form-group">
+                        <label className="check">Use Logo 
+                          <input type="checkbox" />
+                          <span className="checkmark"></span>
+                        </label>
+                        <img alt="Logo" className="img-circle logo"  src="img/dummy-logo.png" />
+                        <br></br>
+                        <span>
+                          <a href="">Upload Agent Logo</a>
+                        </span>
+                      </div>
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="Agent Name" data-rule="minlen:4" data-msg="Please enter name" />
+                        <div className="validation"></div>
+                      </div>
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="Designation" data-rule="minlen:4" />
+                      </div>
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <input name="email" type="email" className="form-control form-control-lg form-control-a" placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
+                        <div className="validation"></div>
+                      </div>
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="Website URL" data-rule="minlen:4" />
+                      </div>
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <input name="phone" type="phone" className="form-control form-control-lg form-control-a" placeholder="Phone Number" data-rule="phone" data-msg="Please enter a valid phone" />
+                          <div className="validation"></div>
+                      </div>
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <textarea name="message" className="form-control" cols="45" rows="8" data-rule="required" data-msg="Please write Company details" placeholder="Company Details"></textarea>
+                      </div>
+                    </div>
+                    <div className="col-md-12 mb-3">
+                      <div className="form-group">
+                        <textarea name="message" className="form-control" cols="45" rows="8" data-rule="required" data-msg="Please write other information if any" placeholder="Other Information"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-12">
+                    <button type="submit" className="btn btn-a">Save</button>
+                  </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+  );
   }
+
   
   
 }

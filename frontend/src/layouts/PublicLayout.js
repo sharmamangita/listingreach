@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import EmployeHeader from '../components/EmployeHeader';
+import ListingHeader from '../components/ListingHeader';
 import Footer from '../components/Footer';
 class PublicLayout extends Component {
   render() {
     return (
       <div>
-        <EmployeHeader/>
+        <ListingHeader/>
         {this.props.children}
         <Footer />
       </div>

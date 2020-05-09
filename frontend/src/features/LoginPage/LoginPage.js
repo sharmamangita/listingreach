@@ -128,7 +128,7 @@ class LoginPage extends React.Component {
                           <div className="col-md-12">
                             <button type="submit" className="btn btn-a  mb-3">Login</button>
                             <br></br>
-                            <a href="forgot.html">Forgot Password?</a>
+                           <Link to="/forgotpassword">Forgot Password?</Link>
                           </div>
                         </div>
                       </form>

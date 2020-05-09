@@ -31,6 +31,7 @@ class ContactPage extends React.Component {
 	} 
   handleSubmit(e) { 
     e.preventDefault();
+	//console.log('stateeeeeee',this.state);return false;
     this.setState({ submitted: true });  
     const {fullname,email,phone,message} = this.state;
     const { dispatch } = this.props;
@@ -57,75 +58,125 @@ class ContactPage extends React.Component {
   const { fullname,email,phone,message,submitted} = this.state;
   const { alert } = this.props;
   return (
-  <div className="site-section bg-light">
+  <div>
+   <section className="intro-single">
     <div className="container">
-      <div className="text-center mb-5 section-heading">
-        <h2>Contact Us</h2>
-      </div>
       <div className="row">
-        <div className="col-md-12 col-lg-8 mb-5">
-          { alert.message &&
-          <Alert className={`alert ${alert.type}`} isOpen={this.state.visible} > <button type="button" onClick={this.closebtn} className="close" >
-          <span aria-hidden="true">&times;</span>
-          </button>{alert.message}</Alert>
-          }
-          <form className="p-5 bg-white" id="contactform" onSubmit={this.handleSubmit} ref="form" >
-            <div className="row form-group"> 
-              <div className="col-md-12 mb-3 mb-md-0">
-                <label className="font-weight-bold" htmlFor="fullname">Full Name</label>
-                <input type="text" id="fullname" className="form-control" name ="fullname" ref='firstName' placeholder="Full Name" value={fullname} onChange={this.handleChange} />
-                {submitted && !fullname &&
-                <div className="help-block red">Fullname is required</div>
-                }
-              </div>
-            </div>
-            <div className="row form-group">
-              <div className="col-md-12">
-                <label className="font-weight-bold" htmlFor="email">Email</label>
-                <input type="email" id="email" className="form-control" name="email" placeholder="Email Address" value={email} onChange={this.handleChange}  />
-                {submitted && !email &&
-                <div className="help-block red">Email is required</div>
-                }
-              </div>
-            </div>
-            <div className="row form-group">
-              <div className="col-md-12 mb-3 mb-md-0">
-                <label className="font-weight-bold" htmlFor="phone">Phone</label>
-                <input type="text" id="phone" className="form-control" name="phone" placeholder="Phone #" value={phone} onChange={this.handleChange}  />
-                  {submitted && !phone &&
-                  <div className="help-block red">Phone is required</div>
-                  }
-              </div>
-            </div>
-            <div className="row form-group">
-              <div className="col-md-12">
-                <label className="font-weight-bold" htmlFor="message">Message</label> 
-                <textarea name="message" id="message" cols="30" rows="5" name="message" className="form-control" placeholder="Say hello to us" value={message} onChange={this.handleChange} ></textarea>
-                  {submitted && !message &&
-                  <div className="help-block red">Message is required</div>
-                }
-              </div>
-            </div>
-           <div className="row form-group">
-              <div className="col-md-12">
-                <input type="submit" value="Send Message" className="btn btn-primary pill px-4 py-2" />
-              </div>
-            </div>
-          </form>
+        <div className="col-md-12 col-lg-8">
+          <div className="title-single-box">
+            <h1 className="title-single">Contact US</h1> 
+			<span className="color-text-a">Customer Service and Technical Support (Monday-Friday 9:00am - 5:00pm EST)</span>	
+          </div>
         </div>
-        <div className="col-lg-4">
-          <div className="p-4 mb-3 bg-white">
-            <h3 className="h5 text-black mb-3">Contact Info</h3>
-            <p className="mb-0 font-weight-bold">Address</p>
-            <p className="mb-4">203 Fake St. Mountain View, San Francisco, California, USA</p>
-            <p className="mb-0 font-weight-bold">Phone</p>
-            <p className="mb-4"><Link to="tel:+1 232 3235 324<">+1 232 3235 324</Link></p>
-            <p className="mb-0 font-weight-bold">Email Address</p>
-            <p className="mb-0"><Link to="mailto:youremail@domain.com">youremail@domain.com</Link></p>
+        <div className="col-md-12 col-lg-4">
+          <nav aria-label="breadcrumb" className="breadcrumb-box d-flex justify-content-lg-end">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                <a href="index.html">Home</a>
+              </li>
+              <li className="breadcrumb-item active" aria-current="page">
+                Contact
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </section>
+    <section className="contact">
+    <div className="container">
+      <div className="row">       
+        <div className="col-sm-12 section-t2">
+          <div className="row">
+            <div className="col-md-7">
+              <form className="form-a contactForm" id="contactform" onSubmit={this.handleSubmit} ref="form">
+                { alert.message &&
+				  <Alert className={`alert ${alert.type}`} isOpen={this.state.visible} > <button type="button" onClick={this.closebtn} className="close" >
+				  <span aria-hidden="true">&times;</span>
+				  </button>{alert.message}</Alert>
+				}
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <div className="form-group">
+                      <input type="text" id="fullname" name="fullname" className="form-control form-control-lg form-control-a" placeholder="Your Name" data-rule="minlen:4" data-msg="Please enter at least 4 chars" value={fullname} onChange={this.handleChange} />
+                      {submitted && !fullname &&
+					  <div className="help-block red">Fullname is required</div>
+					  }
+                    </div>
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <div className="form-group">
+                      <input id="phone" name="phone" type="phone" className="form-control form-control-lg form-control-a" placeholder="Your Phone Number" data-rule="phone" data-msg="Please enter a valid phone" value={phone} onChange={this.handleChange} />
+                      {submitted && !phone &&
+					  <div className="help-block red">Phone is required</div>
+					  }
+                    </div>
+                  </div>
+				  <div className="col-md-12 mb-3">
+                    <div className="form-group">
+                      <input id="email" name="email" type="email" className="form-control form-control-lg form-control-a" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" value={email} onChange={this.handleChange} />
+                      {submitted && !email &&
+					  <div className="help-block red">Email is required</div>
+					  }
+                    </div>
+                  </div>
+                  {/*<div className="col-md-12 mb-3">
+                    <div className="form-group">
+                      <input type="url" name="subject" className="form-control form-control-lg form-control-a" placeholder="Subject" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject"/>
+                      <div className="help-block red"></div>
+                    </div>
+                  </div>*/}
+                  <div className="col-md-12 mb-3">
+                    <div className="form-group">
+                      <textarea id="message" name="message" className="form-control" name="message" cols="45" rows="8" data-rule="required" data-msg="Please write something for us" placeholder="Message" value={message} onChange={this.handleChange} ></textarea>
+                        {submitted && !message &&
+						  <div className="help-block red">Message is required</div>
+						}
+                    </div>
+                  </div>
+                  <div className="col-md-12">
+                    <button type="submit" value="Send Message" className="btn btn-a">Send Message</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div className="col-md-5 section-md-t3"> 
+              <div className="icon-box">
+                <div className="icon-box-icon">
+                  <span className="ion-ios-redo"></span>
+                </div>
+                <div className="icon-box-content table-cell">
+                  <div className="icon-box-title">
+                    <h5 className="icon-title">Have you seen our <a>FAQ page?</a></h5>
+                  </div>                  
+                </div>
+              </div>
+			   <div className="icon-box">
+                <div className="icon-box-icon">
+                  <span className="ion-ios-redo"></span>
+                </div>
+                <div className="icon-box-content table-cell">
+                  <div className="icon-box-title">
+                    <h5 className="icon-title">Have you seen our <a>Tutorial videos?</a></h5>
+                  </div>                  
+                </div>
+              </div>
+			   <div className="icon-box">
+                <div className="icon-box-icon">
+                  <span className="ion-ios-redo"></span>
+                </div>
+                <div className="icon-box-content table-cell">
+                  <div className="icon-box-title">
+                    <h5 className="icon-title">Do you need <a>Pricing?</a></h5>
+                  </div>                  
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+  </section>
   </div>
   );
   }

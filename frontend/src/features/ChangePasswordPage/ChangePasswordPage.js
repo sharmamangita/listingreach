@@ -8,6 +8,7 @@ import { Alert } from 'reactstrap';
 class ChangePasswordPage extends React.Component {
     constructor(props) {
         super(props);
+        console.log("dsfafasf");
         var user  = JSON.parse(localStorage.getItem('user'));
         this.state = {
 			  showerror:true,

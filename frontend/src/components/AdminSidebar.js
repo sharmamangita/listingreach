@@ -18,7 +18,7 @@ class AdminSidebar extends React.Component {
 							<li className="nav-item"><Link className="nav-link" to="EmployersPage"><em className="fa fa-group"></em> Employers</Link></li>
 							<li className="nav-item"><Link className="nav-link" to="CandidatePage"><em className="fa fa-users"></em> Candidates</Link></li>
 							<li className="nav-item"><Link className="nav-link" to="PricePage"><em className="fa fa-money"></em> Pricing</Link></li>
-							<li className="nav-item"><Link className="nav-link" to="ContentPage"><em className="fa fa-file-text-o"></em> Content</Link></li>
+							
 							<li className="nav-item"><Link className="nav-link" to="ChangePassword"><em className="fa fa-key"></em> Change Password</Link></li>
 						</ul>
 					</nav>

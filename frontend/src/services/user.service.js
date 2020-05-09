@@ -15,7 +15,7 @@ export const userService = {
     contactForm,
     deleteprofilepic,
     deleteprofileCover,
-   
+    getapagecontent,
     delete: _delete,
     getReferences,
     updateStatus,
@@ -31,6 +31,7 @@ function login(email, password) {
     return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
     .then(handleResponse)
     .then(user => {
+        console.log("user====",user);
         if (user.token) {
             localStorage.setItem('user', JSON.stringify(user));
             if(user.profilePic){
@@ -215,6 +216,13 @@ var user = {"userid":uid};
 	}	
 
 
-
+function getapagecontent(page) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(page)
+    };
+    return fetch(`${config.apiUrl}/contentPage`, requestOptions).then(handleResponse);
+}	
     
 	

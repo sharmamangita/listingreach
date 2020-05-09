@@ -16,7 +16,7 @@ export const userActions = {
     updatepassword,
     contactForm,
     deleteprofilepic,
-    
+    getapagecontent,
     deleteprofileCover,
     delete: _delete,
     getReferences,
@@ -55,37 +55,20 @@ function login(email, password) {
                 dispatch(success(user));
                 var currenturl  = '';
                 var token='';
-                console.log("test=====");
-                if(localStorage.getItem('invitetoken') && localStorage.getItem('invitetoken') !== "undefined"){
+                console.log("test=====",user.roles);
+                /*if(localStorage.getItem('invitetoken') && localStorage.getItem('invitetoken') !== "undefined"){
                     token = localStorage.getItem('invitetoken');
                     history.push('/PostreviewsPage?ref='+token.replace(/\"/g, ""));
                     localStorage.removeItem("invitetoken");  
-                }
-                else if(localStorage.getItem('srcid') && localStorage.getItem('srcid') !== "undefined"){
-                    currenturl = localStorage.getItem('srcid');
-                    userService.unsetsrcid();
-                    history.push('/profilePage?id='+currenturl);
-                    currenturl='';
-                    localStorage.removeItem("srcid");     
-                }
-                else if(user.roles=='admin'){
+                }*/
+               
+                if(user.roles=='admin'){
                     history.push('/DashboardPage')  
                 }
-                else if(user.roles=='hr'){
-                    if(user.companyName){
-                        history.push('/savedCandidates')
-                    }else{
-                        history.push('/hrprofile')
-                    }
+                else if(user.roles=='users'){
+                    history.push('/AgentDashboardPage');
                 }
-                else{
-
-                    if(user.resume =="true"){
-						history.push('/profilePage')  
-    				} else {
-    					history.push('/changePassword');
-    					} 
-                    } 
+                 
                     localStorage.removeItem("srcid");    
                 },
                 error => {
@@ -192,10 +175,9 @@ function updatepassword(user,currentpassword,newspassword) {
             user => { 
                 dispatch(success());
                 if(user.success){
-                    if(userroles=="candidate"){
-                       history.push('/postresume');
-                    } else if(userroles=="hr"){
-                       history.push('/hrprofile');
+                    if(userroles=="users"){
+                       
+                       history.push('/homePage');
                     }
                 dispatch(alertActions.success(user.success));
                 window.scrollTo(0,0);
@@ -378,3 +360,20 @@ function _delete(id,flag) {
     function failure(id, error) { return { type: userConstants.DELETE_FAILURE, id, error } }
 }
 
+
+
+
+function getapagecontent(page){
+     return dispatch => {
+        dispatch(request());
+        userService.getapagecontent(page)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+
+    function request() { return { type: userConstants.GETALL_REQUEST } }
+    function success(users) { return { type: userConstants.GETALL_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
+}
