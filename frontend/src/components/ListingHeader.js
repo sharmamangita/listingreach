@@ -63,7 +63,7 @@ class ListingHeader extends React.Component {
     let $rigister=null;
     $logout = (<Link to="login" className="dropdown-item" onClick={ this.logoutuser.bind(this) }>Logout</Link>); 
     
-    if(this.state.user && this.state.user.roles== 'users' && this.state.user.email !== null ){
+    if(this.state.user && this.state.user.roles== 'agents' && this.state.user.email !== null ){
     let profilepc ='/public/assets/images/dummy-profile-pic.png';
     let profileimage = localStorage.getItem('profileimage');
      

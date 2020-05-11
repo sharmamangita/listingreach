@@ -65,7 +65,7 @@ function login(email, password) {
                 if(user.roles=='admin'){
                     history.push('/DashboardPage')  
                 }
-                else if(user.roles=='users'){
+                else if(user.roles=='agents'){
                     history.push('/AgentDashboardPage');
                 }
                  
@@ -175,7 +175,7 @@ function updatepassword(user,currentpassword,newspassword) {
             user => { 
                 dispatch(success());
                 if(user.success){
-                    if(userroles=="users"){
+                    if(userroles=="agents"){
                        
                        history.push('/homePage');
                     }

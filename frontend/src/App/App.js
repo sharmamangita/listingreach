@@ -70,7 +70,7 @@ class App extends React.Component {
       typevalue=type[1];
     }
     if(this.state.user && this.state.user.roles !== null ){
-      if(this.state.user.roles=='users'){
+      if(this.state.user.roles=='agents'){
        return <PublicLayout >
          <Route path="/forgotpassword" component={ForgotPasswordPage} />
           <Route path="/register" component={RegisterPage} />

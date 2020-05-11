@@ -59,7 +59,7 @@ class ListingSubmenu extends React.Component {
 
     render() {
      
-    if(this.state.user && this.state.user.roles== 'users' && this.state.user.email !== null ){
+    if(this.state.user && this.state.user.roles== 'agents' && this.state.user.email !== null ){
     
     return (
       <section className="intro-single" style={{padding: "9rem 0 3rem"}}>

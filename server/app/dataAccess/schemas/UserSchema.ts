@@ -34,7 +34,7 @@ class UserSchema {
                 type: String,
                 required: true
             },
-           roles:{
+            roles:{
                 type: String,
                 required: true
             },
@@ -47,7 +47,9 @@ class UserSchema {
 			status:{
                 type: String
 			},
-            
+            paidOn:{
+                type: Boolean
+            },
             
             createdOn: {
                 type: Date,

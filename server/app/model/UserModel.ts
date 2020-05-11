@@ -31,7 +31,9 @@ class UserModel {
     get password (): string {
         return this._userModel.password;
     }
-   
+    get paidOn (): string {
+        return this._userModel.paidOn;
+    }
     get userName (): string {
         return this._userModel.userName;
     }
