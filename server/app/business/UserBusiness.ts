@@ -33,8 +33,8 @@ class UserBusiness implements BaseBusiness<IUserModel> {
     retrieve (query: any, callback: (error: any, result: any) => void) {
         this._userRepository.retrieve(query, callback);
     }
-    aggregate (query: any, callback: (error: any, result: any) => void) {
-        this._userRepository.aggregate(query, callback);
+    aggregate (query: any,match:object,group:object, callback: (error: any, result: any) => void) {
+        this._userRepository.aggregate(query,match,group, callback);
     }
 	retrieveFields (query: any, fields: any, callback: (error: any, result: any) => void) {
         this._userRepository.retrieveFields(query, fields,callback);

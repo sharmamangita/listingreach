@@ -64,16 +64,19 @@ class AdminLoginPage extends React.Component {
         const { email, password, submitted } = this.state;
         const { alert } = this.props;
         return(
-            <div className="container-fluid admin-login" id="wrapper">
-                <div className="row mt-5 text-center">
+         
+            <div className="container-fluid" id="wrapper">
+            <div className="row mt-5 text-center">
                 <div className="col-12 mb-5">
-                    <span className="mb-0 site-logo" style={logofont}><img src="http://66.235.194.119/employeemirror/images/logo1-free-img-1.png" alt="" className="img-fluid mr-1"  style={logowidth} />Employee<strong className="font-weight-bold">MIRROR</strong></span>
+                    <div className="logo-bg">
+                        <img src="public/assets/images/listing-reach-logo.png" alt="" className="img-fluid mr-1" />
+                    </div>
                 </div>
-                </div>
-                <div className="clear"></div>
-                <section className="row">
+            </div>
+            <div className="clear"></div>
+            <section className="row">
                 <div className="col-lg-3 col-md-12">
-                
+
                 </div>
                 <div className="col-lg-6 col-md-12">
                     <div className="card mb-4">
@@ -81,26 +84,26 @@ class AdminLoginPage extends React.Component {
 
                             <form className="form" onSubmit={this.handleSubmit}>
                                 <h4 className="text-center ">Admin Login</h4>
-                                                                        {alert.message &&
-                    <div className={`alert ${alert.type}`}>{alert.message}</div>
-                    }
+                                {alert.message &&
+                                    <div className={`alert ${alert.type}`}>{alert.message}</div>
+                                }
                                 <div className="form-group row mt-4">
-                           
-                                    <div className="col-md-12">
-                                     <input type="text" className="form-control " name="email" value={email} onChange={this.handleChange} placeholder="Email Address"/>
+                                <label  className="col-md-3 col-form-label">Username/Email</label>
+                                    <div className="col-md-9">
+                                        <input type="text" className="form-control " name="email" value={email} onChange={this.handleChange} placeholder="Email Address" />
                                         {submitted && !email &&
                                             <div className="help-block red">Email is required</div>
                                         }
                                     </div>
                                 </div>
                                 <div className="form-group row">
-                                  
-                                    <div className="col-md-12">
-                                        <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} placeholder="Password"/>
+                                <label className="col-md-3 col-form-label">Password</label>
+                                    <div className="col-md-9">
+                                        <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} placeholder="Password" />
                                         {submitted && !password &&
                                             <div className="help-block red">Password is required</div>
                                         }
-                                     </div>
+                                    </div>
                                 </div>
 
                                 <div className="sign-btn text-center">
@@ -111,8 +114,7 @@ class AdminLoginPage extends React.Component {
                     </div>
                 </div>
             </section>
-           </div>
-          
+        </div>
         );
     }
 }

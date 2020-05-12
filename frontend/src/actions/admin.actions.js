@@ -183,7 +183,7 @@ function getAlldashboardData() {
         dispatch(request());
         adminService.getAlldashboardData()
         .then(
-            admins => dispatch(success(admins)),
+            dashboardcounts => dispatch(success(dashboardcounts)),
             error => dispatch(failure(error.toString()))
         );
     };
