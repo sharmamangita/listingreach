@@ -7,13 +7,13 @@ import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
 
 import UserBusiness = require("./../app/business/UserBusiness");
 
-import PlanBusiness = require("./../app/business/PlanBusiness");
+import BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
 import PagesBusiness = require("./../app/business/PagesBusiness");
 import IBaseController = require("./BaseController");
 import IAdminUserModel = require("./../app/model/interfaces/IAdminUserModel");
 import IPagesModel = require("./../app/model/interfaces/IPagesModel");
 import Common = require("./../config/constants/common");
-
+import IUserModel = require("./../app/model/interfaces/IUserModel")
 
 var mongoose = require('mongoose');
 var async = require('async');
@@ -121,80 +121,14 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	}
 
-	PlanRegister(req: express.Request, res: express.Response): void {
-		try {
-			var user: any = [];
-			var plan: IPlanModel = <IPlanModel>req.body.user;
 
-			plan.createdOn = new Date();
-			plan.plan = req.body.user.plan;
-			plan.plan_name = "basic";
-			var planBusiness = new PlanBusiness();
-			planBusiness.retrieve({ 'plan_name': 'basic' }, (error, result) => {
-				if (error) {
-					res.send({ "error": "error" });
-				}
-				else {
-					if (result.length > 0) {
-						console.log("plan====", plan);
-						planBusiness.update(result[0]._id, plan, (error, result) => {
-							if (error) {
-								res.send({ "error": "error" });
-							}
-							else {
-								res.send({ "success": "success" });
-							}
-						});
-					} else {
-						console.log("user====", plan);
-						planBusiness.create(plan, (error, userdata) => {
-							if (error) {
-								console.log("error====", error);
 
-							} else {
-								console.log("userdata==", userdata);
-								res.send({ "success": userdata });
-							}
-						});
-					}
-				}
-			});
 
-		} catch (e) {
-			console.log(e);
-			res.send({
-				"error": "error in your request"
-			});
-
-		}
-
-	}
-
-	getPlans(req: express.Request, res: express.Response): void {
-		//console.log("daatat");
-		try {
-			var _planBusiness = new PlanBusiness();
-			_planBusiness.retrieve({ 'plan_name': 'basic' }, (error, result) => {
-				if (error) {
-					res.send({ "error": "error" });
-				} else {
-					res.send(result);
-					//console.log("get all data plans",result);
-				}
-			});
-		}
-		catch (e) {
-
-			console.log(e);
-			res.send({ "error": "error in your request" });
-		}
-
-	}
 
 	getDashboardData(req: express.Request, res: express.Response): void {
 		try {
 			console.log("test=====");
-			var _userBusiness = new UserBusiness();		
+			var _userBusiness = new UserBusiness();
 			var match: Object = { status: 'verified' };
 			var group: Object = { _id: '$roles', total: { $sum: 1 } };
 			_userBusiness.aggregate("", match, group, (error, result) => {
@@ -217,6 +151,25 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	}
 
+	getBlastSettings(req: express.Request, res: express.Response): void {
+		try {
+			var _blastSettingsBusiness = new BlastSettingsBusiness();
+			_blastSettingsBusiness.retrieve("", (error, result) => {
+				if (error) {
+					res.send({ "error": error });
+				} else {
+					res.send(result);
+					//console.log("get all data plans",result);
+				}
+			});
+		}
+		catch (e) {
+
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+
+	}
 
 	update(req: express.Request, res: express.Response): void {
 		console.log("in _user controller->update");
@@ -428,7 +381,8 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				} else {
 					console.log(result);
 					if (result) {
-						_pagesBusiness.update(result._id, _pages, (error: any, resultUpdate: any) => {
+						const { ObjectId } = require('mongodb');
+						_pagesBusiness.update(ObjectId(result._id), _pages, (error: any, resultUpdate: any) => {
 							if (error) {
 								res.send({ "error": "error" });
 							} else {

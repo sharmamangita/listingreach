@@ -7,6 +7,7 @@ export const adminService = {
   userStatus,
   PlanRegister,
   getPlan,
+  getBlastSettings,
   updatecontent,
   getContent,
   getAlldashboardData,
@@ -65,6 +66,12 @@ function getPlan() {
         method: 'GET'
     };
     return fetch(`${config.apiUrl}/adminusers/plan`, requestOptions).then(handleResponse);
+}
+function getBlastSettings() {
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(`${config.apiUrl}/adminusers/blastsettings`, requestOptions).then(handleResponse);
 }
 
 function updatecontent(page,content) {

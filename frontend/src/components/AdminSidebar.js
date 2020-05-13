@@ -11,8 +11,8 @@ class AdminSidebar extends React.Component {
 			<div className="container-fluid" id="wrapper">
 				<div className="row">
 					<nav className="sidebar col-xs-12 col-sm-4 col-lg-3 col-xl-2" style={{paddingTop:0}}>
-						<div class="logo-bg">
-							<img src="public/assets/images/listing-reach-logo.png" alt="" class="img-a img-fluid" />
+						<div className="logo-bg">
+							<img src="public/assets/images/listing-reach-logo.png" alt="" className="img-a img-fluid" />
 						</div>
 						
 						<a href="#menu-toggle" className="btn btn-default" id="menu-toggle"><em className="fa fa-bars"></em></a>

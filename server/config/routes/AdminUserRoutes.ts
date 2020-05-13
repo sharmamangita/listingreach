@@ -14,14 +14,15 @@ class AdminUserRoutes {
     }
     get routes () {
         var controller = this._adminUserController;
-        router.get("/adminusers/plan",controller.getPlans);
+      //  router.get("/adminusers/plan",controller.getPlans);
+        router.get("/adminusers/blastsettings",controller.getBlastSettings);
         router.get("/adminusers/getContent",controller.getContent);
         router.get("/adminusers/:_flag", controller.allcandidate);
         router.put("/adminusers/", controller.update);
         router.delete("/adminusers/:_id", controller.deleteusers);
         router.get("/userStatus/:_id", controller.userStatus);
         router.get("/adminusers/:_id", controller.findById);
-        router.post("/adminusers/PlanRegister", controller.PlanRegister);
+     //   router.post("/adminusers/PlanRegister", controller.PlanRegister);
         router.get("/adminusers", controller.getDashboardData);
 
 		router.get("/adminusers-bytoken", controller.findByToken);

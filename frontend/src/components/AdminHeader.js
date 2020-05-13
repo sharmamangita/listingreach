@@ -7,6 +7,7 @@ import { Nav, Navbar, NavItem, NavDropdown, MenuItem, NavLink } from 'react-boot
 class AdminHeader extends React.Component {
   constructor(props) {
     super(props);
+    console.log(' header props      ',props)
     let user = JSON.parse(localStorage.getItem('user'));
     this.state = {
       user: user
