@@ -16,9 +16,14 @@ import IPagesModel = require("./../app/model/interfaces/IPagesModel");
 import IEmployeeModel = require("./../app/model/interfaces/IEmployeeModel");
 import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
 import ContactformBusiness = require("./../app/business/ContactformBusiness");
+import BlastBusiness = require("./../app/business/BlastBusiness");
+import PropertyBusiness = require("./../app/business/PropertyBusiness");
 import InvitationBusiness = require("./../app/business/InvitationBusiness");
 import IAdminUserModel = require("./../app/model/interfaces/IAdminUserModel");
 import IContactformModel = require("./../app/model/interfaces/IContactformModel");
+import IBlastModel = require("./../app/model/interfaces/IBlastModel");
+import IPropertyModel = require("./../app/model/interfaces/IPropertyModel");
+
 import IInvitationModel = require("./../app/model/interfaces/IInvitationModel");
 import Common = require("./../config/constants/common");
 import PlanBusiness = require("./../app/business/PlanBusiness");
@@ -145,6 +150,7 @@ class UserController implements IBaseController <UserBusiness> {
 
         }
     }
+
     create(req: express.Request, res: express.Response): void {
         try {
         	var _userBusiness = new UserBusiness();
@@ -639,6 +645,48 @@ update(req: express.Request, res: express.Response): void {
 		}
 	}
     
+    saveBlast(req: express.Request, res: express.Response): void {
+        try {
+           var _blastform: IBlastModel = <IBlastModel>req.body;
+			var _blastBusiness = new BlastBusiness();
+
+			_blastform.selected_template_date = new Date();
+           _blastBusiness.create(_blastform, (error, result) => {
+	                if(error) {
+						console.log(error);
+						res.send({"error": error});
+					}
+	                else res.send({"success": "success"});
+	        	}); 
+        }
+        catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+    }
+
+
+     saveProperty(req: express.Request, res: express.Response): void {
+        try {
+           var _propertyform: IPropertyModel = <IPropertyModel>req.body;
+			var _propertyBusiness = new PropertyBusiness();
+
+			console.log("_propertyform======",_propertyform);
+
+/*           _propertyBusiness.create(_propertyform, (error, result) => {
+	                if(error) {
+						console.log(error);
+						res.send({"error": error});
+					}
+	                else res.send({"success": "success"});
+	        	}); */
+        }
+        catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+    }
+
 
 
 

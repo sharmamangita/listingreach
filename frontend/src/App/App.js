@@ -39,6 +39,10 @@ import { AdminChangePasswordPage } from './../features/admin/AdminChangePassword
 import AdminLayout from '../layouts/AdminLayout';   
 import Footer from '../components/Footer';
 import { AgentDashboardPage } from '../features/AgentDashboardPage';
+import { CreateFlyerPage } from '../features/CreateFlyerPage';
+import { FlyersPage } from '../features/FlyersPage';
+import { BillingPage } from '../features/BillingPage';
+import { DesignsPage } from '../features/DesignsPage';
 
 
 
@@ -74,7 +78,7 @@ class App extends React.Component {
        return <PublicLayout >
          <Route path="/forgotpassword" component={ForgotPasswordPage} />
           <Route path="/register" component={RegisterPage} />
-          <Route path="/index" component={HomePage} />
+          <Route path="/HomePage" component={HomePage} />
           <Route path="/login" component={LoginPage} />
           <Route path="/verification/:token" component={VerificationPage} />
           <Route path ="/changePassword" component={ChangePasswordPage} />
@@ -89,7 +93,11 @@ class App extends React.Component {
     		  <Route path ="/DatabasesPage" component={DatabasesPage} />
           <Route path ="/LegalPage" component={LegalPage} />
           <Route path ="/PricingPage" component={PricingPage} /> 
-          <Route path ="/AgentDashboardPage" component={AgentDashboardPage} /> 
+          <Route path ="/AgentDashboardPage" component={AgentDashboardPage} />
+		  <Route path ="/CreateFlyerPage" component={CreateFlyerPage} />
+		  <Route path ="/FlyersPage" component={FlyersPage} />
+		  <Route path ="/BillingPage" component={BillingPage} />
+		  <Route path ="/DesignsPage" component={DesignsPage} /> 
            
          
           </PublicLayout>
@@ -117,7 +125,7 @@ class App extends React.Component {
           <Route path ="/PricingPage" component={PricingPage} /> 
           <Route path ="/contact" component={ContactPage} />
           <Route path="/forgotpassword" component={ForgotPasswordPage} />
-          <Route path="/index" component={HomePage} />
+          <Route path="/HomePage" component={HomePage} />
           <Route path ="/profilePage" component={ProfilePage} />
           
           </PublicLayout >
@@ -140,7 +148,7 @@ class App extends React.Component {
     		<Route path ="/DatabasesPage" component={DatabasesPage} />
         <Route path ="/LegalPage" component={LegalPage} />
         <Route path ="/PricingPage" component={PricingPage} /> 
-        <Route path="/index" component={HomePage} />
+        <Route path="/HomePage" component={HomePage} />
          <Route path ="/profilePage" component={ProfilePage} />
         <Route path="/forgotpassword" component={ForgotPasswordPage} /> 
 		   

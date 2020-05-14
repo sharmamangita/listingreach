@@ -67,11 +67,11 @@ class ListingSubmenu extends React.Component {
           <div className="row">
             <div className="col-md-12">
               <div className="topnav" id="myTopnav">
-                <a href="dashboard.html" className="active">Dashboard</a>
-                <a href="create-flyer.html">Create New Blast</a>
-                <a href="flyers.html">My Saved Blasts</a>
-                <a href="designs.html">Design Ideas</a>
-                <a href="billing.html">My Billing</a>
+                <Link to="AgentDashboardPage" className="nav-link">Dashboard</Link>
+				<Link to="CreateFlyerPage" className="nav-link">Create New Flyer</Link>
+                <Link to="FlyersPage" className="nav-link">My Saved Flyers</Link>
+				<Link to="DesignsPage" className="nav-link">Design Ideas</Link>
+                <Link to="BillingPage" className="nav-link">My Billing</Link>
                 <Link to="ProfilePage">Account Details</Link>
                 <a href="javascript:void(0);" className="icon">
                 <i className="fa fa-bars"></i>

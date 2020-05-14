@@ -34,8 +34,11 @@ class UserRoutes {
         router.post("/users/deleteprofilepic",controller.deleteprofilepic);
         router.post("/users/deleteprofileCover",controller.deleteprofileCover);  
         router.post("/users/UpdateUserPassword",controller.UpdateUserPassword);
-        
         router.post("/users/getReferences", controller.getReferences);
+
+        /* blast routes */ 
+        router.post("/users/saveBlast",controller.saveBlast);
+        router.post("/users/saveProperty",controller.saveProperty);
         return router;
     }
 

@@ -100,7 +100,7 @@ class LoginPage extends React.Component {
                         <div className="row">
                             
                           <div className="col-md-12 mb-3">
-                            <div className={'col-md-12 mb-3 mb-md-0' + (submitted && !email ? ' has-error' : '')}>
+                            <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
                               <input type="text" className="form-control form-control-lg form-control-a" name="email" value={email} onChange={this.handleChange} placeholder="Email Address"/>
                                 {submitted && !email &&
                                     <div className="help-block red">Email is required</div>
