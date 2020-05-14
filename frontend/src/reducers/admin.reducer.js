@@ -13,16 +13,16 @@ export function admins(state = {}, action) {
     case adminConstants.GETALL_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,
-         candidateData: action.admin.data.userData,
-         downloadData: action.admin.data.downloadData
+        candidateData: action.admin.data.userData,
+        downloadData: action.admin.data.downloadData
       });
       return newState;
     case adminConstants.GETALL_FAILURE:
-      return { 
+      return {
         error: action.error
       };
-    
-      case adminConstants.GETDASHBOARDALL_REQUEST:
+
+    case adminConstants.GETDASHBOARDALL_REQUEST:
       newState = objectAssign({}, state, {
         loading: true
       });
@@ -34,9 +34,27 @@ export function admins(state = {}, action) {
       });
       return newState;
     case adminConstants.GETDASHBOARDALL_FAILURE:
-      return { 
+      return {
         error: action.error
       };
+
+      case adminConstants.BLAST_SETTINGS_REQUEST:
+        newState = objectAssign({}, state, {
+          loading: true
+        });
+        return newState;
+      case adminConstants.BLAST_SETTINGS_SUCCESS:
+        newState = objectAssign({}, state, {
+          loading: true,
+          blastsettings: action.blastsettings[0]
+        });
+        return newState;
+      case adminConstants.BLAST_SETTINGS_FAILURE:
+        return { 
+          error: action.error
+        };
+
+
     case adminConstants.GETALLHR_REQUEST:
       newState = objectAssign({}, state, {
         loading: true
@@ -47,10 +65,10 @@ export function admins(state = {}, action) {
         loading: true,
         hrData: action.admin.data.userData,
         downloadData: action.admin.data.downloadData
-    });
-    return newState;
+      });
+      return newState;
     case adminConstants.GETALLHR_FAILURE:
-      return { 
+      return {
         error: action.error
       };
     case adminConstants.DELETE_REQUEST:
@@ -93,7 +111,7 @@ export function admins(state = {}, action) {
       });
       return newState;
     case adminConstants.GETBYID_FAILURE:
-      return { 
+      return {
         error: action.error
       };
 
@@ -105,47 +123,47 @@ export function admins(state = {}, action) {
       });
       return newState;
     case adminConstants.PLAN_SUCCESS:
-    console.log("action.admin===",action);
-    if(action.admin && action.admin.length>0){
-      var variable = action.admin[0];
-      newState = objectAssign({}, state,{
-        loading: true,
-        plan: {
-          plan:variable.plan,
-          experience_one:variable.experience_one,
-          experience_two:variable.experience_two,
-          experience_three:variable.experience_three
-        },
-        plandata: action.admin,
-        submitted: false
-      });
-    }else{
-      newState = objectAssign({}, state, {
-      loading: true,
-      plan: action.admin
-      });
-    }
-    return newState;
+      console.log("action.admin===", action);
+      if (action.admin && action.admin.length > 0) {
+        var variable = action.admin[0];
+        newState = objectAssign({}, state, {
+          loading: true,
+          plan: {
+            plan: variable.plan,
+            experience_one: variable.experience_one,
+            experience_two: variable.experience_two,
+            experience_three: variable.experience_three
+          },
+          plandata: action.admin,
+          submitted: false
+        });
+      } else {
+        newState = objectAssign({}, state, {
+          loading: true,
+          plan: action.admin
+        });
+      }
+      return newState;
     case adminConstants.PLAN_FAILURE:
-      return { 
+      return {
         error: action.error
       };
 
-   case adminConstants.GETCONTENT_REQUEST:
-    newState = objectAssign({}, state, {
-      loading: true
-    });
-    return newState;  
+    case adminConstants.GETCONTENT_REQUEST:
+      newState = objectAssign({}, state, {
+        loading: true
+      });
+      return newState;
     case adminConstants.GETCONTENT_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,
         pageData: action.admins
       });
-    return newState;
+      return newState;
     case adminConstants.GETCONTENT_FAILURE:
       return {
-      error: action.error
-    };  
+        error: action.error
+      };
     case adminConstants.UPDATE_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,

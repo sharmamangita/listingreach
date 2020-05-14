@@ -14,8 +14,32 @@ export const adminActions = {
     updatecontent,
     getContent,
     getAlldashboardData,
-    update
+    update,
+    updateBlastSettings
 };
+
+function updateBlastSettings(blastsetting) {
+    return dispatch => {
+        dispatch(request(blastsetting));
+        console.log('updating...', blastsetting);
+        adminService.updateBlastSettings(blastsetting.id, blastsetting)
+            .then(
+                prices => {
+                    dispatch(success(blastsetting));
+                    location.reload();
+                    dispatch(alertActions.success('Updated successfully.'));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error('Not updated, please try again.'));
+                }
+            );
+    };
+    function request(blastsettings) { return { type: adminConstants.GETALL_REQUEST } }
+    function success(blastsettings) { return { type: adminConstants.UPDATE_SUCCESS, blastsettings } }
+    function failure(error) { return { type: adminConstants.GETAL_FAILURE, error } }
+}
+
 function update(user, employee) {
     return dispatch => {
         dispatch(request(user, employee));
@@ -141,7 +165,7 @@ function getBlastSettings() {
         dispatch(request());
         adminService.getBlastSettings()
             .then(
-                blastSettings => dispatch(success(blastSettings)),
+                blastsettings => dispatch(success(blastsettings)),
                 error => dispatch(failure(error.toString()))
             );
     };
@@ -201,7 +225,6 @@ function getAlldashboardData() {
     function success(admin) { return { type: adminConstants.GETDASHBOARDALL_SUCCESS, admin } }
     function failure(error) { return { type: adminConstants.GETDASHBOARDALL_FAILURE, error } }
 }
-
 
 
 

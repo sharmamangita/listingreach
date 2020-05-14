@@ -11,17 +11,18 @@ export const adminService = {
   updatecontent,
   getContent,
   getAlldashboardData,
-  update
+  updateBlastSettings
 };
 
-function update(id,user) {
+function updateBlastSettings(id,blastsettings) {
+    console.log("bbbbbbbbbbb",blastsettings)
     const requestOptions = {
         method: 'PUT',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
+        body: JSON.stringify(blastsettings)
     };
     // location.reload();  
-    return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);;
+    return fetch(`${config.apiUrl}/adminuser/updateblastsettings/${id}`, requestOptions).then(handleResponse);;
 }
 function getcandidates(flag) {
     const requestOptions = {
@@ -103,7 +104,7 @@ function handleResponse(response) {
         if (!response.ok) {
             if (response.status === 401) {
                //return data.error;
-               var scrollTop = $(window).scrollTop();
+          //     var scrollTop = $(window).scrollTop();
                window.scrollTo(0,0);
                return Promise.reject(data.error);
             }

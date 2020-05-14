@@ -10,11 +10,10 @@ import UserBusiness = require("./../app/business/UserBusiness");
 import BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
 import PagesBusiness = require("./../app/business/PagesBusiness");
 import IBaseController = require("./BaseController");
-import IAdminUserModel = require("./../app/model/interfaces/IAdminUserModel");
+import IUserModel = require("./../app/model/interfaces/IUserModel");
 import IPagesModel = require("./../app/model/interfaces/IPagesModel");
 import Common = require("./../config/constants/common");
-import IUserModel = require("./../app/model/interfaces/IUserModel")
-
+import IBlastSettingsModel = require("./../app/model/interfaces/IBlastSettingsModel");
 var mongoose = require('mongoose');
 var async = require('async');
 class AdminUserController implements IBaseController<AdminUserBusiness> {
@@ -22,7 +21,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 	create(req: express.Request, res: express.Response): void {
 		console.log("in _user controller->create");
 		try {
-			var _user: IAdminUserModel = <IAdminUserModel>req.body;
+			var _user: IUserModel = <IUserModel>req.body;
 			var _adminUserBusiness = new AdminUserBusiness();
 			_adminUserBusiness.create(_user, (error, result) => {
 				if (error) {
@@ -158,8 +157,8 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				if (error) {
 					res.send({ "error": error });
 				} else {
+				//	console.log("get settings result", result);
 					res.send(result);
-					//console.log("get all data plans",result);
 				}
 			});
 		}
@@ -171,10 +170,47 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	}
 
+	updateBlastSetings(req: express.Request, res: express.Response): void {
+		console.log("in _user controller->update");
+		try {
+			var blastsettings: IBlastSettingsModel = <IBlastSettingsModel>req.body;
+			var getValue = req.body;
+			var _adminUserBusiness = new AdminUserBusiness();
+			_adminUserBusiness.verifyToken(req, res, (adminUserData) => {
+				var _blastSettingsBusiness = new BlastSettingsBusiness();
+				var id: string = req.body;
+				var mongoose = require('mongoose');
+			
+			//	blastsettings._id = mongoose.ObjectId(id);
+			//	blastsettings.per_email_blast_price = req.body.peremailblastprice;
+			//	blastsettings.additional_email_blast_price = req.body.additionalemailblastprice;
+				blastsettings.modifiedOn=new Date();
+				blastsettings._id=mongoose.Types.ObjectId.createFromHexString(blastsettings._id);
+				console.log('ffffffffffffff',blastsettings);
+
+				_blastSettingsBusiness.update(id, blastsettings, (error, result) => {
+					if (error) {
+						console.log("error",error.path);
+						res.send({ "error": error });
+					}
+					else {
+						console.log(result);
+						res.send({ "success": "success" });
+					}
+				});
+
+			});
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
+
 	update(req: express.Request, res: express.Response): void {
 		console.log("in _user controller->update");
 		try {
-			var _user: IAdminUserModel = <IAdminUserModel>req.body;
+			var _user: IUserModel = <IUserModel>req.body;
 			var getValue = req.body;
 			var _adminUserBusiness = new AdminUserBusiness();
 			_adminUserBusiness.verifyToken(req, res, (adminUserData) => {
@@ -245,18 +281,18 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	authenticate(req: express.Request, res: express.Response): void {
 		try {
-			var _user: IAdminUserModel = <IAdminUserModel>req.body;
+			var _user: IUserModel = <IUserModel>req.body;
 			//set the createdon to now
 			var _adminUserBusiness = new AdminUserBusiness();
 			_adminUserBusiness.findOne({ email: _user.email }, (error, result) => {
-				if (error) res.send({ "error": "error" });
+				if (error) res.send({ "error": error });
 				else {
 					if (result && result.password && result.password == _user.password) {
-						if (!result.isActive) {
+						if (result.status != "verified") {
 							return res.status(401).send({ "error": "Your account is not active. Please contact admin." });
 						} else {
 							var token = _adminUserBusiness.createToken(result);
-							var _updateData: IAdminUserModel = <IAdminUserModel>req.body;
+							var _updateData: IUserModel = <IUserModel>req.body;
 							_updateData.lastLogin = new Date();
 							_updateData.token = token;
 							var _id: string = result._id.toString();
@@ -290,7 +326,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	changePassword(req: express.Request, res: express.Response): void {
 		try {
-			var _user: IAdminUserModel = <IAdminUserModel>req.body;
+			var _user: IUserModel = <IUserModel>req.body;
 			var getValue = req.body;
 			var _adminUserBusiness = new AdminUserBusiness();
 			_adminUserBusiness.verifyToken(req, res, (adminData) => {

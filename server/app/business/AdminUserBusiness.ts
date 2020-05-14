@@ -7,17 +7,17 @@ var jwt = require('jsonwebtoken');
 var _ = require('lodash');
 
 import BaseBusiness = require("./BaseBusiness");
-import AdminUserRepository = require("./../repository/AdminUserRepository");
-import IAdminUserModel = require("./../model/interfaces/IAdminUserModel");
+import UserRepository = require("./../repository/UserRepository");
+import IUserModel = require("./../model/interfaces/IUserModel");
 
-class AdminUserBusiness implements BaseBusiness<IAdminUserModel> {
-    private _adminUserRepository: AdminUserRepository;
+class AdminUserBusiness implements BaseBusiness<IUserModel> {
+    private _adminUserRepository: UserRepository;
 
     constructor() {
-        this._adminUserRepository = new AdminUserRepository();
+        this._adminUserRepository = new UserRepository();
     }
 
-    create(item: IAdminUserModel, callback: (error: any, result: any) => void) {
+    create(item: IUserModel, callback: (error: any, result: any) => void) {
         console.log("in adminUser  business create");
         console.log(item);
         item._id = mongoose.Types.ObjectId();
@@ -34,7 +34,7 @@ class AdminUserBusiness implements BaseBusiness<IAdminUserModel> {
         this._adminUserRepository.retrieveFields(query, fields, callback);
     }
 
-    update(_id: string, item: IAdminUserModel, callback: (error: any, result: any) => void) {
+    update(_id: string, item: IUserModel, callback: (error: any, result: any) => void) {
         this._adminUserRepository.findById(_id, (err, res) => {
             if (err) callback(err, res);
             else
@@ -49,7 +49,7 @@ class AdminUserBusiness implements BaseBusiness<IAdminUserModel> {
         this._adminUserRepository.deleteMany(query, callback);
     }
 
-    findById(_id: string, callback: (error: any, result: IAdminUserModel) => void) {
+    findById(_id: string, callback: (error: any, result: IUserModel) => void) {
         this._adminUserRepository.findById(_id, callback);
     }
 
@@ -57,7 +57,7 @@ class AdminUserBusiness implements BaseBusiness<IAdminUserModel> {
         this._adminUserRepository.count(query, callback);
     }
 
-    findOne(query: any, callback: (error: any, result: IAdminUserModel) => void) {
+    findOne(query: any, callback: (error: any, result: IUserModel) => void) {
         this._adminUserRepository.findOne(query, callback);
     }
 
@@ -67,7 +67,7 @@ class AdminUserBusiness implements BaseBusiness<IAdminUserModel> {
     }
 
     verifyToken(req: express.Request, res: express.Response, callback: (data: any) => void) {
-        //		console.log('Admin: ' + req.url);
+        console.log('Admin: ' + req.url);
         var token = req.headers.authorization;
         var origin = req.headers.origin;
         if (!token) {
@@ -80,8 +80,7 @@ class AdminUserBusiness implements BaseBusiness<IAdminUserModel> {
                 if (err) {
                     res.status(401).send("Invalid token");
                 } else {
-                    console.log(companyUserData);
-                    if (companyUserData && companyUserData.isActive && companyUserData.email != "") {
+                    if (companyUserData && companyUserData.status == "verified" && companyUserData.email != "") {
                         callback(companyUserData);
                     } else {
                         res.status(401).send("Invalid token");
