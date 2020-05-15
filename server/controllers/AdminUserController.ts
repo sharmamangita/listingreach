@@ -40,11 +40,20 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	////////////////Admin//////////////////////////////////////////
 
-	allcandidate(req: express.Request, res: express.Response): void {
+	getAgents(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
-
-
+			var condition: Object = { status: "verified", roles: /agents/ }
+			var fields: Object = { firstName: 1, lastName: 1, email: 1, createdOn: 1,lastLogin:1 }
+			_userBusiness.retrieveFields(condition, fields, (error, result) => {
+				if (error) {
+					console.log("error in getAgents -", error);
+					res.send({ "error": error });
+				} else {
+					console.log("getAgents response - ", result);
+					res.send(result);
+				}
+			})
 		}
 		catch (e) {
 			console.log(e);
@@ -157,7 +166,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				if (error) {
 					res.send({ "error": error });
 				} else {
-				//	console.log("get settings result", result);
+					//	console.log("get settings result", result);
 					res.send(result);
 				}
 			});
@@ -180,17 +189,17 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				var _blastSettingsBusiness = new BlastSettingsBusiness();
 				var id: string = req.body;
 				var mongoose = require('mongoose');
-			
-			//	blastsettings._id = mongoose.ObjectId(id);
-			//	blastsettings.per_email_blast_price = req.body.peremailblastprice;
-			//	blastsettings.additional_email_blast_price = req.body.additionalemailblastprice;
-				blastsettings.modifiedOn=new Date();
-				blastsettings._id=mongoose.Types.ObjectId.createFromHexString(blastsettings._id);
-				console.log('ffffffffffffff',blastsettings);
+
+				//	blastsettings._id = mongoose.ObjectId(id);
+				//	blastsettings.per_email_blast_price = req.body.peremailblastprice;
+				//	blastsettings.additional_email_blast_price = req.body.additionalemailblastprice;
+				blastsettings.modifiedOn = new Date();
+				blastsettings._id = mongoose.Types.ObjectId.createFromHexString(blastsettings._id);
+				console.log('ffffffffffffff', blastsettings);
 
 				_blastSettingsBusiness.update(id, blastsettings, (error, result) => {
 					if (error) {
-						console.log("error",error.path);
+						console.log("error", error.path);
 						res.send({ "error": error });
 					}
 					else {

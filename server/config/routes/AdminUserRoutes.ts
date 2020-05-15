@@ -18,7 +18,7 @@ class AdminUserRoutes {
         router.get("/adminusers/blastsettings",controller.getBlastSettings);
         router.put("/adminuser/updateblastsettings/:_id", controller.updateBlastSetings);
         router.get("/adminusers/getContent",controller.getContent);
-        router.get("/adminusers/:_flag", controller.allcandidate);
+        router.get("/adminusers/agents", controller.getAgents);
         router.put("/adminusers/", controller.update);
         router.delete("/adminusers/:_id", controller.deleteusers);
         router.get("/userStatus/:_id", controller.userStatus);
