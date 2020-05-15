@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 //import {FlashMessageList} from './flash/FlashMessageList';
 import { history } from '../helpers';
 import { alertActions, userActions,adminActions,profileActions } from '../actions';
-import { PrivateRoute } from '../components';
 
 import { LoginPage } from '../features/LoginPage';
 import { HomePage } from '../features/HomePage';
@@ -32,7 +31,7 @@ import { ContactPage } from '../features/ContactPage';
 import { SendinvitationPage } from '../features/SendinvitationPage';
 import { AdminLoginPage } from './../features/admin/AdminLoginPage';
 import { DashboardPage } from './../features/admin/DashboardPage';
-
+import { AgentsPage } from './../features/admin/AgentsPage';
 import { PricePage } from './../features/admin/PricePage';
 import { ContentPage } from './../features/admin/ContentPage';
 import { AdminChangePasswordPage } from './../features/admin/AdminChangePasswordPage';
@@ -86,7 +85,7 @@ class App extends React.Component {
     		  <Route path ="/RefundPage" component={RefundPage} />
     		  <Route path ="/TestimonialsPage" component={TestimonialsPage} />
     		  <Route path ="/FaqsPage" component={FaqsPage} />
-    		  <Route path ="/DatabasesPage" component={DatabasesPage} />
+    		  <Route path ="/DatabasesPage" component={DatabasesPage} />          
           <Route path ="/LegalPage" component={LegalPage} />
           <Route path ="/PricingPage" component={PricingPage} /> 
           <Route path ="/AgentDashboardPage" component={AgentDashboardPage} /> 
@@ -99,6 +98,7 @@ class App extends React.Component {
         return <AdminLayout>
             <Route path="/DashboardPage" component={DashboardPage} />
             <Route path="/PricePage" component={PricePage} />
+            <Route path ="/AgentsPage" component={AgentsPage} />
             <Route path="/ContentPage" component={ContentPage} />
             <Route path="/ChangePassword" component={AdminChangePasswordPage} />
           </AdminLayout>

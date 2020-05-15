@@ -19,7 +19,7 @@ class AdminSidebar extends React.Component {
 						<ul className="nav nav-pills flex-column sidebar-nav">
 							<li className="nav-item"><Link className="nav-link" to="DashboardPage"><em className="fa fa-dashboard"></em> Dashboard</Link></li>
 							<li className="nav-item"><Link className="nav-link" to="PricePage"><em className="fa fa-group"></em> Update Pricing</Link></li>
-							<li className="nav-item"><Link className="nav-link" to="CandidatePage"><em className="fa fa-users"></em> Candidates</Link></li>
+							<li className="nav-item"><Link className="nav-link" to="AgentsPage"><em className="fa fa-users"></em> Agents</Link></li>
 							<li className="nav-item"><Link className="nav-link" to="PricePage"><em className="fa fa-money"></em> Pricing</Link></li>
 
 							<li className="nav-item"><Link className="nav-link" to="ChangePassword"><em className="fa fa-key"></em> Change Password</Link></li>

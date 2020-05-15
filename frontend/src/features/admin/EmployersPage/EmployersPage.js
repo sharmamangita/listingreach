@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { common } from "../../../helpers";
 import { adminActions } from "../../../actions";
 import { userActions } from "../../../actions";
-import UserProfileModal from "../../../components/UserProfileModal";
 import moment from "moment";
 import { Button,Modal } from 'react-bootstrap';
 import { MDBDataTable } from "mdbreact";
@@ -44,7 +43,7 @@ class EmployersPage extends React.Component{
 	}
 
 	componentDidMount() {
-		this.props.dispatch(adminActions.getcandidates('hr'));
+	//	this.props.dispatch(adminActions.getcandidates('hr'));
 	
   	}
 

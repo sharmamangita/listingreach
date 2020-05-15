@@ -3,7 +3,7 @@ import objectAssign from 'object-assign';
 
 export function admins(state = {}, action) {
   let newState;
-  console.log('Reducer admins111=====:', action.admin);
+  console.log('Reducer admins111=====:', action);
   switch (action.type) {
     case adminConstants.GETALL_REQUEST:
       newState = objectAssign({}, state, {
@@ -53,6 +53,22 @@ export function admins(state = {}, action) {
         return { 
           error: action.error
         };
+
+        case adminConstants.AGENTS_REQUEST:
+          newState = objectAssign({}, state, {
+            loading: true
+          });
+          return newState;
+        case adminConstants.AGENTS_SUCCESS:
+          newState = objectAssign({}, state, {
+            loading: true,
+            agents: action.agents
+          });
+          return newState;
+        case adminConstants.AGENTS_FAILURE:
+          return { 
+            error: action.error
+          };
 
 
     case adminConstants.GETALLHR_REQUEST:

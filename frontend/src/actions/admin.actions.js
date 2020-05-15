@@ -5,7 +5,6 @@ import { history } from '../helpers';
 
 
 export const adminActions = {
-    getcandidates,
     deleteusers,
     userStatus,
     PlanRegister,
@@ -15,7 +14,8 @@ export const adminActions = {
     getContent,
     getAlldashboardData,
     update,
-    updateBlastSettings
+    updateBlastSettings,
+    getAgents
 };
 
 function updateBlastSettings(blastsetting) {
@@ -60,35 +60,18 @@ function update(user, employee) {
     function success(admins) { return { type: adminConstants.UPDATE_SUCCESS, admins } }
     function failure(error) { return { type: adminConstants.GETAL_FAILURE, error } }
 }
-function getcandidates(flag) {
-
-    if (flag == 'candidate') {
-        return dispatch => {
-            dispatch(request());
-            adminService.getcandidates(flag)
-                .then(
-                    admins => dispatch(success(admins)),
-                    error => dispatch(failure(error.toString()))
-                );
-        };
-        function request() { return { type: adminConstants.GETALL_REQUEST } }
-        function success(admin) { return { type: adminConstants.GETALL_SUCCESS, admin } }
-        function failure(error) { return { type: adminConstants.GETALL_FAILURE, error } }
-    }
-    if (flag == 'hr') {
-        return dispatch => {
-            dispatch(request());
-            adminService.getcandidates(flag)
-                .then(
-                    admins => dispatch(success(admins)),
-                    error => dispatch(failure(error.toString()))
-                );
-        };
-        function request() { return { type: adminConstants.GETALLHR_REQUEST } }
-        function success(admin) { return { type: adminConstants.GETALLHR_SUCCESS, admin } }
-        function failure(error) { return { type: adminConstants.GETALLHR_FAILURE, error } }
-
-    }
+function getAgents() {
+    return dispatch => {
+        dispatch(request());
+        adminService.getAgents()
+            .then(
+                agents => dispatch(success(agents)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request() { return { type: adminConstants.AGENTS_REQUEST } }
+    function success(agents) { return { type: adminConstants.AGENTS_SUCCESS, agents } }
+    function failure(error) { return { type: adminConstants.AGENTS_FAILURE, error } }
 }
 
 function deleteusers(id) {

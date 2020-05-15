@@ -2,7 +2,6 @@ import config from 'config';
 import { authHeader } from '../helpers';
 
 export const adminService = {
-  getcandidates,
   deleteusers,
   userStatus,
   PlanRegister,
@@ -11,11 +10,11 @@ export const adminService = {
   updatecontent,
   getContent,
   getAlldashboardData,
-  updateBlastSettings
+  updateBlastSettings,
+  getAgents
 };
 
 function updateBlastSettings(id,blastsettings) {
-    console.log("bbbbbbbbbbb",blastsettings)
     const requestOptions = {
         method: 'PUT',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
@@ -24,11 +23,11 @@ function updateBlastSettings(id,blastsettings) {
     // location.reload();  
     return fetch(`${config.apiUrl}/adminuser/updateblastsettings/${id}`, requestOptions).then(handleResponse);;
 }
-function getcandidates(flag) {
+function getAgents() {
     const requestOptions = {
         method: 'GET'
     };
-    return fetch(`${config.apiUrl}/adminusers/${flag}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/adminusers/agents`, requestOptions).then(handleResponse);
 }
 
 function deleteusers(id) {
