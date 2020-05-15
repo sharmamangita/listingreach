@@ -27,6 +27,9 @@ class DashboardPage extends React.Component {
       if(element._id=="agents"){
         this.registeredagentscount=element.total;
       }
+     else if(element._id=="subscriber"){
+        this.emailsubscriberscount=element.total;
+      }
     });
   }
 

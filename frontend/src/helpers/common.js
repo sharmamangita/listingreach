@@ -20,7 +20,7 @@ export const common = {
       label: 'Name',
       field: 'name',
       sort: 'asc',
-      width: 150
+      width: 250
     },
     {
       label: 'Email',
@@ -29,22 +29,40 @@ export const common = {
       width: 270
     },
     {
+      label: 'Company',
+      field: 'company',
+      sort: 'asc',
+      width: 200
+    },
+    {
+      label: '#Blasts Sent',
+      field: 'blastssent',
+      sort: 'asc',
+      width: 50
+    },
+    {
+      label: 'Total Paid',
+      field: 'totalpaid',
+      sort: 'asc',
+      width: 50
+    },
+    {
       label: 'Registered Date',
       field: 'registered',
       sort: 'asc',
-      width: 100
+      width: 200
     },   
     {
       label: 'Actions',
       field: 'actions',
       sort: 'asc',
-      width: 100
+      width: 50
     },
     {
       label: 'Status',
       field: 'status',
       sort: 'asc',
-      width: 100
+      width: 50
     },
   ],
   empdata: [
