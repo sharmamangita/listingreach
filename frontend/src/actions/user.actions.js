@@ -20,7 +20,9 @@ export const userActions = {
     deleteprofileCover,
     delete: _delete,
     getReferences,
-    updateStatus
+    updateStatus,
+    blast,
+    saveProperty
 };
 /* Get References */
 function getReferences(userid){
@@ -377,3 +379,39 @@ function getapagecontent(page){
     function success(users) { return { type: userConstants.GETALL_SUCCESS, users } }
     function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
 }
+
+function blast(blast_type,selected_template_id,user){
+   console.log("dsdfsf====",blast_type,selected_template_id,user);
+    return dispatch => {
+        dispatch(request());
+        userService.blast(blast_type,selected_template_id,user)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+
+    function request() { return { type: userConstants.BLAST_REQUEST } }
+    function success(users) { return { type: userConstants.BLAST_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.BLAST_FAILURE, error } }
+
+}
+
+function saveProperty(property){
+   console.log("property====",property);
+    return dispatch => {
+        dispatch(request());
+        userService.saveProperty(property)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+
+    function request() { return { type: userConstants.PROPERTY_REQUEST } }
+    function success(users) { return { type: userConstants.PROPERTY_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.PROPERTY_FAILURE, error } }
+
+}
+
+

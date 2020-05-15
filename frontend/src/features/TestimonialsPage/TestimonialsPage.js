@@ -60,9 +60,53 @@ class TestimonialsPage extends React.Component {
 					  <div className="row">
 						<div className="col-md-12">
 						 
-						  <p className="color-text-a">
-						  Content awaited... 
-						  </p>
+						 <div className="testimonials-box">
+						<div className="row">           
+						  <div className="col-sm-12 col-md-6">         
+							<div className="testimonials-content">
+							  <p className="testimonial-text">
+							   “Listing Reach allowed me to market my luxury listing to top markets like Miami, LA, and NY. I was able to connect with another agent and close the deal. This tool is invaluable.”
+							  </p>
+							</div>
+							<div className="testimonial-author-box">                  
+							  <h5 className="testimonial-author">Lori</h5>
+							</div>
+						  </div>
+								 <div className="col-sm-12 col-md-6">              
+							<div className="testimonials-content">
+							  <p className="testimonial-text">
+							   “Great product. I can now connect with more agents than I thought possible. No more tracking down email addresses one at a time. I selected my desired market and send off my listing”
+							  </p>
+							</div>
+							<div className="testimonial-author-box">                 
+							  <h5 className="testimonial-author">Brian</h5>
+							</div>
+						  </div>
+						</div>
+						
+						<div className="row">           
+						  <div className="col-sm-12 col-md-6">         
+							<div className="testimonials-content">
+							  <p className="testimonial-text">
+							   “Thanks so much! Your service is fantastic. Such speedy reply! Always been very happy with your service! It is typically very easy to navigate and I am impressed with your customer service…so timely!”
+							  </p>
+							</div>
+							<div className="testimonial-author-box">                  
+							  <h5 className="testimonial-author">Keller </h5>
+							</div>
+						  </div>
+								 <div className="col-sm-12 col-md-6">              
+							<div className="testimonials-content">
+							  <p className="testimonial-text">
+							   “Thank you for your services. ListingReach continues to keep phones ringing for our Home Inspection company and Home Inspectors.”
+							  </p>
+							</div>
+							<div className="testimonial-author-box">                 
+							  <h5 className="testimonial-author">Vince</h5>
+							</div>
+						  </div>
+						</div>
+					  </div>
 						</div>
 					   
 					  </div>

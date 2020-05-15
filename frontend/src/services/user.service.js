@@ -10,7 +10,6 @@ export const userService = {
     getById,
     getVerification,
     update,
-    
     updatepassword,
     contactForm,
     deleteprofilepic,
@@ -19,7 +18,9 @@ export const userService = {
     delete: _delete,
     getReferences,
     updateStatus,
-    unsetsrcid
+    unsetsrcid,
+    blast,
+    saveProperty
 };
 
 function login(email, password) {
@@ -224,5 +225,24 @@ function getapagecontent(page) {
     };
     return fetch(`${config.apiUrl}/contentPage`, requestOptions).then(handleResponse);
 }	
+
+function blast(blast_type,selected_template_id,user_id){
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({blast_type,selected_template_id,user_id})
+    };
+    return fetch(`${config.apiUrl}/users/saveBlast`, requestOptions).then(handleResponse);    
+}
+
+function saveProperty(property){
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({property})
+    };
+    return fetch(`${config.apiUrl}/users/saveProperty`, requestOptions).then(handleResponse);    
+}
+
+
     
-	

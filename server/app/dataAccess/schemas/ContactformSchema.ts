@@ -20,11 +20,11 @@ class ContactformSchema {
                 required: true
             },
             phone : {
-                type: String
+                type: String,
                 required: true
             },
             message : {
-				type: String
+				type: String,
                 required: true
             },
              createdOn: {

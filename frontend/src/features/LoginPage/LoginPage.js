@@ -92,18 +92,17 @@ class LoginPage extends React.Component {
                   <div className="row">
                     <div className="col-md-7">
                       <form className="form-a contactForm"  onSubmit={this.handleSubmit}>
-                        <div id="sendmessage">Your message has been sent. Thank you!</div>
-                        <div id="errormessage">
+                        
                         {this.alermsg.message &&
-                        <div className={`alert ${this.alermsg.type}`}>{this.alermsg.message}</div>
-                        }</div>
+                        <div id="errormessage"><div className="{`alert ${this.alermsg.type}`}">{this.alermsg.message}</div>
+                        </div>}
                         <div className="row">
                             
                           <div className="col-md-12 mb-3">
-                            <div className={'col-md-12 mb-3 mb-md-0' + (submitted && !email ? ' has-error' : '')}>
+                            <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
                               <input type="text" className="form-control form-control-lg form-control-a" name="email" value={email} onChange={this.handleChange} placeholder="Email Address"/>
                                 {submitted && !email &&
-                                    <div className="help-block red">Email is required</div>
+                                    <div className="validation">Email is required</div>
                                 }
                             </div>
                           </div>
@@ -112,7 +111,7 @@ class LoginPage extends React.Component {
                             <div className="form-group">
                                 <input type="password" className="form-control form-control-lg form-control-a" name="password" value={password} onChange={this.handleChange} placeholder="Password"/>
                                 {submitted && !password &&
-                                    <div className="help-block red">Password is required</div>
+                                    <div className="validation">Password is required</div>
                                 }
                             </div>
                           </div>

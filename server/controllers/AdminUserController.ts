@@ -43,14 +43,14 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 	getAgents(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
-			var condition: Object = { status: "verified", roles: /agents/ }
-			var fields: Object = { firstName: 1, lastName: 1, email: 1, createdOn: 1,lastLogin:1 }
+			var condition: Object = { roles: /agents/ }
+			var fields: Object = { _id: 1, firstName: 1, lastName: 1, email: 1, status: 1, createdOn: 1, lastLogin: 1 }
 			_userBusiness.retrieveFields(condition, fields, (error, result) => {
 				if (error) {
 					console.log("error in getAgents -", error);
 					res.send({ "error": error });
 				} else {
-					console.log("getAgents response - ", result);
+					//console.log("getAgents response - ", result);
 					res.send(result);
 				}
 			})
