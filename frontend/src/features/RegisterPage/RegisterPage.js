@@ -131,7 +131,7 @@ class RegisterPage extends React.Component {
         }
         var  notmatached='';
         if(this.state.showerror==false){
-         notmatached = (<div className="help-block red">Password not matched</div>);
+         notmatached = (<div className="validation">Password not matched</div>);
         } 
         const { registering  } = this.props;
         const { user, submitted } = this.state;
@@ -183,7 +183,7 @@ class RegisterPage extends React.Component {
                                             <div className={'form-group' + (submitted && !user.userName ? ' has-error' : '')}>
                                             <input type="text" className="form-control form-control-lg form-control-a" name="userName" value={user.userName} onChange={this.handleChange}  placeholder="User Name"/>
                                             {submitted && !user.userName &&
-                                                <div className="help-block red">User Name is required</div>
+                                                <div className="validation">User Name is required</div>
                                             }
                                             </div>
                                         </div>
@@ -191,7 +191,7 @@ class RegisterPage extends React.Component {
                                             <div className={'form-group' + (submitted && !user.firstName ? ' has-error' : '')}>
                                             <input type="text" className="form-control form-control-lg form-control-a" name="firstName" value={user.firstName} onChange={this.handleChange}  placeholder="First Name"/>
                                             {submitted && !user.firstName &&
-                                                <div className="help-block red">First Name is required</div>
+                                                <div className="validation">First Name is required</div>
                                             }
                                             </div>
                                         </div>
@@ -199,7 +199,7 @@ class RegisterPage extends React.Component {
                                             <div className={'form-group mb-3' + (submitted && !user.lastName ? ' has-error' : '')}>
                                             <input type="text" className="form-control form-control-lg form-control-a" name="lastName" value={user.lastName} onChange={this.handleChange}  placeholder="Last Name"/>
                                             {submitted && !user.lastName &&
-                                                <div className="help-block red">Last Name is required</div>
+                                                <div className="validation">Last Name is required</div>
                                             }
                                             </div>
                                         </div>
@@ -207,7 +207,7 @@ class RegisterPage extends React.Component {
                                             <div className={'form-group mb-3' + (submitted && !user.email ? ' has-error' : '')}>
                                             <input type="email" className="form-control form-control-lg form-control-a" name="email"  value={user.email} onChange={this.handleChange} placeholder="Email"/>
                                             {submitted && !user.email &&
-                                                <div className="help-block red">Email is required</div>
+                                                <div className="validation">Email is required</div>
                                             }
                                             </div>
                                         </div>
@@ -215,7 +215,7 @@ class RegisterPage extends React.Component {
                                             <div className={'form-group mb-3' + (submitted && !user.phoneno ? ' has-error' : '')}>
                                             <input type="text" className="form-control form-control-lg form-control-a" name="phoneno"  value={user.phoneno} onChange={this.handleChange} placeholder="Your Phone Number"/>
                                             {submitted && !user.phoneno &&
-                                                <div className="help-block red">Phone Number is required</div>
+                                                <div className="validation">Phone Number is required</div>
                                             }
                                             </div>
                                         </div> 
@@ -233,7 +233,7 @@ class RegisterPage extends React.Component {
                                             <div className={'form-group mb-3' + (submitted && !user.password ? ' has-error' : '')}>
                                             <input type="password" className="form-control form-control-lg form-control-a" name="password" minLength={6}  value={user.password} onChange={this.handleChange} placeholder="Password"/>
                                             {submitted && !user.password &&
-                                                <div className="help-block red">Password Number is required</div>
+                                                <div className="validation">Password Number is required</div>
                                             }
                                             </div>
                                         </div> 
@@ -242,7 +242,7 @@ class RegisterPage extends React.Component {
                                             <div className={'form-group mb-3' + (submitted && !user.confirmpassword ? ' has-error' : '')}>
                                             <input type="password" className="form-control form-control-lg form-control-a" name="confirmpassword" minLength={6}  value={user.confirmpassword} onChange={this.handleChange} placeholder="Confirm Password"/>
                                             {submitted && !user.confirmpassword &&
-                                                <div className="help-block red">Phone Number is required</div>
+                                                <div className="validation">Phone Number is required</div>
                                             }
                                             {notmatached}
                                             </div>

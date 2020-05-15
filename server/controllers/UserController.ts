@@ -404,7 +404,13 @@ update(req: express.Request, res: express.Response): void {
     findById(req: express.Request, res: express.Response): void {
         
         try {
-        	
+        	var _userBusiness = new UserBusiness();
+        	_userBusiness.verifyToken(req, res, (userdata) => {
+	        	_userBusiness.findOne({_id:userdata.id}, (error, result) => {
+	        		
+	        		res.send(result)
+				});
+			});
 		}
         catch (e)  { 
             console.log(e);

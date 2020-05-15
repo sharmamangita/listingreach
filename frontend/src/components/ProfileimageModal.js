@@ -27,7 +27,7 @@ class ProfileimageModal extends React.Component {
           image:null,
           restoreFocus:true,
           submitted: false,
-          proimg:'/public/assets/images/dummy-profile-pic.png' 
+          proimg:'/public/assets/images/dummy-profile.png' 
         };
        
         
@@ -112,7 +112,7 @@ class ProfileimageModal extends React.Component {
 				<div className="modal-body">
 				<div className="col-sm-12 text-center">
 				<Spinner size={120} spinnerColor={"#333"} spinnerWidth={2} visible={this.state.loader} />
-				<img src={(url ? url :'/public/assets/images/dummy-profile-pic.png')}  style={imgstyle} className="img-circle" />
+				<img src={(url ? url :'/public/assets/images/dummy-profile.png')}  style={imgstyle} className="img-circle" />
 			</div>
              <div className="row form-group">
                 <div className="col-md-12 col-lg-12 mb-3 mb-md-0">

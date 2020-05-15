@@ -3,10 +3,6 @@ import config from 'config';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions } from '../../actions';
-
-
-import ProfileimageModal from '../../components/ProfileimageModal';
-
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 
 const Entities = require('html-entities').XmlEntities;
@@ -16,28 +12,91 @@ import ReadMoreAndLess from 'react-read-more-less';
 
 import moment from "moment";
 import queryString from 'query-string';
-
+import ProfileimageModal from '../../components/ProfileimageModal';
 import PaypalExpressBtn from 'react-paypal-express-checkout';
 import PaypalButton from '../../components/PaypalButton';
 import ListingSubmenu from '../../components/ListingSubmenu';
-var QRCode = require('qrcode.react');
+
 import { Button,Modal } from 'react-bootstrap';
 import { Alert } from 'reactstrap';
 
 class ProfilePage extends React.Component {
 constructor(props) {
   super(props);
+  let id='';
+  if(this.props.user){
+     id= this.props.user.userId; 
+  }
+  const { dispatch } = this.props;
  
+  this.state = {
+      submitted: false,
+      user: this.props.user,
+      profile: this.props.profile,
+      userdata:'' ,
+      show: false,
+      showprofileimage:false,
+  };
+  this.dispatchval = ({
+      tagName : 'span',
+      className : '',
+      children : null,
+      dispatch :this.props
+  });
+  this.handleShow = this.handleShow.bind(this);
+  this.handleChange = this.handleChange.bind(this);
+}
+componentDidMount(){
+   this.props.dispatch(userActions.getById(this.props.user.userId));
+}
+handleShow() {
+    this.setState({ 
+        show: true,
+        scrollable:true,
+        showprofileimage:false,
+        restoreFocus:true
+     });
+}
+handleChange(event) {
+}
+renderProfileimageModal() {
+  console.log("test====");
+  let modalClose = () => this.setState({ showprofileimage: false });
+  return (
+    <ProfileimageModal modalid={this.state.modalid} dispatchval = {this.dispatchval} profile={this.state.profile} users={this.state.user} visible={this.state.showprofileimage} onClickBackdrop={modalClose}  dialogClassName="modal-lg"/>
+  );
 }
 
-
-
- componentDidMount(){
   
- }
-
+handleSubmit(event) {
+  event.preventDefault();
+  var ftechdata = this.state.social_media;
+  this.setState({ submitted: true });
+}
 
 render() {
+  const {profile } = this.props;
+  console.log("test===");
+  this.state.userdata=Object.assign({
+    companyName:'',
+    mobileno:'',
+    city:'',
+    country:'',
+    state:'',
+    zipcode:'',
+
+  },profile);
+  const {submitted,userdata,user}=this.state;
+  let modalproimageOpen = (event) => {
+     var id = event.currentTarget.dataset.id;
+     this.setState({ showprofileimage: true , profile:this.props.profile, modalid: id});
+  }
+ 
+ 
+  let profilepc ='/public/assets/images/dummy-profile.png';
+  var profileimagemodal = this.state.profile ? this.renderProfileimageModal() : (<span></span>);
+    
+  
   return (
   <div>
     <ListingSubmenu/>
@@ -50,6 +109,7 @@ render() {
     </section>
     <section className="news-grid grid">
       <div className="container">
+       {profileimagemodal}
         <div className="row">
           <div className="col-sm-12 section-t2">
             <div className="row">
@@ -59,43 +119,58 @@ render() {
                   <div className="row">
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="Company Name" data-rule="minlen:4" data-msg="Please enter unique username" />
-                        <div className="validation"></div>
+                         <input type="text" className="form-control form-control-lg form-control-a " name="companyName" value={userdata.companyName} onChange={this.handleChange}  placeholder="Company Name"/>
+                          {submitted && !userdata.companyName &&
+                              <div className="validation">Company Name is required</div>
+                          }
                       </div>
                     </div>
                     <div className="col-md-6 mb-3">
                       <div className="form-group">
-                        <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="First Name" data-rule="minlen:4" data-msg="Please enter your first name" />
-                        <div className="validation"></div>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="firstName" value={userdata.firstName} onChange={this.handleChange}  placeholder="First Name"/>
+                        {submitted && !userdata.firstName &&
+                            <div className="validation">First Name is required</div>
+                        }
                       </div>
                     </div>
                     <div className="col-md-6 mb-3">
                       <div className="form-group">
-                        <input name="text" type="phone" className="form-control form-control-lg form-control-a" placeholder="Last Name" data-rule="phone" data-msg="Please enter your last name" />
-                        <div className="validation"></div>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="lastName" value={userdata.lastName} onChange={this.handleChange}  placeholder="Last Name"/>
+                        {submitted && !userdata.lastName &&
+                            <div className="validation">Last Name is required</div>
+                        }
                       </div>
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <input name="email" type="email" className="form-control form-control-lg form-control-a" placeholder="Your Email" data-rule="email" data-msg="Please enter a valid email" />
-                        <div className="validation"></div>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="email" value={userdata.email} onChange={this.handleChange}  placeholder="Your Email"/>
+                        {submitted && !userdata.email &&
+                            <div className="validation">Email is required</div>
+                        }
                       </div>
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <input name="phone" type="phone" className="form-control form-control-lg form-control-a" placeholder="Your Phone Number" data-rule="phone" data-msg="Please enter a valid phone" />
-                        <div className="validation"></div>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="phone" value={userdata.phone} onChange={this.handleChange}  placeholder="Your Phone Number"/>
+                        {submitted && !userdata.phone &&
+                            <div className="validation">Please enter a valid phone</div>
+                        }
                       </div>
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <input name="phone" type="phone" className="form-control form-control-lg form-control-a" placeholder="Your Mobile Number" data-rule="phone" data-msg="Please enter a valid phone" />
-                        <div className="validation"></div>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="mobileno" value={userdata.mobileno} onChange={this.handleChange}  placeholder="Your Mobile Number"/>
+                        {submitted && !userdata.mobileno &&
+                            <div className="validation">Please enter a valid phone</div>
+                        }
                       </div>
                     </div>
                     <div className="col-md-6 mb-3">
                         <div className="form-group">
-                          <input type="text" name="City" className="form-control form-control-lg form-control-a" placeholder="City" data-rule="minlen:4" data-msg="Please enter your City" />
+                          <input type="text" className="form-control form-control-lg form-control-a " name="city" value={userdata.city} onChange={this.handleChange}  placeholder="City"/>
+                          {submitted && !userdata.city &&
+                              <div className="validation">Please enter your City</div>
+                          }
                         </div>
                     </div>
                     <div className="col-md-6 mb-3">
@@ -107,21 +182,24 @@ render() {
                     </div>
                     <div className="col-md-6 mb-3">
                       <div className="form-group">
-                        <input type="text" name="City" className="form-control form-control-lg form-control-a" placeholder="Zip Code" data-rule="minlen:4" data-msg="Please enter your City" />
-                        </div>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="zipcode" value={userdata.zipcode} onChange={this.handleChange}  placeholder="Zip Code"/>
+                        {submitted && !userdata.zipcode &&
+                            <div className="validation">Please enter your zipcode</div>
+                        }
                       </div>
-                      <div className="col-md-6 mb-3">
+                    </div>
+                    <div className="col-md-6 mb-3">
+                      <div className="form-group">
                         <div className="form-group">
-                          <div className="form-group">
-                            <select className="form-control form-control-lg form-control-a" id="city">
-                              <option>Select Country</option>
-                            </select>
-                          </div>
+                          <select className="form-control form-control-lg form-control-a" id="city">
+                            <option>Select Country</option>
+                          </select>
                         </div>
                       </div>
-                      <div className="col-md-12">
-                        <button type="submit" className="btn btn-a">Save</button>
-                      </div>
+                    </div>
+                    <div className="col-md-12">
+                      <button type="submit" className="btn btn-a">Save</button>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -136,7 +214,12 @@ render() {
                           <input type="checkbox" />
                           <span className="checkmark"></span>
                         </label>
-                        <img alt="Photo" className="img-circle logo"  src="img/dummy-profile.png" />
+                         {userdata && userdata.roles=='agents'  ? 
+                          <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-target="#profileimg"  onClick={modalproimageOpen}>
+                          <img src={profilepc} alt="Image" className="profile-img img-fluid" />
+                          </a>
+                        : <img src={profilepc} alt="Image" className="profile-img img-fluid" />}
+                        
                         <br></br>
                         <span>
                           <a href="">Upload Agent Photo</a>
@@ -149,7 +232,7 @@ render() {
                           <input type="checkbox" />
                           <span className="checkmark"></span>
                         </label>
-                        <img alt="Logo" className="img-circle logo"  src="img/dummy-logo.png" />
+                        <img alt="Logo" className="img-circle logo"  src="images/dummy-logo.png" />
                         <br></br>
                         <span>
                           <a href="">Upload Agent Logo</a>
@@ -223,15 +306,11 @@ function mapStateToProps(state) {
   const { profile} = users;
   const { alert } = state;
   
-  console.log("profile======",profile);
+  console.log("profile======",users);
   return {
     user,
-    profile,
-   
-   
-	  
-    alert
-    
+    alert,
+    profile
   };
 }
 

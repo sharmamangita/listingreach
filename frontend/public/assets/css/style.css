@@ -2841,23 +2841,23 @@ footer .credits {
 ======================================*/
 
 .form-a #sendmessage {
-    color: #EE8C3A;
-    border: 1px solid #000;
-    display: none;
-    text-align: center;
-    padding: 15px;
-    font-weight: 600;
-    margin-bottom: 15px;
+  color: #EE8C3A;
+  border: 1px solid #000;
+  display: block;
+  text-align: center;
+  padding: 15px;
+  font-weight: 600;
+  margin-bottom: 15px;
 }
 
 .form-a #errormessage {
-    color: red;
-    display: none;
-    border: 1px solid red;
-    text-align: center;
-    padding: 15px;
-    font-weight: 600;
-    margin-bottom: 15px;
+  color: red;
+  display: block;
+  border: 1px solid red;
+  text-align: center;
+  padding: 15px;
+  font-weight: 600;
+  margin-bottom: 15px;
 }
 
 .form-a #sendmessage.show,
