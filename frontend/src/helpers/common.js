@@ -65,6 +65,64 @@ export const common = {
       width: 50
     },
   ],
+
+  subscribercolumns: [
+    {
+      label: 'Name',
+      field: 'name',
+      sort: 'asc',
+      width: 250
+    },
+    {
+      label: 'Email',
+      field: 'email',
+      sort: 'asc',
+      width: 270
+    },
+    {
+      label: 'Phone',
+      field: 'phone',
+      sort: 'asc',
+      width: 200
+    },
+    {
+      label: 'City',
+      field: 'city',
+      sort: 'asc',
+      width: 50
+    },
+    {
+      label: 'State',
+      field: 'state',
+      sort: 'asc',
+      width: 50
+    },
+    {
+      label: 'Subscribed Date',
+      field: 'subscribedon',
+      sort: 'asc',
+      width: 200
+    },   
+    {
+      label: 'Preferences',
+      field: 'preferences',
+      sort: 'asc',
+      width: 50
+    },
+    {
+      label: 'Actions',
+      field: 'actions',
+      sort: 'asc',
+      width: 50
+    },
+    {
+      label: 'Status',
+      field: 'status',
+      sort: 'asc',
+      width: 50
+    },
+  ],
+
   empdata: [
     {
       label: 'Name',

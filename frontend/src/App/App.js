@@ -3,7 +3,7 @@ import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 //import {FlashMessageList} from './flash/FlashMessageList';
 import { history } from '../helpers';
-import { alertActions, userActions,adminActions,profileActions } from '../actions';
+import { alertActions, userActions, adminActions, profileActions } from '../actions';
 
 import { LoginPage } from '../features/LoginPage';
 import { HomePage } from '../features/HomePage';
@@ -33,9 +33,12 @@ import { AdminLoginPage } from './../features/admin/AdminLoginPage';
 import { DashboardPage } from './../features/admin/DashboardPage';
 import { AgentsPage } from './../features/admin/AgentsPage';
 import { PricePage } from './../features/admin/PricePage';
+import { SubscriberPage } from './../features/admin/SubscribersPage';
+import { EmailBlastsPage } from './../features/admin/EmailBlastsPage'
+import { PaymentsPage } from './../features/admin/PaymentsPage'
 import { ContentPage } from './../features/admin/ContentPage';
 import { AdminChangePasswordPage } from './../features/admin/AdminChangePasswordPage';
-import AdminLayout from '../layouts/AdminLayout';   
+import AdminLayout from '../layouts/AdminLayout';
 import Footer from '../components/Footer';
 import { AgentDashboardPage } from '../features/AgentDashboardPage';
 import { CreateFlyerPage } from '../features/CreateFlyerPage';
@@ -48,16 +51,16 @@ import { DesignsPage } from '../features/DesignsPage';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    let user  = JSON.parse(localStorage.getItem('user'));
+    let user = JSON.parse(localStorage.getItem('user'));
     const { dispatch } = this.props;
-    this.state={
+    this.state = {
       user: user
     }
-    
+
     history.listen((location, action) => {
       // clear alert on location change
       dispatch(alertActions.clear());
-      });
+    });
     this.adminLayout = this.adminLayout.bind(this);
   }
 
@@ -65,94 +68,98 @@ class App extends React.Component {
     const { dispatch } = this.props;
   }
 
-  adminLayout(e){
+  adminLayout(e) {
     var urlval = window.location.pathname;
-    var type= urlval.split("/");
-    var typevalue='';
-    if(type){
-      typevalue=type[1];
+    var type = urlval.split("/");
+    var typevalue = '';
+    if (type) {
+      typevalue = type[1];
     }
-    if(this.state.user && this.state.user.roles !== null ){
-      if(this.state.user.roles=='agents'){
-       return <PublicLayout >
-         <Route path="/forgotpassword" component={ForgotPasswordPage} />
+    if (this.state.user && this.state.user.roles !== null) {
+      if (this.state.user.roles == 'agents') {
+        return <PublicLayout >
+          <Route path="/forgotpassword" component={ForgotPasswordPage} />
           <Route path="/register" component={RegisterPage} />
           <Route path="/HomePage" component={HomePage} />
           <Route path="/login" component={LoginPage} />
           <Route path="/verification/:token" component={VerificationPage} />
-          <Route path ="/changePassword" component={ChangePasswordPage} />
-          <Route path ="/contact" component={ContactPage} />
-          <Route path ="/profilePage" component={ProfilePage} />
-          <Route path ="/SendInvitePage" component={SendinvitationPage} />
-          <Route path ="/AboutPage" component={AboutPage} />
-          <Route path ="/PrivacyPage" component={PrivacyPage} />
-    		  <Route path ="/RefundPage" component={RefundPage} />
-    		  <Route path ="/TestimonialsPage" component={TestimonialsPage} />
-    		  <Route path ="/FaqsPage" component={FaqsPage} />
-    		  <Route path ="/DatabasesPage" component={DatabasesPage} />          
-          <Route path ="/LegalPage" component={LegalPage} />
-          <Route path ="/PricingPage" component={PricingPage} /> 
-          <Route path ="/AgentDashboardPage" component={AgentDashboardPage} />
-		  <Route path ="/CreateFlyerPage" component={CreateFlyerPage} />
-		  <Route path ="/FlyersPage" component={FlyersPage} />
-		  <Route path ="/BillingPage" component={BillingPage} />
-		  <Route path ="/DesignsPage" component={DesignsPage} /> 
-           
-         
-          </PublicLayout>
-       }else if(this.state.user.roles =='admin' ){
-         require('./App.css');
-         require('./react-draft-wysiwyg.css');
+          <Route path="/changePassword" component={ChangePasswordPage} />
+          <Route path="/contact" component={ContactPage} />
+          <Route path="/profilePage" component={ProfilePage} />
+          <Route path="/SendInvitePage" component={SendinvitationPage} />
+          <Route path="/AboutPage" component={AboutPage} />
+          <Route path="/PrivacyPage" component={PrivacyPage} />
+          <Route path="/RefundPage" component={RefundPage} />
+          <Route path="/TestimonialsPage" component={TestimonialsPage} />
+          <Route path="/FaqsPage" component={FaqsPage} />
+          <Route path="/DatabasesPage" component={DatabasesPage} />
+          <Route path="/LegalPage" component={LegalPage} />
+          <Route path="/PricingPage" component={PricingPage} />
+          <Route path="/AgentDashboardPage" component={AgentDashboardPage} />
+          <Route path="/CreateFlyerPage" component={CreateFlyerPage} />
+          <Route path="/FlyersPage" component={FlyersPage} />
+          <Route path="/BillingPage" component={BillingPage} />
+          <Route path="/DesignsPage" component={DesignsPage} />
+
+
+        </PublicLayout>
+      } else if (this.state.user.roles == 'admin') {
+        require('./App.css');
+        require('./react-draft-wysiwyg.css');
         return <AdminLayout>
-            <Route path="/DashboardPage" component={DashboardPage} />
-            <Route path="/PricePage" component={PricePage} />
-            <Route path ="/AgentsPage" component={AgentsPage} />
-            <Route path="/ContentPage" component={ContentPage} />
-            <Route path="/ChangePassword" component={AdminChangePasswordPage} />
-          </AdminLayout>
-        }
-        else{
+          <Route path="/DashboardPage" component={DashboardPage} />
+          <Route path="/PricePage" component={PricePage} />
+          <Route path="/AgentsPage" component={AgentsPage} />
+          <Route path="/SubscriberPage" component={SubscriberPage} />
+          <Route path="/EmailBlastsPage" component={EmailBlastsPage} />
+          <Route path="/PaymentsPage" component={PaymentsPage} />
+          <Route path="/ContentPage" component={ContentPage} />
+          <Route path="/ChangePassword" component={AdminChangePasswordPage} />
+        </AdminLayout>
+      }
+      else {
         return <PublicLayout >
           <Route path="/login" component={LoginPage} />
           <Route path="/register" component={RegisterPage} />
-          <Route path ="/AboutPage" component={AboutPage} />
-          <Route path ="/PrivacyPage" component={PrivacyPage} />
-          <Route path ="/RefundPage" component={RefundPage} />
-          <Route path ="/TestimonialsPage" component={TestimonialsPage} /> 
-          <Route path ="/FaqsPage" component={FaqsPage} />
-          <Route path ="/DatabasesPage" component={DatabasesPage} />
-          <Route path ="/LegalPage" component={LegalPage} />
-          <Route path ="/PricingPage" component={PricingPage} /> 
-          <Route path ="/contact" component={ContactPage} />
+          <Route path="/AboutPage" component={AboutPage} />
+          <Route path="/PrivacyPage" component={PrivacyPage} />
+          <Route path="/RefundPage" component={RefundPage} />
+          <Route path="/TestimonialsPage" component={TestimonialsPage} />
+          <Route path="/FaqsPage" component={FaqsPage} />
+          <Route path="/DatabasesPage" component={DatabasesPage} />
+          <Route path="/LegalPage" component={LegalPage} />
+          <Route path="/PricingPage" component={PricingPage} />
+          <Route path="/contact" component={ContactPage} />
           <Route path="/forgotpassword" component={ForgotPasswordPage} />
           <Route path="/HomePage" component={HomePage} />
-          <Route path ="/profilePage" component={ProfilePage} />
-          
-          </PublicLayout >
-        }
+          <Route path="/profilePage" component={ProfilePage} />
+        
+
+        </PublicLayout >
       }
-    else{
-      if(typevalue=='adminlogin'){
+    }
+    else {
+      if (typevalue == 'adminlogin') {
         return <Route path="/adminlogin" component={AdminLoginPage} />
       }
-      else{
-        return  <PublicLayout >
-        <Route path="/login" component={LoginPage} />
-        <Route path="/register" component={RegisterPage} />
-        <Route path ="/contact" component={ContactPage} />
-        <Route path ="/AboutPage" component={AboutPage} />
-        <Route path ="/PrivacyPage" component={PrivacyPage} />
-    		<Route path ="/RefundPage" component={RefundPage} />
-    		<Route path ="/TestimonialsPage" component={TestimonialsPage} />
-    		<Route path ="/FaqsPage" component={FaqsPage} />
-    		<Route path ="/DatabasesPage" component={DatabasesPage} />
-        <Route path ="/LegalPage" component={LegalPage} />
-        <Route path ="/PricingPage" component={PricingPage} /> 
-        <Route path="/HomePage" component={HomePage} />
-         <Route path ="/profilePage" component={ProfilePage} />
-        <Route path="/forgotpassword" component={ForgotPasswordPage} /> 
-		   
-            
+      else {
+        return <PublicLayout >
+          <Route path="/login" component={LoginPage} />
+          <Route path="/register" component={RegisterPage} />
+          <Route path="/contact" component={ContactPage} />
+          <Route path="/AboutPage" component={AboutPage} />
+          <Route path="/PrivacyPage" component={PrivacyPage} />
+          <Route path="/RefundPage" component={RefundPage} />
+          <Route path="/TestimonialsPage" component={TestimonialsPage} />
+          <Route path="/FaqsPage" component={FaqsPage} />
+          <Route path="/DatabasesPage" component={DatabasesPage} />
+          <Route path="/LegalPage" component={LegalPage} />
+          <Route path="/PricingPage" component={PricingPage} />
+          <Route path="/HomePage" component={HomePage} />
+          <Route path="/profilePage" component={ProfilePage} />
+          <Route path="/forgotpassword" component={ForgotPasswordPage} />
+
+
         </PublicLayout >
       }
     }
@@ -160,15 +167,15 @@ class App extends React.Component {
 
   render() {
     return (
-       <div className="site-wrap">
-             
-             <Router history={history}>
-              <div>
-              {this.adminLayout()} 
-             </div>
-          </Router>
+      <div className="site-wrap">
+
+        <Router history={history}>
+          <div>
+            {this.adminLayout()}
+          </div>
+        </Router>
       </div>
-     );
+    );
   }
 }
 

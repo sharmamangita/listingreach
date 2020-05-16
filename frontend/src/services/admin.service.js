@@ -2,19 +2,20 @@ import config from 'config';
 import { authHeader } from '../helpers';
 
 export const adminService = {
-  deleteusers,
-  userStatus,
-  PlanRegister,
-  getPlan,
-  getBlastSettings,
-  updatecontent,
-  getContent,
-  getAlldashboardData,
-  updateBlastSettings,
-  getAgents
+    deleteusers,
+    userStatus,
+    PlanRegister,
+    getPlan,
+    getBlastSettings,
+    updatecontent,
+    getContent,
+    getAlldashboardData,
+    updateBlastSettings,
+    getAgents,
+    getSubscribers
 };
 
-function updateBlastSettings(id,blastsettings) {
+function updateBlastSettings(id, blastsettings) {
     const requestOptions = {
         method: 'PUT',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
@@ -28,6 +29,13 @@ function getAgents() {
         method: 'GET'
     };
     return fetch(`${config.apiUrl}/adminusers/agents`, requestOptions).then(handleResponse);
+}
+
+function getSubscribers() {
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(`${config.apiUrl}/adminusers/subscribers`, requestOptions).then(handleResponse);
 }
 
 function deleteusers(id) {
@@ -45,14 +53,14 @@ function userStatus(id) {
     };
     return fetch(`${config.apiUrl}/userStatus/${id}`, requestOptions).then(handleResponse)
 
-    .then(user => {
-        location.reload();
-        return user;
-    }).catch(this.handleError)
+        .then(user => {
+            location.reload();
+            return user;
+        }).catch(this.handleError)
 }
 
 function PlanRegister(user) {
-    console.log("user service=====",user);
+    console.log("user service=====", user);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -74,17 +82,17 @@ function getBlastSettings() {
     return fetch(`${config.apiUrl}/adminusers/blastsettings`, requestOptions).then(handleResponse);
 }
 
-function updatecontent(page,content) {
+function updatecontent(page, content) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({page,content})
+        body: JSON.stringify({ page, content })
     };
     return fetch(`${config.apiUrl}/adminusers/updateContent`, requestOptions).then(handleResponse);
 }
 
 
-function getContent(){
+function getContent() {
 
     const requestOptions = {
         method: 'GET'
@@ -102,14 +110,14 @@ function handleResponse(response) {
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === 401) {
-               //return data.error;
-          //     var scrollTop = $(window).scrollTop();
-               window.scrollTo(0,0);
-               return Promise.reject(data.error);
+                //return data.error;
+                //     var scrollTop = $(window).scrollTop();
+                window.scrollTo(0, 0);
+                return Promise.reject(data.error);
             }
 
         }
-        console.log("data====",data);
+        console.log("data====", data);
         return data;
     });
 }

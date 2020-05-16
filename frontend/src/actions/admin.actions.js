@@ -15,7 +15,8 @@ export const adminActions = {
     getAlldashboardData,
     update,
     updateBlastSettings,
-    getAgents
+    getAgents,
+    getSubscribers
 };
 
 function updateBlastSettings(blastsetting) {
@@ -72,6 +73,20 @@ function getAgents() {
     function request() { return { type: adminConstants.AGENTS_REQUEST } }
     function success(agents) { return { type: adminConstants.AGENTS_SUCCESS, agents } }
     function failure(error) { return { type: adminConstants.AGENTS_FAILURE, error } }
+}
+
+function getSubscribers() {
+    return dispatch => {
+        dispatch(request());
+        adminService.getSubscribers()
+            .then(
+                subscribers => dispatch(success(subscribers)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request() { return { type: adminConstants.SUBSCRIBERS_REQUEST } }
+    function success(subscribers) { return { type: adminConstants.SUBSCRIBERS_SUCCESS, subscribers } }
+    function failure(error) { return { type: adminConstants.SUBSCRIBERS_FAILURE, error } }
 }
 
 function deleteusers(id) {

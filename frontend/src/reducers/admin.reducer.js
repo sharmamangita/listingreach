@@ -38,37 +38,53 @@ export function admins(state = {}, action) {
         error: action.error
       };
 
-      case adminConstants.BLAST_SETTINGS_REQUEST:
-        newState = objectAssign({}, state, {
-          loading: true
-        });
-        return newState;
-      case adminConstants.BLAST_SETTINGS_SUCCESS:
-        newState = objectAssign({}, state, {
-          loading: true,
-          blastsettings: action.blastsettings[0]
-        });
-        return newState;
-      case adminConstants.BLAST_SETTINGS_FAILURE:
-        return { 
-          error: action.error
-        };
+    case adminConstants.BLAST_SETTINGS_REQUEST:
+      newState = objectAssign({}, state, {
+        loading: true
+      });
+      return newState;
+    case adminConstants.BLAST_SETTINGS_SUCCESS:
+      newState = objectAssign({}, state, {
+        loading: true,
+        blastsettings: action.blastsettings[0]
+      });
+      return newState;
+    case adminConstants.BLAST_SETTINGS_FAILURE:
+      return {
+        error: action.error
+      };
 
-        case adminConstants.AGENTS_REQUEST:
-          newState = objectAssign({}, state, {
-            loading: true
-          });
-          return newState;
-        case adminConstants.AGENTS_SUCCESS:
-          newState = objectAssign({}, state, {
-            loading: true,
-            agents: action.agents
-          });
-          return newState;
-        case adminConstants.AGENTS_FAILURE:
-          return { 
-            error: action.error
-          };
+    case adminConstants.AGENTS_REQUEST:
+      newState = objectAssign({}, state, {
+        loading: true
+      });
+      return newState;
+    case adminConstants.AGENTS_SUCCESS:
+      newState = objectAssign({}, state, {
+        loading: true,
+        agents: action.agents
+      });
+      return newState;
+    case adminConstants.AGENTS_FAILURE:
+      return {
+        error: action.error
+      };
+
+    case adminConstants.SUBSCRIBERS_REQUEST:
+      newState = objectAssign({}, state, {
+        loading: true
+      });
+      return newState;
+    case adminConstants.SUBSCRIBERS_SUCCESS:
+      newState = objectAssign({}, state, {
+        loading: true,
+        subscribers: action.subscribers
+      });
+      return newState;
+    case adminConstants.SUBSCRIBERS_FAILURE:
+      return {
+        error: action.error
+      };
 
 
     case adminConstants.GETALLHR_REQUEST:

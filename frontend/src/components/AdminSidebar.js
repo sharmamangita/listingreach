@@ -18,10 +18,11 @@ class AdminSidebar extends React.Component {
 						<a href="#menu-toggle" className="btn btn-default" id="menu-toggle"><em className="fa fa-bars"></em></a>
 						<ul className="nav nav-pills flex-column sidebar-nav">
 							<li className="nav-item"><Link className="nav-link" to="DashboardPage"><em className="fa fa-dashboard"></em> Dashboard</Link></li>
-							<li className="nav-item"><Link className="nav-link" to="PricePage"><em className="fa fa-group"></em> Update Pricing</Link></li>
+							<li className="nav-item"><Link className="nav-link" to="PricePage"><em className="fa fa-money"></em> Update Pricing</Link></li>
 							<li className="nav-item"><Link className="nav-link" to="AgentsPage"><em className="fa fa-users"></em> Agents</Link></li>
-							<li className="nav-item"><Link className="nav-link" to="PricePage"><em className="fa fa-money"></em> Pricing</Link></li>
-
+							<li className="nav-item"><Link className="nav-link" to="SubscriberPage"><em className="fa fa-users"></em> Subscribers</Link></li>
+							<li className="nav-item"><Link className="nav-link" to="SubscriberPage"><em className="fa fa-envelope"></em> Email Blasts</Link></li>
+							<li className="nav-item"><Link className="nav-link" to="SubscriberPage"><em className="fa fa-money"></em> Payments</Link></li>
 							<li className="nav-item"><Link className="nav-link" to="ChangePassword"><em className="fa fa-key"></em> Change Password</Link></li>
 						</ul>
 					</nav>
