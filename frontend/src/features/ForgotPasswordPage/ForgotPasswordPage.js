@@ -8,6 +8,7 @@ import { Alert } from 'reactstrap';
 class ForgotPasswordPage extends React.Component {
     constructor(props) {
         super(props);
+        this.alermsg = '';
         this.props.dispatch(userActions.logout());
         this.state = {
             email: '',
@@ -47,51 +48,70 @@ class ForgotPasswordPage extends React.Component {
     render() {
         const { loggingIn  } = this.props;
         const { email, submitted } = this.state;
+        
         const { alert } = this.props;
+        if(alert && alert.message){
+            this.alermsg = alert;
+        }
         return (
-            <div className="site-section bg-light">
-                <div className="container">
-               { alert.message &&
-                  <Alert className={`alert ${alert.type}`} isOpen={this.state.visible} > <button type="button" onClick={this.closebtn} className="close">
-						<span aria-hidden="true">&times;</span>
-							</button>{alert.message}</Alert>
-                     }
-                    <div className="text-center mb-5 section-heading">
-                      <h2>Forgot Password?</h2>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-12 col-lg-2">
-                        </div>
-                        <div className="col-md-12 col-lg-8 mb-5">
-                            <form onSubmit={this.handleSubmit} className="p-5 bg-white">
-                                <div className="row form-group">
-                                <div className="col-md-12 mb-3 mb-md-0">
-                                    <label className="font-weight-bold" htmlFor="fullname">Enter your email to reset your password.</label>
-                                    <div className={'col-md-12 mb-3 mb-md-0' + (submitted && !email ? ' has-error' : '')}>
-                                        <input type="text" className="form-control mb-3" name="email" value={email} onChange={this.handleChange} placeholder="Email Address"/>
-                                        {submitted && !email &&
-                                            <div className="help-block red">Email is required</div>
-                                        }
-                                        
-                                    </div>
-
-                                </div>
-                              </div>  
-                              <div className="row form-group">
-                                <div className="col-md-4">
-                                  <input type="submit" value="Submit" className="btn btn-primary pill px-4 py-2" />
-                                </div>
-                                <div className="col-md-8 text-right">
-                                  <span className="font-13"><Link to="login">Back to Login</Link></span>
-                                </div>
-                              </div>             
-                            </form>
-                        </div>          
-                        <div className="col-md-12 col-lg-2">
-                        </div>
-                    </div>
-                </div>
-            </div>
+		<div>
+		 <section className="intro-single">
+				<div className="container">
+				  <div className="row">
+					<div className="col-md-12 col-lg-8">
+					  <div className="title-single-box">
+						<h1 className="title-single">Forgot Password?</h1> 
+			             <span className="color-text-a">To reset your password, please enter your email address or username below.</span>	
+					  </div>
+					</div>
+					<div className="col-md-12 col-lg-4">
+					  <nav aria-label="breadcrumb" className="breadcrumb-box d-flex justify-content-lg-end">
+						<ol className="breadcrumb">
+						  <li className="breadcrumb-item">
+							<Link to="HomePage">Home</Link>
+						  </li>
+						  <li className="breadcrumb-item active" aria-current="page">
+							Forgot Password
+						  </li>
+						</ol>
+					  </nav>
+					</div>
+				  </div>
+				</div>
+			</section>
+		  <section class="contact">
+			<div class="container">
+			  <div class="row">
+				
+				<div class="col-sm-12 section-t2">
+				  <div class="row">
+					<div class="col-md-7">
+					  <form class="form-a contactForm" onSubmit={this.handleSubmit}>
+						{this.alermsg.message &&
+                        <div id="sendmessage"><div className="{`alert ${this.alermsg.type}`}">{this.alermsg.message}</div>
+                        </div>}
+						<div class="row">
+							
+						  <div className="col-md-12 mb-3">
+							<div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
+							  <input name="email" type="email" className="form-control form-control-lg form-control-a" placeholder="Enter Your Username or Email" data-rule="email" data-msg="Please enter a valid email"  value={email} onChange={this.handleChange} />
+							  {submitted && !email &&
+								<div className="help-block red">Email is required</div>
+							  }
+							</div>
+						  </div>
+						  <div className="col-md-12">
+							<button type="submit" className="btn btn-a  mb-3">Reset Password</button>				
+						  </div>
+						</div>
+					  </form>
+					</div>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		  </section>
+		</div>
         );
     }
 }

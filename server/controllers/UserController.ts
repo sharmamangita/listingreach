@@ -11,7 +11,7 @@ import PagesBusiness = require("./../app/business/PagesBusiness");
 
 import IBaseController = require("./BaseController");
 import IUserModel = require("./../app/model/interfaces/IUserModel");
-
+import IAgentModel = require("./../app/model/interfaces/IAgentModel");
 import IPagesModel = require("./../app/model/interfaces/IPagesModel");
 import IEmployeeModel = require("./../app/model/interfaces/IEmployeeModel");
 import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
@@ -22,8 +22,8 @@ import IContactformModel = require("./../app/model/interfaces/IContactformModel"
 import IInvitationModel = require("./../app/model/interfaces/IInvitationModel");
 import Common = require("./../config/constants/common");
 import PlanBusiness = require("./../app/business/PlanBusiness");
-
-
+import AgentBusiness = require("./../app/business/AgentBusiness");
+import IAgentModel = require("./../app/model/interfaces/IAgentModel");
 
 var moment = require('moment');
 var mammoth = require("mammoth");
@@ -80,7 +80,7 @@ class UserController implements IBaseController <UserBusiness> {
                    
                     var signupemailtemplatetouser = Common.SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER;
                     var emailtemplate = signupemailtemplatetouser.replace(/#email#/g, userdata.email).replace(/#password#/g, userdata.password);
-                     Common.sendMail(userdata.email, Common.ADMIN_EMAIL, 'Welcome to Listingraech!', null, emailtemplate, function(error: any, response: any) {
+                     Common.sendMail(userdata.email, Common.ADMIN_EMAIL, 'Welcome to ListingReach!', null, emailtemplate, function(error: any, response: any) {
                         if (error) {
                             console.log(error);
                             res.send("error");
@@ -192,26 +192,46 @@ update(req: express.Request, res: express.Response): void {
  
 
     updateprofilepic(data:any,id:any, res: express.Response): void {
-    	var _employeeBusiness = new EmployeeBusiness();
-    	var _emplloye: IEmployeeModel = <IEmployeeModel>data;
+    	var _userBusiness = new UserBusiness();
+    	var _agentBusiness= new AgentBusiness();
+    	var _agent: IAgentModel = <IAgentModel >data;
+    	_agent.createdOn = new Date();
+    	var _user: IUserModel = <IUserModel>data;
     	var type= data.mimetype.split("/");
- 		_emplloye.profilePic=data.filename;
+ 		_user.profilePic=data.filename;
 	 	var userid:string = id.toString();
-		_employeeBusiness.findOne({'userId':userid}, (error, result) => {
+		_userBusiness.findOne({'_id':userid}, (error, result) => {
 			if(error){
 				console.log("ueser");
 			}
 			else {
+				
 				var _id:string = result._id.toString();
-				_employeeBusiness.update(_id, _emplloye, (error:any, resultUpdate:any) => {
-					if(error){
-					}else {
-						return res.json({profileimg:_emplloye.profilePic});
+				_agent.userId=result._id.toString();
+				_agent.image_url=_agent.profilePic;
+				_agentBusiness.findOne({'userId':_id}, (error:any, agentresult:any) => {
+					if(agentresult!=null){
+						_agentBusiness.update(_id, _agent, (error:any, resultUpdate:any) => {
+							if(error){
+							}else {
+								return res.json({profileimg:agentresult.profilePic});
+							}
+						});
+					}else{
+						console.log("_agent=====",_agent);
+						_agentBusiness.create(_agent, (error, agentresultData) => {
+							if(error){
+							}else {
+							   return res.json({profileimg:agentresultData.image_url});
+							}
+						});
 					}
+					
 				});
 			}
 		});
     }
+
 
 
     updatecoverupload(data:any,id:any, res: express.Response): void {   
@@ -261,9 +281,7 @@ update(req: express.Request, res: express.Response): void {
             res.send({"error": "error in your request"});
         }
     }
-
-
-    deleteprofileCover(req: express.Request, res: express.Response): void {
+   deleteprofileCover(req: express.Request, res: express.Response): void {
 		try {
 		var _employeeBusiness = new EmployeeBusiness();
 		var userid =  req.body.userid;
@@ -396,9 +414,35 @@ update(req: express.Request, res: express.Response): void {
    
 
     findById(req: express.Request, res: express.Response): void {
-        
         try {
-        	
+        	var _userBusiness = new UserBusiness();
+        	var _agentBusiness = new AgentBusiness()
+        	_userBusiness.verifyToken(req, res, (userdata) => {
+        		async.parallel({
+					agentData: function(callback:any) {
+						
+						_agentBusiness.retrieve({'userId':userdata.id},(error,agentdata) => {    
+					        if(error){
+					         }
+					        else{
+					        	callback(null,agentdata);
+					        }
+					    })
+					},
+					userData: function(callback:any) {
+			        	_userBusiness.findOne({_id:userdata.id}, (error, result) => {
+			        		callback(null,result);
+			        		
+						});
+					}
+				}, function(err:any, results:any) {
+					if(err){
+						res.send({"error": "error"});
+					}
+					console.log("results===",results);
+					res.json({"status":"success","data":results});
+				});
+			});
 		}
         catch (e)  { 
             console.log(e);
@@ -417,7 +461,7 @@ update(req: express.Request, res: express.Response): void {
     
     contactForm(req: express.Request, res: express.Response): void { 
 		try {
-			var _contactform: IContactformModel = <IContactfromModel>req.body;
+			var _contactform: IContactformModel = <IContactformModel>req.body;
 			var _contactformBusiness = new ContactformBusiness();
 			_contactform.fullname =req.body.fullname;
 			_contactform.email = req.body.email;
@@ -431,7 +475,7 @@ update(req: express.Request, res: express.Response): void {
 				} else {
 					var contactFormemail =Common.CONTACT_FORM;	
 					var emailtemplate = contactFormemail.replace(/#fullname#/g,_contactform.fullname).replace(/#email#/g,_contactform.email).replace(/#phone#/g,_contactform.phone).replace(/#message#/g,_contactform.message) .replace(/#date#/g,_contactform.createdOn);
-					Common.sendMail(_contactform.email,'support@employeemirror.com','Contact Form', null,emailtemplate, function(error: any, response: any){ 
+					Common.sendMail(_contactform.email,'support@ListingReach.com','Contact Form', null,emailtemplate, function(error: any, response: any){ 
 					if(error){ 
 					console.log(error);
 					res.end("error");
@@ -479,7 +523,7 @@ update(req: express.Request, res: express.Response): void {
 										else {
 											var emailresetpassword=Common.EMAIL_TEMPLATE_RESET_USER_PASSWORD;
 											var emailtemplate =emailresetpassword.replace(/#password#/g,_user.password);
-											Common.sendMail(result.email,'support@employeemirror.com','Forgot Password', null,emailtemplate, function(error: any, response: any){
+											Common.sendMail(result.email,'support@ListingReach.com','Forgot Password', null,emailtemplate, function(error: any, response: any){
 												if(error){
 													console.log(error);
 													res.end("error");
@@ -507,6 +551,7 @@ update(req: express.Request, res: express.Response): void {
     
     
     UpdateUserPassword(req: express.Request, res: express.Response): void {
+    console.log("Dsadasdasd")
     	try {
 			var _user: IUserModel = <IUserModel>req.body; 
 			var _userBusiness = new UserBusiness();

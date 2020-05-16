@@ -108,9 +108,9 @@ class ListingHeader extends React.Component {
                 <Link to="TestimonialsPage" className="nav-link">Testimonials</Link>
               </li>
               <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <Link className="nav-link dropdown-toggle active" to="AgentDashboardPage" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   My Account
-                </a>
+                </Link>
                 <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                   <Link className="dropdown-item" to="changePassword">Change Password</Link>
                   {$logout}            
@@ -137,7 +137,7 @@ class ListingHeader extends React.Component {
 			<span></span>
 			<span></span>
 		  </button>
-		  <a className="navbar-brand text-brand" href="index.html"><img src="public/assets/images/listing-reach-logo.png" alt="" className="img-a img-fluid"/></a>
+		  <Link className="navbar-brand text-brand" to="HomePage"><img src="public/assets/images/listing-reach-logo.png" alt="" className="img-a img-fluid"/></Link>
 		  <button type="button" className="btn btn-link nav-search navbar-toggle-box-collapse d-md-none" data-toggle="collapse"
 			data-target="#navbarTogglerDemo01" aria-expanded="false">
 			<span className="fa fa-envelope-square" aria-hidden="true"></span>

@@ -9,7 +9,8 @@ interface IContactformModel extends mongoose.Document {
     fullname : string,
     email : string,
     phone:string,
-    message : string
+    message : string,
+    createdOn:string
 }
 
 export = IContactformModel; 

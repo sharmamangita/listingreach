@@ -9,6 +9,7 @@ import { userActions } from '../../actions';
 class RegisterPage extends React.Component {
     constructor(props) {
         super(props);
+        this.alermsg = '';
         this.state = {
             user: {
                 userName:'',
@@ -137,15 +138,15 @@ class RegisterPage extends React.Component {
         const { user, submitted } = this.state;
         const registerStyle = {};
         registerStyle.width =  "245px" ;
-    	const { alert } = this.props;
+    	
+        const { alert } = this.props;
+        if(alert && alert.message){
+            this.alermsg = alert;
+        }
         return (
             <div className="site-section bg-light">
              <div className="container">
-                { alert.message &&
-                   <Alert className={`alert ${alert.type}`} isOpen={this.state.visible} > <button type="button" onClick={this.closebtn} className="close">
-					<span aria-hidden="true">&times;</span>
-					</button>{alert.message}</Alert>
-             	}
+                
 			    <section className="intro-single">
                 <div className="container">
                   <div className="row">
@@ -172,12 +173,15 @@ class RegisterPage extends React.Component {
                 </section>
                 <section className="contact">
                 <div className="container">
+                    
                     <div className="row">       
                         <div className="col-sm-12 section-t2">
                             <div className="row">
                                 <div className="col-md-7">
                                     <form onSubmit={this.handleSubmit} className="form-a contactForm">
-                                    
+                                    {this.alermsg.message &&
+                                    <div id="errormessage"><div className="{`alert ${this.alermsg.type}`}">{this.alermsg.message}</div>
+                                    </div>}
                                     <div className="row">
                                           <div className="col-md-4 mb-3">
                                             <div className={'form-group' + (submitted && !user.userName ? ' has-error' : '')}>
@@ -219,15 +223,7 @@ class RegisterPage extends React.Component {
                                             }
                                             </div>
                                         </div> 
-                                        <div className="col-md-12 mb-3">
-                                            <div className="form-group">
-                                                <div className="form-group">              
-                                                    <select className="form-control form-control-lg form-control-a" id="city">
-                                                        <option>Select Country</option>                
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                         
                                         <div className="col-md-12 mb-3">
                                             <div className={'form-group mb-3' + (submitted && !user.password ? ' has-error' : '')}>
@@ -254,6 +250,7 @@ class RegisterPage extends React.Component {
                                               privacy policy</a>
                                               <input type="checkbox"   defaultChecked={this.state.isChecked} onChange={this.handleCheck}/>
                                               <span className="checkmark"></span>
+                                               <div className="validation">{msg}</div>
                                               </label>       
                                             </div>
                                           </div>

@@ -179,7 +179,7 @@ function updatepassword(user,currentpassword,newspassword) {
                 if(user.success){
                     if(userroles=="agents"){
                        
-                       history.push('/homePage');
+                       history.push('/AgentDashboardPage');
                     }
                 dispatch(alertActions.success(user.success));
                 window.scrollTo(0,0);
@@ -315,6 +315,7 @@ function getById(id) {
                     dispatch(alertActions.success('Please login first to view candidates profile.'));
                    
                 }else{
+                    console.log("user===",user);
                   dispatch(success(user));
                 }
             },

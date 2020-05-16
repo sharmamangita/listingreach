@@ -40,7 +40,8 @@ export function users(state = {}, action) {
      
       newState = objectAssign({}, state, {
         loading: true,
-        profile: action.user
+        profile: action.user.data.userData,
+        agentData: action.user.data.agentData,
       });
       return newState ;     
      

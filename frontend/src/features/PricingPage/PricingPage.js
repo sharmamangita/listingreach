@@ -15,7 +15,7 @@ class PricingPage extends React.Component {
   }
 
   componentWillMount() {
-   this.props.dispatch(adminActions.getPlan()); 
+   //this.props.dispatch(adminActions.getPlan()); 
    window.scrollTo(0,0);
   }
 

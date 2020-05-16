@@ -60,7 +60,7 @@ handleShow() {
 handleChange(event) {
 }
 renderProfileimageModal() {
-  console.log("test====");
+  console.log("test==sss==",this.state.modalid);
   let modalClose = () => this.setState({ showprofileimage: false });
   return (
     <ProfileimageModal modalid={this.state.modalid} dispatchval = {this.dispatchval} profile={this.state.profile} users={this.state.user} visible={this.state.showprofileimage} onClickBackdrop={modalClose}  dialogClassName="modal-lg"/>
@@ -76,7 +76,8 @@ handleSubmit(event) {
 
 render() {
   const {profile } = this.props;
-  console.log("test===");
+  console.log("test==s=",profile);
+ 
   this.state.userdata=Object.assign({
     companyName:'',
     mobileno:'',
@@ -89,6 +90,7 @@ render() {
   const {submitted,userdata,user}=this.state;
   let modalproimageOpen = (event) => {
      var id = event.currentTarget.dataset.id;
+     console.log("id====",event.currentTarget.dataset.id);
      this.setState({ showprofileimage: true , profile:this.props.profile, modalid: id});
   }
  
@@ -214,15 +216,12 @@ render() {
                           <input type="checkbox" />
                           <span className="checkmark"></span>
                         </label>
-                         {userdata && userdata.roles=='agents'  ? 
-                          <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-target="#profileimg"  onClick={modalproimageOpen}>
+                          <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id="profileimg" data-target="#profileimg"  onClick={modalproimageOpen}>
                           <img src={profilepc} alt="Image" className="profile-img img-fluid" />
                           </a>
-                        : <img src={profilepc} alt="Image" className="profile-img img-fluid" />}
-                        
                         <br></br>
                         <span>
-                          <a href="">Upload Agent Photo</a>
+                          <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id="profileimg" data-target="#profileimg"  onClick={modalproimageOpen}>Upload Agent Photo</a>
                         </span>
                       </div>
                     </div>
@@ -232,7 +231,7 @@ render() {
                           <input type="checkbox" />
                           <span className="checkmark"></span>
                         </label>
-                        <img alt="Logo" className="img-circle logo"  src="images/dummy-logo.png" />
+                        <img alt="Logo" className="img-circle logo"  src="/public/assets/images/dummy-logo.png" />
                         <br></br>
                         <span>
                           <a href="">Upload Agent Logo</a>
@@ -305,7 +304,6 @@ function mapStateToProps(state) {
   const { user } = authentication;
   const { profile} = users;
   const { alert } = state;
-  
   console.log("profile======",users);
   return {
     user,
