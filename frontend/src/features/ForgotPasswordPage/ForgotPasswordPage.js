@@ -79,18 +79,18 @@ class ForgotPasswordPage extends React.Component {
 				  </div>
 				</div>
 			</section>
-		  <section class="contact">
-			<div class="container">
-			  <div class="row">
+		  <section className="contact">
+			<div className="container">
+			  <div className="row">
 				
-				<div class="col-sm-12 section-t2">
-				  <div class="row">
-					<div class="col-md-7">
-					  <form class="form-a contactForm" onSubmit={this.handleSubmit}>
+				<div className="col-sm-12 section-t2">
+				  <div className="row">
+					<div className="col-md-7">
+					  <form className="form-a contactForm" onSubmit={this.handleSubmit}>
 						{this.alermsg.message &&
                         <div id="sendmessage"><div className="{`alert ${this.alermsg.type}`}">{this.alermsg.message}</div>
                         </div>}
-						<div class="row">
+						<div className="row">
 							
 						  <div className="col-md-12 mb-3">
 							<div className={'form-group' + (submitted && !email ? ' has-error' : '')}>

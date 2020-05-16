@@ -24,6 +24,15 @@ interface IPropertyModel extends mongoose.Document {
     number_stories: string,
     garage:string,
     property_details: string,
+    priceinfo:[{
+        price: string;
+        priceType: string;
+        
+    }],
+
+    link_website:[{ 
+                data:string
+    }]
 }
 
 export = IPropertyModel;

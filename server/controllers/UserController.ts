@@ -16,9 +16,15 @@ import IPagesModel = require("./../app/model/interfaces/IPagesModel");
 import IEmployeeModel = require("./../app/model/interfaces/IEmployeeModel");
 import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
 import ContactformBusiness = require("./../app/business/ContactformBusiness");
+import BlastBusiness = require("./../app/business/BlastBusiness");
+import PropertyBusiness = require("./../app/business/PropertyBusiness");
+import TemplateBusiness = require("./../app/business/TemplateBusiness");
 import InvitationBusiness = require("./../app/business/InvitationBusiness");
 import IAdminUserModel = require("./../app/model/interfaces/IAdminUserModel");
 import IContactformModel = require("./../app/model/interfaces/IContactformModel");
+import IBlastModel = require("./../app/model/interfaces/IBlastModel");
+import IPropertyModel = require("./../app/model/interfaces/IPropertyModel");
+import ITemplateModel = require("./../app/model/interfaces/ITemplateModel");
 import IInvitationModel = require("./../app/model/interfaces/IInvitationModel");
 import Common = require("./../config/constants/common");
 import PlanBusiness = require("./../app/business/PlanBusiness");
@@ -281,7 +287,9 @@ update(req: express.Request, res: express.Response): void {
             res.send({"error": "error in your request"});
         }
     }
-   deleteprofileCover(req: express.Request, res: express.Response): void {
+
+
+    deleteprofileCover(req: express.Request, res: express.Response): void {
 		try {
 		var _employeeBusiness = new EmployeeBusiness();
 		var userid =  req.body.userid;
@@ -421,7 +429,7 @@ update(req: express.Request, res: express.Response): void {
         		async.parallel({
 					agentData: function(callback:any) {
 						
-						_agentBusiness.retrieve({'userId':userdata.id},(error,agentdata) => {    
+						_agentBusiness.findOne({'userId':userdata.id},(error,agentdata) => {    
 					        if(error){
 					         }
 					        else{
@@ -439,7 +447,6 @@ update(req: express.Request, res: express.Response): void {
 					if(err){
 						res.send({"error": "error"});
 					}
-					console.log("results===",results);
 					res.json({"status":"success","data":results});
 				});
 			});
@@ -684,7 +691,106 @@ update(req: express.Request, res: express.Response): void {
 		}
 	}
     
+    saveBlast(req: express.Request, res: express.Response): void {
+        try {
+           var _blastform: IBlastModel = <IBlastModel>req.body;
+			var _blastBusiness = new BlastBusiness();
 
+			_blastform.selected_template_date = new Date();
+           _blastBusiness.create(_blastform, (error, result) => {
+	                if(error) {
+						console.log(error);
+						res.send({"error": error});
+					}
+	                else res.send({"success": "success"});
+	        	}); 
+        }
+        catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+    }
+
+
+     saveProperty(req: express.Request, res: express.Response): void {
+        try {
+           var _propertyforms: IPropertyModel = <IPropertyModel>req.body;
+			var _propertyBusiness = new PropertyBusiness();
+			 var _templateforms: ITemplateModel = <ITemplateModel>req.body;
+			 var _templateBusiness = new TemplateBusiness();
+				let _propertyform ={};
+				let _templateform={};
+			
+			console.log("_propertyforms====",_propertyforms);
+			//if(_templateforms.property.)
+			
+
+
+
+			if(_propertyforms.property.propertyAddress){
+				_propertyform.display_method=_propertyforms.property.propertyAddress.displayMethod;
+				_propertyform.street_address=_propertyforms.property.propertyAddress.streetAddress;
+				_propertyform.city=_propertyforms.property.propertyAddress.city;
+				_propertyform.state=_propertyforms.property.propertyAddress.state;
+				_propertyform.zipcode=_propertyforms.property.propertyAddress.zipCode;
+			}
+
+			if(_propertyforms.property.mlsNumber){
+				_propertyform.mls_number=_propertyforms.property.mlsNumber.numberProperty;
+				_propertyform.board=_propertyforms.property.mlsNumber.boardAssociation;
+			}
+
+			if(_propertyforms.property.generalPropertyInformation){
+				_propertyform.property_type=_propertyforms.property.generalPropertyInformation.propertyType;
+				_propertyform.property_style=_propertyforms.property.generalPropertyInformation.propertyStyle;
+				_propertyform.lot_size=_propertyforms.property.generalPropertyInformation.lotSize;
+				_propertyform.number_bedrooms=_propertyforms.property.generalPropertyInformation.numberOfBedrooms;
+				_propertyform.building_size=_propertyforms.property.generalPropertyInformation.buildingSize;
+				_propertyform.number_stories=_propertyforms.property.generalPropertyInformation.numberOfStories;
+				_propertyform.price="23";
+				_propertyform.number_bathrooms="4";
+				_propertyform.year_built =_propertyforms.property.generalPropertyInformation.yearBuilt;
+				_propertyform.garage=_propertyforms.property.generalPropertyInformation.garage;
+			}
+
+			if(_propertyforms.property.propertyDetail){
+				_propertyform.property_details=_propertyforms.property.propertyDetail;
+			}
+
+    		_propertyBusiness.create(_propertyform, (error, result) => {
+                if(error) {
+					console.log(error);
+					res.send({"error": error});
+				}
+                _templateBusiness.create(_templateforms, (error, result) => { 
+	                if(error) {
+						console.log(error);
+						res.send({"error": error});
+					} else {
+						res.send({"success": "success"});
+					}
+                }); 
+        	}); 
+
+        	
+        }
+        catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+    }
+
+
+ savePropertyImages(data:any,id:any, res: express.Response): void { 
+ 	console.log("test======got it",data);
+ 	console.log("test======got it",id);
+
+
+
+
+
+
+ }
 
 
 	
