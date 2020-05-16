@@ -79,6 +79,14 @@ class PropertyModel {
     get property_details (): string {
         return this.propertyModel.property_details;
     }
+
+    get priceinfo (): object {
+        return this.propertyModel.priceinfo;
+    }
+
+    get link_website (): object {
+        return this.propertyModel.link_website;
+    }
 	
 }
 Object.seal(PropertyModel);

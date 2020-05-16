@@ -33,7 +33,9 @@ constructor(props) {
       submitted: false,
       user: this.props.user,
       profile: this.props.profile,
+      agentData: this.props.agentData,
       userdata:'' ,
+      agentdataval:'',
       show: false,
       showprofileimage:false,
   };
@@ -58,6 +60,15 @@ handleShow() {
      });
 }
 handleChange(event) {
+  const { name, value } = event.target;
+  const { agentdataval } = this.state;
+  this.setState({
+      agentdataval: {
+          ...agentdataval,
+          [name]: value
+      }
+  });
+  console.log("srt=====",agentdataval);
 }
 renderProfileimageModal() {
   console.log("test==sss==",this.state.modalid);
@@ -75,8 +86,7 @@ handleSubmit(event) {
 }
 
 render() {
-  const {profile } = this.props;
-  console.log("test==s=",profile);
+  const {profile,agentData} = this.props;
  
   this.state.userdata=Object.assign({
     companyName:'',
@@ -87,10 +97,23 @@ render() {
     zipcode:'',
 
   },profile);
-  const {submitted,userdata,user}=this.state;
+  this.state.agentdataval=Object.assign({
+    name:'',
+    designation:'',
+    email:'',
+    website_url:'',
+    phone_number:'',
+    company_details:'',
+    other_information:'',
+    image_url:'',
+    logo_url:''
+
+  },agentData);
+  
+  const {submitted,userdata,user,agentdataval}=this.state;
+  console.log("agentdataVal=====",this.state);
   let modalproimageOpen = (event) => {
      var id = event.currentTarget.dataset.id;
-     console.log("id====",event.currentTarget.dataset.id);
      this.setState({ showprofileimage: true , profile:this.props.profile, modalid: id});
   }
  
@@ -240,40 +263,59 @@ render() {
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="Agent Name" data-rule="minlen:4" data-msg="Please enter name" />
-                        <div className="validation"></div>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="name" value={agentdataval.name} onChange={this.handleChange}  placeholder="Agent Name"/>
+                        {submitted && !agentdataval.name &&
+                            <div className="validation">Please enter name</div>
+                        }
+
                       </div>
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="Designation" data-rule="minlen:4" />
+                        <input type="text" className="form-control form-control-lg form-control-a " name="designation" value={agentdataval.designation} onChange={this.handleChange}  placeholder="Designation"/>
+                        {submitted && !agentdataval.designation &&
+                            <div className="validation">Please enter name</div>
+                        }
                       </div>
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <input name="email" type="email" className="form-control form-control-lg form-control-a" placeholder="Email" data-rule="email" data-msg="Please enter a valid email" />
-                        <div className="validation"></div>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="email" value={agentdataval.email} onChange={this.handleChange}  placeholder="Email"/>
+                        {submitted && !agentdataval.email &&
+                            <div className="validation">Please enter email</div>
+                        }
                       </div>
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <input type="text" name="name" className="form-control form-control-lg form-control-a" placeholder="Website URL" data-rule="minlen:4" />
+                        <input type="text" className="form-control form-control-lg form-control-a " name="website_url" value={agentdataval.email} onChange={this.handleChange}  placeholder="Website URL"/>
+                        {submitted && !agentdataval.website_url &&
+                            <div className="validation">Please enter website URL</div>
+                        }
                       </div>
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <input name="phone" type="phone" className="form-control form-control-lg form-control-a" placeholder="Phone Number" data-rule="phone" data-msg="Please enter a valid phone" />
-                          <div className="validation"></div>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="phone" value={agentdataval.phone} onChange={this.handleChange}  placeholder="Phone Number"/>
+                        {submitted && !agentdataval.phone &&
+                            <div className="validation">Please enter phone number</div>
+                        }  
                       </div>
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <textarea name="message" className="form-control" cols="45" rows="8" data-rule="required" data-msg="Please write Company details" placeholder="Company Details"></textarea>
+                        <textarea type="text" className="form-control" cols="45" rows="8" name="company_details" value={agentdataval.company_details} onChange={this.handleChange}  placeholder="Company Details"></textarea>
+                        {submitted && !agentdataval.company_details &&
+                            <div className="validation">Please write Company details</div>
+                        }  
                       </div>
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className="form-group">
-                        <textarea name="message" className="form-control" cols="45" rows="8" data-rule="required" data-msg="Please write other information if any" placeholder="Other Information"></textarea>
+                        <textarea type="text" className="form-control" cols="45" rows="8" name="other_information" value={agentdataval.other_information} onChange={this.handleChange}  placeholder="Other Information"></textarea>
+                        {submitted && !agentdataval.other_information &&
+                            <div className="validation">Please write other information if any</div>
+                        }  
                       </div>
                     </div>
                   </div>
@@ -303,12 +345,14 @@ function mapStateToProps(state) {
   const { authentication, users} = state;
   const { user } = authentication;
   const { profile} = users;
+  const { agentData} = users;
   const { alert } = state;
-  console.log("profile======",users);
+  console.log("profile======",agentData);
   return {
     user,
     alert,
-    profile
+    profile,
+    agentData
   };
 }
 

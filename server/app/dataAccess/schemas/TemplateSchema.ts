@@ -11,20 +11,46 @@ class TemplateSchema {
     static get schema () {
         var schema =  mongoose.Schema({
            _id: mongoose.Schema.Types.ObjectId,
-            user_id : {
+            template_type : {
                 type: String,
                 required: true
             },
-            blast_type : {
-                type: String,
-                required: true
-            },
-            selected_template_id : {
+            email_subject : {
                 type: String
             },
-            selected_template_date: {
+            from_line: {
                 type: Date,
                 required: true
+            },
+            address : {
+                type: String,
+                required: true
+            },
+            headline : {
+                type: String,
+                required: true
+            },
+            database_id : {
+                type: String,
+                required: true
+            },
+            template_date:{
+                tape:Date
+            },
+            paid:{
+                type:Boolean
+            },
+            image_id:{
+                type: mongoose.Schema.Types.ObjectId
+            },
+            status:{
+                type:String
+            },
+            Property_id:{
+                type:mongoose.Schema.Types.ObjectId
+            },
+            created_on:{
+                type:Date
             }
         });
 

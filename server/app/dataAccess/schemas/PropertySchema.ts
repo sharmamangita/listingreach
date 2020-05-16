@@ -81,6 +81,16 @@ class PropertySchema {
                 type: String,
                 required: true                    
             }
+            priceinfo:[{
+                price:{
+                 type:String,
+                },
+                priceType:{
+                 type:String
+                }
+            }],
+
+
 
         });
 
