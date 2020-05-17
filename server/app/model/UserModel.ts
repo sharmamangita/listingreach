@@ -38,13 +38,28 @@ class UserModel {
         return this._userModel.userName;
     }
     
-	get lastLogin (): Date {
+    get companyName (): string {
+        return this._userModel.companyName;
+    }
+    get phone (): string {
+        return this._userModel.phone;
+    }
+    get city (): string {
+        return this._userModel.city;
+    }
+    get zipcode (): string {
+        return this._userModel.zipcode;
+    }
+   	
+    get country (): string {
+        return this._userModel.country;
+    }
+    get state (): string {
+        return this._userModel.state;
+    }
+    get lastLogin (): Date {
         return this._userModel.lastLogin;
     }
-     get roles (): string {
-        return this._userModel.roles;
-    }
-
 	get token (): string {
         return this._userModel.token;
     }

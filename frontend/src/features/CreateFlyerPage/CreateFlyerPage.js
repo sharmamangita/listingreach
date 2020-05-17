@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import Select from "react-select";
 import { Alert } from "reactstrap";
 import { render } from "react-dom";
+import { authHeader } from '../../helpers';
 import ListingSubmenu from "../../components/ListingSubmenu";
 import ReactHtmlParser, {
   processNodes,
@@ -34,6 +35,7 @@ class CreateFlyerPage extends React.Component {
       blast_type: "",
       selected_template_id: "",
       userId: "",
+      updateimage:"",
       errors: {
         propertyDetails: {
           Email: {
@@ -149,6 +151,7 @@ class CreateFlyerPage extends React.Component {
           url: "",
           linkData: [],
         },
+        
       },
     };
 
@@ -181,12 +184,14 @@ class CreateFlyerPage extends React.Component {
     formData.append("myImage", e.target.files[0]);
     const config = {
       headers: {
-        "content-type": "multipart/form-data",
-      },
+       ...authHeader(), 'content-type': 'multipart/form-data'
+      }
     };
     axios
       .post(`http://localhost:3000/propertyupload`, formData, config)
       .then((response) => {
+        console.log("response===",response);
+        this.setState({updateimage:response.data.url});
         alert("The file is successfully uploaded");
       })
       .catch((error) => {});
@@ -638,6 +643,13 @@ class CreateFlyerPage extends React.Component {
 
     const { errors, propertyDetails, disabled } = this.state;
     console.log("propertyDetails====", propertyDetails);
+    
+    let firstpostionImage ='';
+    if(this.state.updateimage){
+      firstpostionImage=this.state.updateimage;
+    }else{
+      firstpostionImage='/public/assets/images/img1.jpg';
+    }
     return (
       <div>
         <ListingSubmenu />
@@ -2410,7 +2422,7 @@ class CreateFlyerPage extends React.Component {
                                   </div>
                                   <img
                                     className="card-img-bottom"
-                                    src="../../../public/assets/images/img1.jpg"
+                                    src='../../../public/assets/images/img1.jpg'
                                     alt="image"
                                     style={{ width: "100%" }}
                                   />
@@ -2462,7 +2474,7 @@ class CreateFlyerPage extends React.Component {
                             </div>
                             <img
                               className="card-img-bottom"
-                              src="../../../public/assets/images/img1.jpg"
+                              src={firstpostionImage}
                               alt="image"
                               style={{ width: "100%" }}
                             />

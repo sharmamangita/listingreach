@@ -30,6 +30,8 @@ import Common = require("./../config/constants/common");
 import PlanBusiness = require("./../app/business/PlanBusiness");
 import AgentBusiness = require("./../app/business/AgentBusiness");
 import IAgentModel = require("./../app/model/interfaces/IAgentModel");
+import IBlastImageModel = require("./../app/model/interfaces/IBlastImageModel");
+import BlastImageBusiness = require("./../app/business/BlastImageBusiness");
 
 var moment = require('moment');
 var mammoth = require("mammoth");
@@ -188,80 +190,114 @@ updateStatus(req: express.Request, res: express.Response): void {
 }
 
 
-update(req: express.Request, res: express.Response): void {
-	var employe=[];
-	var userBusiness = new UserBusiness();
-	userBusiness.verifyToken(req, res,  (companyUserData:any) => {
-		
-    });
+updateUser(req: express.Request, res: express.Response): void {
+	try {
+		var _userBusiness = new UserBusiness();
+		_userBusiness.verifyToken(req, res,  (UserData:any) => {
+			var _user: IUserModel = <IUserModel>req.body.user;
+			var _id:string = _user.id.toString();
+			_userBusiness.update(mongoose.Types.ObjectId(_id), _user, (error:any, userdata:any) => {
+				 if(error) {
+					console.log(error);
+					res.send({"error": error});
+				}
+	            else{
+	            	var _agentBusiness = new AgentBusiness()
+		        		async.parallel({
+							agentData: function(callback:any) {
+								
+								_agentBusiness.findOne({'userId':_id},(error,agentdata) => {    
+							        if(error){
+							         }
+							        else{
+							        	callback(null,agentdata);
+							        }
+							    })
+							},
+							userData: function(callback:any) {
+					        	_userBusiness.retrieve({_id:_id}, (error, result) => {
+					        		var returnObj = result.map(function(obj: any): any {
+						      		
+						            return {
+								        id: obj._id,
+								        userName:obj.userName,
+								        firstName:obj.firstName,
+								        lastName:obj.lastName,
+								        status:obj.status,
+								        email:obj.email,
+								        companyName:obj.companyName,
+								        phone:obj.phone,
+								        city:obj.city,
+								        zipcode:obj.zipcode,
+								        roles:obj.roles,
+								        status:obj.status
+								       
+								    }
+					   			});
+					   			callback(null,returnObj);
+					        	});
+							}
+						}, function(err:any, results:any) {
+							if(err){
+								res.send({"error": "error"});
+							}
+							res.json({"status":"success","data":results});
+						});
+					
+	            	
+	        	}
+	       	}); 
+		    
+	    });
+	}
+	catch (e)  {
+	    console.log(e);
+	    res.send({"error": "error in your request"});
+	}
 }
  
 
-    updateprofilepic(data:any,id:any, res: express.Response): void {
-    	var _userBusiness = new UserBusiness();
+    updateprofilepic(data:any,id:any, res: express.Response,flag:any): void {
     	var _agentBusiness= new AgentBusiness();
     	var _agent: IAgentModel = <IAgentModel >data;
     	_agent.createdOn = new Date();
-    	var _user: IUserModel = <IUserModel>data;
     	var type= data.mimetype.split("/");
- 		_user.profilePic=data.filename;
-	 	var userid:string = id.toString();
-		_userBusiness.findOne({'_id':userid}, (error, result) => {
-			if(error){
-				console.log("ueser");
-			}
-			else {
-				
-				var _id:string = result._id.toString();
-				_agent.userId=result._id.toString();
-				_agent.image_url=_agent.profilePic;
-				_agentBusiness.findOne({'userId':_id}, (error:any, agentresult:any) => {
-					if(agentresult!=null){
-						_agentBusiness.update(_id, _agent, (error:any, resultUpdate:any) => {
-							if(error){
-							}else {
-								return res.json({profileimg:agentresult.profilePic});
-							}
-						});
-					}else{
-						console.log("_agent=====",_agent);
-						_agentBusiness.create(_agent, (error, agentresultData) => {
-							if(error){
-							}else {
-							   return res.json({profileimg:agentresultData.image_url});
-							}
-						});
-					}
-					
-				});
-			}
-		});
-    }
-
-
-
-    updatecoverupload(data:any,id:any, res: express.Response): void {   
-	var _employeeBusiness = new EmployeeBusiness();
-    	var _emplloye: IEmployeeModel = <IEmployeeModel>data;
-    	var type= data.mimetype.split("/");
- 		_emplloye.profileCover=data.filename;
-	 	var userid:string = id.toString();
-		_employeeBusiness.findOne({'userId':userid}, (error, result) => {
-			if(error){
-				console.log("ueser");
-			}
-			else {
-				var _id:string = result._id.toString();
-				_employeeBusiness.update(_id, _emplloye, (error:any, resultUpdate:any) => {
+ 	 	var userid:string = id.toString();
+		var _id=userid;
+		_agent.userId=userid;
+		console.log("userId=====",flag);
+		if(flag == 'logo'){
+			_agent.logo_url=data.filename;
+		}
+		else{
+			_agent.image_url=data.filename;
+		}
+		_agentBusiness.findOne({'userId':userid}, (error:any, agentresult:any) => {
+			if(agentresult!=null){
+				var _id:string = agentresult._id.toString();
+				_agentBusiness.update(_id, _agent, (error:any, resultUpdate:any) => {
 					if(error){
 					}else {
-						return res.json({profileimg:_emplloye.profilePic});
+						return res.json({profileimg:agentresult.profilePic});
+					}
+				});
+			}else{
+				console.log("_agent=====",_agent);
+				_agentBusiness.create(_agent, (error, agentresultData) => {
+					if(error){
+					}else {
+					   return res.json({profileimg:agentresultData.image_url});
 					}
 				});
 			}
+			
 		});
-
+			
     }
+
+
+
+   
    deleteprofilepic(req: express.Request, res: express.Response): void {
 		try {
 		var _employeeBusiness = new EmployeeBusiness();
@@ -320,82 +356,7 @@ update(req: express.Request, res: express.Response): void {
 	
     delete(req: express.Request, res: express.Response): void {
     	try {
-		var _userBusiness = new UserBusiness();
-		var _employeeBusiness = new EmployeeBusiness();
-
-        _userBusiness.verifyToken(req, res, (userdata) => {
-        	_employeeBusiness.findOne({'userId':userdata.id}, (error, result) => {
-				if(error){
-					console.log("error");
-				}else{
-					var _employee: IEmployeeModel = <IEmployeeModel>req.body;
-				    if(req.params._flag=='education'){
-			        	var education = result.education.filter(item => {
-				           return item._id != req.params._id
-				        });
-			       		_employee.education  =education;
-				        var _id:string = result._id.toString();
-						_employeeBusiness.update(mongoose.Types.ObjectId(_id), _employee, (error:any, resultUpdate:any) => {
-							if(error){
-								console.log("error===",error);
-							}else {
-								
-								return res.json('updated succfully');
-							}
-						});
-			        }
-					if(req.params._flag=='skills'){
-			        	var skill = result.skills.filter(item => {
-				           return item._id != req.params._id
-				        });
-			       		_employee.skills  = skill;
-				        var _id:string = result._id.toString();
-						_employeeBusiness.update(mongoose.Types.ObjectId(_id), _employee, (error:any, resultUpdate:any) => {
-							if(error){
-								console.log("error===",error);
-							}else {
-								
-								return res.json('updated succfully');
-							}
-						});
-				    }
-			        if(req.params._flag=='professional'){
-			        	var professionalSummary = result.professionalSummary.filter(item => {
-				           return item._id != req.params._id
-				        });
-			        	 _employee.professionalSummary =professionalSummary;
-				        var _id:string = result._id.toString();
-						_employeeBusiness.update(mongoose.Types.ObjectId(_id), _employee, (error:any, resultUpdate:any) => {
-							if(error){
-								console.log("error===",error);
-							}else {
-								return res.json('updated succfully');
-							}
-						});
-			        }
-
-
-			        if(req.params._flag=='socialmedia'){
-			        	var socialmedia = result.social_media.filter(item => {
-				           return item._id != req.params._id
-				        });
-			        	 _employee.social_media = socialmedia;
-				        var _id:string = result._id.toString();
-						_employeeBusiness.update(mongoose.Types.ObjectId(_id), _employee, (error:any, resultUpdate:any) => {
-							if(error){
-								console.log("error===",error);
-							}else {
-								console.log('updated succfully');
-								return res.json('updated succfully');
-							}
-						});
-				      
-			        }
-
-			    }
-		    });
-			
-        });
+		
         }
         catch (e)  {
             console.log(e);
@@ -438,10 +399,27 @@ update(req: express.Request, res: express.Response): void {
 					    })
 					},
 					userData: function(callback:any) {
-			        	_userBusiness.findOne({_id:userdata.id}, (error, result) => {
-			        		callback(null,result);
-			        		
-						});
+			        	_userBusiness.retrieve({_id:userdata.id}, (error, result) => {
+			        		var returnObj = result.map(function(obj: any): any {
+				      		
+				            return {
+						        id: obj._id,
+						        userName:obj.userName,
+						        firstName:obj.firstName,
+						        lastName:obj.lastName,
+						        status:obj.status,
+						        email:obj.email,
+						        companyName:obj.companyName,
+						        phone:obj.phone,
+						        city:obj.city,
+						        zipcode:obj.zipcode,
+						        roles:obj.roles,
+						        status:obj.status
+						       
+						    }
+			   			});
+			   			callback(null,returnObj);
+			        	});
 					}
 				}, function(err:any, results:any) {
 					if(err){
@@ -491,6 +469,35 @@ update(req: express.Request, res: express.Response): void {
 					res.status(201).send({ "success":"done" }); 
 				}
 			});
+		}  catch (e)  {
+			console.log(e);
+			res.send({"error": "error in your request"});
+		}
+	}    
+	
+	emailPreviewTemplate(req: express.Request, res: express.Response): void { 
+		try { 
+			
+			var _contactform: IContactformModel = <IContactfromModel>req.body;
+			var _contactformBusiness = new ContactformBusiness();
+			//_contactform.fullname =req.body.fullname;
+			_contactform.email = req.body.email;
+			/* _contactform.phone = req.body.phone;
+			_contactform.message = req.body.message; */
+			_contactform.createdOn = new Date();
+			
+				
+					var previewTemplatememail =Common.PREVIEW_EMAIL_TEMPLATE;	
+					var emailtemplate = previewTemplatememail;
+					Common.sendMail(_contactform.email,'support@employeemirror.com','Contact Form', null,emailtemplate, function(error: any, response: any){ 
+					if(error){ 
+					console.log(error);
+					res.end("error");
+					}
+					});
+					res.status(201).send({ "success":"done" }); 
+				
+			
 		}  catch (e)  {
 			console.log(e);
 			res.send({"error": "error in your request"});
@@ -710,7 +717,30 @@ update(req: express.Request, res: express.Response): void {
             res.send({"error": "error in your request"});
 		}
     }
-
+    saveAgents(req: express.Request, res: express.Response): void {
+    	 try {
+    	 	var _userBusiness = new UserBusiness();
+        	_userBusiness.verifyToken(req, res,  (companyUserData) => { 
+	    	 	var _agent: IAgentModel = <IAgentModel>req.body;
+	    	 	console.log("_agent====",companyUserData);
+	    	 	_agent.createdOn = new Date();
+	    	 	_agent.userId=companyUserData._id;
+				var _agentBusiness = new AgentBusiness();
+	    	 	_agentBusiness.create(_agent, (error, agentresultData) => {
+					if(error){
+						console.log("error====",error)
+					}else {
+						console.log("agentresultData====",agentresultData);
+					   return res.json({profileimg:agentresultData});
+					}
+				});
+			});
+    	 }
+    	  catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+    });
 
      saveProperty(req: express.Request, res: express.Response): void {
         try {
@@ -782,19 +812,24 @@ update(req: express.Request, res: express.Response): void {
 
 
  savePropertyImages(data:any,id:any, res: express.Response): void { 
- 	console.log("test======got it",data);
- 	console.log("test======got it",id);
-
-
-
-
-
-
- }
-
-
-	
-
-	
+ 	var _blastimageBusiness= new BlastImageBusiness();
+	var _blastimage: IBlastImageModel = <IBlastImageModel >data;
+		
+    	var type= data.mimetype.split("/");
+ 	 	var userid:string = id.toString();
+		
+		_blastimage.user_id=userid;
+		_blastimage.url=data.filename;
+		_blastimageBusiness.create(_blastimage, (error, resultData) => {
+				if(error){
+					console.log("error===",error);
+				}else {
+					 return res.json({url:resultData.url});
+				}
+			});
+		}
+			
+		
+	}
 }
 export = UserController;

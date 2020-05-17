@@ -20,7 +20,7 @@ class UserRoutes {
         router.post("/users", controller.create);
         
         
-        router.put("/users/:_id", controller.update);
+        
         router.get("/users/:_id", controller.findById);
 		router.get("/users-bytoken", controller.findByToken);
         router.get("/users/getEmailExists/:query", controller.getEmailExists);
@@ -31,11 +31,13 @@ class UserRoutes {
         router.post("/users/forgetUserPassword", controller.forgetUserPassword);
         router.post("/users/forgetSAdminPassword", controller.forgetSAdminPassword);
         router.post("/users/contactForm",controller.contactForm);
+		router.post("/users/emailPreviewTemplate",controller.emailPreviewTemplate);
         router.post("/users/deleteprofilepic",controller.deleteprofilepic);
         router.post("/users/deleteprofileCover",controller.deleteprofileCover);  
         router.post("/users/UpdateUserPassword",controller.UpdateUserPassword);
-        
+        router.put("/userUpdate", controller.updateUser);
         router.post("/users/getReferences", controller.getReferences);
+        router.post("/users/saveAgents",controller.saveAgents);
         return router;
     }
 

@@ -38,6 +38,25 @@ class UserSchema {
                 type: String,
                 required: true
             },
+
+            companyName:{
+                type: String,
+            },
+            phone:{
+                type: String,
+            },
+            city:{
+                type: String,
+            },
+            country:{
+                type: String,
+            },
+            zipcode:{
+                type: String,
+            },
+            state:{
+                type: String,
+            },
 			lastLogin:{
                 type: Date
 			},

@@ -12,6 +12,7 @@ export const userService = {
     update,
     updatepassword,
     contactForm,
+	emailPreviewTemplate,
     deleteprofilepic,
     deleteprofileCover,
     getapagecontent,
@@ -20,7 +21,8 @@ export const userService = {
     updateStatus,
     unsetsrcid,
     blast,
-    saveProperty
+    saveProperty,
+    saveAgents
 };
 
 function login(email, password) {
@@ -141,15 +143,27 @@ function contactForm(fullname,email,phone,message){
         return user;
     }).catch(this.handleError);
 	}
+/* contact form */
+function emailPreviewTemplate(email){
+		const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({email})
+    };
+    return fetch(`${config.apiUrl}/users/emailPreviewTemplate`, requestOptions).then(handleResponse)
+    .then(user => {
+        return user;
+    }).catch(this.handleError);
+	}
 
-function update(id,user) {
+
+function update(user) {
     const requestOptions = {
         method: 'PUT',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
+        body: JSON.stringify({user})
     };
-    // location.reload();  
-    return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);;
+    return fetch(`${config.apiUrl}/userUpdate`, requestOptions).then(handleResponse);;
 }
 
 
@@ -244,5 +258,15 @@ function saveProperty(property){
     return fetch(`${config.apiUrl}/users/saveProperty`, requestOptions).then(handleResponse);    
 }
 
+function saveAgents(agentData){
+    console.log("save agentData====",agentData);
+    const requestOptions = {
+        method: 'POST',
+        
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(agentData)
+    };
+    return fetch(`${config.apiUrl}/users/saveAgents`, requestOptions).then(handleResponse);    
+}
 
     

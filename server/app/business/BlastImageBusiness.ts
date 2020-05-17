@@ -65,5 +65,5 @@ class BlastImageBusiness implements BaseBusiness<IBlastImageModel> {
 }
 
 
-Object.seal(PropertyBusiness);
-export =PropertyBusiness
+Object.seal(BlastImageBusiness);
+export =BlastImageBusiness

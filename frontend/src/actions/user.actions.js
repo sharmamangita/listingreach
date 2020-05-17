@@ -15,6 +15,7 @@ export const userActions = {
     getById,
     updatepassword,
     contactForm,
+	emailPreviewTemplate,
     deleteprofilepic,
     getapagecontent,
     deleteprofileCover,
@@ -22,7 +23,8 @@ export const userActions = {
     getReferences,
     updateStatus,
     blast,
-    saveProperty
+    saveProperty,
+    saveAgents
 };
 /* Get References */
 function getReferences(userid){
@@ -90,6 +92,29 @@ function contactForm(fullname,email,phone,message){
 	    return dispatch => {
         dispatch(request({fullname,email,phone,message }));
         userService.contactForm(fullname,email,phone,message)
+            .then(
+                user => { 
+                    dispatch(success(user));
+                    dispatch(alertActions.success('Email has been sent successfully'));
+                }, 
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error(error.toString()));
+                }
+            );
+    };
+    
+ function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
+ function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } }
+ function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }	
+}
+
+
+/* send preview template email*/
+function emailPreviewTemplate(email){
+	    return dispatch => {
+        dispatch(request({email}));
+		userService.emailPreviewTemplate(email)
             .then(
                 user => { 
                     dispatch(success(user));
@@ -196,13 +221,18 @@ function updatepassword(user,currentpassword,newspassword) {
 }
 
 /* user update */
-function update(user,employee) {
+function update(user) {
     return dispatch => {
-        dispatch(request(user,employee));
-        userService.update(user,employee)
+        dispatch(request(user));
+        userService.update(user)
             .then(
                 users => { 
+                    console.log("Dsadasdsa=====");
+                    history.push('/AgentDashboardPage');
                     dispatch(success(users));
+                    //if(users.success){
+                         
+                    //}
                     dispatch(alertActions.success('Updated successfully.'));
                 },
                 error => {
@@ -414,5 +444,19 @@ function saveProperty(property){
     function failure(error) { return { type: userConstants.PROPERTY_FAILURE, error } }
 
 }
+function saveAgents(agentData){
+    console.log("agentData==action===",agentData)
+    return dispatch => {
+        dispatch(request());
+        userService.saveAgents(agentData)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
 
+    function request() { return { type: userConstants.AGENT_REQUEST } }
+    function success(users) { return { type: userConstants.AGENT_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.AGENT_FAILURE, error } }
+}
 

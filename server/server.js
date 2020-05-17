@@ -103,28 +103,46 @@ app.post('/updatedupload',function(req, res) {
         var common = new UserController();
         var _userBusiness = new UserBusiness();
       _userBusiness.verifyToken(req, res, (userdata) => {
-        console.log(":dsdsad====",userdata._id);
-        common.updateprofilepic(req.file,userdata._id, res);
+        
+        common.updateprofilepic(req.file,userdata._id, res,'profile');
       });
 
     }
   });
 
 });
-   
-app.post('/coverupload',function(req, res) {
+app.post('/logoupload',function(req, res) {
+  console.log(":dsdsad====",req.flag);
+  upload1(req, res, function (err) {
+    let path = req.file.path;
+    if (err) {
+      return res.status(500).json(err)
+    } else {
+        var common = new UserController();
+        var _userBusiness = new UserBusiness();
+      _userBusiness.verifyToken(req, res, (userdata) => {
+        
+        common.updateprofilepic(req.file,userdata._id, res,'logo');
+      });
+
+    }
+  });
+
+});   
+app.post('/propertyupload',function(req, res) {
+  let userid = req.body;
+  console.log("===========",userid);
     upload1(req, res, function (err) {
 		let path = req.file.path;
 		if (err) {
 			return res.status(500).json(err)
 			} else {
-						var common = new UserController();
+			var common = new UserController();
       var _userBusiness = new UserBusiness();
       _userBusiness.verifyToken(req, res, (userdata) => {
-        console.log(":dsdsad====1212",userdata._id);
-        common.updatecoverupload(req.file,userdata._id, res);
-    });
-			
+         console.log("userdata====",userdata);
+          common.savePropertyImages(req.file,userdata._id, res);
+      });
 		}
    });
  });
