@@ -189,7 +189,7 @@ class CreateFlyerPage extends React.Component {
       .then((response) => {
         alert("The file is successfully uploaded");
       })
-      .catch((error) => {});
+      .catch((error) => { });
   }
 
   addOpenHouse() {
@@ -1260,10 +1260,10 @@ class CreateFlyerPage extends React.Component {
                           style={{
                             display:
                               propertyDetails &&
-                              propertyDetails.isOpenHouse &&
-                              propertyDetails.isOpenHouse.display !=
+                                propertyDetails.isOpenHouse &&
+                                propertyDetails.isOpenHouse.display !=
                                 undefined &&
-                              propertyDetails.isOpenHouse.display
+                                propertyDetails.isOpenHouse.display
                                 ? "inline"
                                 : "none",
                           }}
@@ -1376,7 +1376,7 @@ class CreateFlyerPage extends React.Component {
                             <tbody>
                               {propertyDetails.isOpenHouse &&
                                 propertyDetails.isOpenHouse.openHouseData !=
-                                  undefined &&
+                                undefined &&
                                 propertyDetails.isOpenHouse.openHouseData
                                   .length > 0 &&
                                 propertyDetails.isOpenHouse.openHouseData.map(
@@ -1392,27 +1392,27 @@ class CreateFlyerPage extends React.Component {
                                               disabled={disabled}
                                             />
                                           ) : (
-                                            <select
-                                              className="form-control form-control-lg form-control-a"
-                                              id={i}
-                                              name="houseType"
-                                              disabled={disabled}
-                                              onChange={
-                                                this.openHouseArrayChange
-                                              }
-                                            >
-                                              <option value="">Select</option>
-                                              <option value="Open House">
-                                                Open House
+                                              <select
+                                                className="form-control form-control-lg form-control-a"
+                                                id={i}
+                                                name="houseType"
+                                                disabled={disabled}
+                                                onChange={
+                                                  this.openHouseArrayChange
+                                                }
+                                              >
+                                                <option value="">Select</option>
+                                                <option value="Open House">
+                                                  Open House
                                               </option>
-                                              <option value="Broker Open">
-                                                Broker Open
+                                                <option value="Broker Open">
+                                                  Broker Open
                                               </option>
-                                              <option value="Agent Tour">
-                                                Agent Tour
+                                                <option value="Agent Tour">
+                                                  Agent Tour
                                               </option>
-                                            </select>
-                                          )}
+                                              </select>
+                                            )}
                                         </td>
                                         <td>
                                           <input
@@ -1675,9 +1675,9 @@ class CreateFlyerPage extends React.Component {
                           style={{
                             display:
                               propertyDetails &&
-                              propertyDetails.mlsNumber &&
-                              propertyDetails.mlsNumber.display != undefined &&
-                              propertyDetails.mlsNumber.display
+                                propertyDetails.mlsNumber &&
+                                propertyDetails.mlsNumber.display != undefined &&
+                                propertyDetails.mlsNumber.display
                                 ? "flex"
                                 : "none",
                           }}
@@ -2134,10 +2134,10 @@ class CreateFlyerPage extends React.Component {
                           style={{
                             display:
                               propertyDetails &&
-                              propertyDetails.linksToWebsites &&
-                              propertyDetails.linksToWebsites.display !=
+                                propertyDetails.linksToWebsites &&
+                                propertyDetails.linksToWebsites.display !=
                                 undefined &&
-                              propertyDetails.linksToWebsites.display
+                                propertyDetails.linksToWebsites.display
                                 ? "inline"
                                 : "none",
                           }}
@@ -2209,7 +2209,7 @@ class CreateFlyerPage extends React.Component {
                             <tbody>
                               {propertyDetails.linksToWebsites &&
                                 propertyDetails.linksToWebsites.linkData !=
-                                  undefined &&
+                                undefined &&
                                 propertyDetails.linksToWebsites.linkData
                                   .length > 0 &&
                                 propertyDetails.linksToWebsites.linkData.map(

@@ -16,7 +16,7 @@
     "draftjs-to-html": "^0.8.4",
     "history": "^4.6.3",
     "html-entities": "^1.2.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.1",
     "mdbreact": "^4.16.0",
     "moment": "^2.24.0",
     "qrcode.react": "^0.9.3",

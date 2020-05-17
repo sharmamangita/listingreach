@@ -1,37 +1,42 @@
 import React from 'react'
+import { connect } from "react-redux";
+import { subscriberActions } from '../actions/subscriber.actions'
 export default class SubscribeNewsLetter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state =
+        {
+            subscriber: this.props.subscriber
+        }
+    }
+    componentWillMount() {
+        // this.props.dispatch(subscriberActions.newSubscriber());
+        // this.setState({ subscriber: this.props.subscriber });
+    }
     componentDidMount() {
 
+        console.log("props", this.props)
         var subscribeButton = document.querySelector('#sub-button')
-        console.log('elem', subscribeButton);
         subscribeButton.addEventListener('click', function () {
             document.body.classList.remove('box-collapse-closed');
             document.body.classList.add('box-collapse-open');
         });
 
         var closeButton = document.querySelector('.close-box-collapse, .click-closed')
-        console.log('elem', closeButton);
         closeButton.addEventListener('click', function () {
             document.body.classList.remove('box-collapse-open');
             document.body.classList.add('box-collapse-closed');
         });
-
-        // $('.navbar-toggle-box-collapse').on('click', function () {
-        //     $('body').removeClass('box-collapse-closed').addClass('box-collapse-open');
-        // });
-        // $('.close-box-collapse, .click-closed').on('click', function () {
-        //     $('body').removeClass('box-collapse-open').addClass('box-collapse-closed');
-        //     $('.menu-list ul').slideUp(700);
-        // });
     }
     render() {
+        console.log("props", this.props)
         return (
             <div>
                 <div className="box-collapse">
                     <div className="title-box-d">
                         <h3 className="title-d">Subscribe For Emails</h3>
                     </div>
-                    <span className="close-box-collapse right-boxed ion-ios-close"></span>
+                    <span className="close-box-collapse right-boxed fa fa-close fa-2x"></span>
                     <div className="box-collapse-wrap form">
                         <form className="form-a">
                             <div className="row">
@@ -375,9 +380,18 @@ export default class SubscribeNewsLetter extends React.Component {
                         </div>
                     </div>
                 </section>
-
-
             </div>
         );
     };
 }
+
+// function mapStateToProps(state) {
+//     const { subscriber } = state;
+//     //  console.log("subscriber====", subscriber);
+//     return {
+//         subscriber
+//     };
+// }
+
+// const connectedCandidatePage = connect(mapStateToProps)(SubscribeNewsLetter);
+// export { connectedCandidatePage as SubscribeNewsLetter };

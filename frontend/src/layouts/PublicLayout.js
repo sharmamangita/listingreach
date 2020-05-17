@@ -6,9 +6,9 @@ class PublicLayout extends Component {
   render() {
     return (
       <div>
-        <SubscribeNewsLetterSlider />
         <ListingHeader />
         {this.props.children}
+        <SubscribeNewsLetterSlider />
         <Footer />
       </div>
     );
