@@ -1,21 +1,42 @@
 import React from 'react'
 import { connect } from "react-redux";
 import { subscriberActions } from '../actions/subscriber.actions'
-export default class SubscribeNewsLetter extends React.Component {
+import { subscriberService } from '../services';
+class SubscribeNewsLetter extends React.Component {
     constructor(props) {
         super(props);
+        const propertyTypes = ["Single Family", "Condo/townhome/row home/co-op", "Duplex", "Farm/Ranch", "Mfd/Mobile/Modular Home", "Vacant Lot / Vacant Land", "Rental Income Property", "Buyer’s Requirement / Acquisition Needs"];
+        const priceFilters = [
+            { text: "Up to $299,999", min: 0, max: 299999 },
+            { text: "$300,000 - $599,999", min: 300000, max: 599999 },
+            { text: "$600,000 or more", min: 600000, max: 900000000 }
+        ];
+        const preferedVendors = ["Lender / Mortgage Broker", "Education", "Building inspection", "Closing Assistance", "Staging", "Photography / Videography", "Other, N/A"];
         this.state =
         {
-            subscriber: this.props.subscriber
+            submitted: false,
+            propertyTypes: propertyTypes,
+            priceFilters: priceFilters,
+            preferedVendors: preferedVendors,
+            subscriber: {
+                name: "",
+                email: "",
+                phone: "",
+                city: "",
+                state: "",
+                state: "",
+                propertyTypes: [],
+                priceRanges: [],
+                includeRentedProperties: false,
+                agentTypes: [],
+                mailingLists: []
+            }
         }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
-    componentWillMount() {
-        // this.props.dispatch(subscriberActions.newSubscriber());
-        // this.setState({ subscriber: this.props.subscriber });
-    }
-    componentDidMount() {
 
-        console.log("props", this.props)
+    componentDidMount() {
         var subscribeButton = document.querySelector('#sub-button')
         subscribeButton.addEventListener('click', function () {
             document.body.classList.remove('box-collapse-closed');
@@ -28,8 +49,71 @@ export default class SubscribeNewsLetter extends React.Component {
             document.body.classList.add('box-collapse-closed');
         });
     }
+    handleChange(e, selectedItem) {
+        const { name, value, checked } = e.target;
+        var { subscriber } = this.state;
+        switch (name) {
+            case "name":
+                subscriber.name = value;
+                break;
+            case "email":
+                subscriber.email = value;
+                break;
+            case "phone":
+                subscriber.phone = value;
+                break;
+            case "city":
+                subscriber.city = value;
+                break;
+            case "state":
+                subscriber.state = value;
+                break;
+            case "propertytypes":
+                if (checked) {
+                    subscriber.propertyTypes.push(selectedItem);
+                } else {
+                    var index = subscriber.propertyTypes.indexOf(selectedItem);
+                    if (index > -1) {
+                        subscriber.propertyTypes.splice(index, 1)
+                    }
+                }
+                break;
+            case "pricefilters":
+                if (checked) {
+                    subscriber.priceRanges.push(selectedItem);
+                } else {
+                    var index = subscriber.priceRanges.indexOf(selectedItem);
+                    if (index > -1) {
+                        subscriber.priceRanges.splice(index, 1)
+                    }
+                }
+                break;
+            case "preferedvendor":
+                if (checked) {
+                    subscriber.agentTypes.push(value);
+                } else {
+                    var index = subscriber.agentTypes.indexOf(value);
+                    if (index > -1) {
+                        subscriber.agentTypes.splice(index, 1)
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        console.log("eeeeeeee", e.target);
+        this.setState({ subscriber: subscriber });
+    }
+    handleSubmit(e) {
+        e.preventDefault();
+        this.setState({ submitted: true });
+        this.props.dispatch(subscriberActions.register(this.state.subscriber));
+    }
+
     render() {
-        console.log("props", this.props)
+        var { subscriber, submitted, propertyTypes, priceFilters, preferedVendors } = this.state;
+        console.log("subscriber", this.state)
         return (
             <div>
                 <div className="box-collapse">
@@ -38,37 +122,46 @@ export default class SubscribeNewsLetter extends React.Component {
                     </div>
                     <span className="close-box-collapse right-boxed fa fa-close fa-2x"></span>
                     <div className="box-collapse-wrap form">
-                        <form className="form-a">
+                        <form onSubmit={this.handleSubmit} className="form-a">
                             <div className="row">
                                 <div className="col-md-12 mb-2">
                                     <div className="form-group">
-                                        <label htmlFor="Type">Name</label>
-                                        <input type="text" className="form-control form-control-lg form-control-a" placeholder="Your Full Name" />
+                                        <label htmlFor="name">Name</label>
+                                        <input type="text" name="name" value={subscriber.name} onChange={this.handleChange} className="form-control form-control-lg form-control-a" placeholder="Your Full Name" />
+                                        {submitted && !subscriber.name &&
+                                            <div className="help-block red">This filed is required</div>
+                                        }
                                     </div>
                                 </div>
                                 <div className="col-md-12 mb-2">
                                     <div className="form-group">
-                                        <label htmlFor="Type">Email Address</label>
-                                        <input type="text" className="form-control form-control-lg form-control-a" placeholder="Your Email Address" />
+                                        <label htmlFor="email">Email Address</label>
+                                        <input type="email" required="" name="email" value={subscriber.email} onChange={this.handleChange} className="form-control form-control-lg form-control-a" placeholder="Your Email Address" />
+                                        {submitted && !subscriber.email &&
+                                            <div className="help-block red">This filed is required</div>
+                                        }
                                     </div>
                                 </div>
                                 <div className="col-md-12 mb-2">
                                     <div className="form-group">
-                                        <label htmlFor="Type">Phone</label>
-                                        <input type="text" className="form-control form-control-lg form-control-a" placeholder="Your Phone Number" />
+                                        <label htmlFor="phone">Phone</label>
+                                        <input type="text" name="phone" onChange={this.handleChange} className="form-control form-control-lg form-control-a" placeholder="Your Phone Number" />
                                     </div>
                                 </div>
                                 <div className="col-md-6 mb-2">
                                     <div className="form-group">
-                                        <label htmlFor="Type">City</label>
-                                        <input type="text" className="form-control form-control-lg form-control-a" placeholder="City" />
+                                        <label htmlFor="city">City</label>
+                                        <input type="text" name="city" onChange={this.handleChange} value={subscriber.city} className="form-control form-control-lg form-control-a" placeholder="City" />
                                     </div>
                                 </div>
                                 <div className="col-md-6 mb-2">
                                     <div className="form-group">
-                                        <label htmlFor="Type">State</label>
-                                        <select className="form-control form-control-lg form-control-a" id="Type">
+                                        <label htmlFor="state">State</label>
+                                        <select name="state" onChange={this.handleChange} value={subscriber.state} className="form-control form-control-lg form-control-a" id="Type">
                                             <option>Select</option>
+                                            <option>Punjab</option>
+                                            <option>Hryana</option>
+                                            <option>Rajasthan</option>
                                         </select>
                                     </div>
                                 </div>
@@ -78,70 +171,35 @@ export default class SubscribeNewsLetter extends React.Component {
                                         <div className="row">
                                             <div className="col-md-6 mb-2">
                                                 <div className="mb-2">Property Type</div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Single Family
-                                                   </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Condo/townhome/row home/co-op
-                                                    </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Duplex
-                                                 </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Farm/Ranch
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Mfd/Mobile/Modular Home
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Vacant Lot / Vacant Land
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Rental Income Property
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Buyer’s Requirement / Acquisition Needs
-  </label>
-                                                </div>
+                                                {
+                                                    propertyTypes.map((property) => (
+                                                        <div className="form-check" key={property} >
+                                                            <label className="form-check-label">
+                                                                <input type="checkbox" name="propertytypes" value={property} onChange={(event)=> this.handleChange(event,property)} className="form-check-input" />
+                                                                {property}
+                                                            </label>
+                                                        </div>
+                                                    ))
+                                                }
+
                                             </div>
                                             <div className="col-md-6 mb-2">
                                                 <div className="mb-2">Price Point</div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Up to $299,999
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />$300,000 - $599,999
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />$600,000 or more
-  </label>
-                                                </div>
+                                                {
+                                                    priceFilters.map((filter) => (
+                                                        <div className="form-check" key={filter.text} >
+                                                            <label className="form-check-label">
+                                                                <input type="checkbox" name="pricefilters" value={filter} onChange={(event) => this.handleChange(event, filter)} className="form-check-input" />
+                                                                {filter.text}
+                                                            </label>
+                                                        </div>
+                                                    ))
+                                                }
                                                 <div className="form-check">
                                                     <label className="form-check-label">
                                                         <input type="checkbox" className="form-check-input" value="" />Properties For Rent
-  </label>
+                                                    </label>
                                                 </div>
-
                                             </div></div>
 
                                     </div>
@@ -152,41 +210,16 @@ export default class SubscribeNewsLetter extends React.Component {
                                         <label htmlFor="property"><b>What types of Preferred Vendors would you like to hear from?</b></label>
                                         <div className="row">
                                             <div className="col-md-6 mb-2">
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Lender / Mortgage Broker
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Education
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Building inspection
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Closing Assistance
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Staging
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Photography / Videography
-  </label>
-                                                </div>
-                                                <div className="form-check">
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Other, N/A
-  </label>
-                                                </div>
+                                                {
+                                                    preferedVendors.map((vendor) => (
+                                                        <div className="form-check" key={vendor} >
+                                                            <label className="form-check-label">
+                                                                <input type="checkbox" name="preferedvendor" value={vendor} onChange={(event) => this.handleChange(event,vendor)} className="form-check-input" />
+                                                                {vendor}
+                                                            </label>
+                                                        </div>
+                                                    ))
+                                                }
 
                                             </div>
                                         </div>
@@ -384,7 +417,7 @@ export default class SubscribeNewsLetter extends React.Component {
         );
     };
 }
-
+export default connect()(SubscribeNewsLetter);
 // function mapStateToProps(state) {
 //     const { subscriber } = state;
 //     //  console.log("subscriber====", subscriber);

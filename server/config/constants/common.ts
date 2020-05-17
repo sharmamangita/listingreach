@@ -1293,6 +1293,139 @@ static EMAIL_FOR_LOGIN_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
 ` +Common.EMAIL_TEMPLATE_FOOTER;
 
 
+static PREVIEW_EMAIL_TEMPLATE:string = Common.EMAIL_TEMPLATE_HEADER_NEW+`
+<div class="row">
+<div class="col-md-2">
+</div>
+ <div class="col-md-8">
+ <div class="border2">
+ <div class="row">
+<div class="col-md-4 mb-3 mt-3 text-right">
+<label>From: </label>
+ </div>
+ <div class="col-md-8 mb-3 mt-3">
+Vinod via Listingreach.com
+ </div>
+<div class="col-md-4 mb-3 text-right">
+<label>Email Subject Line:</label>
+ </div>
+ <div class="col-md-8 mb-3">
+Property for sale
+ </div>
+ </div>
+ </div>
+ <div class="border3">
+ <div class="row">
+<div class="col-md-5 mb-3 mt-3 ml-3">
+<i>Powered by</i> <br>
+<img src="http://66.235.194.119/listingreach/img/listing-reach-logo.png" alt="" class="img-a img-fluid">
+ </div>
+ <div class="col-md-3 mb-3 mt-3 text-right">
+<button class="btn btn-primary">Reply to Sender</button>
+ </div>
+ <div class="col-md-3 mb-3 mt-3 text-right">
+<button class="btn btn-primary">Forward to Associate</button>
+ </div>
+ </div>
+   <div class="row">
+<div class="col-md-12">
+<div class="flyer-header">
+Flyer Headline will come here
+ </div>
+ </div>
+ </div>
+   <div class="row">
+<div class="col-md-12">
+<img src="http://66.235.194.119/listingreach/img/img1.jpg" alt="image" style="width:100%;height: 400px;">
+ </div>  
+ </div>
+ <div class="flyer-bg">
+  <div class="row">
+<div class="col-md-12 mt-3 mb-3 ml-3">
+ <h4>Price: $1,000.00 per Square Foot</h4>
+ </div>
+ </div>
+ <div class="row">
+<div class="col-md-12 mt-3 text-center">
+ <label class="flyer-label">Property Address:</label>
+ <p>Street Address will come here, City name come here, FL 22121</p>
+ </div>
+ <div class="col-md-12 text-center">
+ <label class="flyer-label">Agent Tour:</label>
+ <span>Thursday, May 21st 9:00 AM - 4:00 PM</span><br>
+ <label class="flyer-label">Open House:</label>
+ <span>Thursday, May 21st 10:00 AM - 4:00 PM</span><br>
+ <label class="flyer-label">Broker Open:</label>
+ <span>Wednesday, May 27th 9:00 AM - 2:00 PM</span>
+ </div><hr>
+  <div class="col-md-12 ml-3">
+ <label class="flyer-label">MLS#:</label>
+ <span>22313123213</span>
+ </div>
+ <div class="col-md-12 ml-3">
+ <label class="flyer-label">Property Description:</label>
+ <span>Property details will come here...</span>  
+ </div>
+ <div class="col-md-12 ml-3">
+ <label class="flyer-label">Key Features:</label>
+ <ul>
+ <li>Property Type: Single Family </li>
+ <li>Property Style: Bungalow </li>  
+<li> 3 Bedrooms</li>
+<li>1 Full +2 Half Bathrooms</li>
+<li>1 Full +2 Half Bathrooms</li>
+<li>500 square feet</li>
+
+<li>$1,000.00 /sqft</li>
+<li>Lot Size: 500.00 sqft</li>
+<li>  Built 2010</li>
+ <li>1 Car Garage</li>
+<li> One Story </li>
+ </ul>  
+ </div>
+<div class="col-md-12 ml-3">
+ <label class="flyer-label">Links:</label>
+ <p><a href=""><u> Websitename with hyperlink</a></u></p>
+ </div>
+ <div class="col-md-12 text-center">
+<h4><a href=""><u>Click Here to Email Agent for More Information</u></a></h4>
+ </div>
+ </div>
+ </div>
+ <div class="flyer-footer">
+ <div class="row mt-3">
+ <div class="col-md-2 text-center">
+  <img alt="Photo" class="img-square" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-logo.png">
+ </div>
+  <div class="col-md-8 text-center">
+ <b> Vinod</b><br>
+Manager<br>
+vinod@gmail.com<br>
+http://www.website.com<br>
+21212121212<br><br>
+
+Agent Other Contacts Details will come here: (Optional)<br><br>
+
+Company Details will come here,<br>
+Company name<br>
+Company Address, Mai Phone Number, Company Website, etc.
+ </div>
+  <div class="col-md-2 text-center pl-0">
+    <img alt="Photo" class="img-circle" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-profile.png">
+ </div>
+ </div>
+ </div>
+ <div class="flyer-btm">
+ <div class="row">
+ <div class="col-md-12 ">
+ This e-blast was delivered by ListingReach.com, a real estate email marketing service. The ListingReach.com service and information provided therein, while believed to be accurate, are provided "as is". ListingReach.com disclaims any and all representations, warranties, or guarantees of any kind. ListingReach.com assumes no liability for errors or omissions.
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+` +Common.EMAIL_TEMPLATE_FOOTER;
 
 
 

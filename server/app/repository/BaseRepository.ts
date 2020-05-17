@@ -11,14 +11,13 @@ import mongoose = require("mongoose");
 class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T> {
 
     private _model: mongoose.Model<mongoose.Document>;
-
+    
     constructor(schemaModel: mongoose.Model<mongoose.Document>) {
         this._model = schemaModel;
     }
 
     create(item: T, callback: (error: any, result: any) => void) {
         this._model.create(item, callback);
-
     }
 
     retrieve(query: any, callback: (error: any, result: any) => void) {
