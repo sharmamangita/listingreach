@@ -36,6 +36,13 @@ class UserRoutes {
         router.put("/userUpdate", controller.updateUser);
         router.post("/users/getReferences", controller.getReferences);
         router.post("/users/saveAgents",controller.saveAgents);
+     
+
+
+        /* blast routes */ 
+        router.post("/users/saveBlast",controller.saveBlast);
+        router.post("/users/saveProperty",controller.saveProperty);
+        router.post("/users/propertyDetail",controller.getTemplateOrPropertydata);
         return router;
     }
 

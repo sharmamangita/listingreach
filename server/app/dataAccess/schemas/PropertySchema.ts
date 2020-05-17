@@ -12,86 +12,76 @@ class PropertySchema {
         var schema =  mongoose.Schema({
            _id: mongoose.Schema.Types.ObjectId,
             display_method : {
-                type: String,
-                required: true
+                type: String
             },
             street_address : {
                 type: String
             },
             city: {
-                type: String,
-                required: true
+                type: String
             },
             state : {
-                type: String,
-                required: true
+                type: String
             },
             zipcode : {
                 type: String
             },
             mls_number: {
-                type: String,
-                required: true
+                type: String
             },
              board : {
-                type: String,
-                required: true
+                type: String
             },
             property_type : {
                 type: String
             },
             property_style: {
-                type: String,
-                required: true
-            },
-            price:{
-                type: String,
-                required: true
+                type: String
             },
             building_size:{
-                type: String,
-                required: true    
-
+                type: String  
             },
             lot_size:{
-                type: String,
-                required: true    
+                type: String 
             },
             number_bedrooms:{
-                type: String,
-                required: true    
+                type: String
             },
             number_bathrooms:{
-                type: String,
-                required: true    
+                type: String  
             },
             year_built:{
-                type: String,
-                required: true    
+                type: String 
             },
             number_stories:{
-                type: String,
-                required: true    
+                type: String    
             },
             garage:{
-                type: String,
-                required: true    
+                type: String  
             },
             property_details:{
-                type: String,
-                required: true                    
-            }
-            priceinfo:[{
+                type: String                  
+            },
+            price:{
+                type: String                  
+            },
+            pricingInfo:[{
                 price:{
-                 type:String,
+                 type:String
                 },
                 priceType:{
                  type:String
                 }
             }],
-
-
-
+            linksToWebsites:[{
+                linksToWebsiteData:Object
+            }],
+            isOpenHouse:[{
+                openHouseData:Object
+            }],
+            userId:{
+                type:mongoose.Schema.Types.ObjectId
+            },
         });
 
         return schema;

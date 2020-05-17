@@ -13,21 +13,30 @@ import IBaseController = require("./BaseController");
 import IUserModel = require("./../app/model/interfaces/IUserModel");
 import IAgentModel = require("./../app/model/interfaces/IAgentModel");
 import IPagesModel = require("./../app/model/interfaces/IPagesModel");
+import IEmployeeModel = require("./../app/model/interfaces/IEmployeeModel");
 import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
 import ContactformBusiness = require("./../app/business/ContactformBusiness");
 import BlastBusiness = require("./../app/business/BlastBusiness");
 import PropertyBusiness = require("./../app/business/PropertyBusiness");
-import TemplateBusiness = require("./../app/business/TemplateBusiness");
+
+
+
+import AgentTemplateBusiness = require("./../app/business/AgentTemplateBusiness");
+
 import InvitationBusiness = require("./../app/business/InvitationBusiness");
 import IAdminUserModel = require("./../app/model/interfaces/IAdminUserModel");
 import IContactformModel = require("./../app/model/interfaces/IContactformModel");
 import IBlastModel = require("./../app/model/interfaces/IBlastModel");
 import IPropertyModel = require("./../app/model/interfaces/IPropertyModel");
-import ITemplateModel = require("./../app/model/interfaces/ITemplateModel");
+
+
+import IAgentTemplateModel = require("./../app/model/interfaces/IAgentTemplateModel");
+
 import IInvitationModel = require("./../app/model/interfaces/IInvitationModel");
 import Common = require("./../config/constants/common");
 import PlanBusiness = require("./../app/business/PlanBusiness");
 import AgentBusiness = require("./../app/business/AgentBusiness");
+import IAgentModel = require("./../app/model/interfaces/IAgentModel");
 import IBlastImageModel = require("./../app/model/interfaces/IBlastImageModel");
 import BlastImageBusiness = require("./../app/business/BlastImageBusiness");
 
@@ -692,28 +701,60 @@ updateUser(req: express.Request, res: express.Response): void {
         try {
            var _propertyforms: IPropertyModel = <IPropertyModel>req.body;
 			var _propertyBusiness = new PropertyBusiness();
-			 var _templateforms: ITemplateModel = <ITemplateModel>req.body;
-			 var _templateBusiness = new TemplateBusiness();
+			 var _templateforms: IAgentTemplateModel = <IAgentTemplateModel>req.body;
+			 var _templateBusiness = new AgentTemplateBusiness();
 				let _propertyform ={};
 				let _templateform={};
+
+			if(_templateforms.property.Email){
+				_templateform.email_subject = _templateforms.property.Email.formSubject;
+				_templateform.from_line = _templateforms.property.Email.formLine;
+				_templateform.address = _templateforms.property.Email.formReply;
+				_templateform.userId = _templateforms.property.userId;
+				_templateform.headline = _templateforms.property.blastHeadline;
+			}
 			
-			console.log("_propertyforms====",_propertyforms);
-			//if(_templateforms.property.)
-			
-
-
-
 			if(_propertyforms.property.propertyAddress){
 				_propertyform.display_method=_propertyforms.property.propertyAddress.displayMethod;
 				_propertyform.street_address=_propertyforms.property.propertyAddress.streetAddress;
 				_propertyform.city=_propertyforms.property.propertyAddress.city;
 				_propertyform.state=_propertyforms.property.propertyAddress.state;
 				_propertyform.zipcode=_propertyforms.property.propertyAddress.zipCode;
+				_propertyform.userId = _propertyforms.property.userId;
+   			
 			}
 
 			if(_propertyforms.property.mlsNumber){
 				_propertyform.mls_number=_propertyforms.property.mlsNumber.numberProperty;
 				_propertyform.board=_propertyforms.property.mlsNumber.boardAssociation;
+			}
+
+			if(_propertyforms.property.pricingInfo){
+				_propertyform.pricingInfo=_propertyforms.property.pricingInfo; 
+			}
+
+			if(_propertyforms.property.linksToWebsites){
+				var linksData=[];
+				let data = _propertyforms.property.linksToWebsites.linkData;
+							data.forEach(function(links:any) {
+							if(links){
+								linksData.push({linksToWebsiteData:links.linksToWebsiteData});
+							}
+						});
+			   _propertyform.linksToWebsites=linksData; 
+			}
+
+			if(_propertyforms.property.isOpenHouse){
+				var opneHouseData=[];
+				let data = _propertyforms.property.isOpenHouse.openHouseData;
+							data.forEach(function(house:any) {
+							if(house){
+								opneHouseData.push({openHouseData:house.openHouseData});
+							}
+						});
+			   _propertyform.isOpenHouse=opneHouseData;
+
+
 			}
 
 			if(_propertyforms.property.generalPropertyInformation){
@@ -723,32 +764,65 @@ updateUser(req: express.Request, res: express.Response): void {
 				_propertyform.number_bedrooms=_propertyforms.property.generalPropertyInformation.numberOfBedrooms;
 				_propertyform.building_size=_propertyforms.property.generalPropertyInformation.buildingSize;
 				_propertyform.number_stories=_propertyforms.property.generalPropertyInformation.numberOfStories;
-				_propertyform.price="23";
+
 				_propertyform.number_bathrooms="4";
 				_propertyform.year_built =_propertyforms.property.generalPropertyInformation.yearBuilt;
 				_propertyform.garage=_propertyforms.property.generalPropertyInformation.garage;
+				_propertyform.price = _propertyforms.property.generalPropertyInformation.pricePerSquareFoot;
+
 			}
 
 			if(_propertyforms.property.propertyDetail){
 				_propertyform.property_details=_propertyforms.property.propertyDetail;
 			}
 
-    		_propertyBusiness.create(_propertyform, (error, result) => {
-                if(error) {
-					console.log(error);
-					res.send({"error": error});
-				}
-                _templateBusiness.create(_templateforms, (error, result) => { 
-	                if(error) {
-						console.log(error);
-						res.send({"error": error});
-					} else {
-						res.send({"success": "success"});
-					}
-                }); 
-        	}); 
+ 
 
         	
+
+
+			var _id: string = _propertyforms.property.propertyId.toString();
+			_propertyBusiness.findById(_id, (error, resultuser) => {  
+				if(resultuser._id !=undefined && resultuser._id){
+					_propertyBusiness.update(_id, _propertyform, (error, resultUpdate) => { 
+						if(error){
+							res.send({"error": error});
+						} else {
+							_templateBusiness.findOne({"Property_id":_id}, (error, result) => {
+								if(error){
+									res.send({"error": error});
+								}
+								let _id: string = result._id.toString();
+								 _templateBusiness.update(_id,_templateform, (error, result) => { 
+								 	if(error){
+								 		res.send({"error": error});
+								 	} else {
+								 		console.log("resultrerresult===",result);
+								 		res.send({"success": "success"});
+								 	}
+								 })
+							})	 
+						}
+					});
+				} else {
+						_propertyBusiness.create(_propertyform, (error, result) => {
+				                if(error) {
+									console.log(error);
+									res.send({"error": error});
+								}
+
+								_templateform.Property_id = result._id.toString();
+								 _templateBusiness.create(_templateform, (error, result) => { 
+					                if(error) {
+										console.log(error);
+										res.send({"error": error});
+									} else {
+										res.send({"success": "success"});
+									}
+				                }); 
+				        }); 
+				}
+			});
         }
         catch (e)  {
             console.log(e);
@@ -758,6 +832,7 @@ updateUser(req: express.Request, res: express.Response): void {
 
 
  savePropertyImages(data:any,id:any, res: express.Response): void { 
+
  	var _blastimageBusiness= new BlastImageBusiness();
 	var _blastimage: IBlastImageModel = <IBlastImageModel >data;
 		
@@ -776,6 +851,163 @@ updateUser(req: express.Request, res: express.Response): void {
 		}
 			
 		
+	
+
+
+
+
+ getTemplateOrPropertydata(req: express.Request, res: express.Response): void { 
+ 		try {
+ 			var _property: IPropertyModel = <IPropertyModel>req.body;
+			var _propertyBusiness = new PropertyBusiness();
+		 		var propertyAggregate = [
+		            {
+			                $lookup:                       
+			                {
+			                    from: "users",
+			                    localField: "userId",   
+			                    foreignField: "_id",        
+			                    as: "users"               
+			                }
+			            },
+			            {
+				      	  	$unwind:"$users"
+				        
+				      	},
+			          	{
+			                $lookup:                       
+			                {
+			                    from: "blastimages",
+			                    localField: "userId",   
+			                    foreignField: "userId",        
+			                    as: "blastimages"               
+			                }
+			            },
+			            {
+				      	  	$unwind:"$users"
+				        
+				      	},
+			            {
+			                $lookup:                       
+			                {
+			                    from: "agents",
+			                    localField: "userId",   
+			                    foreignField: "userId",        
+			                    as: "agents"               
+			                }
+			            },
+			            {
+				      	  	$unwind:"$agents"
+				        
+				      	},
+			            {
+			                $lookup:                       
+			                {
+			                    from: "templates",
+			                    localField: "userId",   
+			                    foreignField: "userId",        
+			                    as: "templates"               
+			                }
+			            },
+			            {
+			                $project:                       
+			                {    
+			                    "_id":1,
+			                    "userId":1,
+         		                "display_method":1,
+			                    "street_address":1,
+			                    "city":1,
+			                    "state":1,
+			                    "zipcode":1,
+			                    "mls_number":1,
+								"board":1,
+			                    "property_type":1,
+			                    "lot_size":1,
+			                    "number_bedrooms":1,
+			                    "building_size":1,
+			                    "number_stories":1,
+								"number_bathrooms":1,
+								"year_built":1,
+								"garage":1,
+								"price":1,
+								"pricingInfo":1,
+								"property_details":1,
+								"isOpenHouse":1,
+								"linksToWebsites":1,
+								"templates.email_subject":1,
+								"templates.from_line":1,
+								"templates.address":1,
+								"templates.Property_id":1,
+								"templates.headline":1,
+								"templates.userId":1,
+								"users.userName":1,
+								"users.firstName":1,
+								"users.lastName":1,
+								"users.roles":1,
+								"blastimages.url":1,
+								"agents.name":1,
+								"agents.designation":1,
+								"agents.email":1,
+								"agents.website_url":1,
+								"agents.phone_number":1,
+								"agents.image_url":1,
+								"agents.logo_url":1,
+								"agents.company_details":1,
+								"agents.other_information":1,
+
+						    }
+			            },
+			            {
+			                $match:
+		                    {
+									userId: mongoose.Types.ObjectId(_property.userId.toString())      
+							}
+			            }
+			        ];
+
+			         _propertyBusiness.aggregate( propertyAggregate, (error:any, result:any) => { 
+			        	if(error) {
+							res.send({"error": error});
+						} else {
+							console.log("result====",result);
+							var returnObj = result.map(function(obj: any): any {
+				            return {
+						        id: obj._id,
+						        firstName:obj.users.firstName,
+						        lastName:obj.users.lastName,
+						        middleName:obj.users.middleName,
+						        building_size:obj.building_size,
+						        number_bathrooms:obj.number_bathrooms,
+						        isOpenHouse:obj.isOpenHouse,
+						        property_type:obj.property_type,
+						        mls_number:obj.mls_number,
+						        linksToWebsites:obj.linksToWebsites,
+						        property_detail:obj.property_details,
+						        pricingInfo:obj.pricingInfo,
+						        board:obj.board,
+						        zipcode:obj.zipcode,
+						        city:obj.city,
+						        street_address:obj.street_address,
+						        number_bedrooms:obj.number_bedrooms,
+						        year_built:obj.year_built,
+						        number_stories:obj.number_stories,
+						        lot_size:obj.lot_size,
+						        templates:obj.templates,
+						        price:obj.price
+
+						    } ;
+
+					});
+							return res.json(returnObj[0]);
+				}
+			});				
+	  
+ }  catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
 	}
+}
+
+
 }
 export = UserController;

@@ -44,9 +44,6 @@ class PropertyModel {
         return this.propertyModel.property_style;
     }
 
-    get price (): string {
-        return this.propertyModel.price;
-    }
 
     get building_size (): string {
         return this.propertyModel.building_size;
@@ -76,18 +73,34 @@ class PropertyModel {
         return this.propertyModel.garage;
     }
 
+    get price (): string {
+        return this.propertyModel.garage;
+    }
+
     get property_details (): string {
         return this.propertyModel.property_details;
     }
 
-    get priceinfo (): object {
-        return this.propertyModel.priceinfo;
+    get pricingInfo (): object {
+        return this.propertyModel.pricingInfo;
     }
 
-    get link_website (): object {
-        return this.propertyModel.link_website;
+    get linksToWebsites (): object {
+        return this.propertyModel.linksToWebsites;
     }
+
+    get isOpenHouse (): object {
+        return this.propertyModel.isOpenHouse;
+    }
+
+    get userId (): mongoose.Types.ObjectId {
+        return this.propertyModel.isOpenHouse;
+    }
+
+    
+    
 	
+
 }
 Object.seal(PropertyModel);
 export =  PropertyModel;

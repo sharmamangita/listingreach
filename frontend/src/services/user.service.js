@@ -15,14 +15,14 @@ export const userService = {
 	emailPreviewTemplate,
     deleteprofilepic,
     deleteprofileCover,
-    getapagecontent,
-    delete: _delete,
+   delete: _delete,
     getReferences,
     updateStatus,
     unsetsrcid,
     blast,
     saveProperty,
-    saveAgents
+    saveAgents,
+    getTemplateOrPropertydata
 };
 
 function login(email, password) {
@@ -231,13 +231,14 @@ var user = {"userid":uid};
 	}	
 
 
-function getapagecontent(page) {
+function getTemplateOrPropertydata(userId) {
+   console.log("test====",JSON.stringify(userId));
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(page)
+        body: JSON.stringify({userId})
     };
-    return fetch(`${config.apiUrl}/contentPage`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/users/propertyDetail`, requestOptions).then(handleResponse);
 }	
 
 function blast(blast_type,selected_template_id,user_id){

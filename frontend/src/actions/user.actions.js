@@ -17,14 +17,14 @@ export const userActions = {
     contactForm,
 	emailPreviewTemplate,
     deleteprofilepic,
-    getapagecontent,
     deleteprofileCover,
     delete: _delete,
     getReferences,
     updateStatus,
     blast,
     saveProperty,
-    saveAgents
+    saveAgents,
+    getTemplateOrPropertydata
 };
 /* Get References */
 function getReferences(userid){
@@ -396,10 +396,10 @@ function _delete(id,flag) {
 
 
 
-function getapagecontent(page){
+function getTemplateOrPropertydata(userId){
      return dispatch => {
         dispatch(request());
-        userService.getapagecontent(page)
+        userService.getTemplateOrPropertydata(userId)
             .then(
                 users => dispatch(success(users)),
                 error => dispatch(failure(error.toString()))

@@ -4,18 +4,18 @@ import { connect } from "react-redux";
 import Select from "react-select";
 import { Alert } from "reactstrap";
 import { render } from "react-dom";
+
 import { authHeader } from '../../helpers';
 import ListingSubmenu from "../../components/ListingSubmenu";
+
+import Moment from 'react-moment';
+
 import ReactHtmlParser, {
   processNodes,
   convertNodeToElement,
   htmlparser2,
 } from "react-html-parser";
 import { userActions } from "../../actions";
-import {
-  NotificationContainer,
-  NotificationManager,
-} from "react-notifications";
 import config from "config";
 const axios = require("axios");
 
@@ -25,17 +25,24 @@ const entities = new Entities();
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 );
+
+const initialState = {
+};
+
 class CreateFlyerPage extends React.Component {
   constructor(props) {
     super(props);
+        var user = JSON.parse(localStorage.getItem("user"));
     this.openHouse = [];
     this.linksToWebsites = [];
     this.state = {
+      email:'',
       disabled: true,
       blast_type: "",
       selected_template_id: "",
       userId: "",
       updateimage:"",
+
       errors: {
         propertyDetails: {
           Email: {
@@ -87,6 +94,8 @@ class CreateFlyerPage extends React.Component {
         },
       },
       propertyDetails: {
+        userId:'',
+        propertyId:'',
         Email: {
           formSubject: "",
           formLine: "",
@@ -151,9 +160,15 @@ class CreateFlyerPage extends React.Component {
           url: "",
           linkData: [],
         },
-        
       },
+      preview:{
+        email:''
+      }
+
     };
+
+
+
 
     this.handleChange = this.handleChange.bind(this);
     this.show = this.show.bind(this);
@@ -167,11 +182,43 @@ class CreateFlyerPage extends React.Component {
     this.saveProperty = this.saveProperty.bind(this);
     this.linkArrayChange = this.linkArrayChange.bind(this);
     this.openHouseArrayChange = this.openHouseArrayChange.bind(this);
-    this.createNotification = this.createNotification.bind(this);
+
     this.openUpload = this.openUpload.bind(this);
     this.imageChange = this.imageChange.bind(this);
-  }
 
+    this.openUpload = this.openUpload.bind(this);
+    this.imageChange = this.imageChange.bind(this);
+    this.propsDataupdate = this.propsDataupdate.bind(this);
+    this.handleChangepreview = this.handleChangepreview.bind(this);
+    this.handleSubmitPreviw = this.handleSubmitPreviw.bind(this);
+    
+
+  }
+   handleChangepreview(e) {
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
+    }
+
+    handleSubmitPreviw(e) { 
+    e.preventDefault();
+  //console.log('stateeeeeee',this.state);return false; 
+    const {email} = this.state;
+    const { dispatch } = this.props;
+    if(email){
+    dispatch(userActions.emailPreviewTemplate(email)); 
+      //window.scrollTo(0,0);
+      this.setState({
+        email:"",
+       submitted:false 
+      });
+      this.setState({visible:true},()=>{
+        window.setTimeout(()=>{
+          this.setState({visible:false})
+        },5000)
+      }); 
+    }    
+  }
+    
   openUpload() {
     $("#imgupload").trigger("click");
   }
@@ -186,15 +233,17 @@ class CreateFlyerPage extends React.Component {
       headers: {
        ...authHeader(), 'content-type': 'multipart/form-data'
       }
+
     };
     axios
       .post(`http://localhost:3000/propertyupload`, formData, config)
       .then((response) => {
         console.log("response===",response);
         this.setState({updateimage:response.data.url});
+
         alert("The file is successfully uploaded");
       })
-      .catch((error) => { });
+      .catch((error) => {});
   }
 
   addOpenHouse() {
@@ -209,55 +258,30 @@ class CreateFlyerPage extends React.Component {
       let date = propertyDetails.isOpenHouse.date;
       let startTime = propertyDetails.isOpenHouse.startTime;
       let endTime = propertyDetails.isOpenHouse.endTime;
-      this.openHouse.push({
+      this.openHouse.push({openHouseData:{
         houseType: houseType,
         date: date,
         startTime: startTime,
         endTime: endTime,
-      });
+      }});
       let openHouse = Object.assign({}, this.state);
       openHouse.propertyDetails.isOpenHouse.openHouseData = this.openHouse;
       this.setState(openHouse);
     }
   }
 
-  createNotification(type) {
-    return () => {
-      switch (type) {
-        case "info":
-          NotificationManager.info("Info message");
-          break;
-        case "success":
-          NotificationManager.success("Success message", "Title here");
-          break;
-        case "warning":
-          NotificationManager.warning(
-            "Warning message",
-            "Close after 3000ms",
-            3000
-          );
-          break;
-        case "error":
-          NotificationManager.error("Error message", "Click me!", 5000, () => {
-            alert("callback");
-          });
-          break;
-      }
-    };
-  }
 
   linkArrayChange(event) {
     const { id, name, value } = event.target;
-
     let linkArray = Object.assign({}, this.state);
-    linkArray.propertyDetails.linksToWebsites.linkData[id][name] = value;
+    linkArray.propertyDetails.linksToWebsites.linkData[id].linksToWebsiteData[name] = value;
     this.setState(linkArray);
   }
 
   openHouseArrayChange(event) {
     const { id, name, value } = event.target;
     let openHouseArray = Object.assign({}, this.state);
-    openHouseArray.propertyDetails.isOpenHouse.openHouseData[id][name] = value;
+    openHouseArray.propertyDetails.isOpenHouse.openHouseData[id].openHouseData[name] = value;
     this.setState(openHouseArray);
   }
 
@@ -352,7 +376,8 @@ class CreateFlyerPage extends React.Component {
     ) {
       let url = propertyDetails.linksToWebsites.url;
       let buildingSize = propertyDetails.linksToWebsites.buildingSize;
-      this.linksToWebsites.push({ url: url, buildingSize: buildingSize });
+
+      this.linksToWebsites.push({ linksToWebsiteData : {url: url, buildingSize: buildingSize }});
       let linksToWebsites = Object.assign({}, this.state);
       linksToWebsites.propertyDetails.linksToWebsites.linkData = this.linksToWebsites;
       this.setState(linksToWebsites);
@@ -370,7 +395,6 @@ class CreateFlyerPage extends React.Component {
             },
           },
         });
-
         break;
       case "mlsNumber":
         this.setState({
@@ -394,6 +418,7 @@ class CreateFlyerPage extends React.Component {
         break;
     }
   }
+
 
   hide(flag) {
     switch (flag) {
@@ -433,15 +458,14 @@ class CreateFlyerPage extends React.Component {
 
   handleChange(flag, event) {
     event.preventDefault();
-    NotificationManager.info("Info message sdsdsd");
     const { propertyDetails } = this.state;
     const { name, value } = event.target;
     let errors = this.state.errors;
     switch (name) {
       case "formSubject":
-        errors.propertyDetails.Email.formSubject = validEmailRegex.test(value)
-          ? ""
-          : "Email is not valid!";
+        errors.propertyDetails.Email.formSubject = value.length < 3 ?
+           "Email Subject must be at least 3 characters long!"
+          : "";
         break;
       case "formLine":
         errors.propertyDetails.Email.formLine =
@@ -477,10 +501,10 @@ class CreateFlyerPage extends React.Component {
         errors.propertyDetails.AgentContactInfo.phone =
           value.length < 2 ? "Phone is required" : "";
         errors.propertyDetails.AgentContactInfo.phone = parseInt(value)
+
           ? ""
           : "Please enter valid number";
         break;
-
       case "numberProperty":
         errors.propertyDetails.mlsNumber.numberProperty = parseInt(value)
           ? ""
@@ -585,18 +609,71 @@ class CreateFlyerPage extends React.Component {
         states.propertyDetails[name] = value;
         this.setState(states);
         break;
+
     }
 
     this.setState({ errors, [name]: value });
   }
 
-  componentDidMount() {
-    var user = JSON.parse(localStorage.getItem("user"));
-    this.setState({
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.users!=undefined && nextProps.users.items){
+            this.propsDataupdate(nextProps.users);
+        }
+        //this.setState(nextProps);
+    }
+
+  propsDataupdate(data){
+      let states = Object.assign({}, this.state);
+      let propsData = data.items;
+        if(propsData !=undefined && propsData){
+
+            if(propsData.templates.length){
+                let template = propsData.templates[0];
+                states.propertyDetails.Email.formSubject = template.email_subject;
+                states.propertyDetails.Email.formLine = template.from_line;
+                states.propertyDetails.Email.formReply = template.address;
+                states.propertyDetails.blastHeadline=template.headline;
+            }
+
+            if(propsData.pricingInfo.length){
+              states.propertyDetails.pricingInfo.price = propsData.pricingInfo[0].price;
+              states.propertyDetails.pricingInfo.priceType = propsData.pricingInfo[0].priceType;
+            }
+
+            states.propertyDetails.propertyDetail = propsData.property_detail;
+            states.propertyDetails.generalPropertyInformation.yearBuilt = propsData.year_built;
+            states.propertyDetails.propertyId=propsData.id;
+
+            states.propertyDetails.linksToWebsites.linkData = propsData.linksToWebsites;
+            states.propertyDetails.isOpenHouse.openHouseData = propsData.isOpenHouse;
+
+            states.propertyDetails.propertyAddress.zipCode=propsData.zipcode;
+            states.propertyDetails.propertyAddress.city=propsData.city;
+            states.propertyDetails.propertyAddress.streetAddress=propsData.street_address;
+
+            states.propertyDetails.mlsNumber.numberProperty=propsData.mls_number;
+            states.propertyDetails.generalPropertyInformation.yearBuilt=propsData.year_built;
+            states.propertyDetails.generalPropertyInformation.lotSize=propsData.lot_size;
+            states.propertyDetails.generalPropertyInformation.buildingSize = propsData.building_size;
+            states.propertyDetails.generalPropertyInformation.numberOfBedrooms = propsData.number_bedrooms;
+            states.propertyDetails.generalPropertyInformation.numberOfStories = propsData.number_stories;
+            states.propertyDetails.generalPropertyInformation.pricePerSquareFoot = propsData.price;
+            
+            this.setState(states);
+        }    
+  }
+
+   componentDidMount() {
+     var user = JSON.parse(localStorage.getItem("user"));
+     const { dispatch } = this.props;
+    this.props.dispatch(userActions.getTemplateOrPropertydata(user.userId));
+    let states = Object.assign({}, this.state);
+        states.propertyDetails.userId = user.userId;
+        this.setState(states);
+   
+   this.setState({
       userId: user.userId,
     });
-    const { dispatch } = this.props;
-    this.props.dispatch(userActions.getapagecontent({ page: "About Us" }));
     window.scrollTo(0, 0);
   }
 
@@ -632,24 +709,19 @@ class CreateFlyerPage extends React.Component {
     $(".nav-tabs > .active").next("a").trigger("click");
   }
 
-  render() {
-    if (this.props.users && this.props.users.items) {
-      console.log("test", this.props.users);
-      if (this.props.users.items[0]) {
-        var abouttitle = entities.decode(this.props.users.items[0].page);
-        var aboutpage = entities.decode(this.props.users.items[0].content);
-      }
-    }
 
+
+  render() {
     const { errors, propertyDetails, disabled } = this.state;
-    console.log("propertyDetails====", propertyDetails);
-    
-    let firstpostionImage ='';
-    if(this.state.updateimage){
-      firstpostionImage=this.state.updateimage;
-    }else{
-      firstpostionImage='/public/assets/images/img1.jpg';
+    const { users } = this.props;
+    let firstName = '';
+    let firstpostionImage= '';
+    //let emailSubjectLine = '';
+    if(users!=undefined && users.items!=undefined){
+      firstName= users.items.firstName;
+      //emailSubjectLine=propertyDetails.Email.formSubject
     }
+    console.log("propertyDetails====", propertyDetails);
     return (
       <div>
         <ListingSubmenu />
@@ -1018,6 +1090,7 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) => this.handleChange("email", e)}
                                 className="form-control form-control-lg form-control-a"
                                 placeholder="Subject"
+                                value={propertyDetails.Email.formSubject}
                               />
                               <div className="validation">
                                 {errors.propertyDetails.Email.formSubject}
@@ -1033,6 +1106,7 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) => this.handleChange("email", e)}
                                 className="form-control form-control-lg form-control-a"
                                 placeholder="Eg. Your Name"
+                                value={propertyDetails.Email.formLine}
                               />
                               <div className="validation">
                                 {errors.propertyDetails.Email.formLine}
@@ -1048,6 +1122,7 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) => this.handleChange("email", e)}
                                 className="form-control form-control-lg form-control-a"
                                 placeholder="name@domain.com"
+                                value={propertyDetails.Email.formReply}
                               />
                               <div className="validation">
                                 {errors.propertyDetails.Email.formReply}
@@ -1070,6 +1145,7 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) =>
                                   this.handleChange("blastHeadline", e)
                                 }
+                                value={propertyDetails.blastHeadline}
                                 className="form-control form-control-lg form-control-a"
                                 placeholder="e.g. Triple Net Shopping Center For Sale in Atlanta"
                               />
@@ -1227,7 +1303,7 @@ class CreateFlyerPage extends React.Component {
                                   this.handleChange("AgentContactInfo", e)
                                 }
                                 placeholder="Company Details"
-                              ></textarea>
+                              >{propertyDetails.propertyDetail}</textarea>
                             </div>
                           </div>
                           <div className="col-md-6 mb-3">
@@ -1272,10 +1348,10 @@ class CreateFlyerPage extends React.Component {
                           style={{
                             display:
                               propertyDetails &&
-                                propertyDetails.isOpenHouse &&
-                                propertyDetails.isOpenHouse.display !=
+                              propertyDetails.isOpenHouse &&
+                              propertyDetails.isOpenHouse.display !=
                                 undefined &&
-                                propertyDetails.isOpenHouse.display
+                              propertyDetails.isOpenHouse.display
                                 ? "inline"
                                 : "none",
                           }}
@@ -1388,7 +1464,7 @@ class CreateFlyerPage extends React.Component {
                             <tbody>
                               {propertyDetails.isOpenHouse &&
                                 propertyDetails.isOpenHouse.openHouseData !=
-                                undefined &&
+                                  undefined &&
                                 propertyDetails.isOpenHouse.openHouseData
                                   .length > 0 &&
                                 propertyDetails.isOpenHouse.openHouseData.map(
@@ -1399,32 +1475,32 @@ class CreateFlyerPage extends React.Component {
                                           {disabled ? (
                                             <input
                                               type="text"
-                                              value={openHouse.houseType}
+                                              value={openHouse.openHouseData.houseType}
                                               className="form-control form-control-lg form-control-a"
                                               disabled={disabled}
                                             />
                                           ) : (
-                                              <select
-                                                className="form-control form-control-lg form-control-a"
-                                                id={i}
-                                                name="houseType"
-                                                disabled={disabled}
-                                                onChange={
-                                                  this.openHouseArrayChange
-                                                }
-                                              >
-                                                <option value="">Select</option>
-                                                <option value="Open House">
-                                                  Open House
+                                            <select
+                                              className="form-control form-control-lg form-control-a"
+                                              id={i}
+                                              name="houseType"
+                                              disabled={disabled}
+                                              onChange={
+                                                this.openHouseArrayChange
+                                              }
+                                            >
+                                              <option value="">Select</option>
+                                              <option value="Open House">
+                                                Open House
                                               </option>
-                                                <option value="Broker Open">
-                                                  Broker Open
+                                              <option value="Broker Open">
+                                                Broker Open
                                               </option>
-                                                <option value="Agent Tour">
-                                                  Agent Tour
+                                              <option value="Agent Tour">
+                                                Agent Tour
                                               </option>
-                                              </select>
-                                            )}
+                                            </select>
+                                          )}
                                         </td>
                                         <td>
                                           <input
@@ -1433,7 +1509,7 @@ class CreateFlyerPage extends React.Component {
                                             onChange={this.openHouseArrayChange}
                                             id={i}
                                             className="form-control form-control-lg form-control-a"
-                                            value={openHouse.date}
+                                            value={openHouse.openHouseData.date}
                                             disabled={disabled}
                                           />
                                         </td>
@@ -1444,7 +1520,7 @@ class CreateFlyerPage extends React.Component {
                                             onChange={this.openHouseArrayChange}
                                             id={i}
                                             className="form-control form-control-lg form-control-a"
-                                            value={openHouse.startTime}
+                                            value={openHouse.openHouseData.startTime}
                                             disabled={disabled}
                                           />{" "}
                                           -{" "}
@@ -1454,7 +1530,7 @@ class CreateFlyerPage extends React.Component {
                                             onChange={this.openHouseArrayChange}
                                             className="form-control form-control-lg form-control-a"
                                             name="endTime"
-                                            value={openHouse.endTime}
+                                            value={openHouse.openHouseData.endTime}
                                             disabled={disabled}
                                           />
                                         </td>
@@ -1517,6 +1593,7 @@ class CreateFlyerPage extends React.Component {
                                   onChange={(e) =>
                                     this.handleChange("propertyPricing", e)
                                   }
+                                  value={propertyDetails.pricingInfo.price}
                                   className="form-control form-control-lg form-control-a"
                                 />
                               </div>
@@ -1596,6 +1673,8 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) =>
                                   this.handleChange("propertyAddress", e)
                                 }
+
+                                value={propertyDetails.propertyAddress.streetAddress}
                               />
                             </div>
                           </div>
@@ -1610,6 +1689,7 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) =>
                                   this.handleChange("propertyAddress", e)
                                 }
+                                value={propertyDetails.propertyAddress.city}
                               />
                             </div>
                           </div>
@@ -1655,6 +1735,7 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) =>
                                   this.handleChange("propertyAddress", e)
                                 }
+                                value={propertyDetails.propertyAddress.zipCode}
                               />
                             </div>
                           </div>
@@ -1687,9 +1768,9 @@ class CreateFlyerPage extends React.Component {
                           style={{
                             display:
                               propertyDetails &&
-                                propertyDetails.mlsNumber &&
-                                propertyDetails.mlsNumber.display != undefined &&
-                                propertyDetails.mlsNumber.display
+                              propertyDetails.mlsNumber &&
+                              propertyDetails.mlsNumber.display != undefined &&
+                              propertyDetails.mlsNumber.display
                                 ? "flex"
                                 : "none",
                           }}
@@ -1705,9 +1786,10 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) =>
                                   this.handleChange("mlsNumber", e)
                                 }
+                                value={propertyDetails.mlsNumber.numberProperty}
                               />
                             </div>
-                            <div class="validation">
+                            <div className="validation">
                               {errors.propertyDetails.mlsNumber.numberProperty}
                             </div>
                           </div>
@@ -1756,6 +1838,7 @@ class CreateFlyerPage extends React.Component {
                                   <option>
                                     Daytona Beach Area Real Estate Agent List
                                   </option>
+
                                   <option>
                                     Dixie Gilchrist Levy Counties Real Estate
                                     Agent List
@@ -1767,6 +1850,7 @@ class CreateFlyerPage extends React.Component {
                                     East Polk County Real Estate Agent List
                                   </option>
                                   <option>
+
                                     Emerald Coast Real Estate Agent List
                                   </option>
                                   <option>
@@ -1874,6 +1958,8 @@ class CreateFlyerPage extends React.Component {
                                   onChange={(e) =>
                                     this.handleChange("propertyInformation", e)
                                   }
+
+                                  value={propertyDetails.generalPropertyInformation.pricePerSquareFoot}
                                 />
 
                                 <div className="input-group-append">
@@ -1903,6 +1989,9 @@ class CreateFlyerPage extends React.Component {
                                   onChange={(e) =>
                                     this.handleChange("propertyInformation", e)
                                   }
+
+                                  value={propertyDetails.generalPropertyInformation.buildingSize}
+
                                 />
 
                                 <div className="input-group-append">
@@ -1931,6 +2020,7 @@ class CreateFlyerPage extends React.Component {
                                   onChange={(e) =>
                                     this.handleChange("propertyInformation", e)
                                   }
+                                  value={propertyDetails.generalPropertyInformation.lotSize}
                                 />
                                 <div className="input-group-append">
                                   <select
@@ -1969,6 +2059,7 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) =>
                                   this.handleChange("propertyInformation", e)
                                 }
+                                value={propertyDetails.generalPropertyInformation.numberOfBedrooms}
                               />
                             </div>
                             <div className="validation">
@@ -2040,6 +2131,7 @@ class CreateFlyerPage extends React.Component {
                                 name="yearBuilt"
                                 className="form-control form-control-lg form-control-a"
                                 placeholder="eg. 2016"
+                                value={propertyDetails.generalPropertyInformation.yearBuilt}
                                 onChange={(e) =>
                                   this.handleChange("propertyInformation", e)
                                 }
@@ -2062,6 +2154,8 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) =>
                                   this.handleChange("propertyInformation", e)
                                 }
+
+                                value={propertyDetails.generalPropertyInformation.numberOfStories}
                               >
                                 <option value="">
                                   -- Select Number of Stories --
@@ -2146,10 +2240,10 @@ class CreateFlyerPage extends React.Component {
                           style={{
                             display:
                               propertyDetails &&
-                                propertyDetails.linksToWebsites &&
-                                propertyDetails.linksToWebsites.display !=
+                              propertyDetails.linksToWebsites &&
+                              propertyDetails.linksToWebsites.display !=
                                 undefined &&
-                                propertyDetails.linksToWebsites.display
+                              propertyDetails.linksToWebsites.display
                                 ? "inline"
                                 : "none",
                           }}
@@ -2221,7 +2315,7 @@ class CreateFlyerPage extends React.Component {
                             <tbody>
                               {propertyDetails.linksToWebsites &&
                                 propertyDetails.linksToWebsites.linkData !=
-                                undefined &&
+                                  undefined &&
                                 propertyDetails.linksToWebsites.linkData
                                   .length > 0 &&
                                 propertyDetails.linksToWebsites.linkData.map(
@@ -2233,7 +2327,7 @@ class CreateFlyerPage extends React.Component {
                                             type="text"
                                             className="form-control form-control-lg form-control-a"
                                             id={i}
-                                            value={linkData.url}
+                                            value={linkData.linksToWebsiteData.url}
                                             name="url"
                                             disabled={disabled}
                                             onChange={this.linkArrayChange}
@@ -2246,7 +2340,7 @@ class CreateFlyerPage extends React.Component {
                                             id={i}
                                             onChange={this.linkArrayChange}
                                             name="buildingSize"
-                                            value={linkData.buildingSize}
+                                            value={linkData.linksToWebsiteData.buildingSize}
                                             disabled={disabled}
                                           />
                                         </td>
@@ -2422,7 +2516,7 @@ class CreateFlyerPage extends React.Component {
                                   </div>
                                   <img
                                     className="card-img-bottom"
-                                    src='../../../public/assets/images/img1.jpg'
+                                    src="../../../public/assets/images/img1.jpg"
                                     alt="image"
                                     style={{ width: "100%" }}
                                   />
@@ -2518,7 +2612,7 @@ class CreateFlyerPage extends React.Component {
                     </div>
 
                     <div
-                      className="tab-pane fade mt-2 active show"
+                      className="tab-pane fade mt-2"
                       id="preview"
                       role="tabpanel"
                       aria-labelledby="group-dropdown2-tab"
@@ -2540,25 +2634,15 @@ class CreateFlyerPage extends React.Component {
                         <div className="col-md-5 mb-3">
                           <div className="form-group">
                             <label>Additional proofs may be emailed here</label>
-                            <input
-                              name="text"
-                              type="text"
-                              className="form-control form-control-lg form-control-a"
-                              placeholder="Email Address"
-                              data-rule="email"
-                              data-msg="Please enter headline"
-                            />
-                            <div className="validation"></div>
+                            <input value={this.state.email} onChange={this.handleChangepreview} name="email" type="text" className="form-control form-control-lg form-control-a" placeholder="Email Address" />
+                          {!this.state.email &&
+                            <div className="help-block red">Email is required</div>
+                          }
                           </div>
                         </div>
                         <div className="col-md-2 mb-3">
                           <div className="form-group pt-4">
-                            <a
-                              href="javascript:void(0)"
-                              className="btn btn-primary"
-                            >
-                              Send
-                            </a>
+                            <a onClick={this.handleSubmitPreviw}  className="btn btn-primary">Send</a>
                           </div>
                         </div>
                       </div>
@@ -2571,13 +2655,13 @@ class CreateFlyerPage extends React.Component {
                                 <label>From: </label>
                               </div>
                               <div className="col-md-8 mb-3 mt-3">
-                                Vinod via Listingreach.com
+                                {firstName} via Listingreach.com
                               </div>
                               <div className="col-md-4 mb-3 text-right">
                                 <label>Email Subject Line:</label>
                               </div>
                               <div className="col-md-8 mb-3">
-                                Property for sale
+                                {propertyDetails.Email.formSubject}
                               </div>
                             </div>
                           </div>
@@ -2621,7 +2705,7 @@ class CreateFlyerPage extends React.Component {
                             <div className="flyer-bg">
                               <div className="row">
                                 <div className="col-md-12 mt-3 mb-3 ml-3">
-                                  <h4>Price: $1,000.00 per Square Foot</h4>
+                                  <h4>Price: ${propertyDetails.generalPropertyInformation.pricePerSquareFoot} per Square Foot</h4>
                                 </div>
                               </div>
                               <div className="row">
@@ -2630,43 +2714,40 @@ class CreateFlyerPage extends React.Component {
                                     Property Address:
                                   </label>
                                   <p>
-                                    Street Address will come here, City name
-                                    come here, FL 22121
+                                    {propertyDetails.propertyAddress.streetAddress}, {propertyDetails.propertyAddress.city}
+                                    , {propertyDetails.propertyAddress.zipcode}
                                   </p>
                                 </div>
+
                                 <div className="col-md-12 text-center">
+                                {propertyDetails && propertyDetails.isOpenHouse && propertyDetails.isOpenHouse.openHouseData.map(function(data, i){
+                                      return  <div key={i}>
+                                      
                                   <label className="flyer-label">
-                                    Agent Tour:
+                                    {data.openHouseData.houseType}:
                                   </label>
                                   <span>
-                                    Thursday, May 21st 9:00 AM - 4:00 PM
+                                   <Moment parse="YYYY-MM-DD HH:mm" >
+                                              {data.openHouseData.date},{data.openHouseData.startTime},{data.openHouseData.endTime}
+                                   </Moment>
                                   </span>
                                   <br />
-                                  <label className="flyer-label">
-                                    Open House:
-                                  </label>
-                                  <span>
-                                    Thursday, May 21st 10:00 AM - 4:00 PM
-                                  </span>
-                                  <br />
-                                  <label className="flyer-label">
-                                    Broker Open:
-                                  </label>
-                                  <span>
-                                    Wednesday, May 27th 9:00 AM - 2:00 PM
-                                  </span>
+                                  
+                                    </div>
+                                      }, this)} 
                                 </div>
+
                                 <hr />
                                 <div className="col-md-12 ml-3">
                                   <label className="flyer-label">MLS#:</label>
-                                  <span>22313123213</span>
+                                  <span>{propertyDetails.mlsNumber.numberProperty}</span>
                                 </div>
                                 <div className="col-md-12 ml-3">
                                   <label className="flyer-label">
                                     Property Description:
                                   </label>
                                   <span>
-                                    Property details will come here...
+                                   {propertyDetails.propertyDetail}
                                   </span>
                                 </div>
                                 <div className="col-md-12 ml-3">
@@ -2674,26 +2755,29 @@ class CreateFlyerPage extends React.Component {
                                     Key Features:
                                   </label>
                                   <ul>
-                                    <li>Property Type: Single Family </li>
-                                    <li>Property Style: Bungalow </li>
-                                    <li> 3 Bedrooms</li>
-                                    <li>1 Full +2 Half Bathrooms</li>
-                                    <li>1 Full +2 Half Bathrooms</li>
-                                    <li>500 square feet</li>
+                                    <li>Property Type: {propertyDetails.generalPropertyInformation.propertyType} </li>
+                                    <li>Property Style: {propertyDetails.generalPropertyInformation.propertyStyle} </li>
+                                    <li> {propertyDetails.generalPropertyInformation.numberOfBedrooms} Bedrooms</li>
+                                    <li>1 Full 1 Half Bathrooms</li>
+                                    <li>1 Full 1 Half Bathrooms</li>
+                                    <li>{propertyDetails.generalPropertyInformation.buildingSize} square feet</li>
 
                                     <li>$1,000.00 /sqft</li>
-                                    <li>Lot Size: 500.00 sqft</li>
-                                    <li> Built 2010</li>
+                                    <li>Lot Size: {propertyDetails.generalPropertyInformation.lotSize} sqft</li>
+                                    <li> Built {propertyDetails.generalPropertyInformation.yearBuilt}</li>
                                     <li>1 Car Garage</li>
-                                    <li> One Story </li>
+                                    <li> {propertyDetails.generalPropertyInformation.numberOfStories} </li>
                                   </ul>
                                 </div>
                                 <div className="col-md-12 ml-3">
                                   <label className="flyer-label">Links:</label>
                                   <p>
-                                    <a href="">
-                                      <u> Websitename with hyperlink</u>
+                                  {propertyDetails && propertyDetails.linksToWebsites && propertyDetails.linksToWebsites.linkData.map(function(data, i){
+                                      return  <div key={i}>
+                                    <a href={data.linksToWebsiteData.url}>
+                                      <u>{data.linksToWebsiteData.buildingSize}</u>
                                     </a>
+                                      </div> }, this)}
                                   </p>
                                 </div>
                                 <div className="col-md-12 text-center">
@@ -2719,27 +2803,23 @@ class CreateFlyerPage extends React.Component {
                                   />
                                 </div>
                                 <div className="col-md-8 text-center">
-                                  <b> Vinod</b>
+                                  <b> {firstName}</b>
                                   <br />
-                                  Manager
+                                  Agent
                                   <br />
-                                  vinod@gmail.com
+                                  {firstName}@gmail.com
                                   <br />
-                                  http://www.website.com
+                               
                                   <br />
                                   21212121212
                                   <br />
                                   <br />
-                                  Agent Other Contacts Details will come here:
-                                  (Optional)
                                   <br />
+                               
                                   <br />
-                                  Company Details will come here,
+                                 
                                   <br />
-                                  Company name
-                                  <br />
-                                  Company Address, Mai Phone Number, Company
-                                  Website, etc.
+                                  {propertyDetails.propertyAddress.streetAddress}, {propertyDetails.propertyAddress.zipcode},{propertyDetails.propertyAddress.city}.
                                 </div>
                                 <div className="col-md-2 text-center pl-0">
                                   <img
@@ -2769,6 +2849,7 @@ class CreateFlyerPage extends React.Component {
                           </div>
                         </div>
                       </div>
+
 
                       <div className="col-md-12 mt-4">
                         <a
