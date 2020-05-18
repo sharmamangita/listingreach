@@ -8,7 +8,7 @@ class PublicLayout extends Component {
       <div>
         <ListingHeader />
         {this.props.children}
-        
+        <SubscribeNewsLetterSlider />
         <Footer />
       </div>
     );
