@@ -347,21 +347,42 @@ updateUser(req: express.Request, res: express.Response): void {
         		async.parallel({
 					agentData: function(callback:any) {
 						
-						_agentBusiness.findOne({'userId':userdata.id},(error,agentdata) => {    
+						_agentBusiness.retrieve({'userId':userdata.id},(error,agentdata) => {    
 					        if(error){
 					         }
 					        else{
-					        	callback(null,agentdata);
+					        	var returnObjagent = agentdata.map(function(obj: any): any {
+				      			    return {
+								        id: obj._id,
+								        userName:obj.name,
+								        firstName:obj.email,
+								        lastName:obj.image_url,
+								        status:obj.logo_url,
+								        email:obj.website_url,
+								        companyName:obj.designation,
+								        phone:obj.phone_number,
+								        city:obj.company_details,
+								        zipcode:obj.other_information,
+								   }
+			   					});
+					        	callback(null,returnObjagent);
 					        }
 					    })
 					},
 					imageData: function(callback:any) {
 						
-						_balstimageBusiness.findOne({'user_id':userdata.id},(error,imagedata) => {    
+						_balstimageBusiness.retrieve({'user_id':userdata.id},(error,imagedata) => {    
 					        if(error){
 					         }
 					        else{
-					        	callback(null,imagedata);
+					        	var returnObjimage = imagedata.map(function(obj: any): any {
+				      			    return {
+								        id: obj._id,
+								        url:obj.url,
+								        
+								   }
+			   					});
+					        	callback(null,returnObjimage);
 					        }
 					    })
 					},
@@ -369,21 +390,21 @@ updateUser(req: express.Request, res: express.Response): void {
 			        	_userBusiness.retrieve({_id:userdata.id}, (error, result) => {
 			        		var returnObj = result.map(function(obj: any): any {
 				      		
-				            return {
-						        id: obj._id,
-						        userName:obj.userName,
-						        firstName:obj.firstName,
-						        lastName:obj.lastName,
-						        status:obj.status,
-						        email:obj.email,
-						        companyName:obj.companyName,
-						        phone:obj.phone,
-						        city:obj.city,
-						        zipcode:obj.zipcode,
-						        roles:obj.roles,
-						       
-						    }
-			   			});
+					            return {
+							        id: obj._id,
+							        userName:obj.userName,
+							        firstName:obj.firstName,
+							        lastName:obj.lastName,
+							        status:obj.status,
+							        email:obj.email,
+							        companyName:obj.companyName,
+							        phone:obj.phone,
+							        city:obj.city,
+							        zipcode:obj.zipcode,
+							        roles:obj.roles,
+							       
+							    }
+			   				});
 			   			callback(null,returnObj);
 			        	});
 					}

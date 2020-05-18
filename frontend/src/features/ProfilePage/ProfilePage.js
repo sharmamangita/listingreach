@@ -198,7 +198,7 @@ render() {
   }  
  
   let profilepc ='';
-  if(agentData && agentData.image_url){
+  if(agentData.image_url){
     profilepc=`${config.uploadapiUrl}/uploads/${agentData.image_url}`;
   }else{
     profilepc='/public/assets/images/dummy-profile.png';
@@ -206,7 +206,7 @@ render() {
   var profileimagemodal = this.state.agentData ? this.renderProfileimageModal() : (<span></span>);
 
   let profilelogo ='';
-  if(agentData && agentData.logo_url){
+  if(agentData.logo_url){
     profilelogo=`${config.uploadapiUrl}/uploads/${agentData.logo_url}`;
   }else{
     profilelogo='/public/assets/images/dummy-logo.png';
@@ -388,7 +388,7 @@ render() {
                     <div className="col-md-12 mb-3">
                       <div className={'form-group' + (submittedagent && !agentData.website_url ? ' has-error' : '')}>
                       
-                        <input type="text" className="form-control form-control-lg form-control-a " name="website_url" value={agentData.website_url} onChange={this.handleChange}  placeholder="Website URL"/>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="website_url" value={agentData.email} onChange={this.handleChange}  placeholder="Website URL"/>
                         {submittedagent && !agentData.website_url &&
                             <div className="validation">Please enter website URL</div>
                         }

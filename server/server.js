@@ -131,7 +131,7 @@ app.post('/logoupload',function(req, res) {
 });   
 app.post('/propertyupload',function(req, res) {
   
-   console.log(":dsdsad====",req.flag);
+   
    upload1(req, res, function (err) {
     let path = req.file.path;
     if (err) {
@@ -140,7 +140,7 @@ app.post('/propertyupload',function(req, res) {
         var common = new UserController();
         var _userBusiness = new UserBusiness();
       _userBusiness.verifyToken(req, res, (userdata) => {
-        
+        console.log("userdata====",userdata)
         common.savePropertyImages(req.file,userdata._id, res);
       });
 
