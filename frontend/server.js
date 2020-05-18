@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 //var pdf = require('html-pdf');
 var fs = require('fs');
 var conversion = require("phantom-html-to-pdf")({
-	phantomPath: "/usr/local/bin/phantomjs"
+  phantomPath: "/usr/local/bin/phantomjs"
 });
 
 // var page = require('webpage').create();
@@ -52,11 +52,11 @@ app.use("/uploads",express.static(path.join(__dirname, 'public/upload')));
 //When a POST request hits the /uploadphysicaldocument endpoint Multer will place the files in the uploads directory. 
   var storage = multer.diskStorage({ //multers disk storage settings
     destination: "./public/upload/",
-	  filename: function(req, file, cb){
+    filename: function(req, file, cb){
        console.log("file.originalname====",file.originalname);
         cb(null,"file-" + Date.now() + path.extname(file.originalname));
      }
-	});
+  });
   var upload = multer({ //multer settings
      storage: storage
   }).array('myImage',3);
@@ -154,7 +154,7 @@ app.post('/propertyupload',function(req, res) {
 
 
 // Set our api routes
-app.use('/', new BaseRoutes().routes);
+app.use('/api', new BaseRoutes().routes);
 
 //only for live
 app.get('/*', (req, res) => {
@@ -162,7 +162,7 @@ app.get('/*', (req, res) => {
 })
 
 // Catch all other routes except uploads folder and return the index file
-app.get('^(?!public).*$', (req, res) => {
+app.get('^(?!uploads).*$', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
@@ -173,25 +173,25 @@ const port = process.env.PORT || '8080';
 app.set('port', port);
 
 if(process.env.SSL && process.env.SSL=="ON") {
-	const options = {
-		key: fs.readFileSync(process.env.SSL_CERTIFICATE_KEYFILE),
-		cert: fs.readFileSync(process.env.SSL_CERTIFICATE_FILE)
-	};
-	if(process.env.SSL_CERTIFICATE_CHAINFILE) {
-		options['ca'] = fs.readFileSync(process.env.SSL_CERTIFICATE_CHAINFILE);
-	}
-	https.createServer(options, app).listen(443, function(){
-		console.log('Server started on port 443');
-	});
-	http.createServer(function (req, res) {
-		res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
-		res.end();
-	}).listen(80);
+  const options = {
+    key: fs.readFileSync(process.env.SSL_CERTIFICATE_KEYFILE),
+    cert: fs.readFileSync(process.env.SSL_CERTIFICATE_FILE)
+  };
+  if(process.env.SSL_CERTIFICATE_CHAINFILE) {
+    options['ca'] = fs.readFileSync(process.env.SSL_CERTIFICATE_CHAINFILE);
+  }
+  https.createServer(options, app).listen(443, function(){
+    console.log('Server started on port 443');
+  });
+  http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+  }).listen(80);
 } else {
-	//Create HTTP server.
-	const server = http.createServer(app);
-	//Listen on provided port, on all network interfaces.
-	server.listen(port, () => console.log(`API running on localhost:${port}`));
+  //Create HTTP server.
+  const server = http.createServer(app);
+  //Listen on provided port, on all network interfaces.
+  server.listen(port, () => console.log(`API running on localhost:${port}`));
 }
 
 process.on('uncaughtException', function (err) {

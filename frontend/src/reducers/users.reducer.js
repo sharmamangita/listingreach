@@ -42,6 +42,7 @@ export function users(state = {}, action) {
         loading: true,
         profile: action.user.data.userData[0],
         agentData: action.user.data.agentData,
+        imageData: action.user.data.imageData
       });
       return newState ;     
      

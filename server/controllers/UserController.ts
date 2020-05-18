@@ -342,6 +342,7 @@ updateUser(req: express.Request, res: express.Response): void {
         try {
         	var _userBusiness = new UserBusiness();
         	var _agentBusiness = new AgentBusiness()
+        	var _balstimageBusiness = new BlastImageBusiness()
         	_userBusiness.verifyToken(req, res, (userdata) => {
         		async.parallel({
 					agentData: function(callback:any) {
@@ -351,6 +352,16 @@ updateUser(req: express.Request, res: express.Response): void {
 					         }
 					        else{
 					        	callback(null,agentdata);
+					        }
+					    })
+					},
+					imageData: function(callback:any) {
+						
+						_balstimageBusiness.findOne({'user_id':userdata.id},(error,imagedata) => {    
+					        if(error){
+					         }
+					        else{
+					        	callback(null,imagedata);
 					        }
 					    })
 					},
@@ -780,10 +791,13 @@ updateUser(req: express.Request, res: express.Response): void {
 
         	
 
-
-			var _id: string = _propertyforms.property.propertyId.toString();
+			
+			var _id: string = _propertyforms.property.propertyId;
+			
 			_propertyBusiness.findById(_id, (error, resultuser) => {  
-				if(resultuser._id !=undefined && resultuser._id){
+			
+				if(resultuser && resultuser._id !=undefined && resultuser._id){
+			
 					_propertyBusiness.update(_id, _propertyform, (error, resultUpdate) => { 
 						if(error){
 							res.send({"error": error});
@@ -805,6 +819,7 @@ updateUser(req: express.Request, res: express.Response): void {
 						}
 					});
 				} else {
+					
 						_propertyBusiness.create(_propertyform, (error, result) => {
 				                if(error) {
 									console.log(error);
@@ -874,32 +889,7 @@ updateUser(req: express.Request, res: express.Response): void {
 				      	  	$unwind:"$users"
 				        
 				      	},
-			          	{
-			                $lookup:                       
-			                {
-			                    from: "blastimages",
-			                    localField: "userId",   
-			                    foreignField: "userId",        
-			                    as: "blastimages"               
-			                }
-			            },
-			            {
-				      	  	$unwind:"$users"
-				        
-				      	},
-			            {
-			                $lookup:                       
-			                {
-			                    from: "agents",
-			                    localField: "userId",   
-			                    foreignField: "userId",        
-			                    as: "agents"               
-			                }
-			            },
-			            {
-				      	  	$unwind:"$agents"
-				        
-				      	},
+			          	
 			            {
 			                $lookup:                       
 			                {
@@ -944,16 +934,6 @@ updateUser(req: express.Request, res: express.Response): void {
 								"users.firstName":1,
 								"users.lastName":1,
 								"users.roles":1,
-								"blastimages.url":1,
-								"agents.name":1,
-								"agents.designation":1,
-								"agents.email":1,
-								"agents.website_url":1,
-								"agents.phone_number":1,
-								"agents.image_url":1,
-								"agents.logo_url":1,
-								"agents.company_details":1,
-								"agents.other_information":1,
 
 						    }
 			            },
