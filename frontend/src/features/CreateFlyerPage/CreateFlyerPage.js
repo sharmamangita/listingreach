@@ -2655,7 +2655,7 @@ class CreateFlyerPage extends React.Component {
                             </div>
                             <img
                               className="card-img-bottom"
-                              src='{config.uploadapiUrl}/uploads/{image}'
+                              src={config.uploadapiUrl +'/uploads/'+image.url}
                               alt="image"
                               style={{ width: "100%" }}
                             />

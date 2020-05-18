@@ -31,7 +31,7 @@ constructor(props) {
   const { dispatch } = this.props;
   console.log("this.props====",this.props);
   this.props.dispatch(userActions.getById(this.props.user.userId));
-   
+  this.alermsg = ''; 
   this.state = {
       submitted: false,
       submittedagent:false,
@@ -196,7 +196,11 @@ render() {
      var id = event.currentTarget.dataset.id;
      this.setState({ showprofilelogo: true , agentData:this.props.agentData, modalid: id});
   }  
- 
+  const { alert } = this.props;
+  if(alert && alert.message){
+    
+    this.alermsg = alert;
+  }
   let profilepc ='';
   if(agentData.image_url){
     profilepc=`${config.uploadapiUrl}/uploads/${agentData.image_url}`;
@@ -324,11 +328,15 @@ render() {
                 </form>
               </div>
               <div className="col-md-6 padding-lt">
+                
                 <h4 className="mb-4">Auto Populate Your Agent Details</h4>
                 <p className="mb-4">The information below will auto populate in the 'Fill in the Blank' Style Templates (optional)</p>
                 <form onSubmit={this.handleSubmit} className="form-a contactForm">
                                     
                   <div className="row">
+                  {this.alermsg.message &&
+                    <div id="sendmessage"><div className="{`alert ${this.alermsg.type}`}">{this.alermsg.message}</div>
+                    </div>}
                     <div className="col-md-6 mb-3">
                       <div className="form-group">
                         <label className="check">Use Agent Photo 
@@ -388,7 +396,7 @@ render() {
                     <div className="col-md-12 mb-3">
                       <div className={'form-group' + (submittedagent && !agentData.website_url ? ' has-error' : '')}>
                       
-                        <input type="text" className="form-control form-control-lg form-control-a " name="website_url" value={agentData.email} onChange={this.handleChange}  placeholder="Website URL"/>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="website_url" value={agentData.website_url} onChange={this.handleChange}  placeholder="Website URL"/>
                         {submittedagent && !agentData.website_url &&
                             <div className="validation">Please enter website URL</div>
                         }

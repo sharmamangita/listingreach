@@ -354,15 +354,15 @@ updateUser(req: express.Request, res: express.Response): void {
 					        	var returnObjagent = agentdata.map(function(obj: any): any {
 				      			    return {
 								        id: obj._id,
-								        userName:obj.name,
-								        firstName:obj.email,
-								        lastName:obj.image_url,
-								        status:obj.logo_url,
+								        name:obj.name,
 								        email:obj.website_url,
-								        companyName:obj.designation,
-								        phone:obj.phone_number,
-								        city:obj.company_details,
-								        zipcode:obj.other_information,
+								        designation:obj.designation,
+								        website_url:obj.website_url,
+								        phone_number:obj.phone_number,
+								        company_details:obj.company_details,
+								        other_information:obj.other_information,
+								        image_url:obj.image_url,
+								        logo_url:obj.logo_url
 								   }
 			   					});
 					        	callback(null,returnObjagent);
@@ -811,13 +811,28 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 	    	 	_agent.createdOn = new Date();
 	    	 	_agent.userId=companyUserData._id;
 				var _agentBusiness = new AgentBusiness();
-	    	 	_agentBusiness.create(_agent, (error, agentresultData) => {
-					if(error){
-						console.log("error====",error)
-					}else {
-						console.log("agentresultData====",agentresultData);
-					   return res.json({profileimg:agentresultData});
+				_agentBusiness.findOne({'userId':companyUserData._id}, (error:any, agentresult:any) => {
+		    	 	
+					if(agentresult){
+						var _id:string = agentresult._id.toString();
+						_agentBusiness.update(_id, _agent, (error:any, resultUpdate:any) => {
+							if(error){
+							}else {
+								res.status(201).send({ "success":"Your agent info successfully updated." });
+								return res.json({data:resultUpdate});
+							}
+						});
+					}else{
+						_agentBusiness.create(_agent, (error, agentresultData) => {
+							if(error){
+								console.log("error====",error)
+							}else {
+								console.log("agentresultData====",agentresultData);
+							  res.status(201).send({ "success":"Your agent info successfully updated." });
+							}
+						});
 					}
+		    	 	
 				});
 			});
     	 }

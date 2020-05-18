@@ -449,11 +449,20 @@ function saveAgents(agentData){
     return dispatch => {
         dispatch(request());
         userService.saveAgents(agentData)
-            .then(
-                users => dispatch(success(users)),
-                error => dispatch(failure(error.toString()))
-            );
+           .then(
+            user => { 
+            dispatch(success());
+            if(user.success){
+                dispatch(alertActions.success(user.success));
+                window.scrollTo(0,0);
+            } else {
+                  dispatch(alertActions.error(user.error));
+                }
+            }
+
+        );
     };
+  
 
     function request() { return { type: userConstants.AGENT_REQUEST } }
     function success(users) { return { type: userConstants.AGENT_SUCCESS, users } }

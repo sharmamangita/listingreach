@@ -267,7 +267,11 @@ function saveAgents(agentData){
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
         body: JSON.stringify(agentData)
     };
-    return fetch(`${config.apiUrl}/users/saveAgents`, requestOptions).then(handleResponse);    
+    return fetch(`${config.apiUrl}/users/saveAgents`, requestOptions).then(handleResponse)
+    .then(user => {
+        return user;
+    }).catch(this.handleError);
+       
 }
 
     
