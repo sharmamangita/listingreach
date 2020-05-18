@@ -8,11 +8,11 @@ class SubscriberSchema {
             _id: mongoose.Schema.Types.ObjectId,
             name: {
                 type: String,
-                required:true
+                required: true
             },
             email: {
                 type: String,
-                required:true
+                required: true
             },
             phone: {
                 type: String
@@ -25,14 +25,18 @@ class SubscriberSchema {
             },
             propertyTypes: {
                 type: Array,
-                required:true
+                required: true
             },
             priceRanges: {
                 type: Array
             },
-            includeRentedProperties:{
-                type:Boolean,
-                default:false
+            includeRentedProperties: {
+                type: Boolean,
+                default: false
+            },
+            includeOutsideAreaProperties: {
+                type: Boolean,
+                default: true
             },
             agentTypes: {
                 type: Array

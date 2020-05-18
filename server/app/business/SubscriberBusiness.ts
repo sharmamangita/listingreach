@@ -12,6 +12,9 @@ class SubscriberBusiness implements BaseBusiness<ISubscriberModel> {
     retrieve(query: any, callback: (error: any, result: any) => void) {
         this._subscriberRepository.retrieve(query, callback);
     }
+    retrieveFields(query: any, fields: any, callback: (error: any, result: any) => void) {
+        this._subscriberRepository.retrieveFields(query, fields, callback);
+    }
     findById: (_id: string, callback: (error: any, result: ISubscriberModel) => void) => void;
     create(item: ISubscriberModel, callback: (error: any, result: any) => void) {
         item._id=mongoose.Types.ObjectId();

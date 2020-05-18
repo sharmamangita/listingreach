@@ -204,11 +204,11 @@ class SubscriberPage extends React.Component {
 				// var subscriber = '';
 				var subscriber = this.props.subscribers[cad];
 				totaldata.push({
-					name: subscriber.firstName ? subscriber.firstName + ' ' + subscriber.lastName : "--",
+					name: subscriber.name,
 					email: subscriber.email ? subscriber.email : "--",
-					phone: "--",
-					city: "--",
-					state: "--",
+					phone: subscriber.phone,
+					city: subscriber.city,
+					state:subscriber.state,
 					subscribedon: this.createdDate(subscriber.createdOn),
 					prefrences: (
 						<a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={subscriber._id} onClick={this.handleModalOpem()} data-target="#intro">
@@ -223,7 +223,7 @@ class SubscriberPage extends React.Component {
 			}
 		}
 		const caddata = {
-			columns: common.agentcolumns,
+			columns: common.subscribercolumns,
 			rows: totaldata
 		};
 		return { totaldata, caddata };

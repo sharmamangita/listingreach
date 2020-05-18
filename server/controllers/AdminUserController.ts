@@ -4,9 +4,8 @@
 
 import express = require("express");
 import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
-
 import UserBusiness = require("./../app/business/UserBusiness");
-
+import SubscriberBusiness= require("./../app/business/SubscriberBusiness");
 import BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
 import PagesBusiness = require("./../app/business/PagesBusiness");
 import IBaseController = require("./BaseController");
@@ -63,10 +62,10 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	getSubscribers(req: express.Request, res: express.Response): void {
 		try {
-			var _userBusiness = new UserBusiness();
-			var condition: Object = { roles: /subscriber/ }
-			var fields: Object = { _id: 1, firstName: 1, lastName: 1, email: 1, status: 1, createdOn: 1, lastLogin: 1 }
-			_userBusiness.retrieveFields(condition, fields, (error, result) => {
+			var subscriberBusiness = new SubscriberBusiness();
+			//var condition: Object = { roles: /subscriber/ }
+			var fields: Object = { _id: 1, name: 1, email: 1, phone:1, city: 1,state:1 , createdOn: 1 }
+			subscriberBusiness.retrieveFields("", fields, (error, result) => {
 				if (error) {
 					console.log("error in getAgents -", error);
 					res.send({ "error": error });
@@ -157,17 +156,17 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	getDashboardData(req: express.Request, res: express.Response): void {
 		try {
-			console.log("test=====");
+		//	console.log("test=====");
 			var _userBusiness = new UserBusiness();
-			var match: Object = { status: 'verified' };
+	//		var match: Object = { status: 'verified' };
 			var group: Object = { _id: '$roles', total: { $sum: 1 } };
-			_userBusiness.aggregate("", match, group, (error, result) => {
+			_userBusiness.aggregate("", {}, group, (error, result) => {
 				if (error) {
 					console.log(error);
 					res.send({ "error": error });
 				}
 				else {
-					console.log('response', result);
+				//	console.log('response', result);
 					res.send(result);
 				}
 			}

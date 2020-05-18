@@ -12,6 +12,7 @@ class SubscriberModel {
     propertyTypes: String[];
     priceRanges: String[];
     includeRentedProperties: Boolean;
+    includeOutsideAreaProperties: Boolean;
     agentTypes: String[];
     mailingLists: String[];
     createdOn: Date;

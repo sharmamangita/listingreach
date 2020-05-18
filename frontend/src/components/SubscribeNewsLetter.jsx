@@ -28,6 +28,7 @@ class SubscribeNewsLetter extends React.Component {
                 propertyTypes: [],
                 priceRanges: [],
                 includeRentedProperties: false,
+                includeOutsideAreaProperties: true,
                 agentTypes: [],
                 mailingLists: []
             }
@@ -38,16 +39,18 @@ class SubscribeNewsLetter extends React.Component {
 
     componentDidMount() {
         var subscribeButton = document.querySelector('#sub-button')
-        subscribeButton.addEventListener('click', function () {
-            document.body.classList.remove('box-collapse-closed');
-            document.body.classList.add('box-collapse-open');
-        });
+        if (subscribeButton) {
+            subscribeButton.addEventListener('click', function () {
+                document.body.classList.remove('box-collapse-closed');
+                document.body.classList.add('box-collapse-open');
+            });
 
-        var closeButton = document.querySelector('.close-box-collapse, .click-closed')
-        closeButton.addEventListener('click', function () {
-            document.body.classList.remove('box-collapse-open');
-            document.body.classList.add('box-collapse-closed');
-        });
+            var closeButton = document.querySelector('.close-box-collapse, .click-closed')
+            closeButton.addEventListener('click', function () {
+                document.body.classList.remove('box-collapse-open');
+                document.body.classList.add('box-collapse-closed');
+            });
+        }
     }
     handleChange(e, selectedItem) {
         const { name, value, checked } = e.target;
@@ -88,6 +91,9 @@ class SubscribeNewsLetter extends React.Component {
                     }
                 }
                 break;
+            case "rentedproperties":
+                subscriber.includeRentedProperties = value;
+                break;
             case "preferedvendor":
                 if (checked) {
                     subscriber.agentTypes.push(value);
@@ -97,6 +103,9 @@ class SubscribeNewsLetter extends React.Component {
                         subscriber.agentTypes.splice(index, 1)
                     }
                 }
+                break;
+            case "outsideareaproperties":
+                subscriber.includeOutsideAreaProperties = value;
                 break;
             default:
                 break;
@@ -175,7 +184,7 @@ class SubscribeNewsLetter extends React.Component {
                                                     propertyTypes.map((property) => (
                                                         <div className="form-check" key={property} >
                                                             <label className="form-check-label">
-                                                                <input type="checkbox" name="propertytypes" value={property} onChange={(event)=> this.handleChange(event,property)} className="form-check-input" />
+                                                                <input type="checkbox" name="propertytypes" value={property} onChange={(event) => this.handleChange(event, property)} className="form-check-input" />
                                                                 {property}
                                                             </label>
                                                         </div>
@@ -197,7 +206,7 @@ class SubscribeNewsLetter extends React.Component {
                                                 }
                                                 <div className="form-check">
                                                     <label className="form-check-label">
-                                                        <input type="checkbox" className="form-check-input" value="" />Properties For Rent
+                                                        <input type="checkbox" name="rentedproperties" className="form-check-input" value={subscriber.includeRentedProperties} onChange={(event) => this.handleChange(event)} />Properties For Rent
                                                     </label>
                                                 </div>
                                             </div></div>
@@ -214,7 +223,7 @@ class SubscribeNewsLetter extends React.Component {
                                                     preferedVendors.map((vendor) => (
                                                         <div className="form-check" key={vendor} >
                                                             <label className="form-check-label">
-                                                                <input type="checkbox" name="preferedvendor" value={vendor} onChange={(event) => this.handleChange(event,vendor)} className="form-check-input" />
+                                                                <input type="checkbox" name="preferedvendor" value={vendor} onChange={(event) => this.handleChange(event, vendor)} className="form-check-input" />
                                                                 {vendor}
                                                             </label>
                                                         </div>
@@ -231,20 +240,22 @@ class SubscribeNewsLetter extends React.Component {
                                         <label htmlFor="property"><b>What Areas Do You Want to Receive Properties From?</b></label>
                                         <div className="col-md-12 mb-4">
                                             Mailing lists are broken down by "realtor association affiliation". Select the mailing lists you wish to receive emails from by using the list below. You can filter the mailing lists by selecting a state from the drop down box. Listingreach.com is a privately held company and is not affiliated with any real estate boards. Emails are sent by Listingreach.com
-			  </div>
+			                            </div>
                                         <div className="row">
                                             <div className="col-md-12 mb-4">
-                                                <button type="button" className="btn btn_primary" data-toggle="modal" data-target="#databases">Add Databases</button>
-
+                                                <button type="button" className="btn btn_primary" data-toggle="modal" data-target="#databases">
+                                                    Add Databases
+                                                    </button>
                                             </div>
 
                                             <div className="col-md-12 mb-3">
 
                                                 <div className="form-group">
                                                     <label className="check">Do NOT send Properties Out of my Area
-  <input type="checkbox" />
+                                                     <input type="checkbox" name="outsideareaproperties" value={!subscriber.includeOutsideAreaProperties} onChange={this.handleChange} />
                                                         <span className="checkmark"></span>
-                                                    </label>       </div>
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

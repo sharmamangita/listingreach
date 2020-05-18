@@ -13,6 +13,7 @@ interface ISubscriberModel extends mongoose.Document {
     propertyTypes: Array<String>,
     priceRanges: Array<String>
     includeRentedProperties: Boolean,
+    includeOutsideAreaProperties: Boolean,
     agentTypes: Array<String>
     mailingLists: Array<String>
     createdOn: Date,
