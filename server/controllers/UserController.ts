@@ -462,21 +462,110 @@ updateUser(req: express.Request, res: express.Response): void {
 		}
 	}    
 	
-	emailPreviewTemplate(req: express.Request, res: express.Response): void { 
+emailPreviewTemplate(req: express.Request, res: express.Response): void { 
 		try { 
 			
+
 			var _contactform: IContactformModel = <IContactfromModel>req.body;
+			console.log("propertyDetails====",_contactform);
+			let property =  _contactform.propertyDetails;
 			var _contactformBusiness = new ContactformBusiness();
 			//_contactform.fullname =req.body.fullname;
 			_contactform.email = req.body.email;
 			/* _contactform.phone = req.body.phone;
 			_contactform.message = req.body.message; */
 			_contactform.createdOn = new Date();
-			
-				
-					var previewTemplatememail =Common.PREVIEW_EMAIL_TEMPLATE;	
-					var emailtemplate = previewTemplatememail;
-					Common.sendMail(_contactform.email,'support@employeemirror.com','Contact Form', null,emailtemplate, function(error: any, response: any){ 
+
+			var _propertyformsEmail = {};
+
+			if(property.Email !=undefined && property.Email){
+				let subject =  property.Email.formSubject;
+				let formLine = property.Email.formLine;
+				let formReply = property.Email.formReply;
+			}
+
+			if(property.propertyDetail !=undefined){
+				let propertyDetail = property.propertyDetail;
+			}
+
+			if(property.propertyAddress !=undefined &&  property.propertyAddress){
+				let streetAddress = property.propertyAddress.streetAddress;
+				let city = property.propertyAddress.city;
+				let zipCode =  property.propertyAddress.zipCode;
+				let displayMethod = property.propertyAddress.displayMethod;
+			}
+
+
+			if(property.mlsNumber !=undefined && property.mlsNumber){
+				let mlsNumber = property.mlsNumber.numberProperty;
+			}
+
+			if(property.blastHeadline!=undefined && property.blastHeadline){
+				let blastHeadline =  property.blastHeadline;
+			}
+
+			if(property.AgentContactInfo!=undefined && property.AgentContactInfo){
+				let agentName = property.AgentContactInfo.agentName;
+			}
+
+			if(property.generalPropertyInformation!=undefined && property.generalPropertyInformation){
+				let numberOfBedrooms=  property.generalPropertyInformation.numberOfBedrooms;
+				let pricePerSquareFoot = property.generalPropertyInformation.pricePerSquareFoot;
+				let yearBuilt = property.generalPropertyInformation.yearBuilt;
+				let lotSize = property.generalPropertyInformation.lotSize;
+				let propertyType = property.generalPropertyInformation.propertyType;
+				let propertyStyle = property.generalPropertyInformation.propertyStyle;
+			}
+
+			let openData = '';
+			console.log(property.isOpenHouse);
+			if(property.isOpenHouse.openHouseData !=undefined && property.isOpenHouse.openHouseData.length){
+				let houseArray = property.isOpenHouse.openHouseData;
+				console.log("houseArray===",houseArray);
+				houseArray.forEach(function(item){
+				 openData +=`<div>
+				 <label class="flyer-label">${item.openHouseData.houseType}:</label>
+				 <span>${item.openHouseData.date} ${item.openHouseData.startTime}  - ${item.openHouseData.endTime}</span><br>
+				 </div>`;
+				})
+			}
+
+			let links = '';
+			if(property.linksToWebsites.linkData !=undefined && property.linksToWebsites.linkData.length){
+				let linkArray = property.linksToWebsites.linkData;
+				linkArray.forEach(function(item){
+				 links +=`<div>
+				  <label class="flyer-label">Links:</label>
+ 					<p><a href="#"><u> ${item.linksToWebsiteData.buildingSize}</a></u></p><br>
+				 </div>`;
+				})
+			}
+
+
+
+			var previewTemplatememail =Common.PREVIEW_EMAIL_TEMPLATE;	
+					var emailtemplate = previewTemplatememail
+					.replace(/#subject#/g,subject)
+					.replace(/#formLine#/g,formLine)
+					.replace(/#formReply#/g,formReply)
+					.replace(/#blastHeadline#/g,blastHeadline)
+					.replace(/#numberOfBedrooms#/g,numberOfBedrooms)
+					.replace(/#propertyDetail#/g,propertyDetail)
+					.replace(/#mlsNumber#/g,mlsNumber)
+					.replace(/#streetAddress#/g,streetAddress)
+					.replace(/#zipCode#/g,zipCode)
+					.replace(/#city#/g,city)
+					.replace(/#pricePerSquareFoot#/g,pricePerSquareFoot)
+					.replace(/#yearBuilt#/g,yearBuilt)
+					.replace(/#lotSize#/g,lotSize)
+					.replace(/#openData#/g,openData)
+					.replace(/#links#/g,links)
+					.replace(/#propertyType#/g,propertyType)
+					.replace(/#propertyStyle#/g,propertyStyle)
+					
+
+					
+					Common.sendMail(_contactform.email,'support@employeemirror.com','Property Details', null,emailtemplate, function(error: any, response: any){ 
 					if(error){ 
 					console.log(error);
 					res.end("error");
@@ -790,16 +879,17 @@ updateUser(req: express.Request, res: express.Response): void {
 			}
 
 			if(_propertyforms.property.generalPropertyInformation){
+				console.log("_propertyforms.property.generalPropertyInformation===",_propertyforms.property.generalPropertyInformation);
 				_propertyform.property_type=_propertyforms.property.generalPropertyInformation.propertyType;
 				_propertyform.property_style=_propertyforms.property.generalPropertyInformation.propertyStyle;
 				_propertyform.lot_size=_propertyforms.property.generalPropertyInformation.lotSize;
 				_propertyform.number_bedrooms=_propertyforms.property.generalPropertyInformation.numberOfBedrooms;
 				_propertyform.building_size=_propertyforms.property.generalPropertyInformation.buildingSize;
 				_propertyform.number_stories=_propertyforms.property.generalPropertyInformation.numberOfStories;
-
-				_propertyform.number_bathrooms="4";
+				_propertyform.number_bathrooms=_propertyforms.property.generalPropertyInformation.numberOfBathrooms;
 				_propertyform.year_built =_propertyforms.property.generalPropertyInformation.yearBuilt;
 				_propertyform.garage=_propertyforms.property.generalPropertyInformation.garage;
+				_propertyform.garageSize=_propertyforms.property.generalPropertyInformation.garageSize;
 				_propertyform.price = _propertyforms.property.generalPropertyInformation.pricePerSquareFoot;
 
 			}

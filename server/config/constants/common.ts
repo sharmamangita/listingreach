@@ -1307,10 +1307,10 @@ static PREVIEW_EMAIL_TEMPLATE:string = Common.EMAIL_TEMPLATE_HEADER_NEW+`
 Vinod via Listingreach.com
  </div>
 <div class="col-md-4 mb-3 text-right">
-<label>Email Subject Line:</label>
+<label>Email Subject Line: #subject#</label>
  </div>
  <div class="col-md-8 mb-3">
-Property for sale
+#formLine#
  </div>
  </div>
  </div>
@@ -1330,7 +1330,7 @@ Property for sale
    <div class="row">
 <div class="col-md-12">
 <div class="flyer-header">
-Flyer Headline will come here
+#blastHeadline#
  </div>
  </div>
  </div>
@@ -1342,25 +1342,20 @@ Flyer Headline will come here
  <div class="flyer-bg">
   <div class="row">
 <div class="col-md-12 mt-3 mb-3 ml-3">
- <h4>Price: $1,000.00 per Square Foot</h4>
+ <h4>Price: $#pricePerSquareFoot# per Square Foot</h4>
  </div>
  </div>
  <div class="row">
 <div class="col-md-12 mt-3 text-center">
  <label class="flyer-label">Property Address:</label>
- <p>Street Address will come here, City name come here, FL 22121</p>
+ <p>#streetAddress#, #city#, #zipCode#</p>
  </div>
  <div class="col-md-12 text-center">
- <label class="flyer-label">Agent Tour:</label>
- <span>Thursday, May 21st 9:00 AM - 4:00 PM</span><br>
- <label class="flyer-label">Open House:</label>
- <span>Thursday, May 21st 10:00 AM - 4:00 PM</span><br>
- <label class="flyer-label">Broker Open:</label>
- <span>Wednesday, May 27th 9:00 AM - 2:00 PM</span>
+	#openData#
  </div><hr>
   <div class="col-md-12 ml-3">
  <label class="flyer-label">MLS#:</label>
- <span>22313123213</span>
+ <span>#mlsNumber#</span>
  </div>
  <div class="col-md-12 ml-3">
  <label class="flyer-label">Property Description:</label>
@@ -1369,23 +1364,21 @@ Flyer Headline will come here
  <div class="col-md-12 ml-3">
  <label class="flyer-label">Key Features:</label>
  <ul>
- <li>Property Type: Single Family </li>
- <li>Property Style: Bungalow </li>  
-<li> 3 Bedrooms</li>
+ <li>Property Type: #propertyType# </li>
+ <li>Property Style: #propertyStyle# </li>  
+<li> #numberOfBedrooms# Bedrooms</li>
 <li>1 Full +2 Half Bathrooms</li>
 <li>1 Full +2 Half Bathrooms</li>
 <li>500 square feet</li>
 
 <li>$1,000.00 /sqft</li>
-<li>Lot Size: 500.00 sqft</li>
-<li>  Built 2010</li>
- <li>1 Car Garage</li>
-<li> One Story </li>
+<li>Lot Size: #lotSize# sqft</li>
+<li>  Built #yearBuilt#</li>
+<li> #numberOfStories# </li>
  </ul>  
  </div>
 <div class="col-md-12 ml-3">
- <label class="flyer-label">Links:</label>
- <p><a href=""><u> Websitename with hyperlink</a></u></p>
+	#links#
  </div>
  <div class="col-md-12 text-center">
 <h4><a href=""><u>Click Here to Email Agent for More Information</u></a></h4>
@@ -1399,7 +1392,7 @@ Flyer Headline will come here
  </div>
   <div class="col-md-8 text-center">
  <b> Vinod</b><br>
-Manager<br>
+Agent<br>
 vinod@gmail.com<br>
 http://www.website.com<br>
 21212121212<br><br>

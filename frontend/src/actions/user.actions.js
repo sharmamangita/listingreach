@@ -111,10 +111,10 @@ function contactForm(fullname,email,phone,message){
 
 
 /* send preview template email*/
-function emailPreviewTemplate(email){
+function emailPreviewTemplate(email,propertyDetails){
 	    return dispatch => {
-        dispatch(request({email}));
-		userService.emailPreviewTemplate(email)
+        dispatch(request({email,propertyDetails}));
+		userService.emailPreviewTemplate(email,propertyDetails)
             .then(
                 user => { 
                     dispatch(success(user));

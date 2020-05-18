@@ -26,8 +26,7 @@ const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 );
 
-const initialState = {
-};
+
 
 class CreateFlyerPage extends React.Component {
   constructor(props) {
@@ -116,6 +115,7 @@ class CreateFlyerPage extends React.Component {
             yearBuilt: "",
             numberOfStories: "",
             garage: false,
+            garageSize:''
           },
         },
       },
@@ -228,10 +228,11 @@ class CreateFlyerPage extends React.Component {
     handleSubmitPreviw(e) { 
     e.preventDefault();
   //console.log('stateeeeeee',this.state);return false; 
-    const {email} = this.state;
+    const {email,propertyDetails} = this.state;
+    console.log("propertyDetailswewe===",propertyDetails);
     const { dispatch } = this.props;
     if(email){
-    dispatch(userActions.emailPreviewTemplate(email)); 
+    dispatch(userActions.emailPreviewTemplate(email,propertyDetails)); 
       //window.scrollTo(0,0);
       this.setState({
         email:"",
@@ -441,6 +442,17 @@ class CreateFlyerPage extends React.Component {
           },
         });
         break;
+      case "garage":
+        this.setState({
+          propertyDetails: {
+            generalPropertyInformation: {
+              ...this.state.garage,
+              garage: true,
+            },
+          },
+        });
+        break;
+
     }
   }
 
@@ -478,7 +490,18 @@ class CreateFlyerPage extends React.Component {
           },
         });
         break;
+      case "garage":
+        this.setState({
+          propertyDetails: {
+            generalPropertyInformation: {
+              ...this.state.garage,
+              garage: false,
+            },
+          },
+        });
+        break;
     }
+
   }
 
   handleChange(flag, event) {
@@ -622,6 +645,11 @@ class CreateFlyerPage extends React.Component {
         break;
       case "propertyInformation":
         states.propertyDetails.generalPropertyInformation[name] = value;
+        this.setState(states);
+        break;
+
+      case "propertyInformationBathrooms":
+        states.propertyDetails.generalPropertyInformation.numberOfBathrooms[name] = value;
         this.setState(states);
         break;
 
@@ -1144,7 +1172,7 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) => this.handleChange("email", e)}
                                 className="form-control form-control-lg form-control-a"
                                 placeholder="Subject"
-                                value={propertyDetails && propertyDetails.Email && propertyDetails.Email.propertyDetails !=!undefined ? propertyDetails.Email.formSubject:''}
+                                value={propertyDetails && propertyDetails.Email && propertyDetails.Email.formSubject}
                               />
                               <div className="validation">
                                 {errors.propertyDetails.Email.formSubject}
@@ -1750,7 +1778,7 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) =>
                                   this.handleChange("propertyAddress", e)
                                 }
-                                value={propertyDetails.propertyAddress.city}
+                                value={propertyDetails && propertyDetails.propertyAddress && propertyDetails.propertyAddress.city}
                               />
                             </div>
                           </div>
@@ -2139,6 +2167,12 @@ class CreateFlyerPage extends React.Component {
                                     className="form-control form-control-lg form-control-a"
                                     placeholder="0"
                                     name="full"
+                                    onChange={(e) =>
+                                      this.handleChange(
+                                        "propertyInformationBathrooms",
+                                        e
+                                      )
+                                    }                                    
                                   />
                                   <div className="input-group-append">
                                     <span className="input-group-text">
@@ -2162,7 +2196,7 @@ class CreateFlyerPage extends React.Component {
                                     name="half"
                                     onChange={(e) =>
                                       this.handleChange(
-                                        "propertyInformation",
+                                        "propertyInformationBathrooms",
                                         e
                                       )
                                     }
@@ -2236,18 +2270,38 @@ class CreateFlyerPage extends React.Component {
                                 <a
                                   href="javascript:void(0)"
                                   className="btn btn-success"
+                                  onClick={() => this.show("garage")}
                                 >
                                   Yes
                                 </a>
                                 <a
                                   href="javascript:void(0)"
                                   className="btn btn-outline-danger"
+                                  onClick={() => this.hide("garage")}
                                 >
                                   No
                                 </a>
                               </div>
                             </div>
                           </div>
+
+
+<div className="col-md-4 mb-3">
+ <div className="form-group">                      
+<select onChange={(e) => this.handleChange("propertyInformation", e)} name="garageSize" style={{display:propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.garage ? "inline":'none'}} className="form-control form-control-lg form-control-a"><option value="">-- Select Garage Size --</option>
+  <option label="1 Car">1 Car</option>
+  <option label="2 Car">2 Car</option>
+  <option label="3 Car">3 Car</option>
+  <option label="4 Car">4 Car</option>
+  <option label="5 Car">5 Car</option>
+  <option label="6 Car">6 Car</option>
+  <option label="7 Car">7 Car</option>
+  <option label="8 Car">8 Car</option>
+  <option label="9 Car">9 Car</option>
+  <option label="10+ Car">10+ Car</option>
+</select>
+</div>
+</div>
                         </div>
                         <hr />
                         <br />
