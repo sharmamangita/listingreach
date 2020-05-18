@@ -1367,14 +1367,14 @@ Vinod via Listingreach.com
  <li>Property Type: #propertyType# </li>
  <li>Property Style: #propertyStyle# </li>  
 <li> #numberOfBedrooms# Bedrooms</li>
-<li>1 Full +2 Half Bathrooms</li>
-<li>1 Full +2 Half Bathrooms</li>
+<li>#full# Full #half# Half Bathrooms</li>
 <li>500 square feet</li>
 
 <li>$1,000.00 /sqft</li>
 <li>Lot Size: #lotSize# sqft</li>
 <li>  Built #yearBuilt#</li>
 <li> #numberOfStories# </li>
+<li>Garage: #garageSize# </li>
  </ul>  
  </div>
 <div class="col-md-12 ml-3">

@@ -411,97 +411,42 @@ class CreateFlyerPage extends React.Component {
   }
 
   show(flag) {
+    let states = Object.assign({}, this.state);
     switch (flag) {
       case "openHouse":
-        this.setState({
-          propertyDetails: {
-            isOpenHouse: {
-              ...this.state.display,
-              display: true,
-            },
-          },
-        });
+          states.propertyDetails.isOpenHouse.display = true;
         break;
       case "mlsNumber":
-        this.setState({
-          propertyDetails: {
-            mlsNumber: {
-              ...this.state.display,
-              display: true,
-            },
-          },
-        });
+         states.propertyDetails.mlsNumber.display = true;
         break;
       case "linksToWebsites":
-        this.setState({
-          propertyDetails: {
-            linksToWebsites: {
-              ...this.state.display,
-              display: true,
-            },
-          },
-        });
+         states.propertyDetails.linksToWebsites.display = true;
         break;
       case "garage":
-        this.setState({
-          propertyDetails: {
-            generalPropertyInformation: {
-              ...this.state.garage,
-              garage: true,
-            },
-          },
-        });
+        states.propertyDetails.generalPropertyInformation.garage = true;
         break;
-
     }
+    this.setState(states);
   }
 
 
   hide(flag) {
+    let states = Object.assign({}, this.state);
     switch (flag) {
       case "openHouse":
-        this.setState({
-          propertyDetails: {
-            isOpenHouse: {
-              ...this.state.display,
-              display: false,
-            },
-          },
-        });
-
+          states.propertyDetails.isOpenHouse.display = false;
         break;
       case "mlsNumber":
-        this.setState({
-          propertyDetails: {
-            mlsNumber: {
-              ...this.state.display,
-              display: false,
-            },
-          },
-        });
+         states.propertyDetails.mlsNumber.display = false;
         break;
       case "linksToWebsites":
-        this.setState({
-          propertyDetails: {
-            linksToWebsites: {
-              ...this.state.display,
-              display: false,
-            },
-          },
-        });
+         states.propertyDetails.linksToWebsites.display = false;
         break;
       case "garage":
-        this.setState({
-          propertyDetails: {
-            generalPropertyInformation: {
-              ...this.state.garage,
-              garage: false,
-            },
-          },
-        });
+        states.propertyDetails.generalPropertyInformation.garage = false;
         break;
     }
-
+     this.setState(states);
   }
 
   handleChange(flag, event) {
@@ -704,6 +649,7 @@ class CreateFlyerPage extends React.Component {
               states.propertyDetails.pricingInfo.priceType = propsData.pricingInfo[0].priceType;
             }
 
+
             states.propertyDetails.propertyDetail = propsData.property_detail;
             states.propertyDetails.generalPropertyInformation.yearBuilt = propsData.year_built;
             states.propertyDetails.propertyId=propsData.id;
@@ -714,17 +660,28 @@ class CreateFlyerPage extends React.Component {
             states.propertyDetails.propertyAddress.zipCode=propsData.zipcode;
             states.propertyDetails.propertyAddress.city=propsData.city;
             states.propertyDetails.propertyAddress.streetAddress=propsData.street_address;
+            states.propertyDetails.propertyAddress.displayMethod=propsData.display_method;
+
 
             states.propertyDetails.mlsNumber.numberProperty=propsData.mls_number;
+            states.propertyDetails.mlsNumber.boardAssociation= propsData.board;
+              
+             if(propsData.number_bathrooms.length){
+               states.propertyDetails.generalPropertyInformation.numberOfBathrooms.full=propsData.number_bathrooms[0].full;
+               states.propertyDetails.generalPropertyInformation.numberOfBathrooms.half=propsData.number_bathrooms[0].half;
+             }
             states.propertyDetails.generalPropertyInformation.yearBuilt=propsData.year_built;
             states.propertyDetails.generalPropertyInformation.lotSize=propsData.lot_size;
             states.propertyDetails.generalPropertyInformation.buildingSize = propsData.building_size;
             states.propertyDetails.generalPropertyInformation.numberOfBedrooms = propsData.number_bedrooms;
             states.propertyDetails.generalPropertyInformation.numberOfStories = propsData.number_stories;
             states.propertyDetails.generalPropertyInformation.pricePerSquareFoot = propsData.price;
+            states.propertyDetails.generalPropertyInformation.propertyType=propsData.property_type;
+            states.propertyDetails.generalPropertyInformation.propertyStyle = propsData.property_style;
             
+            //states.propertyDetails.generalPropertyInformation.numberOfBathrooms.half = propsData.price
             this.setState(states);
-        }    
+        }   
   }
 
    componentDidMount() {
@@ -1455,6 +1412,7 @@ class CreateFlyerPage extends React.Component {
                                     id="Type"
                                     name="houseType"
                                     onChange={this.openHouseChange}
+
                                   >
                                     <option value="">Select</option>
                                     <option value="Open House">
@@ -1699,6 +1657,7 @@ class CreateFlyerPage extends React.Component {
                                   onChange={(e) =>
                                     this.handleChange("propertyPricing", e)
                                   }
+                                  vlaue={propertyDetails && propertyDetails.pricingInfo && propertyDetails.pricingInfo.price}
                                 >
                                   <option value="">
                                     Select Price Display Type
@@ -1743,6 +1702,7 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) =>
                                   this.handleChange("propertyAddress", e)
                                 }
+                                value={propertyDetails && propertyDetails.propertyAddress && propertyDetails.propertyAddress.displayMethod}
                               >
                                 <option>Select Address Display Method</option>
                                 <option>Show Entire Address</option>
@@ -1763,7 +1723,7 @@ class CreateFlyerPage extends React.Component {
                                   this.handleChange("propertyAddress", e)
                                 }
 
-                                value={propertyDetails && propertyDetails.propertyAddress && propertyDetails.propertyAddress.streetAddress ? propertyDetails.propertyAddress.streetAddress : ''}
+                                value={propertyDetails && propertyDetails.propertyAddress && propertyDetails.propertyAddress.streetAddress}
                               />
                             </div>
                           </div>
@@ -1900,6 +1860,8 @@ class CreateFlyerPage extends React.Component {
                                   onChange={(e) =>
                                     this.handleChange("mlsNumber", e)
                                   }
+                                  value={propertyDetails && propertyDetails.mlsNumber && propertyDetails.mlsNumber.boardAssociation}
+
                                 >
                                   <option value="">
                                     -- Please Select a board / association for
@@ -1979,6 +1941,7 @@ class CreateFlyerPage extends React.Component {
                                   onChange={(e) =>
                                     this.handleChange("propertyInformation", e)
                                   }
+                                  value={propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.propertyType}
                                 >
                                   <option>Select Property Type</option>
                                   <option value="" className="">
@@ -2007,6 +1970,7 @@ class CreateFlyerPage extends React.Component {
                                   onChange={(e) =>
                                     this.handleChange("propertyInformation", e)
                                   }
+                                  value={propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.propertyStyle}
                                 >
                                   <option value="" className="">
                                     -- Select Property Style --
@@ -2167,11 +2131,13 @@ class CreateFlyerPage extends React.Component {
                                     className="form-control form-control-lg form-control-a"
                                     placeholder="0"
                                     name="full"
+                                    value={propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.numberOfBathrooms && propertyDetails.generalPropertyInformation.numberOfBathrooms.full} 
                                     onChange={(e) =>
                                       this.handleChange(
                                         "propertyInformationBathrooms",
                                         e
                                       )
+                                      
                                     }                                    
                                   />
                                   <div className="input-group-append">
@@ -2194,11 +2160,13 @@ class CreateFlyerPage extends React.Component {
                                     className="form-control form-control-lg form-control-a"
                                     placeholder="0"
                                     name="half"
+                                    value={propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.numberOfBathrooms && propertyDetails.generalPropertyInformation.numberOfBathrooms.half}
                                     onChange={(e) =>
                                       this.handleChange(
                                         "propertyInformationBathrooms",
                                         e
                                       )
+
                                     }
                                   />
                                   <div className="input-group-append">
@@ -2782,7 +2750,7 @@ class CreateFlyerPage extends React.Component {
                             <div className="row">
                               <div className="col-md-12">
                                 <div className="flyer-header">
-                                  Flyer Headline will come here
+                                  {propertyDetails && propertyDetails.blastHeadline}
                                 </div>
                               </div>
                             </div>
@@ -2856,14 +2824,17 @@ class CreateFlyerPage extends React.Component {
                                     <li>Property Type: {propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.propertyType} </li>
                                     <li>Property Style: {propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.propertyStyle} </li>
                                     <li> {propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.numberOfBedrooms} Bedrooms</li>
-                                    <li>1 Full 1 Half Bathrooms</li>
-                                    <li>1 Full 1 Half Bathrooms</li>
+                                    <li>{propertyDetails && propertyDetails.generalPropertyInformation
+                                    && propertyDetails.generalPropertyInformation.numberOfBathrooms &&
+                                     propertyDetails.generalPropertyInformation.numberOfBathrooms.full} Full {propertyDetails && propertyDetails.generalPropertyInformation
+                                    && propertyDetails.generalPropertyInformation.numberOfBathrooms &&
+                                     propertyDetails.generalPropertyInformation.numberOfBathrooms.half} Half Bathrooms</li>
                                     <li>{propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.buildingSize} square feet</li>
 
                                     <li>$1,000.00 /sqft</li>
                                     <li>Lot Size: {propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.lotSize} sqft</li>
                                     <li> Built {propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.yearBuilt}</li>
-                                    <li>1 Car Garage</li>
+                                    <li>Garage:{propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.garageSize} </li>
                                     <li> {propertyDetails && propertyDetails.generalPropertyInformation && propertyDetails.generalPropertyInformation.numberOfStories} </li>
                                   </ul>
                                 </div>
@@ -2910,7 +2881,7 @@ class CreateFlyerPage extends React.Component {
                                   <br />
                                   Agent
                                   <br />
-                                  {firstName}@gmail.com
+                                  abc@gmail.com
                                   <br />
                                
                                   <br />
@@ -3225,6 +3196,8 @@ class CreateFlyerPage extends React.Component {
                                 <select
                                   className="form-control form-control-lg form-control-a"
                                   id="Type"
+                                  name="state"
+                                  value=""
                                 >
                                   <option value="">-- Select a State --</option>
                                   <option>Alabama</option>

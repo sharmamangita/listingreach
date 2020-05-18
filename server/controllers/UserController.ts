@@ -515,6 +515,10 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 				let lotSize = property.generalPropertyInformation.lotSize;
 				let propertyType = property.generalPropertyInformation.propertyType;
 				let propertyStyle = property.generalPropertyInformation.propertyStyle;
+				let garageSize = property.generalPropertyInformation.garageSize;
+				let full = property.generalPropertyInformation.numberOfBathrooms.full;
+				let half = property.generalPropertyInformation.numberOfBathrooms.half;
+				let numberOfStories = property.generalPropertyInformation.numberOfBathrooms;
 			}
 
 			let openData = '';
@@ -561,7 +565,12 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 					.replace(/#openData#/g,openData)
 					.replace(/#links#/g,links)
 					.replace(/#propertyType#/g,propertyType)
+					.replace(/#full#/g,full)
+					.replace(/#half#/g,half)
+					.replace(/#garageSize#/g,garageSize)
 					.replace(/#propertyStyle#/g,propertyStyle)
+					.replace(/#numberOfStories#/g,numberOfStories)
+
 					
 
 					
@@ -1023,6 +1032,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			                    "mls_number":1,
 								"board":1,
 			                    "property_type":1,
+			                    "property_style":1,
 			                    "lot_size":1,
 			                    "number_bedrooms":1,
 			                    "building_size":1,
@@ -1030,6 +1040,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 								"number_bathrooms":1,
 								"year_built":1,
 								"garage":1,
+								"garageSize":1,
 								"price":1,
 								"pricingInfo":1,
 								"property_details":1,
@@ -1071,6 +1082,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 						        number_bathrooms:obj.number_bathrooms,
 						        isOpenHouse:obj.isOpenHouse,
 						        property_type:obj.property_type,
+						        property_style:obj.property_style,
 						        mls_number:obj.mls_number,
 						        linksToWebsites:obj.linksToWebsites,
 						        property_detail:obj.property_details,
@@ -1078,13 +1090,16 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 						        board:obj.board,
 						        zipcode:obj.zipcode,
 						        city:obj.city,
+						        display_method:obj.display_method,
 						        street_address:obj.street_address,
 						        number_bedrooms:obj.number_bedrooms,
 						        year_built:obj.year_built,
 						        number_stories:obj.number_stories,
 						        lot_size:obj.lot_size,
 						        templates:obj.templates,
-						        price:obj.price
+						        price:obj.price,
+						        garageSize:obj.garageSize
+
 
 						    } ;
 
