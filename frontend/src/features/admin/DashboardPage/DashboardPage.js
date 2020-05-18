@@ -20,17 +20,21 @@ class DashboardPage extends React.Component {
   }
   componentWillMount() {
     console.log("test====");
-     this.props.dispatch(adminActions.getAlldashboardData());
+    this.props.dispatch(adminActions.getAlldashboardData());
   }
-  refreshcounts(){   
-    this.props.dashboard.forEach(element => {
-      if(element._id=="agents"){
-        this.registeredagentscount=element.total;
-      }
-     else if(element._id=="subscriber"){
-        this.emailsubscriberscount=element.total;
-      }
-    });
+  refreshcounts() {
+    if (Array.isArray(this.props.dashboard)) {
+      this.props.dashboard.forEach(element => {
+        if (element._id == "agents") {
+          this.registeredagentscount = element.total;
+        }
+        else if (element._id == "subscriber") {
+          this.emailsubscriberscount = element.total;
+        }
+      });
+    } else {
+      console.log("dashboard data response");
+    }
   }
 
   render() {
@@ -39,7 +43,7 @@ class DashboardPage extends React.Component {
     }
 
     return (
-      <main className="col-xs-12 col-sm-8 col-lg-9 col-xl-10 pt-3 pl-4 ml-auto">      
+      <main className="col-xs-12 col-sm-8 col-lg-9 col-xl-10 pt-3 pl-4 ml-auto">
         <section className="row">
           <div className="col-sm-12">
             <section className="row">
