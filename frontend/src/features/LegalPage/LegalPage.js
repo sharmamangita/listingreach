@@ -15,7 +15,7 @@ class LegalPage extends React.Component {
 
   componentDidMount(){
   const { dispatch } = this.props;
-  this.props.dispatch(userActions.getapagecontent({page:'Legal'})); 
+  //this.props.dispatch(userActions.getapagecontent({page:'Legal'})); 
   window.scrollTo(0,0);
   }
 

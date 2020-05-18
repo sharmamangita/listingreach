@@ -16,7 +16,7 @@ class AgentDashboardPage extends React.Component {
 
   componentDidMount(){
   const { dispatch } = this.props;
-  this.props.dispatch(userActions.getapagecontent({page:'Dashboard'})); 
+ // this.props.dispatch(userActions.getapagecontent({page:'Dashboard'})); 
   window.scrollTo(0,0);
   }
 
