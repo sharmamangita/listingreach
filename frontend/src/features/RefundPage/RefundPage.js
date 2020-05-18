@@ -15,7 +15,7 @@ class RefundPage extends React.Component {
 
   componentDidMount(){
   const { dispatch } = this.props;
-  this.props.dispatch(userActions.getapagecontent({page:'Privacy'})); 
+  //this.props.dispatch(userActions.getapagecontent({page:'Privacy'})); 
   window.scrollTo(0,0);
   }
 

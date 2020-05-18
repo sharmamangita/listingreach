@@ -20,7 +20,7 @@ class DesignsPage extends React.Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    this.props.dispatch(userActions.getapagecontent({ page: "About Us" }));
+    //this.props.dispatch(userActions.getapagecontent({ page: "About Us" }));
     window.scrollTo(0, 0);
   }
 
