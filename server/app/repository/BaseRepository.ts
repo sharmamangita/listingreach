@@ -25,7 +25,7 @@ class RepositoryBase<T extends mongoose.Document> implements IRead<T>, IWrite<T>
         this._model.find(query, callback)
     }
 
-  aggregate(query: any, match: object, group: object, callback: (error: any, result: any) => void) {
+    customaggregate(query: any, match: object, group: object, callback: (error: any, result: any) => void) {
         this._model.aggregate(
             [
                 { $match: match },

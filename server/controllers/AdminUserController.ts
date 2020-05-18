@@ -5,7 +5,8 @@
 import express = require("express");
 import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
 import UserBusiness = require("./../app/business/UserBusiness");
-import SubscriberBusiness= require("./../app/business/SubscriberBusiness");
+import SubscriberBusiness = require("./../app/business/SubscriberBusiness");
+import BlastBusiness =require("./../app/business/BlastBusiness")
 import BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
 import PagesBusiness = require("./../app/business/PagesBusiness");
 import IBaseController = require("./BaseController");
@@ -64,7 +65,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 		try {
 			var subscriberBusiness = new SubscriberBusiness();
 			//var condition: Object = { roles: /subscriber/ }
-			var fields: Object = { _id: 1, name: 1, email: 1, phone:1, city: 1,state:1 , createdOn: 1 }
+			var fields: Object = { _id: 1, name: 1, email: 1, phone: 1, city: 1, state: 1, createdOn: 1 }
 			subscriberBusiness.retrieveFields("", fields, (error, result) => {
 				if (error) {
 					console.log("error in getAgents -", error);
@@ -154,23 +155,79 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 
 
-	getDashboardData(req: express.Request, res: express.Response): void {
+	getCount(req: express.Request, res: express.Response): void {
 		try {
-		//	console.log("test=====");
-			var _userBusiness = new UserBusiness();
-	//		var match: Object = { status: 'verified' };
-			var group: Object = { _id: '$roles', total: { $sum: 1 } };
-			_userBusiness.aggregate("", {}, group, (error, result) => {
-				if (error) {
-					console.log(error);
-					res.send({ "error": error });
-				}
-				else {
-				//	console.log('response', result);
-					res.send(result);
-				}
+			var flag: string = req.params.flag;
+			console.log("test=====", flag);
+			switch (flag) {
+				case "agents":
+					var _userBusiness = new UserBusiness();
+					var match: Object = { roles: /agents/ };
+					var group: Object = { _id: '$roles', total: { $sum: 1 } };
+					_userBusiness.customaggregate("", match, group, (error, result) => {
+						if (error) {
+							console.log(error);
+							res.send({ "error": error });
+						}
+						else {
+							//	console.log('response', result);
+							var subscriberBusiness = new SubscriberBusiness();
+
+							res.send({agentscount:result!='undefined'?result[0].total:0});
+						}
+					}
+					);
+					break;
+				case "subscribers":
+					var subscriberBusiness = new SubscriberBusiness();
+					subscriberBusiness.count("", (error, result) => {
+						if (error) {
+							console.log(error);
+							res.send({ "error": error });
+						}
+						else {
+							//	console.log('response', result);
+							var subscriberBusiness = new SubscriberBusiness();
+							res.send({ subscriberscount: result });
+						}
+					}
+					);
+					break;
+					case "blasts":
+						res.send({ blastscount: 0 });
+						var blastBusiness = new BlastBusiness();
+						subscriberBusiness.count("", (error, result) => {
+							if (error) {
+								console.log(error);
+								res.send({ "error": error });
+							}
+							else {
+								//	console.log('response', result);
+								var subscriberBusiness = new SubscriberBusiness();
+								res.send({ subscriberscount: result });
+							}
+						}
+						);
+						break;
+						case "payments":
+							res.send({ totalpayment: 0 });
+							var blastBusiness = new BlastBusiness();
+							subscriberBusiness.count("", (error, result) => {
+								if (error) {
+									console.log(error);
+									res.send({ "error": error });
+								}
+								else {
+									//	console.log('response', result);
+									var subscriberBusiness = new SubscriberBusiness();
+									res.send({ subscriberscount: result });
+								}
+							}
+							);
+							break;
+				default:
+					break;
 			}
-			);
 
 		}
 		catch (e) {

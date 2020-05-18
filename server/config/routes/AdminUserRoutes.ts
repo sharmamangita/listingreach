@@ -25,7 +25,7 @@ class AdminUserRoutes {
         router.get("/userStatus/:_id", controller.userStatus);
         router.get("/adminusers/:_id", controller.findById);
         //   router.post("/adminusers/PlanRegister", controller.PlanRegister);
-        router.get("/adminusers", controller.getDashboardData);
+        router.get("/adminusers/counts/:flag", controller.getCount);
 
         router.get("/adminusers-bytoken", controller.findByToken);
         router.get("/adminusers-get-billing-detail", controller.getBillingDetail);

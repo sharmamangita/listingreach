@@ -10,38 +10,24 @@ class DashboardPage extends React.Component {
   constructor(props) {
 
     super(props);
-    this.registeredagentscount = 0;
-    this.emailsubscriberscount = 0;
-    this.totalpayments = 0;
-    this.paidemailscount = 0;
     this.state = {
+      agentscount: 0,
+      subscriberscount: 0,
+      blastscount: 0,
+      totalpayment: 0
     };
 
   }
-  componentWillMount() {
-    console.log("test====");
-    this.props.dispatch(adminActions.getAlldashboardData());
-  }
-  refreshcounts() {
-    if (Array.isArray(this.props.dashboard)) {
-      this.props.dashboard.forEach(element => {
-        if (element._id == "agents") {
-          this.registeredagentscount = element.total;
-        }
-        else if (element._id == "subscriber") {
-          this.emailsubscriberscount = element.total;
-        }
-      });
-    } else {
-      console.log("dashboard data response");
-    }
+  componentDidMount() {
+    this.props.dispatch(adminActions.getCount("agents"));
+    this.props.dispatch(adminActions.getCount("subscribers"));
+    this.props.dispatch(adminActions.getCount("blasts"));
+    this.props.dispatch(adminActions.getCount("payments"));
+  
   }
 
   render() {
-    if (this.props.dashboard) {
-      { this.refreshcounts() }
-    }
-
+    console.log("state :", this.props);
     return (
       <main className="col-xs-12 col-sm-8 col-lg-9 col-xl-10 pt-3 pl-4 ml-auto">
         <section className="row">
@@ -53,7 +39,7 @@ class DashboardPage extends React.Component {
                     <div className="jumbotron">
                       <Link to="/CandidatePage?paidOn=false">
                         <span className="dashbrd-icons"><i className="fa fa-fw fa-users"></i></span>
-                        <h3>{this.registeredagentscount}</h3>
+                        <h3>{this.props.agentscount}</h3>
                         <h6>Registered Agents</h6>
                       </Link>
                     </div>
@@ -62,7 +48,7 @@ class DashboardPage extends React.Component {
                     <div className="jumbotron">
                       <Link to="/CandidatePage?paidOn=true">
                         <span className="dashbrd-icons"><i className="fa fa-fw fa-users"></i></span>
-                        <h3>{this.emailsubscriberscount}</h3>
+                        <h3>{this.props.subscriberscount}</h3>
                         <h6>Email Subscribers</h6>
                       </Link>
                     </div>
@@ -70,14 +56,14 @@ class DashboardPage extends React.Component {
                   <div className="col-lg-6">
                     <div className="jumbotron">
                       <span className="dashbrd-icons"><i className="fa fa-fw fa-list-alt"></i></span>
-                      <h3>{this.paidemailscount}</h3>
+                      <h3>{this.props.blastscount}</h3>
                       <h6>Paid Email Blasts</h6>
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="jumbotron">
                       <span className="dashbrd-icons"><i className="fa fa-fw fa-money"></i></span>
-                      <h3>{this.totalpayments}</h3>
+                      <h3>{this.props.totalpayment}</h3>
                       <h6>Total Payments</h6>
                     </div>
                   </div>
@@ -96,10 +82,10 @@ function mapStateToProps(state) {
   console.log("stae11====", state);
   const { authentication, admins } = state;
   const { user } = authentication;
-  const { dashboard } = admins;
+  const { agentscount, subscriberscount, blastscount, totalpayment } = admins;
   return {
     user,
-    dashboard
+    agentscount, subscriberscount, blastscount, totalpayment
   };
 }
 

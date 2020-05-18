@@ -9,7 +9,7 @@ export const adminService = {
     getBlastSettings,
     updatecontent,
     getContent,
-    getAlldashboardData,
+    getCount,
     updateBlastSettings,
     getAgents,
     getSubscribers
@@ -122,10 +122,10 @@ function handleResponse(response) {
     });
 }
 
-function getAlldashboardData() {
+function getCount(flag) {
     const requestOptions = {
         method: 'GET'
     };
-    return fetch(`${config.apiUrl}/adminusers`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/adminusers/counts/${flag}`, requestOptions).then(handleResponse);
 }
 

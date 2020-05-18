@@ -27,10 +27,28 @@ export function admins(state = {}, action) {
         loading: true
       });
       return newState;
-    case adminConstants.GETDASHBOARDALL_SUCCESS:
+    case adminConstants.GET_AGENTSCOUNT_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,
-        dashboard: action.admin
+        agentscount: action.admin.agentscount
+      });
+      return newState;
+    case adminConstants.GET_SUBSCRIBERS_COUNT_SUCCESS:
+      newState = objectAssign({}, state, {
+        loading: true,
+        subscriberscount: action.admin.subscriberscount
+      });
+      return newState;
+    case adminConstants.GET_BLASTSCOUNT_SUCCESS:
+      newState = objectAssign({}, state, {
+        loading: true,
+        blastscount: action.admin.blastscount
+      });
+      return newState;
+    case adminConstants.GET_TOTAL_PAYMENT_SUCCESS:
+      newState = objectAssign({}, state, {
+        loading: true,
+        totalpayment: action.admin.totalpayment
       });
       return newState;
     case adminConstants.GETDASHBOARDALL_FAILURE:

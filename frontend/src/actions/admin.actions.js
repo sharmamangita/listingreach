@@ -12,12 +12,46 @@ export const adminActions = {
     getBlastSettings,
     updatecontent,
     getContent,
-    getAlldashboardData,
     update,
     updateBlastSettings,
     getAgents,
-    getSubscribers
+    getSubscribers,
+    getCount,
 };
+
+
+function getCount(flag) {
+    return dispatch => {
+        dispatch(request());
+        adminService.getCount(flag)
+            .then(
+                dashboardcounts => dispatch(success(dashboardcounts)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request() { return { type: adminConstants.GETDASHBOARDALL_REQUEST } }
+    function success(admin) {
+        switch (flag) {
+            case "agents":
+                return { type: adminConstants.GET_AGENTSCOUNT_SUCCESS, admin }
+                break;
+            case "subscribers":
+                return { type: adminConstants.GET_SUBSCRIBERS_COUNT_SUCCESS, admin }
+                break;
+            case "blasts":
+                return { type: adminConstants.GET_BLASTSCOUNT_SUCCESS, admin }
+                break;
+            case "payments":
+                return { type: adminConstants.GET_TOTAL_PAYMENT_SUCCESS, admin }
+                break;
+            default:
+                break;
+        }
+
+    }
+    function failure(error) { return { type: adminConstants.GETDASHBOARDALL_FAILURE, error } }
+}
+
 
 function updateBlastSettings(blastsetting) {
     return dispatch => {
@@ -210,19 +244,6 @@ function getContent() {
 }
 
 
-function getAlldashboardData() {
-    return dispatch => {
-        dispatch(request());
-        adminService.getAlldashboardData()
-            .then(
-                dashboardcounts => dispatch(success(dashboardcounts)),
-                error => dispatch(failure(error.toString()))
-            );
-    };
-    function request() { return { type: adminConstants.GETDASHBOARDALL_REQUEST } }
-    function success(admin) { return { type: adminConstants.GETDASHBOARDALL_SUCCESS, admin } }
-    function failure(error) { return { type: adminConstants.GETDASHBOARDALL_FAILURE, error } }
-}
 
 
 
