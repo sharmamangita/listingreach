@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Select from "react-select";
 import { Alert } from "reactstrap";
 import { render } from "react-dom";
-
+import config from 'config';
 import { authHeader } from '../../helpers';
 import ListingSubmenu from "../../components/ListingSubmenu";
 
@@ -16,7 +16,7 @@ import ReactHtmlParser, {
   htmlparser2,
 } from "react-html-parser";
 import { userActions } from "../../actions";
-import config from "config";
+
 const axios = require("axios");
 
 const Entities = require("html-entities").XmlEntities;
@@ -250,19 +250,18 @@ class CreateFlyerPage extends React.Component {
   }
 
   imageChange(e) {
-    e.preventDefault();
-    console.log(e.target.files[0]);
-    const formData = new FormData();
-    formData.append("userid", this.state.userid);
-    formData.append("myImage", e.target.files[0]);
-    const config = {
+    const configs = {
       headers: {
        ...authHeader(), 'content-type': 'multipart/form-data'
       }
-
-    };
-    axios
-      .post(`http://localhost:3000/propertyupload`, formData, config)
+    }
+    const formData = new FormData();
+    formData.append("userid", this.state.userid);
+    formData.append("myImage", e.target.files[0]);
+   
+    
+    axios.post(`${config.uploadapiUrl}/propertyupload`,formData,configs)
+    
       .then((response) => {
         console.log("response===",response);
         this.setState({updateimage:response.data.url});
@@ -752,12 +751,13 @@ class CreateFlyerPage extends React.Component {
     const { errors, propertyDetails, disabled,agentData,profile,imageData } = this.state;
     const { users } = this.props;
     let firstName = '';
-    let firstpostionImage= '';
-    if(imageData && imageData.url){
-      firstpostionImage=`${config.uploadapiUrl}/uploads/${imageData.url}`;
-    }else{
-      firstpostionImage ='../../../public/assets/images/img2.jpg';
-    }
+    //let firstpostionImage= '';
+    
+    /*if(imageData && imageData.length>0){
+      imageData.forEach(element => {
+        firstpostionImage=`${config.uploadapiUrl}/uploads/${element.url}`;
+      });*/
+   console.log("imagat===",imageData);
     let profilepc ='';
     if(agentData && agentData.image_url){
       profilepc=`${config.uploadapiUrl}/uploads/${agentData.image_url}`;
@@ -2614,6 +2614,9 @@ class CreateFlyerPage extends React.Component {
                       <p>Click on the image(s) below to upload your photo(s)</p>
                       <div className="row">
                         <div className="col-md-2 mb-3"></div>
+                        { imageData && imageData.length>0 && imageData.map((image) => (
+                            
+                        
                         <div className="col-md-4 mb-3">
                           <div
                             className="card"
@@ -2630,7 +2633,7 @@ class CreateFlyerPage extends React.Component {
                             </div>
                             <img
                               className="card-img-bottom"
-                              src={firstpostionImage}
+                              src='{config.uploadapiUrl}/uploads/{image}'
                               alt="image"
                               style={{ width: "100%" }}
                             />
@@ -2642,34 +2645,8 @@ class CreateFlyerPage extends React.Component {
                             Select
                           </a>
                         </div>
-                        <div className="col-md-4 mb-3">
-                          <div
-                            className="card"
-                            style={{
-                              width: "20rem",
-                              margin: "20px 0 24px 0",
-                              border: "dashed",
-                              padding: "5px",
-                              borderColor: "#ccc",
-                            }}
-                          >
-                            <div className="card-body">
-                              <h4 className="card-title">Position 2</h4>
-                            </div>
-                            <img
-                              className="card-img-bottom"
-                              src="../../../public/assets/images/img2.jpg"
-                              alt="image"
-                              style={{ width: "100%" }}
-                            />
-                          </div>
-                          <a
-                            href="javascript:void(0)"
-                            className="btn btn-primary"
-                          >
-                            Select
-                          </a>
-                        </div>
+                       ))
+                     }
                       </div>
                     </div>
 
