@@ -759,13 +759,13 @@ class CreateFlyerPage extends React.Component {
       firstpostionImage ='../../../public/assets/images/img2.jpg';
     }
     let profilepc ='';
-    if(agentData.image_url){
+    if(agentData && agentData.image_url){
       profilepc=`${config.uploadapiUrl}/uploads/${agentData.image_url}`;
     }else{
       profilepc='/public/assets/images/dummy-profile.png';
     }
     let profilelogo ='';
-    if(agentData.logo_url){
+    if(agentData && agentData.logo_url){
       profilelogo=`${config.uploadapiUrl}/uploads/${agentData.logo_url}`;
     }else{
       profilelogo='/public/assets/images/dummy-logo.png';

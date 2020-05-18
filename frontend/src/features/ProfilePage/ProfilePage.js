@@ -361,7 +361,7 @@ render() {
                     </div>
                     <div className="col-md-12 mb-3">
                       <div className={'form-group' + (submittedagent && !agentData.name ? ' has-error' : '')}>
-                        <input type="text" className="form-control form-control-lg form-control-a" name="name" value={agentData.name} onChange={this.handleChange}  placeholder="User Name"/>
+                        <input type="text" className="form-control form-control-lg form-control-a" name="name" value={agentData && agentData.name} onChange={this.handleChange}  placeholder="User Name"/>
                         {submittedagent && !agentData.name &&
                             <div className="validation">User Name is required</div>
                         }
@@ -370,7 +370,7 @@ render() {
                     <div className="col-md-12 mb-3">
                       <div className={'form-group' + (submittedagent && !agentData.designation ? ' has-error' : '')}>
                       
-                        <input type="text" className="form-control form-control-lg form-control-a " name="designation" value={agentData.designation} onChange={this.handleChange}  placeholder="Designation"/>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="designation" value={agentData && agentData.designation} onChange={this.handleChange}  placeholder="Designation"/>
                         {submittedagent && !agentData.designation &&
                             <div className="validation">Please enter name</div>
                         }
@@ -379,7 +379,7 @@ render() {
                     <div className="col-md-12 mb-3">
                       <div className={'form-group' + (submittedagent && !agentData.email ? ' has-error' : '')}>
                       
-                        <input type="text" className="form-control form-control-lg form-control-a " name="email" value={agentData.email} onChange={this.handleChange}  placeholder="Email"/>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="email" value={agentData && agentData.email} onChange={this.handleChange}  placeholder="Email"/>
                         {submittedagent && !agentData.email &&
                             <div className="validation">Please enter email</div>
                         }
@@ -388,7 +388,7 @@ render() {
                     <div className="col-md-12 mb-3">
                       <div className={'form-group' + (submittedagent && !agentData.website_url ? ' has-error' : '')}>
                       
-                        <input type="text" className="form-control form-control-lg form-control-a " name="website_url" value={agentData.website_url} onChange={this.handleChange}  placeholder="Website URL"/>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="website_url" value={agentData && agentData.website_url} onChange={this.handleChange}  placeholder="Website URL"/>
                         {submittedagent && !agentData.website_url &&
                             <div className="validation">Please enter website URL</div>
                         }
@@ -397,7 +397,7 @@ render() {
                     <div className="col-md-12 mb-3">
                       <div className={'form-group' + (submittedagent && !agentData.phone_number ? ' has-error' : '')}>
                       
-                        <input type="text" className="form-control form-control-lg form-control-a " name="phone_number" value={agentData.phone_number} onChange={this.handleChange}  placeholder="Phone Number"/>
+                        <input type="text" className="form-control form-control-lg form-control-a " name="phone_number" value={agentData && agentData.phone_number} onChange={this.handleChange}  placeholder="Phone Number"/>
                         {submittedagent && !agentData.phone_number &&
                             <div className="validation">Please enter phone number</div>
                         }  
@@ -406,7 +406,7 @@ render() {
                     <div className="col-md-12 mb-3">
                       <div className={'form-group' + (submittedagent && !agentData.company_details ? ' has-error' : '')}>
                       
-                        <textarea type="text" className="form-control" cols="45" rows="8" name="company_details" value={agentData.company_details} onChange={this.handleChange}  placeholder="Company Details"></textarea>
+                        <textarea type="text" className="form-control" cols="45" rows="8" name="company_details" value={agentData && agentData.company_details} onChange={this.handleChange}  placeholder="Company Details"></textarea>
                         {submittedagent && !agentData.company_details &&
                             <div className="validation">Please write Company details</div>
                         }  
@@ -415,7 +415,7 @@ render() {
                     <div className="col-md-12 mb-3">
                        <div className={'form-group' + (submittedagent && !agentData.other_information ? ' has-error' : '')}>
                       
-                        <textarea type="text" className="form-control" cols="45" rows="8" name="other_information" value={agentData.other_information} onChange={this.handleChange}  placeholder="Other Information"></textarea>
+                        <textarea type="text" className="form-control" cols="45" rows="8" name="other_information" value={agentData && agentData.other_information} onChange={this.handleChange}  placeholder="Other Information"></textarea>
                         {submittedagent && !agentData.other_information &&
                             <div className="validation">Please write other information if any</div>
                         }  
