@@ -39,6 +39,7 @@ class SubscribeNewsLetter extends React.Component {
 
     componentDidMount() {
         var subscribeButton = document.querySelector('#sub-button')
+        console.log('btn ',subscribeButton)
         if (subscribeButton) {
             subscribeButton.addEventListener('click', function () {
                 document.body.classList.remove('box-collapse-closed');
