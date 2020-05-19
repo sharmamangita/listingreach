@@ -10,16 +10,15 @@ import { userActions } from "../../actions";
 const Entities = require('html-entities').XmlEntities;
 const entities = new Entities();
 class PricingPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
+	constructor(props) {
+		super(props);
+	}
 
-  componentWillMount() {
-   //this.props.dispatch(adminActions.getPlan()); 
-   window.scrollTo(0,0);
-  }
-
-  render() {
+	componentWillMount() {
+		window.scrollTo(0,0);
+	}
+	
+  	render() {
     
     return (
 		<div>

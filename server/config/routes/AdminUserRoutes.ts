@@ -16,7 +16,7 @@ class AdminUserRoutes {
         var controller = this._adminUserController;
         //  router.get("/adminusers/plan",controller.getPlans);
         router.get("/adminusers/blastsettings", controller.getBlastSettings);
-        router.put("/adminuser/updateblastsettings/:_id", controller.updateBlastSetings);
+        router.put("/adminuser/updateblastsettings", controller.updateBlastSetings);
         router.get("/adminusers/getContent", controller.getContent);
         router.get("/adminusers/agents", controller.getAgents);
         router.get("/adminusers/subscribers", controller.getSubscribers);

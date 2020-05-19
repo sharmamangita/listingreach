@@ -10,11 +10,12 @@ class PricePage extends React.Component {
     super(props);
     this.state = {
       visible: false,
-      blastsettings: {
+      
+      blastsettings:Object.assign({
         _id: '',
-        per_email_blast_price: 0.0,
-        additional_email_blast_price: 0.0
-      },
+        per_email_blast_price: '',
+        additional_email_blast_price:''
+      },this.props.blastsettings),
       submitted: false,
     };
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -23,40 +24,33 @@ class PricePage extends React.Component {
     this.closebtn = this.closebtn.bind(this);
 
   }
-
+  componentWillReceiveProps(nextProps) {
+    if((nextProps.blastsettings!=undefined && nextProps.blastsettings)){
+        this.propsDataupdate(nextProps.blastsettings);
+    }
+  }
+  propsDataupdate(data){
+    let states = Object.assign({}, this.state);
+    let propsData = data;
+   if((propsData !=undefined && propsData )  ){
+      states.blastsettings = propsData;
+      this.setState({blastsettings:states.blastsettings});
+    }    
+  }
   componentDidMount() {
     this.props.dispatch(adminActions.getBlastSettings());
-    this.setState({ visible: true }, () => {
-      window.setTimeout(() => {
-        this.setState({ visible: false, });
-        this.setState({
-          blastsettings:
-          {
-            _id: this.props.blastsettings._id,
-            per_email_blast_price: this.props.blastsettings.per_email_blast_price,
-            additional_email_blast_price: this.props.blastsettings.additional_email_blast_price
-          }
-        })
-      }, 2000)
-    });
+   
   }
   handleChange(event) {
-    console.log("targetname ", event.target.name);
-    console.log('props', this.props.blastsettings);
-    if (event.target.name == 'peremailprice') {
-      this.props.blastsettings.per_email_blast_price = Number(event.target.value)
-    }
-    if (event.target.name == 'addiitionalprice') {
-      this.props.blastsettings.additional_email_blast_price = Number(event.target.value)
-    }
+    console.log("evebt====",event)
+    const { name, value } = event.target;
+    const { blastsettings } = this.state;
     this.setState({
-      blastsettings:
-      {
-        _id: this.props.blastsettings._id,
-        per_email_blast_price: this.props.blastsettings.per_email_blast_price,
-        additional_email_blast_price: this.props.blastsettings.additional_email_blast_price
-      }
-    })
+        blastsettings: {
+            ...blastsettings,
+            [name]: value
+        }
+    });
   }
 
   closebtn() {
@@ -84,7 +78,7 @@ class PricePage extends React.Component {
 
   render() {
     const { submitted, blastsettings } = this.state;
-    console.log("BL  ", blastsettings)
+    console.log("blastsettings===",blastsettings);
     return (
       <main className="col-xs-12 col-sm-8 col-lg-9 col-xl-10 pt-3 pl-4 ml-auto">
         <h3 className="admin-title">   Pricing</h3>
@@ -104,10 +98,10 @@ class PricePage extends React.Component {
                     <form onSubmit={this.handleSubmit} className="form">
                       <div className="form-group row">
                         <label className="col-md-3 col-form-label"><b>Price Per Email Blast</b></label>
-                        <div className={'col-md-4 price' + (submitted && !blastsettings.per_email_blast_price ? ' has-error' : '')}>
+                        <div className={'col-md-4 price' + (submitted && blastsettings && !blastsettings.per_email_blast_price ? ' has-error' : '')}>
                           <span className="mt-2 mr-1">$</span> <span>
-                            <input className="form-control" type="number" name="peremailprice" value={blastsettings.per_email_blast_price || 0} onChange={this.handleChange} placeholder="Price" />
-                            {submitted && !blastsettings.per_email_blast_price &&
+                            <input className="form-control" type="number" name="per_email_blast_price" value={ blastsettings && blastsettings.per_email_blast_price || 0} onChange={this.handleChange} placeholder="Price" />
+                            {submitted && blastsettings && !blastsettings.per_email_blast_price &&
                               <div className="help-block red">Amount is required</div>
                             }</span>
                         </div>
@@ -115,10 +109,10 @@ class PricePage extends React.Component {
 
                       <div className="form-group row">
                         <label className="col-md-3 col-form-label"><b>Additional Per Email Blast Price</b></label>
-                        <div className={'col-md-4 price' + (submitted && !blastsettings.additional_email_blast_price ? ' has-error' : '')}>
+                        <div className={'col-md-4 price' + (submitted  && blastsettings  && !blastsettings.additional_email_blast_price ? ' has-error' : '')}>
                           <span className="mt-2 mr-1">$</span> <span>
-                            <input className="form-control" type="number" name="addiitionalprice" value={blastsettings.additional_email_blast_price || 0} onChange={this.handleChange} placeholder="Price" />
-                            {submitted && !blastsettings.additional_email_blast_price &&
+                            <input className="form-control" type="number" name="additional_email_blast_price" value={blastsettings && blastsettings.additional_email_blast_price || 0} onChange={this.handleChange} placeholder="Price" />
+                            {submitted && blastsettings && !blastsettings.additional_email_blast_price &&
                               <div className="help-block red">Amount is required</div>
                             }</span>
                         </div>

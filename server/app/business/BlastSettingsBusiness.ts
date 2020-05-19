@@ -53,7 +53,9 @@ class BlastSettingsBusiness implements BaseBusiness<IBlastSettingsModel> {
     findById(_id: string, callback: (error: any, result: IBlastSettingsModel) => void) {
         this._blastSettingsRepository.findById(_id, callback);
     }
-
+    findOne(query: any, callback: (error: any, result: IBlastSettingsModel) => void) {
+        this._blastSettingsRepository.findOne(query, callback);
+    }
     count(query: any, callback: (error: any, result: Number) => void) {
         this._blastSettingsRepository.count(query, callback);
     }

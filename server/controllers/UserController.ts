@@ -124,10 +124,10 @@ class UserController implements IBaseController<UserBusiness> {
                 if(error) res.send({"error": "error"});
                 else {
                 	
-					if(result && result.password && result.password==_user.password) {
-						/*if(!result.isActive) {
+					if(result && result.password && result.password==_user.password ) {
+						if(result.status=='unverified') {
 							return res.status(401).send({"error": "Your account is not active. Please contact admin."});
-						} else {*/
+						} else {
 							var token = _userBusiness.createToken(result);
 							var _updateData: IUserModel = <IUserModel>req.body;
 							_updateData.lastLogin = new Date();
@@ -148,7 +148,7 @@ class UserController implements IBaseController<UserBusiness> {
 									});
 								}
 							});
-						//}
+						}
 					} else {
 						return res.status(401).send({"error": "The username or password don't match"});
 					}

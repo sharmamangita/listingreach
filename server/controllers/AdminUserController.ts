@@ -272,17 +272,33 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				//	blastsettings.per_email_blast_price = req.body.peremailblastprice;
 				//	blastsettings.additional_email_blast_price = req.body.additionalemailblastprice;
 				blastsettings.modifiedOn = new Date();
-				blastsettings._id = mongoose.Types.ObjectId.createFromHexString(blastsettings._id);
 				console.log('ffffffffffffff', blastsettings);
-
-				_blastSettingsBusiness.update(id, blastsettings, (error, result) => {
-					if (error) {
-						console.log("error", error.path);
-						res.send({ "error": error });
+				_blastSettingsBusiness.findOne({'_id':id},(error,blastsettingsData) => { 
+					if(blastsettingsData){
+						var _id = blastsettingsData._id.toString();
+				
+						_blastSettingsBusiness.update( mongoose.Types.ObjectId(_id), blastsettings, (error, result) => {
+							if (error) {
+								console.log("error", error.path);
+								res.send({ "error": error });
+							}
+							else {
+								console.log(result);
+								res.send({ "success": "success" });
+							}
+						});
 					}
-					else {
-						console.log(result);
-						res.send({ "success": "success" });
+					else{
+						_blastSettingsBusiness.create(blastsettings, (error, result) => {
+							if (error) {
+								console.log("error", error.path);
+								res.send({ "error": error });
+							}
+							else {
+								console.log(result);
+								res.send({ "success": "success" });
+							}
+						});
 					}
 				});
 
