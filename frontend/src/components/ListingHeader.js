@@ -112,6 +112,7 @@ class ListingHeader extends React.Component {
                       My Account
                 </Link>
                     <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <Link className="dropdown-item" to="AgentDashboardPage">Control Panel</Link>
                       <Link className="dropdown-item" to="changePassword">Change Password</Link>
                       {$logout}
                     </div>

@@ -62,9 +62,7 @@ class Footer extends React.Component {
 					  
 					  <Link to="RefundPage">Refund Policy</Link>
 					  </li>
-					  <li className="list-inline-item">
-						<a href="#">Mail Preferences</a>
-					  </li>
+					  
 					  <li className="list-inline-item">
 					  
 					  <Link to="FaqsPage">FAQs</Link>

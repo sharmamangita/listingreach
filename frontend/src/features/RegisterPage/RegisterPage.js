@@ -238,7 +238,7 @@ class RegisterPage extends React.Component {
                                             <div className={'form-group mb-3' + (submitted && !user.confirmpassword ? ' has-error' : '')}>
                                             <input type="password" className="form-control form-control-lg form-control-a" name="confirmpassword" minLength={6}  value={user.confirmpassword} onChange={this.handleChange} placeholder="Confirm Password"/>
                                             {submitted && !user.confirmpassword &&
-                                                <div className="validation">Phone Number is required</div>
+                                                <div className="validation">Confirm Password is required</div>
                                             }
                                             {notmatached}
                                             </div>
