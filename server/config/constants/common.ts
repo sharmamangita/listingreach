@@ -1292,133 +1292,202 @@ static EMAIL_FOR_LOGIN_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
         <p><a href="`+Common.SITE_URL+`/login?ref=#autotoken#">Post Reference</a> to see the application.</p>
 ` +Common.EMAIL_TEMPLATE_FOOTER;
 
+ 
+static PREVIEW_EMAIL_TEMPLATE:string =  ` 
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset='UTF-8'>
+      <style>
+	
+      </style>
+   </head>
+   <body>
+      <div class="blast-box" style=" max-width: 100%;
+         background: #fff;
+         font-family: 'Poppins', sans-serif;
+         margin: auto;
+         color: #555555;
+         font-size: 1rem;
+         font-weight: 400;
+         line-height: 1.5;
+         padding: 30px;display: block;">
+         <div class="row" style="display: block;display: flex;flex-wrap: wrap;">
+            <div style="display: block;width:66%;margin: auto;">
+               <div class="border2" style="display: block;border: 3px solid #eee;">
+                  <div class="row" style="display: block;display: flex;flex-wrap: wrap;">
+                     <div class="mb-3 mt-3 text-right" style="display: block;width:30%;text-align: right !important; margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">					 
+                        <label style="display: inline-block;
+         margin-bottom: 0.5rem;">From:	</label>
+                     </div>
+                     <div style="display: block;width:66%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;" class="mb-3 mt-3 ml-3">
+                        Vinod via Listingreach.com
+                     </div>
+                     <div class="mb-3 text-right" style="display: block;width:30%;text-align: right !important;margin-bottom: 1rem !important;text-align: right !important;">					 
+                        <label style="display: inline-block;
+         margin-bottom: 0.5rem;">Email Subject Line: #subject#</label>
+                     </div>
+                     <div class="mb-3 ml-3" style="width:66%; margin-left: 1rem !important;">
+                        #formLine#
+                     </div>
+                  </div>
+               </div>
+               <div class="border3" style=" border: 3px solid #eee;
+         border-top: 0;">
+                  <div class="row" style="display: flex;flex-wrap: wrap;">
+                     <div class="mb-3 mt-3 ml-3" style="width:41%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
+                        <i>Powered by</i>	<br>
+                        <img src="http://66.235.194.119/listingreach/img/listing-reach-logo.png" alt="" class="img-a img-fluid">
+                     </div>
+                     <div class="mb-3 mt-3 text-right" style="width:25%;text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+                        <button class="btn btn-primary" style="background-color: #EE8C3A;
+         border: #EE8C3A;
+         color:#fff;display: inline-block;
+         font-weight: 400;
+         text-align: center;
+         white-space: nowrap;
+         vertical-align: middle;
+         -webkit-user-select: none;
+         -moz-user-select: none;
+         -ms-user-select: none;
+         user-select: none;
+         padding: 0.375rem 0.75rem;
+         font-size: 1rem;
+         line-height: 1.5;
+         border-radius: 0.25rem;
+         box-shadow 0.15s ease-in-out;">Reply to Sender</button>
+                     </div>
+                     <div class="mb-3 mt-3 text-right ml-3" style="width:25%;text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+                        <button class="btn btn-primary" style="background-color: #EE8C3A;
+         border: #EE8C3A;
+         color:#fff;display: inline-block;
+         font-weight: 400;
+         text-align: center;
+         white-space: nowrap;
+         vertical-align: middle;
+         -webkit-user-select: none;
+         -moz-user-select: none;
+         -ms-user-select: none;
+         user-select: none;
+         padding: 0.375rem 0.75rem;
+         font-size: 1rem;
+         line-height: 1.5;
+         border-radius: 0.25rem;
+         box-shadow 0.15s ease-in-out;">Forward to Associate</button>
+                     </div>
+                  </div>
+                  <div class="row" style="display: flex;flex-wrap: wrap;">
+                     <div style="width:100%">
+                        <div class="flyer-header" style="display: block;overflow: hidden;
+         background-color: #EE8C3A;
+         color: #fff;
+         box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(20, 19, 18, 0.1);
+         border-top: 4px solid #EE8C3A;
+         height: 80px;
+         text-align: center;
+         font-size: 28px;
+         font-weight: bold;
+         padding: 17px 0 10px 0;">					 
+                           #blastHeadline#
+                        </div>
+                     </div>
+                  </div>
+                  <div class="row" style="display: block;display: flex;flex-wrap: wrap;">
+                     <div style="width:100%;display: block;">
+                        <img src="http://66.235.194.119/listingreach/img/img1.jpg" alt="image" style="width:100%;height: 400px;">
+                     </div>
+                  </div>
+                  <div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc;">
+                     <div class="row" style="display: flex;flex-wrap: wrap;">
+                        <div class="mt-3 mb-3 ml-3" style="width:100%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">
+                           <h4 style=" background: #f1f1f1;border-bottom: 2px solid #ccc;font-size: 1.5rem;">Price: $#pricePerSquareFoot# per Square Foot</h4>
+                        </div>
+                     </div>
+                     <div class="row" style="">
+                        <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
+                           <label class="flyer-label" style="color: #EE8C3A;
+         font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
+                           <p>#streetAddress#, #city#, #zipCode#</p>
+                        </div>
+                        <div class="text-center" style="width:100%;text-align: center !important;">
+                           #openData#
+                        </div>
+                        <hr>
+                        <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+                           <label class="flyer-label" style="color: #EE8C3A;
+         font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">MLS#:</label>
+                           <span>#mlsNumber#</span>
+                        </div>
+                        <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+                           <label class="flyer-label" style="color: #EE8C3A;
+         font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Description:</label>
+                           <span>Property details will come here...</span>				  
+                        </div>
+                        <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+                           <label class="flyer-label" style="color: #EE8C3A;
+         font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Key Features:</label>
+                           <ul>
+                               <li>Property Type: #propertyType# </li>
+								<li>Property Style: #propertyStyle# </li>  
+								<li> #numberOfBedrooms# Bedrooms</li>
+								<li>#full# Full #half# Half Bathrooms</li>
+								<li>500 square feet</li>
 
-static PREVIEW_EMAIL_TEMPLATE:string = Common.EMAIL_TEMPLATE_HEADER_NEW+`
-<div class="row">
-<div class="col-md-2">
-</div>
- <div class="col-md-8">
- <div class="border2">
- <div class="row">
-<div class="col-md-4 mb-3 mt-3 text-right">
-<label>From: </label>
- </div>
- <div class="col-md-8 mb-3 mt-3">
-Vinod via Listingreach.com
- </div>
-<div class="col-md-4 mb-3 text-right">
-<label>Email Subject Line: #subject#</label>
- </div>
- <div class="col-md-8 mb-3">
-#formLine#
- </div>
- </div>
- </div>
- <div class="border3">
- <div class="row">
-<div class="col-md-5 mb-3 mt-3 ml-3">
-<i>Powered by</i> <br>
-<img src="http://66.235.194.119/listingreach/img/listing-reach-logo.png" alt="" class="img-a img-fluid">
- </div>
- <div class="col-md-3 mb-3 mt-3 text-right">
-<button class="btn btn-primary">Reply to Sender</button>
- </div>
- <div class="col-md-3 mb-3 mt-3 text-right">
-<button class="btn btn-primary">Forward to Associate</button>
- </div>
- </div>
-   <div class="row">
-<div class="col-md-12">
-<div class="flyer-header">
-#blastHeadline#
- </div>
- </div>
- </div>
-   <div class="row">
-<div class="col-md-12">
-<img src="http://66.235.194.119/listingreach/img/img1.jpg" alt="image" style="width:100%;height: 400px;">
- </div>  
- </div>
- <div class="flyer-bg">
-  <div class="row">
-<div class="col-md-12 mt-3 mb-3 ml-3">
- <h4>Price: $#pricePerSquareFoot# per Square Foot</h4>
- </div>
- </div>
- <div class="row">
-<div class="col-md-12 mt-3 text-center">
- <label class="flyer-label">Property Address:</label>
- <p>#streetAddress#, #city#, #zipCode#</p>
- </div>
- <div class="col-md-12 text-center">
-	#openData#
- </div><hr>
-  <div class="col-md-12 ml-3">
- <label class="flyer-label">MLS#:</label>
- <span>#mlsNumber#</span>
- </div>
- <div class="col-md-12 ml-3">
- <label class="flyer-label">Property Description:</label>
- <span>Property details will come here...</span>  
- </div>
- <div class="col-md-12 ml-3">
- <label class="flyer-label">Key Features:</label>
- <ul>
- <li>Property Type: #propertyType# </li>
- <li>Property Style: #propertyStyle# </li>  
-<li> #numberOfBedrooms# Bedrooms</li>
-<li>#full# Full #half# Half Bathrooms</li>
-<li>500 square feet</li>
-
-<li>$1,000.00 /sqft</li>
-<li>Lot Size: #lotSize# sqft</li>
-<li>  Built #yearBuilt#</li>
-<li> #numberOfStories# </li>
-<li>Garage: #garageSize# </li>
- </ul>  
- </div>
-<div class="col-md-12 ml-3">
-	#links#
- </div>
- <div class="col-md-12 text-center">
-<h4><a href=""><u>Click Here to Email Agent for More Information</u></a></h4>
- </div>
- </div>
- </div>
- <div class="flyer-footer">
- <div class="row mt-3">
- <div class="col-md-2 text-center">
-  <img alt="Photo" class="img-square" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-logo.png">
- </div>
-  <div class="col-md-8 text-center">
- <b> Vinod</b><br>
-Agent<br>
-vinod@gmail.com<br>
-http://www.website.com<br>
-21212121212<br><br>
-
-Agent Other Contacts Details will come here: (Optional)<br><br>
-
-Company Details will come here,<br>
-Company name<br>
-Company Address, Mai Phone Number, Company Website, etc.
- </div>
-  <div class="col-md-2 text-center pl-0">
-    <img alt="Photo" class="img-circle" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-profile.png">
- </div>
- </div>
- </div>
- <div class="flyer-btm">
- <div class="row">
- <div class="col-md-12 ">
- This e-blast was delivered by ListingReach.com, a real estate email marketing service. The ListingReach.com service and information provided therein, while believed to be accurate, are provided "as is". ListingReach.com disclaims any and all representations, warranties, or guarantees of any kind. ListingReach.com assumes no liability for errors or omissions.
- </div>
- </div>
- </div>
- </div>
- </div>
- </div>
-` +Common.EMAIL_TEMPLATE_FOOTER;
+								<li>$111,000.00 /sqft</li>
+								<li>Lot Size: #lotSize# sqft</li>
+								<li>  Built #yearBuilt#</li>
+								<li> #numberOfStories# </li>
+								<li>Garage: #garageSize# </li>
+                           </ul>
+                        </div>
+                        <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+                          #links#
+                        </div>
+                        <div class="text-center" style="width:100%;text-align: center !important;">
+                           <h4 style=" background: #f1f1f1;
+         border-bottom: 2px solid #ccc;"><a href="http://66.235.194.119/listingreach" style="color: #000000;transition: all .5s ease;"><u>Click Here to Email Agent for More Information</u></a></h4>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="flyer-footer">
+                     <div class="row mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
+                        <div class="text-center" style="width:16%;text-align: center !important;">
+                           <img alt="Photo" class="img-square" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-logo.png">
+                        </div>
+                        <div class="text-center" style="width:66%;text-align: center !important;">
+                           <b> Vinod</b><br>
+                           Manager<br>
+                           vinod@gmail.com<br>
+                           http://www.website.com<br>
+                           21212121212<br><br>
+                           Agent Other Contacts Details will come here: (Optional)<br><br>
+                           Company Details will come here,<br>
+                           Company name<br>
+                           Company Address, Mai Phone Number, Company Website, etc.
+                        </div>
+                        <div class="text-center pl-0" style="width:16%;text-align: center !important;">
+                           <img alt="Photo" class="img-circle" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-profile.png">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="flyer-btm" style="background: #8c8c8c;
+         padding: 10px;
+         font-size: 0.8rem;
+         color: #fff;
+         margin-top: 10px;">
+                     <div class="row" style="display: flex;flex-wrap: wrap;">
+                        <div style="width:100%">
+                           This e-blast was delivered by ListingReach.com, a real estate email marketing service. The ListingReach.com service and information provided therein, while believed to be accurate, are provided "as is". ListingReach.com disclaims any and all representations, warranties, or guarantees of any kind. ListingReach.com assumes no liability for errors or omissions.
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>  
+`;
 
 
 

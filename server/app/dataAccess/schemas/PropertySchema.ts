@@ -47,9 +47,6 @@ class PropertySchema {
             number_bedrooms:{
                 type: String
             },
-            number_bathrooms:{
-                type: String  
-            },
             year_built:{
                 type: String 
             },

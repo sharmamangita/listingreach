@@ -68,6 +68,12 @@ class CreateFlyerPage extends React.Component {
       imageData:Object.assign({
        url:''
       },this.props.imageData),
+      alert:{
+        alertIsOpenHouse:false,
+        alertlink:false,
+        type:'',
+        message:''
+      },
       errors: {
         propertyDetails: {
           Email: {
@@ -186,9 +192,6 @@ class CreateFlyerPage extends React.Component {
           url: "",
           linkData: [],
         },
-      },
-      preview:{
-        email:''
       }
 
     };
@@ -301,14 +304,36 @@ class CreateFlyerPage extends React.Component {
     const { id, name, value } = event.target;
     let linkArray = Object.assign({}, this.state);
     linkArray.propertyDetails.linksToWebsites.linkData[id].linksToWebsiteData[name] = value;
-    this.setState(linkArray);
+    if(this.setState(linkArray)){
+
+    } else {
+
+    }
+
+
+
   }
 
   openHouseArrayChange(event) {
     const { id, name, value } = event.target;
     let openHouseArray = Object.assign({}, this.state);
     openHouseArray.propertyDetails.isOpenHouse.openHouseData[id].openHouseData[name] = value;
-    this.setState(openHouseArray);
+    if(openHouseArray.propertyDetails.isOpenHouse.openHouseData[id].openHouseData[name]){
+        openHouseArray.alert.type='success';
+        openHouseArray.alert.message='Data is updated successfully';
+        openHouseArray.alert.alertIsOpenHouse=true;
+        this.setState({disabled:false},()=>{
+          window.setTimeout(()=>{
+            this.setState({disabled:true,...this.state.alert, alertIsOpenHouse:false});
+          },2000)
+        });
+    }else{
+        openHouseArray.alert.type='danger';
+        openHouseArray.alert.message='Data is not updated successfully'; 
+        openHouseArray.alert.alertIsOpenHouse=true;
+    }
+    
+   let isState = this.setState(openHouseArray);
   }
 
   linkArrayDelete(event) {
@@ -328,16 +353,16 @@ class CreateFlyerPage extends React.Component {
           value.length < 5 ? "Please select house type" : "";
         break;
       case "date":
-        errors.propertyDetails.linksToWebsites.date =
+        errors.propertyDetails.isOpenHouse.date =
           value.length < 3 ? "Date is required" : "";
         break;
       case "startTime":
-        errors.propertyDetails.linksToWebsites.startTime =
+        errors.propertyDetails.isOpenHouse.startTime =
           value.length < 3 ? "Start time is required" : "";
         break;
 
       case "endTime":
-        errors.propertyDetails.linksToWebsites.endTime =
+        errors.propertyDetails.isOpenHouse.endTime =
           value.length < 3 ? "End time is required" : "";
         break;
     }
@@ -635,7 +660,6 @@ class CreateFlyerPage extends React.Component {
         this.setState({profile:states.profile});
       }  
         if(propsData !=undefined && propsData){
-
             if(propsData.templates.length){
                 let template = propsData.templates[0];
                 states.propertyDetails.Email.formSubject = template.email_subject;
@@ -643,12 +667,10 @@ class CreateFlyerPage extends React.Component {
                 states.propertyDetails.Email.formReply = template.address;
                 states.propertyDetails.blastHeadline=template.headline;
             }
-
             if(propsData.pricingInfo.length){
               states.propertyDetails.pricingInfo.price = propsData.pricingInfo[0].price;
               states.propertyDetails.pricingInfo.priceType = propsData.pricingInfo[0].priceType;
             }
-
 
             states.propertyDetails.propertyDetail = propsData.property_detail;
             states.propertyDetails.generalPropertyInformation.yearBuilt = propsData.year_built;
@@ -670,6 +692,7 @@ class CreateFlyerPage extends React.Component {
                states.propertyDetails.generalPropertyInformation.numberOfBathrooms.full=propsData.number_bathrooms[0].full;
                states.propertyDetails.generalPropertyInformation.numberOfBathrooms.half=propsData.number_bathrooms[0].half;
              }
+
             states.propertyDetails.generalPropertyInformation.yearBuilt=propsData.year_built;
             states.propertyDetails.generalPropertyInformation.lotSize=propsData.lot_size;
             states.propertyDetails.generalPropertyInformation.buildingSize = propsData.building_size;
@@ -719,11 +742,22 @@ class CreateFlyerPage extends React.Component {
     }
   }
 
-  saveProperty() {
-    const { propertyDetails } = this.state;
+  saveProperty(event) {
+    event.preventDefault();
+    const { propertyDetails,submitted } = this.state;
     const { dispatch } = this.props;
-    dispatch(userActions.saveProperty(propertyDetails));
-    this.moveNexttab();
+      if(propertyDetails && 
+        propertyDetails.Email.formSubject &&
+        propertyDetails.Email.formReply &&
+        propertyDetails.blastHeadline &&
+        propertyDetails.propertyDetail &&
+        propertyDetails.pricingInfo.price){
+        console.log("propertyDetails.Email.formSubject====",propertyDetails.Email.formSubject);
+        dispatch(userActions.saveProperty(propertyDetails));
+        this.moveNexttab();
+      } else {
+        this.setState({submitted:true});
+      }
   }
 
   moveNexttab() {
@@ -733,7 +767,7 @@ class CreateFlyerPage extends React.Component {
 
 
   render() {
-    const { errors, propertyDetails, disabled,agentData,profile,imageData } = this.state;
+    const { errors, propertyDetails, disabled,agentData,profile,imageData,alert,submitted } = this.state;
     const { users } = this.props;
     let firstName = '';
     //let firstpostionImage= '';
@@ -1111,7 +1145,7 @@ class CreateFlyerPage extends React.Component {
                       <p>Enter property details for sale.</p>
                       <form
                         className="form-a contactForm"
-                        action=""
+                        action={this.saveProperty}
                         method="post"
                         role="form"
                       >
@@ -1132,7 +1166,7 @@ class CreateFlyerPage extends React.Component {
                                 value={propertyDetails && propertyDetails.Email && propertyDetails.Email.formSubject}
                               />
                               <div className="validation">
-                                {errors.propertyDetails.Email.formSubject}
+                                {errors.propertyDetails.Email.formSubject || submitted && !propertyDetails.Email.formSubject && "Email is required"}
                               </div>
                             </div>
                           </div>
@@ -1145,10 +1179,10 @@ class CreateFlyerPage extends React.Component {
                                 onChange={(e) => this.handleChange("email", e)}
                                 className="form-control form-control-lg form-control-a"
                                 placeholder="Eg. Your Name"
-                                value={propertyDetails && propertyDetails.Email && propertyDetails.Email.formLine ? propertyDetails.Email.formLine:''}
+                                value={propertyDetails && propertyDetails.Email && propertyDetails.Email.formLine}
                               />
                               <div className="validation">
-                                {errors.propertyDetails.Email.formLine}
+                                {errors.propertyDetails.Email.formLine || submitted && !propertyDetails.Email.formLine && "Form Line is required"}
                               </div>
                             </div>
                           </div>
@@ -1164,7 +1198,7 @@ class CreateFlyerPage extends React.Component {
                                 value={propertyDetails && propertyDetails.Email && propertyDetails.Email.formReply ? propertyDetails.Email.formReply:''}
                               />
                               <div className="validation">
-                                {errors.propertyDetails.Email.formReply}
+                                {errors.propertyDetails.Email.formReply || submitted && !propertyDetails.Email.formReply && "Form Reply Line is required"}
                               </div>
                             </div>
                           </div>
@@ -1189,7 +1223,7 @@ class CreateFlyerPage extends React.Component {
                                 placeholder="e.g. Triple Net Shopping Center For Sale in Atlanta"
                               />
                               <div className="validation">
-                                {errors.propertyDetails.blastHeadline}
+                                {errors.propertyDetails.blastHeadline || submitted && !propertyDetails.Email.blastHeadline && "Blast headline Line is required"}
                               </div>
                             </div>
                           </div>
@@ -1388,6 +1422,8 @@ class CreateFlyerPage extends React.Component {
                                 No
                               </a>
                             </div>
+
+    <Alert className={`alert ${alert.type}`} isOpen={alert && alert.alertIsOpenHouse}>{alert && alert.message}</Alert>
                           </div>
                         </div>
                         <div
@@ -1429,7 +1465,7 @@ class CreateFlyerPage extends React.Component {
                                 <div className="validation">
                                   {
                                     errors.propertyDetails.linksToWebsites
-                                      .houseType
+                                      .houseType  
                                   }
                                 </div>
                               </div>
@@ -1505,7 +1541,6 @@ class CreateFlyerPage extends React.Component {
                                 <th>Date</th>
                                 <th>Time</th>
                                 <th>Action</th>
-                                <th>Sort</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -1602,17 +1637,6 @@ class CreateFlyerPage extends React.Component {
                                             }
                                           ></i>
                                         </td>
-                                        <td>
-                                          <a href="" title="Up">
-                                            <i className="fa fa-caret-up"></i>
-                                          </a>{" "}
-                                          &nbsp; &nbsp;
-                                          <i
-                                            className="fa fa-caret-down"
-                                            aria-hidden="true"
-                                            title="Down"
-                                          ></i>
-                                        </td>
                                       </tr>
                                     );
                                   },
@@ -1640,9 +1664,12 @@ class CreateFlyerPage extends React.Component {
                                   onChange={(e) =>
                                     this.handleChange("propertyPricing", e)
                                   }
-                                  value={propertyDetails && propertyDetails.pricingInfo && propertyDetails.pricingInfo.price?propertyDetails.pricingInfo.price:''}
+                                  value={propertyDetails && propertyDetails.pricingInfo && propertyDetails.pricingInfo.price}
                                   className="form-control form-control-lg form-control-a"
                                 />
+                              </div>
+                              <div className="validation">
+                                {submitted && !propertyDetails.pricingInfo.price && "Price is required"}
                               </div>
                             </div>
                           </div>
@@ -1657,30 +1684,30 @@ class CreateFlyerPage extends React.Component {
                                   onChange={(e) =>
                                     this.handleChange("propertyPricing", e)
                                   }
-                                  vlaue={propertyDetails && propertyDetails.pricingInfo && propertyDetails.pricingInfo.price}
+                                  vlaue={propertyDetails && propertyDetails.pricingInfo && propertyDetails.pricingInfo.priceType}
                                 >
                                   <option value="">
                                     Select Price Display Type
                                   </option>
-                                  <option value="20">
+                                  <option>
                                     Display Price Specified
                                   </option>
-                                  <option value="30">
+                                  <option>
                                     Replace Price with 'AUCTION'
                                   </option>
-                                  <option value="40">
+                                  <option>
                                     Replace Price with 'Call For Pricing'
                                   </option>
-                                  <option value="50">
+                                  <option>
                                     Replace Price with 'Call For Offers'
                                   </option>
-                                  <option value="60">
+                                  <option>
                                     Display Price per Square Foot
                                   </option>
-                                  <option value="70">
+                                  <option>
                                     Display Price per Month
                                   </option>
-                                  <option value="80">
+                                  <option>
                                     Display as Value Price Range
                                   </option>
                                 </select>
@@ -1861,7 +1888,6 @@ class CreateFlyerPage extends React.Component {
                                     this.handleChange("mlsNumber", e)
                                   }
                                   value={propertyDetails && propertyDetails.mlsNumber && propertyDetails.mlsNumber.boardAssociation}
-
                                 >
                                   <option value="">
                                     -- Please Select a board / association for
@@ -2291,7 +2317,7 @@ class CreateFlyerPage extends React.Component {
                               </textarea>
                             </div>
                             <div className="validation">
-                              {errors.propertyDetails.propertyDetail}
+                              {errors.propertyDetails.propertyDetail || submitted && !propertyDetails.propertyDetail && "Property detail is required"}
                             </div>
                           </div>{" "}
                         </div>
@@ -2355,7 +2381,7 @@ class CreateFlyerPage extends React.Component {
 
                             <div className="col-md-5 mb-3">
                               <div className="form-group">
-                                <label>Building Size</label>
+                                <label>Anchor Text</label>
                                 <input
                                   type="text"
                                   name="buildingSize"
@@ -2393,7 +2419,6 @@ class CreateFlyerPage extends React.Component {
                                 <th>URL</th>
                                 <th>Text</th>
                                 <th>Action</th>
-                                <th>Position</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -2448,17 +2473,6 @@ class CreateFlyerPage extends React.Component {
                                               this.editOrDelete(e, "delete")
                                             }
                                             title="linkDelete"
-                                          ></i>
-                                        </td>
-                                        <td>
-                                          <a href="" title="Up">
-                                            <i className="fa fa-caret-up"></i>
-                                          </a>{" "}
-                                          &nbsp; &nbsp;
-                                          <i
-                                            className="fa fa-caret-down"
-                                            aria-hidden="true"
-                                            title="Down"
                                           ></i>
                                         </td>
                                       </tr>
