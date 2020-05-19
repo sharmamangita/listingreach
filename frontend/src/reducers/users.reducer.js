@@ -41,7 +41,7 @@ export function users(state = {}, action) {
       newState = objectAssign({}, state, {
         loading: true,
         profile: action.user.data.userData[0],
-        agentData: action.user.data.agentData,
+        agentData: action.user.data.agentData[0],
         imageData: action.user.data.imageData
       });
       return newState ;     

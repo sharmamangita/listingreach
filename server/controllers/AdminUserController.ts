@@ -195,35 +195,35 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					break;
 					case "blasts":
 						res.send({ blastscount: 0 });
-						var blastBusiness = new BlastBusiness();
-						subscriberBusiness.count("", (error, result) => {
-							if (error) {
-								console.log(error);
-								res.send({ "error": error });
-							}
-							else {
-								//	console.log('response', result);
-								var subscriberBusiness = new SubscriberBusiness();
-								res.send({ subscriberscount: result });
-							}
-						}
-						);
+						// var blastBusiness = new BlastBusiness();
+						// subscriberBusiness.count("", (error, result) => {
+						// 	if (error) {
+						// 		console.log(error);
+						// 		res.send({ "error": error });
+						// 	}
+						// 	else {
+						// 		//	console.log('response', result);
+						// 		var subscriberBusiness = new SubscriberBusiness();
+						// 		res.send({ subscriberscount: result });
+						// 	}
+						// }
+						// );
 						break;
 						case "payments":
 							res.send({ totalpayment: 0 });
-							var blastBusiness = new BlastBusiness();
-							subscriberBusiness.count("", (error, result) => {
-								if (error) {
-									console.log(error);
-									res.send({ "error": error });
-								}
-								else {
-									//	console.log('response', result);
-									var subscriberBusiness = new SubscriberBusiness();
-									res.send({ subscriberscount: result });
-								}
-							}
-							);
+							// var blastBusiness = new BlastBusiness();
+							// subscriberBusiness.count("", (error, result) => {
+							// 	if (error) {
+							// 		console.log(error);
+							// 		res.send({ "error": error });
+							// 	}
+							// 	else {
+							// 		//	console.log('response', result);
+							// 		var subscriberBusiness = new SubscriberBusiness();
+							// 		res.send({ subscriberscount: result });
+							// 	}
+							// }
+							// );
 							break;
 				default:
 					break;

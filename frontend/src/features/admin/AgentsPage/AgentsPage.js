@@ -139,6 +139,7 @@ class AgentsPage extends React.Component {
 		);
 	}
 	render() {
+		
 		var { totaldata, caddata } = this.prepareTable();
 		console.log('totaldata   ', totaldata)
 		return (

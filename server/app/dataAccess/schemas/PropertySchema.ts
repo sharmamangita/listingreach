@@ -47,9 +47,6 @@ class PropertySchema {
             number_bedrooms:{
                 type: String
             },
-            number_bathrooms:{
-                type: String  
-            },
             year_built:{
                 type: String 
             },
@@ -65,6 +62,9 @@ class PropertySchema {
             price:{
                 type: String                  
             },
+            garageSize:{
+                type: String 
+            },
             pricingInfo:[{
                 price:{
                  type:String
@@ -73,6 +73,16 @@ class PropertySchema {
                  type:String
                 }
             }],
+
+            number_bathrooms:[{
+                full:{
+                 type:String
+                },
+                half:{
+                 type:String
+                }
+            }],
+
             linksToWebsites:[{
                 linksToWebsiteData:Object
             }],

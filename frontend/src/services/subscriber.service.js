@@ -5,15 +5,15 @@ export const subscriberService = {
     register,
     getAll,
     update,
-    newSubscriber
+    getAgentsDatabase
 };
 
-function newSubscriber() {
+function getAgentsDatabase(state) {
     const requestOptions = {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
     };
-    return fetch(`${config.apiUrl}/subscriber/new`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/subscriber/getagentdatabase/${state}`, requestOptions).then(handleResponse);
 }
 
 function getAll() {

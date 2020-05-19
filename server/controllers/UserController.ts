@@ -354,15 +354,15 @@ updateUser(req: express.Request, res: express.Response): void {
 					        	var returnObjagent = agentdata.map(function(obj: any): any {
 				      			    return {
 								        id: obj._id,
-								        userName:obj.name,
-								        firstName:obj.email,
-								        lastName:obj.image_url,
-								        status:obj.logo_url,
+								        name:obj.name,
 								        email:obj.website_url,
-								        companyName:obj.designation,
-								        phone:obj.phone_number,
-								        city:obj.company_details,
-								        zipcode:obj.other_information,
+								        designation:obj.designation,
+								        website_url:obj.website_url,
+								        phone_number:obj.phone_number,
+								        company_details:obj.company_details,
+								        other_information:obj.other_information,
+								        image_url:obj.image_url,
+								        logo_url:obj.logo_url
 								   }
 			   					});
 					        	callback(null,returnObjagent);
@@ -462,21 +462,119 @@ updateUser(req: express.Request, res: express.Response): void {
 		}
 	}    
 	
-	emailPreviewTemplate(req: express.Request, res: express.Response): void { 
+emailPreviewTemplate(req: express.Request, res: express.Response): void { 
 		try { 
 			
+
 			var _contactform: IContactformModel = <IContactfromModel>req.body;
+			console.log("propertyDetails====",_contactform);
+			let property =  _contactform.propertyDetails;
 			var _contactformBusiness = new ContactformBusiness();
 			//_contactform.fullname =req.body.fullname;
 			_contactform.email = req.body.email;
 			/* _contactform.phone = req.body.phone;
 			_contactform.message = req.body.message; */
 			_contactform.createdOn = new Date();
-			
-				
-					var previewTemplatememail =Common.PREVIEW_EMAIL_TEMPLATE;	
-					var emailtemplate = previewTemplatememail;
-					Common.sendMail(_contactform.email,'support@employeemirror.com','Contact Form', null,emailtemplate, function(error: any, response: any){ 
+
+			var _propertyformsEmail = {};
+
+			if(property.Email !=undefined && property.Email){
+				let subject =  property.Email.formSubject;
+				let formLine = property.Email.formLine;
+				let formReply = property.Email.formReply;
+			}
+
+			if(property.propertyDetail !=undefined){
+				let propertyDetail = property.propertyDetail;
+			}
+
+			if(property.propertyAddress !=undefined &&  property.propertyAddress){
+				let streetAddress = property.propertyAddress.streetAddress;
+				let city = property.propertyAddress.city;
+				let zipCode =  property.propertyAddress.zipCode;
+				let displayMethod = property.propertyAddress.displayMethod;
+			}
+
+
+			if(property.mlsNumber !=undefined && property.mlsNumber){
+				let mlsNumber = property.mlsNumber.numberProperty;
+			}
+
+			if(property.blastHeadline!=undefined && property.blastHeadline){
+				let blastHeadline =  property.blastHeadline;
+			}
+
+			if(property.AgentContactInfo!=undefined && property.AgentContactInfo){
+				let agentName = property.AgentContactInfo.agentName;
+			}
+
+			if(property.generalPropertyInformation!=undefined && property.generalPropertyInformation){
+				let numberOfBedrooms=  property.generalPropertyInformation.numberOfBedrooms;
+				let pricePerSquareFoot = property.generalPropertyInformation.pricePerSquareFoot;
+				let yearBuilt = property.generalPropertyInformation.yearBuilt;
+				let lotSize = property.generalPropertyInformation.lotSize;
+				let propertyType = property.generalPropertyInformation.propertyType;
+				let propertyStyle = property.generalPropertyInformation.propertyStyle;
+				let garageSize = property.generalPropertyInformation.garageSize;
+				let full = property.generalPropertyInformation.numberOfBathrooms.full;
+				let half = property.generalPropertyInformation.numberOfBathrooms.half;
+				let numberOfStories = property.generalPropertyInformation.numberOfBathrooms;
+			}
+
+			let openData = '';
+			console.log(property.isOpenHouse);
+			if(property.isOpenHouse.openHouseData !=undefined && property.isOpenHouse.openHouseData.length){
+				let houseArray = property.isOpenHouse.openHouseData;
+				console.log("houseArray===",houseArray);
+				houseArray.forEach(function(item){
+				 openData +=`<div>
+				 <label class="flyer-label">${item.openHouseData.houseType}:</label>
+				 <span>${item.openHouseData.date} ${item.openHouseData.startTime}  - ${item.openHouseData.endTime}</span><br>
+				 </div>`;
+				})
+			}
+
+			let links = '';
+			if(property.linksToWebsites.linkData !=undefined && property.linksToWebsites.linkData.length){
+				let linkArray = property.linksToWebsites.linkData;
+				linkArray.forEach(function(item){
+				 links +=`<div>
+				  <label class="flyer-label">Links:</label>
+ 					<p><a href="#"><u> ${item.linksToWebsiteData.buildingSize}</a></u></p><br>
+				 </div>`;
+				})
+			}
+
+
+
+			var previewTemplatememail =Common.PREVIEW_EMAIL_TEMPLATE;	
+					var emailtemplate = previewTemplatememail
+					.replace(/#subject#/g,subject)
+					.replace(/#formLine#/g,formLine)
+					.replace(/#formReply#/g,formReply)
+					.replace(/#blastHeadline#/g,blastHeadline)
+					.replace(/#numberOfBedrooms#/g,numberOfBedrooms)
+					.replace(/#propertyDetail#/g,propertyDetail)
+					.replace(/#mlsNumber#/g,mlsNumber)
+					.replace(/#streetAddress#/g,streetAddress)
+					.replace(/#zipCode#/g,zipCode)
+					.replace(/#city#/g,city)
+					.replace(/#pricePerSquareFoot#/g,pricePerSquareFoot)
+					.replace(/#yearBuilt#/g,yearBuilt)
+					.replace(/#lotSize#/g,lotSize)
+					.replace(/#openData#/g,openData)
+					.replace(/#links#/g,links)
+					.replace(/#propertyType#/g,propertyType)
+					.replace(/#full#/g,full)
+					.replace(/#half#/g,half)
+					.replace(/#garageSize#/g,garageSize)
+					.replace(/#propertyStyle#/g,propertyStyle)
+					.replace(/#numberOfStories#/g,numberOfStories)
+
+					
+
+					
+					Common.sendMail(_contactform.email,'support@employeemirror.com','Property Details', null,emailtemplate, function(error: any, response: any){ 
 					if(error){ 
 					console.log(error);
 					res.end("error");
@@ -713,13 +811,28 @@ updateUser(req: express.Request, res: express.Response): void {
 	    	 	_agent.createdOn = new Date();
 	    	 	_agent.userId=companyUserData._id;
 				var _agentBusiness = new AgentBusiness();
-	    	 	_agentBusiness.create(_agent, (error, agentresultData) => {
-					if(error){
-						console.log("error====",error)
-					}else {
-						console.log("agentresultData====",agentresultData);
-					   return res.json({profileimg:agentresultData});
+				_agentBusiness.findOne({'userId':companyUserData._id}, (error:any, agentresult:any) => {
+		    	 	
+					if(agentresult){
+						var _id:string = agentresult._id.toString();
+						_agentBusiness.update(_id, _agent, (error:any, resultUpdate:any) => {
+							if(error){
+							}else {
+								res.status(201).send({ "success":"Your agent info successfully updated." });
+								return res.json({data:resultUpdate});
+							}
+						});
+					}else{
+						_agentBusiness.create(_agent, (error, agentresultData) => {
+							if(error){
+								console.log("error====",error)
+							}else {
+								console.log("agentresultData====",agentresultData);
+							  res.status(201).send({ "success":"Your agent info successfully updated." });
+							}
+						});
 					}
+		    	 	
 				});
 			});
     	 }
@@ -790,16 +903,17 @@ updateUser(req: express.Request, res: express.Response): void {
 			}
 
 			if(_propertyforms.property.generalPropertyInformation){
+				console.log("_propertyforms.property.generalPropertyInformation===",_propertyforms.property.generalPropertyInformation);
 				_propertyform.property_type=_propertyforms.property.generalPropertyInformation.propertyType;
 				_propertyform.property_style=_propertyforms.property.generalPropertyInformation.propertyStyle;
 				_propertyform.lot_size=_propertyforms.property.generalPropertyInformation.lotSize;
 				_propertyform.number_bedrooms=_propertyforms.property.generalPropertyInformation.numberOfBedrooms;
 				_propertyform.building_size=_propertyforms.property.generalPropertyInformation.buildingSize;
 				_propertyform.number_stories=_propertyforms.property.generalPropertyInformation.numberOfStories;
-
-				_propertyform.number_bathrooms="4";
+				_propertyform.number_bathrooms=_propertyforms.property.generalPropertyInformation.numberOfBathrooms;
 				_propertyform.year_built =_propertyforms.property.generalPropertyInformation.yearBuilt;
 				_propertyform.garage=_propertyforms.property.generalPropertyInformation.garage;
+				_propertyform.garageSize=_propertyforms.property.generalPropertyInformation.garageSize;
 				_propertyform.price = _propertyforms.property.generalPropertyInformation.pricePerSquareFoot;
 
 			}
@@ -933,6 +1047,7 @@ updateUser(req: express.Request, res: express.Response): void {
 			                    "mls_number":1,
 								"board":1,
 			                    "property_type":1,
+			                    "property_style":1,
 			                    "lot_size":1,
 			                    "number_bedrooms":1,
 			                    "building_size":1,
@@ -940,6 +1055,7 @@ updateUser(req: express.Request, res: express.Response): void {
 								"number_bathrooms":1,
 								"year_built":1,
 								"garage":1,
+								"garageSize":1,
 								"price":1,
 								"pricingInfo":1,
 								"property_details":1,
@@ -981,6 +1097,7 @@ updateUser(req: express.Request, res: express.Response): void {
 						        number_bathrooms:obj.number_bathrooms,
 						        isOpenHouse:obj.isOpenHouse,
 						        property_type:obj.property_type,
+						        property_style:obj.property_style,
 						        mls_number:obj.mls_number,
 						        linksToWebsites:obj.linksToWebsites,
 						        property_detail:obj.property_details,
@@ -988,13 +1105,16 @@ updateUser(req: express.Request, res: express.Response): void {
 						        board:obj.board,
 						        zipcode:obj.zipcode,
 						        city:obj.city,
+						        display_method:obj.display_method,
 						        street_address:obj.street_address,
 						        number_bedrooms:obj.number_bedrooms,
 						        year_built:obj.year_built,
 						        number_stories:obj.number_stories,
 						        lot_size:obj.lot_size,
 						        templates:obj.templates,
-						        price:obj.price
+						        price:obj.price,
+						        garageSize:obj.garageSize
+
 
 						    } ;
 

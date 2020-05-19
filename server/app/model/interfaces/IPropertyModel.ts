@@ -18,10 +18,10 @@ interface IPropertyModel extends mongoose.Document {
     building_size: string,
     lot_size: string,
     number_bedrooms:string,
-    number_bathrooms : string,
     year_built: string,
     number_stories: string,
     garage:string,
+    garageSize:string,
     property_details: string,
     price:string,
     userId:mongoose.Types.ObjectId,
@@ -30,10 +30,13 @@ interface IPropertyModel extends mongoose.Document {
         priceType: string
         
     }],
+    number_bathrooms:[{
+        full: string,
+        half: string
+    }],
     linksToWebsites:[{
         linksToWebsiteData:Object
     }],
-
     isOpenHouse:[{
         openHouseData:Object
     }]

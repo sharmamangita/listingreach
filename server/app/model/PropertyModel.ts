@@ -57,10 +57,6 @@ class PropertyModel {
         return this.propertyModel.number_bedrooms;
     }
 
-    get number_bathrooms (): string {
-        return this.propertyModel.number_bathrooms;
-    }
-
     get year_built (): string {
         return this.propertyModel.year_built;
     }
@@ -84,6 +80,14 @@ class PropertyModel {
     get pricingInfo (): object {
         return this.propertyModel.pricingInfo;
     }
+
+    get number_bathrooms (): object {
+        return this.propertyModel.number_bathrooms;
+    } 
+    
+    get garageSize (): object {
+        return this.propertyModel.garageSize;
+    }      
 
     get linksToWebsites (): object {
         return this.propertyModel.linksToWebsites;

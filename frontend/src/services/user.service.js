@@ -144,11 +144,11 @@ function contactForm(fullname,email,phone,message){
     }).catch(this.handleError);
 	}
 /* contact form */
-function emailPreviewTemplate(email){
+function emailPreviewTemplate(email,propertyDetails){
 		const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({email})
+        body: JSON.stringify({email,propertyDetails})
     };
     return fetch(`${config.apiUrl}/users/emailPreviewTemplate`, requestOptions).then(handleResponse)
     .then(user => {
@@ -267,7 +267,11 @@ function saveAgents(agentData){
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
         body: JSON.stringify(agentData)
     };
-    return fetch(`${config.apiUrl}/users/saveAgents`, requestOptions).then(handleResponse);    
+    return fetch(`${config.apiUrl}/users/saveAgents`, requestOptions).then(handleResponse)
+    .then(user => {
+        return user;
+    }).catch(this.handleError);
+       
 }
 
     

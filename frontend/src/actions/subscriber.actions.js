@@ -3,15 +3,15 @@ import {subscriberService} from '../services'
 import { alertActions } from '.';
 import { history } from '../helpers';
 export const subscriberActions = {
-    newSubscriber,
     register,
     update,
+    getAgentsDatabase,
 };
 
-function newSubscriber() {
+function getAgentsDatabase(state) {
     return dispatch => {
         dispatch(request());
-        subscriberService.newSubscriber()
+        subscriberService.getAgentsDatabase(state)
             .then(
                 () => {
                     return dispatch(success(susbscriber));
@@ -19,9 +19,9 @@ function newSubscriber() {
                 error => dispatch(failure(error.toString()))
             );
     };
-    function request(subscriber) { return { type: userConstants.SUBSCRIBER_REQUEST, subscriber } }
-    function success(subscriber) { return { type: userConstants.SUBSCRIBER_SUCCESS, subscriber } }
-    function failure(error) { return { type: userConstants.SUBSCRIBER_FAILURE, error } }
+    function request(subscriber) { return { type: userConstants.AGENT_DATABASE_REQUEST, subscriber } }
+    function success(subscriber) { return { type: userConstants.AGENT_DATABASE_SUCCESS, subscriber } }
+    function failure(error) { return { type: userConstants.AGENT_DATABASE_FAILURE, error } }
 }
 function register(subscriber) {
     return dispatch => {

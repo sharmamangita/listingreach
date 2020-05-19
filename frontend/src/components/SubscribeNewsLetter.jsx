@@ -40,6 +40,7 @@ class SubscribeNewsLetter extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleStateChange=this.handleStateChange.bind(this);
     }
 
     handleClose() {
@@ -48,6 +49,10 @@ class SubscribeNewsLetter extends React.Component {
 
     handleShow() {
         this.setState({ show: true });
+    }
+    handleStateChange(e){
+        const state=e.target.value;
+        this.props.dispatch(subscriberActions.getAgentsDatabase(state))
     }
     componentDidMount() {
         var subscribeButton = document.querySelector('#sub-button')
@@ -137,7 +142,7 @@ class SubscribeNewsLetter extends React.Component {
             && subscriber.email.length > 0
             && subscriber.phone.length > 0
             && subscriber.city.length > 0
-            && subscriber.state.length > 0 && subscriber.state!=="Select"
+            && subscriber.state.length > 0 && subscriber.state !== "Select"
             && subscriber.propertyTypes.length > 0
             && subscriber.agentTypes.length > 0
             && subscriber.mailingLists.length > 0
@@ -312,14 +317,14 @@ class SubscribeNewsLetter extends React.Component {
                         </form>
                     </div>
                 </div>
-                <Modal show={show} onHide={this.handleClose} bsSize="large">
+                <Modal show={show} onHide={this.handleClose} size="lg">
 
                     <Modal.Header closeButton>
                         <h4 className="modal-title">Select Databases</h4>
                     </Modal.Header>
                     <Modal.Body>
                         <div className="form-group col-md-6">
-                            <select className="form-control form-control-a" id="Type">
+                            <select className="form-control form-control-a" onChange={this.handleStateChange} >
                                 <option>Select State</option>
                                 {
                                     globalData.USstates.map((st) => (
@@ -327,6 +332,24 @@ class SubscribeNewsLetter extends React.Component {
                                     ))
                                 }
                             </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="property"><b>What types of Preferred Vendors would you like to hear from?</b></label>
+                            <div className="row">
+                                <div className="col-md-6 mb-2">
+                                    {
+                                        preferedVendors.map((vendor) => (
+                                            <div className="form-check" key={vendor} >
+                                                <label className="form-check-label">
+                                                    <input type="checkbox" name="preferedvendor" value={vendor} onChange={(event) => this.handleChange(event, vendor)} className="form-check-input" />
+                                                    {vendor}
+                                                </label>
+                                            </div>
+                                        ))
+                                    }
+                                  
+                                </div>
+                            </div>
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
