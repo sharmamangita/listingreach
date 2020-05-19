@@ -37,7 +37,7 @@ class DashboardPage extends React.Component {
                 <div className="row">
                   <div className="col-lg-6">
                     <div className="jumbotron">
-                      <Link to="/CandidatePage?paidOn=false">
+                      <Link to="/AgentsPage">
                         <span className="dashbrd-icons"><i className="fa fa-fw fa-users"></i></span>
                         <h3>{this.props.agentscount}</h3>
                         <h6>Registered Agents</h6>
@@ -46,7 +46,7 @@ class DashboardPage extends React.Component {
                   </div>
                   <div className="col-lg-6">
                     <div className="jumbotron">
-                      <Link to="/CandidatePage?paidOn=true">
+                      <Link to="/SubscriberPage">
                         <span className="dashbrd-icons"><i className="fa fa-fw fa-users"></i></span>
                         <h3>{this.props.subscriberscount}</h3>
                         <h6>Email Subscribers</h6>
