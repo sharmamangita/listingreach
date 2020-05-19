@@ -12,7 +12,8 @@ class SubscriberSchema {
             },
             email: {
                 type: String,
-                required: true
+                required: true,
+                unique: true
             },
             phone: {
                 type: String
@@ -23,12 +24,17 @@ class SubscriberSchema {
             state: {
                 type: String
             },
+            status: {
+                type: String,
+                required: true
+            },
             propertyTypes: {
                 type: Array,
                 required: true
             },
             priceRanges: {
-                type: Array
+                type: Array,
+                required: true
             },
             includeRentedProperties: {
                 type: Boolean,
@@ -42,7 +48,8 @@ class SubscriberSchema {
                 type: Array
             },
             mailingLists: {
-                type: Array
+                type: Array,
+                required: true
             },
             createdOn: {
                 type: Date,

@@ -125,8 +125,8 @@ class ListingHeader extends React.Component {
       );
     }
     else {
-      $login = (<li><Link to="login" className="nav-link">Login</Link></li>);
-      $rigister = (<li><Link to="register" className="nav-link">Register</Link></li>);
+      $login = (<Link to="login" className="nav-link">Login</Link>);
+      $rigister = (<Link to="register" className="nav-link">Register</Link>);
       return (
         <header>
           <nav className="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">

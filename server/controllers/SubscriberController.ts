@@ -17,8 +17,9 @@ class SubscriberController implements IBaseController<SubscriberBusiness> {
 	//	console.log(subscriber);
 		subscriber.createdOn = new Date();
 		var subscriberBusiness = new SubscriberBusiness();
+		subscriber.status="unverified";
 		subscriberBusiness.create(subscriber, (error, result) => {
-			console.log("res",result);
+		//	console.log("res",result);
 			if (error) {
 				res.send(error);
 			} else {

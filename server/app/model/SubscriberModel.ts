@@ -9,6 +9,7 @@ class SubscriberModel {
     phone: String;
     city: String;
     state: String;
+    status: String;
     propertyTypes: String[];
     priceRanges: String[];
     includeRentedProperties: Boolean;

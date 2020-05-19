@@ -4,12 +4,13 @@
 
 import mongoose = require("mongoose");
 
-interface ISubscriberModel extends mongoose.Document {   
+interface ISubscriberModel extends mongoose.Document {
     name: String,
     email: String,
     phone: String
-    city: String
-    state: String
+    city: String,
+    state: String,
+    status: String,
     propertyTypes: Array<String>,
     priceRanges: Array<String>
     includeRentedProperties: Boolean,
