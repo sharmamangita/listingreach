@@ -42,25 +42,24 @@ class SubscribeNewsLetter extends React.Component {
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleStateChange = this.handleStateChange.bind(this);
+        this.clearAgentDataBase = this.clearAgentDataBase.bind(this);
     }
 
     handleClose() {
         this.setState({ show: false });
     }
-
+    clearAgentDataBase() {
+        const { subscriber } = this.state;
+        subscriber.mailingLists = [];
+        this.setState({ subscriber: subscriber, show: false, agentDatabase: [] });
+    }
     handleShow() {
         this.setState({ show: true });
     }
     handleStateChange(e) {
+        this.setState({ agentDatabase: [] })
         const state = e.target.value;
         this.props.dispatch(subscriberActions.getAgentsDatabase(state))
-    }
-    componentWillReceiveProps(nextProps) {
-
-        console.log("nextprops ", nextProps)
-        this.setState({
-            users: nextProps.users
-        });
     }
     componentDidMount() {
         var subscribeButton = document.querySelector('#sub-button')
@@ -131,6 +130,16 @@ class SubscribeNewsLetter extends React.Component {
                     }
                 }
                 break;
+            case "agentdatabase":
+                if (checked) {
+                    subscriber.mailingLists.push(value);
+                } else {
+                    var index = subscriber.mailingLists.indexOf(value);
+                    if (index > -1) {
+                        subscriber.mailingLists.splice(index, 1)
+                    }
+                }
+                break;
             case "outsideareaproperties":
                 subscriber.includeOutsideAreaProperties = value;
                 break;
@@ -165,50 +174,53 @@ class SubscribeNewsLetter extends React.Component {
         // const { agentData } = this.props;
         return (
             <Modal show={show} onHide={this.handleClose} size="lg">;
-                <Modal.Header closeButton>
+                <Modal.Header >
                     <h4 className="modal-title">Select Databases</h4>
                 </Modal.Header>
                 <Modal.Body>
-                    <div className="form-group col-md-6">
-                        <select className="form-control form-control-a" onChange={this.handleStateChange} >
-                            <option>Select State</option>
-                            {
-                                globalData.USstates.map((st) => (
-                                    <option key={st}>{st}</option>
-                                ))
-                            }
-                        </select>
-                    </div>
-                    {agentDatabase.length > 0 ?
-                        <div className="form-group">
-                            <label htmlFor="property"><b>City wise Agents</b></label>
-                            <div className="row">
-                                <div className="col-md-6 mb-2">
-                                    {
-                                        agentDatabase.map((city) => (
-                                            <div className="form-check" key={city._id} >
-                                                <label className="form-check-label">
-                                                    <input type="checkbox" name="preferedvendor" value={city._id} onChange={(event) => this.handleChange(event, city, _id)} className="form-check-input" />
-                                                    {city._id + "  Agents(" + city.agents + ")"}
-                                                </label>
-                                            </div>)
-                                        )
-                                    }
+                    <form className="form">
+                        <div className="form-group col-md-6">
+                            <select className="form-control form-control-a" onChange={this.handleStateChange} >
+                                <option>Select State</option>
+                                {
+                                    globalData.USstates.map((st) => (
+                                        <option key={st}>{st}</option>
+                                    ))
+                                }
+                            </select>
+                        </div>
+                        {agentDatabase.length > 0 ?
+                            <div className="form-group">
+                                <label htmlFor="property"><b>City wise Agents</b></label>
+                                <div className="row">
+                                    <div className="col-md-6 mb-2">
+                                        {
+                                            agentDatabase.map((city) => (
+                                                <div className="form-check" key={city._id} >
+                                                    <label className="form-check-label">
+                                                        <input type="checkbox" name="agentdatabase" value={city._id} onChange={(event) => this.handleChange(event, city._id)} className="form-check-input" />
+                                                        {city._id + "  (" + city.agents + " Agents)"}
+                                                    </label>
+                                                </div>)
+                                            )
+                                        }
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        : null
-                    }
+                            : null
+                        }
+                    </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <button type="button" className="btn btn-b" data-dismiss="modal">Close</button>
+                    <button type="button" className="btn btn-b" onClick={this.clearAgentDataBase}>Cancel</button>
+                    <button type="button" className="btn btn-b" onClick={this.handleClose} >Done</button>
                 </Modal.Footer>
             </Modal>
         )
     };
     render() {
         var { subscriber, submitted, propertyTypes, priceFilters, preferedVendors } = this.state;
-        console.log("subscriber", this.state)
+        //      console.log("subscriber", this.state)
         return (
             <React.Fragment>
                 <div className="box-collapse">
@@ -347,6 +359,9 @@ class SubscribeNewsLetter extends React.Component {
                                                 <button type="button" onClick={this.handleShow} className="btn btn_primary" data-toggle="modal" data-target="#databases">
                                                     Add Databases
                                                     </button>
+                                                {submitted && subscriber.mailingLists.length < 1 &&
+                                                    <div className="help-block text-danger">Select aleast 1 Database</div>
+                                                }
                                             </div>
 
                                             <div className="col-md-12 mb-3">
@@ -375,7 +390,6 @@ class SubscribeNewsLetter extends React.Component {
         );
     };
     componentWillReceiveProps(props) {
-        console.log("updatedprops", props)
         this.setState({ agentDatabase: props.agentData })
     }
 }

@@ -4,21 +4,19 @@ import IBaseController = require("./BaseController");
 import ISubscriberModel = require("../app/model/interfaces/ISubscriberModel");
 import UserBusiness = require("../app/business/UserBusiness");
 class SubscriberController implements IBaseController<SubscriberBusiness> {
-
-
 	findById: express.RequestHandler;
 	getAgentDatabase(req: express.Request, res: express.Response): void {
 		var agentBusiness = new UserBusiness();
-		const { state } = req.body;
-	//	const match = { state: state };
-		const group = { _id: "$City", agents: { $sum: 1 } };
-		agentBusiness.customaggregate("", {}, group, (error, result) => {
-			//	console.log("res",result);
+		const { state } = req.params;
+		//console.log(req.params);
+		const match = { state: state };
+		const group = { _id: "$city", agents: { $sum: 1 } };
+		agentBusiness.customaggregate("", match, group, (error, result) => {
 			if (error) {
-				console.log(error);	
+				console.log(error);
 				res.send(error);
 			} else {
-				//console.log(result)
+			//	console.log(result)
 				res.send({ agentDatabase: result });
 			}
 		})
