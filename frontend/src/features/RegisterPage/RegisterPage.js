@@ -144,7 +144,7 @@ class RegisterPage extends React.Component {
             this.alermsg = alert;
         }
         return (
-            <div className="site-section bg-light">
+            <div className="site-section">
              <div className="container">
                 
 			    <section className="intro-single">

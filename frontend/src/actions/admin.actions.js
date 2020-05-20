@@ -57,7 +57,7 @@ function updateBlastSettings(blastsetting) {
     return dispatch => {
         dispatch(request(blastsetting));
         console.log('updating...', blastsetting);
-        adminService.updateBlastSettings(blastsetting.id, blastsetting)
+        adminService.updateBlastSettings(blastsetting)
             .then(
                 prices => {
                     dispatch(success(blastsetting));

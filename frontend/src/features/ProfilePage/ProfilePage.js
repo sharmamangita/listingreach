@@ -101,17 +101,19 @@ class ProfilePage extends React.Component {
         [name]: value
       }
     });
-    //console.log("srt=====",agentData);
+    
   }
   handleChanges(event) {
     const { name, value } = event.target;
     const { profile } = this.state;
+    
     this.setState({
       profile: {
         ...profile,
         [name]: value
       }
     });
+
   }
   renderProfileimageModal() {
     let modalClose = () => this.setState({ showprofileimage: false });
@@ -127,10 +129,12 @@ class ProfilePage extends React.Component {
   }
   handleSubmits(event) {
     event.preventDefault();
+
     this.setState({ submitted: true });
     const { profile } = this.state;
     const { dispatch } = this.props;
     if (profile.email) {
+       console.log("srt=====",profile);
       dispatch(userActions.update(profile));
       window.scrollTo(0, 0);
       this.setState({ visible: true }, () => {
@@ -299,7 +303,7 @@ class ProfilePage extends React.Component {
                         </div>
                         <div className="col-md-6 mb-3">
                           <div className="form-group">
-                            <select name="state" className="form-control form-control-lg form-control-a" onChange={this.handleChange}>
+                            <select name="state"  value={profile.state} className="form-control form-control-lg form-control-a" onChange={this.handleChange}>
                               <option>Select State</option>
                               {
                                 globalData.USstates.map((st) => (

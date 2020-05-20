@@ -15,14 +15,14 @@ export const adminService = {
     getSubscribers
 };
 
-function updateBlastSettings(id, blastsettings) {
+function updateBlastSettings( blastsettings) {
     const requestOptions = {
         method: 'PUT',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
         body: JSON.stringify(blastsettings)
     };
     // location.reload();  
-    return fetch(`${config.apiUrl}/adminuser/updateblastsettings/${id}`, requestOptions).then(handleResponse);;
+    return fetch(`${config.apiUrl}/adminuser/updateblastsettings`, requestOptions).then(handleResponse);;
 }
 function getAgents() {
     const requestOptions = {
