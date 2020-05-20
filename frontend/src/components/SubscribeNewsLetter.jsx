@@ -18,6 +18,7 @@ class SubscribeNewsLetter extends React.Component {
             show: false,
             isFormValid: false,
             submitted: false,
+            agentDatabase: [],
             propertyTypes: propertyTypes,
             priceFilters: priceFilters,
             preferedVendors: preferedVendors,
@@ -40,7 +41,7 @@ class SubscribeNewsLetter extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        this.handleStateChange=this.handleStateChange.bind(this);
+        this.handleStateChange = this.handleStateChange.bind(this);
     }
 
     handleClose() {
@@ -50,9 +51,16 @@ class SubscribeNewsLetter extends React.Component {
     handleShow() {
         this.setState({ show: true });
     }
-    handleStateChange(e){
-        const state=e.target.value;
+    handleStateChange(e) {
+        const state = e.target.value;
         this.props.dispatch(subscriberActions.getAgentsDatabase(state))
+    }
+    componentWillReceiveProps(nextProps) {
+
+        console.log("nextprops ", nextProps)
+        this.setState({
+            users: nextProps.users
+        });
     }
     componentDidMount() {
         var subscribeButton = document.querySelector('#sub-button')
@@ -151,13 +159,56 @@ class SubscribeNewsLetter extends React.Component {
             ));
         }
     }
-
+    renderdataBaseModal() {
+        const { show, agentDatabase } = this.state;
+        // console.log("state in model ", this.props)
+        // const { agentData } = this.props;
+        return (
+            <Modal show={show} onHide={this.handleClose} size="lg">;
+                <Modal.Header closeButton>
+                    <h4 className="modal-title">Select Databases</h4>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="form-group col-md-6">
+                        <select className="form-control form-control-a" onChange={this.handleStateChange} >
+                            <option>Select State</option>
+                            {
+                                globalData.USstates.map((st) => (
+                                    <option key={st}>{st}</option>
+                                ))
+                            }
+                        </select>
+                    </div>
+                    {agentDatabase.length > 0 ?
+                        <div className="form-group">
+                            <label htmlFor="property"><b>City wise Agents</b></label>
+                            <div className="row">
+                                <div className="col-md-6 mb-2">
+                                    {
+                                        agentDatabase.map((city) => (
+                                            <div className="form-check" key={city._id} >
+                                                <label className="form-check-label">
+                                                    <input type="checkbox" name="preferedvendor" value={city._id} onChange={(event) => this.handleChange(event, city, _id)} className="form-check-input" />
+                                                    {city._id + "  Agents(" + city.agents + ")"}
+                                                </label>
+                                            </div>)
+                                        )
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        : null
+                    }
+                </Modal.Body>
+                <Modal.Footer>
+                    <button type="button" className="btn btn-b" data-dismiss="modal">Close</button>
+                </Modal.Footer>
+            </Modal>
+        )
+    };
     render() {
-        var { subscriber, submitted, propertyTypes, priceFilters, preferedVendors, show } = this.state;
+        var { subscriber, submitted, propertyTypes, priceFilters, preferedVendors } = this.state;
         console.log("subscriber", this.state)
-        //   const [show, setShow] = this.state;
-        // const handleClose = () => setShow(false);
-        // const handleShow = () => setShow(true);
         return (
             <React.Fragment>
                 <div className="box-collapse">
@@ -317,47 +368,24 @@ class SubscribeNewsLetter extends React.Component {
                         </form>
                     </div>
                 </div>
-                <Modal show={show} onHide={this.handleClose} size="lg">
-
-                    <Modal.Header closeButton>
-                        <h4 className="modal-title">Select Databases</h4>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="form-group col-md-6">
-                            <select className="form-control form-control-a" onChange={this.handleStateChange} >
-                                <option>Select State</option>
-                                {
-                                    globalData.USstates.map((st) => (
-                                        <option key={st}>{st}</option>
-                                    ))
-                                }
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="property"><b>What types of Preferred Vendors would you like to hear from?</b></label>
-                            <div className="row">
-                                <div className="col-md-6 mb-2">
-                                    {
-                                        preferedVendors.map((vendor) => (
-                                            <div className="form-check" key={vendor} >
-                                                <label className="form-check-label">
-                                                    <input type="checkbox" name="preferedvendor" value={vendor} onChange={(event) => this.handleChange(event, vendor)} className="form-check-input" />
-                                                    {vendor}
-                                                </label>
-                                            </div>
-                                        ))
-                                    }
-                                  
-                                </div>
-                            </div>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <button type="button" className="btn btn-b" data-dismiss="modal">Close</button>
-                    </Modal.Footer>
-                </Modal>
+                {
+                    this.renderdataBaseModal()
+                }
             </React.Fragment>
         );
     };
+    componentWillReceiveProps(props) {
+        console.log("updatedprops", props)
+        this.setState({ agentDatabase: props.agentData })
+    }
 }
-export default connect()(SubscribeNewsLetter);
+function mapStateToProps(state) {
+    console.log("stae11====", state);
+    const { users } = state;
+    const { agentData } = users;
+    console.log(agentData);
+    return {
+        agentData: agentData ? agentData.agentDatabase : null
+    };
+}
+export default connect(mapStateToProps)(SubscribeNewsLetter);

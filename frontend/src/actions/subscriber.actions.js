@@ -13,14 +13,14 @@ function getAgentsDatabase(state) {
         dispatch(request());
         subscriberService.getAgentsDatabase(state)
             .then(
-                () => {
-                    return dispatch(success(susbscriber));
+                agentDatabase => {
+                    return dispatch(success(agentDatabase));
                 },
                 error => dispatch(failure(error.toString()))
             );
     };
-    function request(subscriber) { return { type: userConstants.AGENT_DATABASE_REQUEST, subscriber } }
-    function success(subscriber) { return { type: userConstants.AGENT_DATABASE_SUCCESS, subscriber } }
+    function request(agentDatabase) { return { type: userConstants.AGENT_DATABASE_REQUEST, agentDatabase } }
+    function success(agentDatabase) { return { type: userConstants.AGENT_DATABASE_SUCCESS, agentDatabase } }
     function failure(error) { return { type: userConstants.AGENT_DATABASE_FAILURE, error } }
 }
 function register(subscriber) {

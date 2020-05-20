@@ -3,7 +3,7 @@ import objectAssign from 'object-assign';
 
 export function users(state = {}, action) {
   let newState;
-  
+
   switch (action.type) {
     case userConstants.GETALL_REQUEST:
       newState = objectAssign({}, state, {
@@ -28,7 +28,7 @@ export function users(state = {}, action) {
       return newState;
 
     case userConstants.GETALL_FAILURE:
-      return { 
+      return {
         error: action.error
       };
     case userConstants.GETBYID_REQUEST:
@@ -37,39 +37,54 @@ export function users(state = {}, action) {
       });
       return newState;
     case userConstants.GETBYID_SUCCESS:
-     
+
       newState = objectAssign({}, state, {
         loading: true,
         profile: action.user.data.userData[0],
         agentData: action.user.data.agentData[0],
         imageData: action.user.data.imageData
       });
-      return newState ;     
-     
+      return newState;
+
     case userConstants.GETBYID_FAILURE:
-      return { 
+      return {
         error: action.error
       };
-     case userConstants.UPDATESAVED_SUCCESS:
-     
+    case userConstants.UPDATESAVED_SUCCESS:
+
       newState = objectAssign({}, state);
       return newState;
 
-      case userConstants.GETREVIEW_REQUEST:
-        newState = objectAssign({}, state, {
+    case userConstants.GETREVIEW_REQUEST:
+      newState = objectAssign({}, state, {
         loading: true
       });
       return newState;
-     case userConstants.REVIEWUPDATE_SUCCESS:
+    case userConstants.REVIEWUPDATE_SUCCESS:
       newState = objectAssign({}, state);
       return newState;
 
-      case userConstants.REVIEW_FAILURE:
-      return { 
+    case userConstants.REVIEW_FAILURE:
+      return {
         error: action.error
       };
-      
 
+    case userConstants.AGENT_DATABASE_REQUEST:
+      newState = objectAssign({}, state, {
+        loading: true
+      });
+      return newState;
+    case userConstants.AGENT_DATABASE_SUCCESS:
+      newState = objectAssign({}, state, {
+        loading: true,
+        agentData: action.agentDatabase
+      });
+      return newState;
+
+    case userConstants.AGENT_DATABASE_FAILURE:
+      return {
+        error: action.error
+      };
 
     case userConstants.GETDOWNLOADEDALL_REQUEST:
       return {
@@ -82,14 +97,14 @@ export function users(state = {}, action) {
       });
       return newState;
     case userConstants.GETDOWNLOADEDALL_FAILURE:
-      return { 
+      return {
         error: action.error
       };
     case userConstants.DELETE_REQUEST:
       // add 'deleting:true' property to user being deleted
       return {
         loading: true
-        
+
       };
     case userConstants.DELETE_SUCCESS:
       // remove deleted user from state
@@ -111,7 +126,7 @@ export function users(state = {}, action) {
           return user;
         })
       };
-      
+
     default:
       return state
   }

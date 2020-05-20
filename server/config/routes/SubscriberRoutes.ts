@@ -12,8 +12,8 @@ class SubscriberRoutes {
     get routes() {
         var controller = this._controller;
         console.log("in common routes");
-        router.get("/subscriber/new", controller.newSubscriber);
         router.post("/subscriber/register", controller.create);
+        router.get("/subscriber/getagentdatabase/:state",controller.getAgentDatabase)
         return router;
     }
 

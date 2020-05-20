@@ -1,25 +1,37 @@
 import express = require("express");
 import SubscriberBusiness = require("../app/business/SubscriberBusiness");
 import IBaseController = require("./BaseController");
-import SubscriberModel = require("../app/model/SubscriberModel");
 import ISubscriberModel = require("../app/model/interfaces/ISubscriberModel");
+import UserBusiness = require("../app/business/UserBusiness");
 class SubscriberController implements IBaseController<SubscriberBusiness> {
 
 
 	findById: express.RequestHandler;
-	newSubscriber(req: express.Request, res: express.Response): void {
-		var newSubscriber = new SubscriberModel();
-		res.send({ subscriber: newSubscriber })
+	getAgentDatabase(req: express.Request, res: express.Response): void {
+		var agentBusiness = new UserBusiness();
+		const { state } = req.body;
+	//	const match = { state: state };
+		const group = { _id: "$City", agents: { $sum: 1 } };
+		agentBusiness.customaggregate("", {}, group, (error, result) => {
+			//	console.log("res",result);
+			if (error) {
+				console.log(error);	
+				res.send(error);
+			} else {
+				//console.log(result)
+				res.send({ agentDatabase: result });
+			}
+		})
 	};
 	create(req: express.Request, res: express.Response): void {
 
-		const subscriber:ISubscriberModel = <ISubscriberModel>req.body;;
-	//	console.log(subscriber);
+		const subscriber: ISubscriberModel = <ISubscriberModel>req.body;;
+		//	console.log(subscriber);
 		subscriber.createdOn = new Date();
 		var subscriberBusiness = new SubscriberBusiness();
-		subscriber.status="unverified";
+		subscriber.status = "unverified";
 		subscriberBusiness.create(subscriber, (error, result) => {
-		//	console.log("res",result);
+			//	console.log("res",result);
 			if (error) {
 				res.send(error);
 			} else {

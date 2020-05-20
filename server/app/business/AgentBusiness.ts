@@ -31,8 +31,11 @@ class AgentBusiness implements BaseBusiness<IAgentModel> {
     retrieve(query: any, callback: (error: any, result: any) => void) {
         this._agentRepository.retrieve(query, callback);
     }
-    aggregate(query: any, match: object, group: object, callback: (error: any, result: any) => void) {
-        this._agentRepository.aggregate(query, match, group, callback);
+    aggregate(query: any, callback: (error: any, result: any) => void) {
+        this._agentRepository.aggregate(query, callback);
+    }
+    customaggregate(query: any, match: object, group: object, callback: (error: any, result: any) => void) {
+        this._agentRepository.customaggregate(query, match, group, callback);
     }
     retrieveFields(query: any, fields: any, callback: (error: any, result: any) => void) {
         this._agentRepository.retrieveFields(query, fields, callback);
@@ -61,14 +64,14 @@ class AgentBusiness implements BaseBusiness<IAgentModel> {
         this._agentRepository.findById(_id, callback);
     }
 
-   
+
 
     findOne(query: any, callback: (error: any, result: IAgentModel) => void) {
         this._agentRepository.findOne(query, callback);
     }
 
-   
-   
+
+
 }
 
 

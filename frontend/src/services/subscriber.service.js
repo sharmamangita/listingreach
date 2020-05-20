@@ -49,7 +49,9 @@ function handleResponse(response) {
 
     return response.text().then(text => {
         const data = text && JSON.parse(text);
+        console.log('response data  ',data)
         if (!response.ok) {
+            console.log("ERROR : ",response);
             if (response.status === 401) {
                 //   window.scrollTo(0, 0);
                 return Promise.reject(data.error);
