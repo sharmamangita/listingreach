@@ -89,13 +89,14 @@ export function users(state = {}, action) {
 
       case userConstants.BLAST_SUCCESS:
         newState = objectAssign({}, state,{
-          tab:'designTemplateTab'
+          tab:'designTemplateTab',
         });
       return newState ; 
 
       case userConstants.DESIGNTEMPLATE_SUCCESS:
         newState = objectAssign({}, state,{
-          tab:'property'
+          tab:'property',
+          templateName:action.users
         });
       return newState ; 
 
