@@ -1,12 +1,29 @@
-import { userConstants } from '../constants';
-import {subscriberService} from '../services'
+import { userConstants, adminConstants } from '../constants';
+import { subscriberService } from '../services'
 import { alertActions } from '.';
 import { history } from '../helpers';
 export const subscriberActions = {
     register,
     update,
     getAgentsDatabase,
+    getSubscriberPreferences,
 };
+
+function getSubscriberPreferences(id) {
+    return dispatch => {
+        dispatch(request());
+        subscriberService.getSubscriberPreferences(id)
+            .then(
+                subscriberPrefs => {
+                    return dispatch(success(subscriberPrefs));
+                },
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request(subscriberPrefs) { return { type: adminConstants.SUB_PREFERENCES_REQUEST, subscriberPrefs } }
+    function success(subscriberPrefs) { return { type: adminConstants.SUB_PREFERENCES_SUCCESS, subscriberPrefs } }
+    function failure(error) { return { type: adminConstants.SUB_PREFERENCES_FAILURE, error } }
+}
 
 function getAgentsDatabase(state) {
     return dispatch => {
@@ -34,7 +51,7 @@ function register(subscriber) {
                     if (user.error) {
                         dispatch(alertActions.error('This email address is already used, please try with another email.'));
                     } else {
-                     //   history.push('/login');
+                        //   history.push('/login');
                         dispatch(alertActions.success('Thank you for registration.Please check your inbox for password and login link.'));
                     }
                 },

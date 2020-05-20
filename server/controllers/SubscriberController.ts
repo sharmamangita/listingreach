@@ -16,8 +16,30 @@ class SubscriberController implements IBaseController<SubscriberBusiness> {
 				console.log(error);
 				res.send(error);
 			} else {
-			//	console.log(result)
+				//	console.log(result)
 				res.send({ agentDatabase: result });
+			}
+		})
+	};
+	getSubsciberPreferences(req: express.Request, res: express.Response): void {
+		var subscriberBusiness = new SubscriberBusiness();
+		const { id } = req.params;
+		const query = { _id: id };
+		const fields: Object = {
+			mailingLists: 1,
+			agentTypes: 1,
+			includeOutsideAreaProperties: 1,
+			includeRentedProperties: 1,
+			priceRanges: 1,
+			propertyTypes: 1
+		}
+		subscriberBusiness.retrieveFields(query, fields, (error, result) => {
+			if (error) {
+				console.log(error);
+				res.send(error);
+			} else {
+				//	console.log(result)
+				res.send(result);
 			}
 		})
 	};

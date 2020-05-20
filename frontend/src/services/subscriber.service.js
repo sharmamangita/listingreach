@@ -5,9 +5,17 @@ export const subscriberService = {
     register,
     getAll,
     update,
-    getAgentsDatabase
+    getAgentsDatabase,
+    getSubscriberPreferences
 };
 
+function getSubscriberPreferences(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    };
+    return fetch(`${config.apiUrl}/subscriber/preferences/${id}`, requestOptions).then(handleResponse);
+}
 function getAgentsDatabase(state) {
     const requestOptions = {
         method: 'GET',

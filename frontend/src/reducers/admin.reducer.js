@@ -72,6 +72,23 @@ export function admins(state = {}, action) {
         error: action.error
       };
 
+      case adminConstants.SUB_PREFERENCES_REQUEST:
+        newState = objectAssign({}, state, {
+          loading: true
+        });
+        return newState;
+      case adminConstants.SUB_PREFERENCES_SUCCESS:
+        newState = objectAssign({}, state, {
+          loading: true,
+          subscriberPreferences: action.subscriberPrefs[0]
+        });
+        return newState;
+  
+      case adminConstants.SUB_PREFERENCES_FAILURE:
+        return {
+          error: action.error
+        };
+
     case adminConstants.AGENTS_REQUEST:
       newState = objectAssign({}, state, {
         loading: true

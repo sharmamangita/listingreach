@@ -272,7 +272,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				//	blastsettings.per_email_blast_price = req.body.peremailblastprice;
 				//	blastsettings.additional_email_blast_price = req.body.additionalemailblastprice;
 				blastsettings.modifiedOn = new Date();
-				console.log('ffffffffffffff', blastsettings);
+		//		console.log('ffffffffffffff', blastsettings);
 				_blastSettingsBusiness.findOne({'_id':id},(error,blastsettingsData) => { 
 					if(blastsettingsData){
 						var _id = blastsettingsData._id.toString();
@@ -483,6 +483,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					res.send({ "error": "error" });
 				}
 				else {
+					console.log(result);
 					res.send(result)
 				};
 			});
