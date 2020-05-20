@@ -69,6 +69,7 @@ export function users(state = {}, action) {
         error: action.error
       };
 
+
     case userConstants.AGENT_DATABASE_REQUEST:
       newState = objectAssign({}, state, {
         loading: true
@@ -86,10 +87,30 @@ export function users(state = {}, action) {
         error: action.error
       };
 
+      case userConstants.BLAST_SUCCESS:
+        newState = objectAssign({}, state,{
+          tab:'designTemplateTab'
+        });
+      return newState ; 
+
+      case userConstants.DESIGNTEMPLATE_SUCCESS:
+        newState = objectAssign({}, state,{
+          tab:'property'
+        });
+      return newState ; 
+
+      case userConstants.PROPERTY_SUCCESS:
+        newState = objectAssign({}, state,{
+          tab:'photo'
+        });
+      return newState ; 
+
+
     case userConstants.GETDOWNLOADEDALL_REQUEST:
       return {
         loading: true
       };
+      
     case userConstants.GETDOWNLOADEDALL_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,

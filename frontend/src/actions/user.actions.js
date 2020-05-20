@@ -24,7 +24,8 @@ export const userActions = {
     blast,
     saveProperty,
     saveAgents,
-    getTemplateOrPropertydata
+    getTemplateOrPropertydata,
+    designTemplate
 };
 /* Get References */
 function getReferences(userid){
@@ -411,11 +412,10 @@ function getTemplateOrPropertydata(userId){
     function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
 }
 
-function blast(blast_type,selected_template_id,user){
-   console.log("dsdfsf====",blast_type,selected_template_id,user);
+function blast(blast_type,user){
     return dispatch => {
         dispatch(request());
-        userService.blast(blast_type,selected_template_id,user)
+        userService.blast(blast_type,user)
             .then(
                 users => dispatch(success(users)),
                 error => dispatch(failure(error.toString()))
@@ -427,6 +427,26 @@ function blast(blast_type,selected_template_id,user){
     function failure(error) { return { type: userConstants.BLAST_FAILURE, error } }
 
 }
+
+function designTemplate(designTemplate,user){
+    return dispatch => {
+        dispatch(request());
+        userService.designTemplate(designTemplate,user)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+
+    function request() { return { type: userConstants.DESIGNTEMPLATE_REQUEST } }
+    function success(users) { return { type: userConstants.DESIGNTEMPLATE_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.DESIGNTEMPLATE_FAILURE, error } }
+
+}
+
+
+
+
 
 function saveProperty(property){
    console.log("property====",property);

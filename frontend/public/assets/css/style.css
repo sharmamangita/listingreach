@@ -2294,3 +2294,7 @@ footer .credits {
     color: #fff;
     margin-top: 10px;
 }
+
+.news-grid.grid .fade:not(.show) {
+    opacity: 10;
+} 

@@ -800,6 +800,43 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
             res.send({"error": "error in your request"});
 		}
     }
+
+    saveDesignTemplate(req: express.Request, res: express.Response): void {
+        try {
+           	let _IagentTemplateModel: IAgentTemplateModel = <IAgentTemplateModel>req.body;
+			let _agentTemplateBusiness = new AgentTemplateBusiness();
+
+			let _blastform: IBlastModel = <IBlastModel>req.body;
+			let _blastBusiness = new BlastBusiness();
+			_blastform.selected_template_date = new Date();
+           _agentTemplateBusiness.create(_IagentTemplateModel, (error, result) => {
+	                if(error) {
+						console.log(error);
+						res.send({"error": error});
+					} else {
+						if(result && result._id){
+							_blastform.selected_template_id = result._id;
+							_blastBusiness.findOne({"user_id":_IagentTemplateModel.userId}, (error, user) => {	
+								let _id: string = user._id.toString();
+								_blastBusiness.update(_id, _blastform, (error:any, resultUpdate:any) => {
+									if(error){
+									} else {
+									 return res.json({"sucess":"sucess"});
+									}
+								});
+							});
+						}
+					}
+	        	}); 
+        }
+        catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+    }
+
+    
+    
     saveAgents(req: express.Request, res: express.Response): void {
     	 try {
     	 	var _userBusiness = new UserBusiness();
@@ -1084,7 +1121,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			        	if(error) {
 							res.send({"error": error});
 						} else {
-							console.log("result====",result);
 							var returnObj = result.map(function(obj: any): any {
 				            return {
 						        id: obj._id,
@@ -1112,9 +1148,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 						        templates:obj.templates,
 						        price:obj.price,
 						        garageSize:obj.garageSize
-
-
-						    } ;
+						    };
 
 					});
 							return res.json(returnObj[0]);
