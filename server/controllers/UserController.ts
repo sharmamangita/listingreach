@@ -11,9 +11,7 @@ import PagesBusiness = require("./../app/business/PagesBusiness");
 
 import IBaseController = require("./BaseController");
 import IUserModel = require("./../app/model/interfaces/IUserModel");
-import IAgentModel = require("./../app/model/interfaces/IAgentModel");
 import IPagesModel = require("./../app/model/interfaces/IPagesModel");
-import IEmployeeModel = require("./../app/model/interfaces/IEmployeeModel");
 import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
 import ContactformBusiness = require("./../app/business/ContactformBusiness");
 import BlastBusiness = require("./../app/business/BlastBusiness");
@@ -402,7 +400,7 @@ updateUser(req: express.Request, res: express.Response): void {
 							        city:obj.city,
 							        zipcode:obj.zipcode,
 							        roles:obj.roles,
-							       
+							       state:obj.state
 							    }
 			   				});
 			   			callback(null,returnObj);

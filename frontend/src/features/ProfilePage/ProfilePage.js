@@ -303,11 +303,11 @@ class ProfilePage extends React.Component {
                         </div>
                         <div className="col-md-6 mb-3">
                           <div className="form-group">
-                            <select name="state"  value={profile.state} className="form-control form-control-lg form-control-a" onChange={this.handleChange}>
+                            <select name="state" value={profile.state}  className="form-control form-control-lg form-control-a" onChange={this.handleChanges}>
                               <option>Select State</option>
                               {
                                 globalData.USstates.map((st) => (
-                                  <option key={st} value={st}>{st}</option>
+                                  <option key={st} >{st}</option>
                                 ))
                               }
                             </select>
