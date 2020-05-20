@@ -31,7 +31,7 @@ this.selectDesignTemplate = this.selectDesignTemplate.bind(this);
   }
 
   selectDesignTemplate(e, designTemplate) {
-    if (designTemplat) {
+    if (designTemplate) {
       const { dispatch } = this.props.dispatchval.dispatch;
       const { userId } = this.state;
       dispatch(userActions.designTemplate(designTemplate, userId));

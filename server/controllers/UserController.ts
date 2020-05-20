@@ -821,7 +821,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 								_blastBusiness.update(_id, _blastform, (error:any, resultUpdate:any) => {
 									if(error){
 									} else {
-									 return res.json({"sucess":"sucess"});
+									 return res.json({"sucess":"sucess","data":result});
 									}
 								});
 							});
@@ -1034,12 +1034,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 				}
 			});
 		}
-			
 		
-	
-
-
-
 
  getTemplateOrPropertydata(req: express.Request, res: express.Response): void { 
  		try {
@@ -1101,6 +1096,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 								"templates.address":1,
 								"templates.Property_id":1,
 								"templates.headline":1,
+								"templates.template_type":1,
 								"templates.userId":1,
 								"users.userName":1,
 								"users.firstName":1,
