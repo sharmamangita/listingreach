@@ -46,7 +46,8 @@ class CreateFlyerPage extends React.Component {
 
     this.state = {
        moveTab:'blast',
-       propertDetails:''
+       previewData:'',
+       propertyData:''
     };
 
     this.moveTab = this.moveTab.bind(this);
@@ -66,6 +67,7 @@ class CreateFlyerPage extends React.Component {
 
   }
  componentWillReceiveProps(nextProps) {
+    console.log("nextProps==tetetete==",nextProps);  
      if(nextProps && nextProps.users && nextProps.users.tab){
          let tab = nextProps.users.tab;
          this.moveTab(tab)
@@ -78,7 +80,11 @@ class CreateFlyerPage extends React.Component {
 
  stateSettingsForTabs(nextProps){
    if(nextProps.items!=undefined && nextProps.items){
-     this.setState({propertDetails:nextProps.items});   
+     this.setState({previewData:nextProps.items});   
+   }
+
+   if(nextProps.templateName!=undefined && nextProps.templateName){
+     this.setState({propertyData:nextProps.templateName});   
    }
  }
 
@@ -93,7 +99,8 @@ setKey(tab){
   render() {
     const {
       moveTab,
-      propertDetails
+      previewData,
+      propertyData
     } = this.state;
     const { users } = this.props;
     return (
@@ -128,13 +135,13 @@ setKey(tab){
                         <AgentTemplateTab dispatchval={this.dispatchval} />
                       </Tab>
                       <Tab eventKey="property" title="Property Details">
-                        <PropertyTab dispatchval={this.dispatchval} />
+                        <PropertyTab dispatchval={this.dispatchval} propertyData={propertyData} />
                       </Tab>
                       <Tab eventKey="photo" title="Photos">
                         <PhotoTab dispatchval={this.dispatchval} />
                       </Tab>
                       <Tab eventKey="preview" title="Preview">
-                        <PreviewTab dispatchval={this.dispatchval} previewData={propertDetails} />
+                        <PreviewTab dispatchval={this.dispatchval} previewData={previewData} />
                       </Tab>
                       <Tab eventKey="selectdatabase" title="Select Database">
                         <DatabaseTab dispatchval={this.dispatchval} />

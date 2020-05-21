@@ -24,14 +24,20 @@ class PreviewTab extends React.Component {
     let user = JSON.parse(localStorage.getItem("user"));
     if(user && user.userId &&  this.props && this.props.dispatchval){
        const { dispatch } = this.props.dispatchval.dispatch;
-      dispatch(userActions.getById(user.userId));
+      dispatch(userActions.getById(user.userId));      
     }
     
     this.handleChangepreview = this.handleChangepreview.bind(this);
     this.handleSubmitPreviw = this.handleSubmitPreviw.bind(this);
   }
 
+ componentWillReceiveProps(nextProps) { 
+    console.log("nextProps====",nextProps);
+   if(nextProps && nextProps.previewData && nextProps.previewData.templates){
+       console.log("nextProps====",nextProps);
+   }
 
+  }
     handleChangepreview(e) {
         const { name, value } = e.target;
         this.setState({ [name]: value });
@@ -64,6 +70,7 @@ class PreviewTab extends React.Component {
 
 
   render() {
+    console.log("this.props===preview== templates",this.props);
     const { previewData } = this.props;
     return (
       <div
@@ -125,8 +132,8 @@ class PreviewTab extends React.Component {
                   <label>Email Subject Line:</label>
                 </div>
                 <div className="col-md-8 mb-3">
-                  {previewData && previewData.templates[0] && 
-                    previewData.templates[0].email_subject}
+                  {previewData && previewData[0] && previewData[0].templates && previewData[0].templates[0] && 
+                    previewData[0].templates[0].email_subject}
                 </div>
               </div>
             </div>
@@ -152,8 +159,8 @@ class PreviewTab extends React.Component {
               <div className="row">
                 <div className="col-md-12">
                   <div className="flyer-header">
-                  {previewData && previewData.templates[0] &&
-                    previewData.templates[0].headline}
+                  {previewData && previewData[0] && previewData[0].templates && previewData[0].templates[0] &&
+                    previewData[0].templates[0].headline}
                   </div>
                 </div>
               </div>
@@ -171,8 +178,8 @@ class PreviewTab extends React.Component {
                   <div className="col-md-12 mt-3 mb-3 ml-3">
                     <h4>
                       Price: $
-                      {previewData && previewData.price}
-                      per Square Foot
+                      {previewData && previewData[0] && previewData[0].price}
+                       {" "}per Square Foot
                     </h4>
                   </div>
                 </div>
@@ -180,21 +187,21 @@ class PreviewTab extends React.Component {
                   <div className="col-md-12 mt-3 text-center">
                     <label className="flyer-label">Property Address:</label>
                     <p>
-                      {previewData && previewData.street_address}
+                      {previewData && previewData[0] && previewData[0].street_address}
                       ,{" "}
-                      {previewData &&
-                        previewData.city}
+                      {previewData && previewData[0] &&
+                        previewData[0].city}
                       ,{" "}
-                      {previewData &&
-                        previewData.zipcode}
+                      {previewData && previewData[0] &&
+                        previewData[0].zipcode}
                     </p>
                   </div>
 
                   <div className="col-md-12 text-center">
-                    {previewData.isOpenHouse &&
-                      previewData.isOpenHouse.openHouseData != undefined &&
-                      previewData.isOpenHouse.openHouseData.length > 0 &&
-                      previewData.isOpenHouse.openHouseData.map(function (
+                    {previewData && previewData[0] && previewData[0].isOpenHouse &&
+                      previewData[0].isOpenHouse.openHouseData != undefined &&
+                      previewData[0].isOpenHouse.openHouseData.length > 0 &&
+                      previewData[0].isOpenHouse.openHouseData.map(function (
                         data,
                         i
                       ) {
@@ -221,14 +228,14 @@ class PreviewTab extends React.Component {
                   <div className="col-md-12 ml-3">
                     <label className="flyer-label">MLS#:</label>
                     <span>
-                      {previewData &&
-                        previewData.mls_number}
+                      {previewData && previewData[0] &&
+                        previewData[0].mls_number}
                     </span>
                   </div>
                   <div className="col-md-12 ml-3">
                     <label className="flyer-label">Property Description:</label>
                     <span>
-                      {previewData && previewData.property_detail}
+                      {previewData && previewData[0] && previewData[0].property_detail}
                     </span>
                   </div>
                   <div className="col-md-12 ml-3">
@@ -236,66 +243,66 @@ class PreviewTab extends React.Component {
                     <ul>
                       <li>
                         Property Type:{" "}
-                        {previewData && 
-                            previewData.property_type}{" "}
+                        {previewData &&  previewData[0] &&
+                            previewData[0].property_type}{" "}
                       </li>
                       <li>
                         Property Style:{" "}
-                        {previewData && previewData.property_style}{" "}
+                        {previewData && previewData[0] && previewData[0].property_style}{" "}
                       </li>
                       <li>
                         {" "}
-                        {previewData &&
+                        {previewData && previewData[0] &&
                           previewData.number_bedrooms}{" "}
                         Bedrooms
                       </li>
                       <li>
-                        {previewData &&
-                          previewData
+                        {previewData && previewData[0] && previewData[0].number_bathrooms &&
+                          previewData[0]
                             .number_bathrooms[0] &&
-                          previewData.number_bathrooms[0].full}{" "}
+                          previewData[0].number_bathrooms[0].full}{" "}
                         Full{" "}
-                        {previewData &&
-                          previewData.number_bathrooms[0] &&
-                          previewData.number_bathrooms[0].half}{" "}
+                        {previewData && previewData[0] && previewData[0].number_bathrooms &&
+                          previewData[0].number_bathrooms[0] &&
+                          previewData[0].number_bathrooms[0].half}{" "}
                         Half Bathrooms
                       </li>
                       <li>
-                        {previewData && previewData
+                        {previewData &&  previewData[0] && previewData[0] 
                             .building_size}{" "}
                         square feet
                       </li>
 
-                      <li>$1,000.00 /sqft</li>
+                      <li>$ {previewData && previewData[0] && previewData[0].price} /sqft</li>
                       <li>
                         Lot Size:{" "}
-                        {previewData &&
-                          previewData.lot_size}{" "}
+                        {previewData && previewData[0] &&
+                          previewData[0].lot_size}{" "}
                         sqft
                       </li>
                       <li>
                         {" "}
                         Built{" "}
-                        {previewData &&
-                          previewData.year_built }
+                        {previewData && previewData[0] && 
+                          previewData[0].year_built }
                       </li>
                       <li>
                         Garage:
-                        {previewData && previewData.garageSize}{" "}
+                        {previewData && previewData[0] && previewData.garageSize}{" "}
                       </li>
                       <li>
                         {" "}
-                        {previewData &&
-                          previewData.number_stories}{" "}
+                        {previewData && previewData[0] &&
+                          previewData[0].number_stories}{" "}
                       </li>
                     </ul>
                   </div>
                   <div className="col-md-12 ml-3">
                     <label className="flyer-label">Links:</label>
                     <p>
-                      {previewData && 
-                        previewData.linksToWebsites && previewData.linksToWebsites.linkData && previewData.linksToWebsites.linkData.length > 0 &&
-                        previewData.linksToWebsites.linkData.map(function (
+                      {previewData && previewData[0] &&
+                        previewData[0].linksToWebsites && previewData[0].linksToWebsites.linkData && previewData[0].linksToWebsites.linkData.length > 0 &&
+                        previewData[0].linksToWebsites.linkData.map(function (
                           data,
                           i
                         ) {
@@ -326,30 +333,32 @@ class PreviewTab extends React.Component {
                       alt="Photo"
                       className="img-square"
                       style={{ width: "100px" }}
-                      src="public/assets/images/dummy-logo.png"
+                      src={previewData && previewData[0] && previewData[0].agentData && previewData[0].agentData[0] && previewData[0].agentData[0].logo_url || "public/assets/images/dummy-logo.png"}
                     />
                   </div>
                   <div className="col-md-8 text-center">
-                    <b> {previewData.firstName}</b>
+                    <b> {previewData && previewData[0] && previewData[0].agentData && previewData[0].agentData[0].name} </b>
                     <br />
                     Agent
                     <br />
-                    abc@gmail.com
+                    {previewData && previewData[0] && previewData[0].agentData && previewData[0].agentData[0].email}
                     <br />
                     <br />
-                    21212121212
+                    {previewData && previewData[0] && previewData[0].agentData && previewData[0].agentData[0].phone_number}
                     <br />
                     <br />
                     <br />
                     <br />
+                    {previewData && previewData[0] && previewData[0].agentData && previewData[0].agentData[0].website_url}
                     <br />
-                    {previewData &&
-                      previewData.street_address}
+                    
+                    {previewData && previewData[0] &&
+                      previewData[0].street_address}
                     ,{" "}
-                    {previewData && previewData.zipcode}
+                    {previewData && previewData[0] && previewData[0].zipcode}
                     ,
-                    {previewData &&
-                      previewData.city}
+                    {previewData && previewData[0] &&
+                      previewData[0].city}
                     .
                   </div>
                   <div className="col-md-2 text-center pl-0">
@@ -357,7 +366,7 @@ class PreviewTab extends React.Component {
                       alt="Photo"
                       className="img-circle"
                       style={{ width: "100px" }}
-                      src="public/assets/images/dummy-profile.png"
+                      src={previewData && previewData[0] && previewData[0].agentData && previewData[0].agentData[0] && previewData[0].agentData[0].image_url || "public/assets/images/dummy-profile.png"}
                     />
                   </div>
                 </div>

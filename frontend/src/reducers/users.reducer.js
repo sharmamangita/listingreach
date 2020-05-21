@@ -95,18 +95,13 @@ export function users(state = {}, action) {
         });
       return newState ; 
 
-    case userConstants.DESIGNTEMPLATE_SUCCESS:
-      newState = objectAssign({}, state, {
-        tab: 'property'
-      });
-      return newState;
-
-    case userConstants.PROPERTY_SUCCESS:
-      newState = objectAssign({}, state, {
-        tab: 'photo'
-      });
-      return newState;
-
+      case userConstants.PROPERTY_SUCCESS:
+      console.log("action.result===",action.result);
+        newState = objectAssign({}, state,{
+          tab:'photo',
+          tabsData:action.result
+        });
+      return newState ; 
 
     case userConstants.GETDOWNLOADEDALL_REQUEST:
       return {

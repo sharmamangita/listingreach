@@ -448,11 +448,11 @@ function designTemplate(designTemplate,user){
 
 
 
-function saveProperty(property){
+function saveProperty(property,agentData,Email,blastHeadline,templateId){
    console.log("property====",property);
     return dispatch => {
         dispatch(request());
-        userService.saveProperty(property)
+        userService.saveProperty(property,agentData,Email,blastHeadline,templateId)
             .then(
                 users => dispatch(success(users)),
                 error => dispatch(failure(error.toString()))
@@ -460,6 +460,12 @@ function saveProperty(property){
     };
 
     function request() { return { type: userConstants.PROPERTY_REQUEST } }
+/*    function callService(users) { 
+        userService.getTemplateOrPropertydata().then(
+                users => dispatch(success(users.userId)),
+                error => dispatch(failure(error.toString()))
+            );
+    }*/
     function success(users) { return { type: userConstants.PROPERTY_SUCCESS, users } }
     function failure(error) { return { type: userConstants.PROPERTY_FAILURE, error } }
 
