@@ -6,7 +6,7 @@ import express = require("express");
 import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
 import UserBusiness = require("./../app/business/UserBusiness");
 import SubscriberBusiness = require("./../app/business/SubscriberBusiness");
-import BlastBusiness =require("./../app/business/BlastBusiness")
+import BlastBusiness = require("./../app/business/BlastBusiness")
 import BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
 import PagesBusiness = require("./../app/business/PagesBusiness");
 import IBaseController = require("./BaseController");
@@ -108,6 +108,25 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	}
 
+	deleteSubscriber(req: express.Request, res: express.Response): void {
+		var _id: string = req.params._id;
+		try {
+			var _userBusiness = new SubscriberBusiness();
+			_userBusiness.delete(_id, (error, result) => {
+				if (error) {
+					res.send({ "error": error });
+				} else {
+					console.log(result);
+					res.send({ "success": "success" });
+				}
+			});
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
+
 	userStatus(req: express.Request, res: express.Response): void {
 		var uid: string = req.params._id;
 		// console.log("uid============>",uid)
@@ -151,6 +170,37 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	}
 
+	changeSubscriberStatus(req: express.Request, res: express.Response): void {
+		var uid: string = req.params._id;
+		// console.log("uid============>",uid)
+		try {
+			var _subscriberBusiness = new SubscriberBusiness();
+			_subscriberBusiness.findById(mongoose.Types.ObjectId(uid), (error, subscriber) => {
+				if (error) {
+					res.send({ "error": error });
+				} else {
+					subscriber.status = subscriber.status == "verified" ? "unverified" : "verified";			
+					console.log("s s s",subscriber)
+					_subscriberBusiness.update(uid, subscriber, (error: any, resultUpdate: any) => {
+						if (error) {
+							console.log("error",error);
+							res.send({ "error": error });
+						} else {
+							console.log("res",resultUpdate);
+							res.send({ "success": "success" });
+						}
+					})
+				}
+			});
+		}
+
+		catch (e) {
+
+			console.log("exception:",e);
+			res.send({ "error": "error in your request" });
+		}
+
+	}
 
 
 
@@ -173,7 +223,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 							//	console.log('response', result);
 							var subscriberBusiness = new SubscriberBusiness();
 
-							res.send({agentscount:result!='undefined'?result[0].total:0});
+							res.send({ agentscount: result != 'undefined' ? result[0].total : 0 });
 						}
 					}
 					);
@@ -193,38 +243,38 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					}
 					);
 					break;
-					case "blasts":
-						res.send({ blastscount: 0 });
-						// var blastBusiness = new BlastBusiness();
-						// subscriberBusiness.count("", (error, result) => {
-						// 	if (error) {
-						// 		console.log(error);
-						// 		res.send({ "error": error });
-						// 	}
-						// 	else {
-						// 		//	console.log('response', result);
-						// 		var subscriberBusiness = new SubscriberBusiness();
-						// 		res.send({ subscriberscount: result });
-						// 	}
-						// }
-						// );
-						break;
-						case "payments":
-							res.send({ totalpayment: 0 });
-							// var blastBusiness = new BlastBusiness();
-							// subscriberBusiness.count("", (error, result) => {
-							// 	if (error) {
-							// 		console.log(error);
-							// 		res.send({ "error": error });
-							// 	}
-							// 	else {
-							// 		//	console.log('response', result);
-							// 		var subscriberBusiness = new SubscriberBusiness();
-							// 		res.send({ subscriberscount: result });
-							// 	}
-							// }
-							// );
-							break;
+				case "blasts":
+					res.send({ blastscount: 0 });
+					// var blastBusiness = new BlastBusiness();
+					// subscriberBusiness.count("", (error, result) => {
+					// 	if (error) {
+					// 		console.log(error);
+					// 		res.send({ "error": error });
+					// 	}
+					// 	else {
+					// 		//	console.log('response', result);
+					// 		var subscriberBusiness = new SubscriberBusiness();
+					// 		res.send({ subscriberscount: result });
+					// 	}
+					// }
+					// );
+					break;
+				case "payments":
+					res.send({ totalpayment: 0 });
+					// var blastBusiness = new BlastBusiness();
+					// subscriberBusiness.count("", (error, result) => {
+					// 	if (error) {
+					// 		console.log(error);
+					// 		res.send({ "error": error });
+					// 	}
+					// 	else {
+					// 		//	console.log('response', result);
+					// 		var subscriberBusiness = new SubscriberBusiness();
+					// 		res.send({ subscriberscount: result });
+					// 	}
+					// }
+					// );
+					break;
 				default:
 					break;
 			}
@@ -272,12 +322,12 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				//	blastsettings.per_email_blast_price = req.body.peremailblastprice;
 				//	blastsettings.additional_email_blast_price = req.body.additionalemailblastprice;
 				blastsettings.modifiedOn = new Date();
-		//		console.log('ffffffffffffff', blastsettings);
-				_blastSettingsBusiness.findOne({'_id':id},(error,blastsettingsData) => { 
-					if(blastsettingsData){
+				//		console.log('ffffffffffffff', blastsettings);
+				_blastSettingsBusiness.findOne({ '_id': id }, (error, blastsettingsData) => {
+					if (blastsettingsData) {
 						var _id = blastsettingsData._id.toString();
-				
-						_blastSettingsBusiness.update( mongoose.Types.ObjectId(_id), blastsettings, (error, result) => {
+
+						_blastSettingsBusiness.update(mongoose.Types.ObjectId(_id), blastsettings, (error, result) => {
 							if (error) {
 								console.log("error", error.path);
 								res.send({ "error": error });
@@ -288,7 +338,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 							}
 						});
 					}
-					else{
+					else {
 						_blastSettingsBusiness.create(blastsettings, (error, result) => {
 							if (error) {
 								console.log("error", error.path);

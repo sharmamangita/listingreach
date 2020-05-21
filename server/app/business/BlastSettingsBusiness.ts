@@ -24,8 +24,8 @@ class BlastSettingsBusiness implements BaseBusiness<IBlastSettingsModel> {
     retrieve(query: any, callback: (error: any, result: any) => void) {
         this._blastSettingsRepository.retrieve(query, callback);
     }
-    aggregate(query: any, match: Object, group: object, callback: (error: any, result: any) => void) {
-        this._blastSettingsRepository.aggregate(query, match, group, callback);
+    aggregate(query: any, callback: (error: any, result: any) => void) {
+        this._blastSettingsRepository.aggregate(query, callback);
     }
     retrieveFields(query: any, fields: any, callback: (error: any, result: any) => void) {
         this._blastSettingsRepository.retrieveFields(query, fields, callback);

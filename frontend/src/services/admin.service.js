@@ -12,7 +12,9 @@ export const adminService = {
     getCount,
     updateBlastSettings,
     getAgents,
-    getSubscribers
+    getSubscribers,
+    deletesubscriber,
+    subscriberStatus
 };
 
 function updateBlastSettings( blastsettings) {
@@ -47,11 +49,31 @@ function deleteusers(id) {
     return fetch(`${config.apiUrl}/adminusers/${id}`, requestOptions).then(handleResponse);
 }
 
+function deletesubscriber(id) {
+    const requestOptions = {
+        method: 'DELETE',
+        headers: authHeader()
+    };
+    location.reload();
+    return fetch(`${config.apiUrl}/adminusers/deletesubscriber/${id}`, requestOptions).then(handleResponse);
+}
+
 function userStatus(id) {
     const requestOptions = {
         method: 'GET'
     };
     return fetch(`${config.apiUrl}/userStatus/${id}`, requestOptions).then(handleResponse)
+
+        .then(user => {
+            location.reload();
+            return user;
+        }).catch(this.handleError)
+}
+function subscriberStatus(id) {
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(`${config.apiUrl}/adminuser/subscriberstatus/${id}`, requestOptions).then(handleResponse)
 
         .then(user => {
             location.reload();

@@ -82,7 +82,7 @@ class SubscriberPage extends React.Component {
 	}
 
 	userStatus(id) {
-		this.props.dispatch(adminActions.userStatus(id));
+		this.props.dispatch(adminActions.subscriberStatus(id));
 	}
 
 	status(status, id) {

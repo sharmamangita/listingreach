@@ -24,13 +24,23 @@ class SubscriberBusiness implements BaseBusiness<ISubscriberModel> {
     aggregate(query: any, callback: (error: any, result: any) => void) {
         this._subscriberRepository.aggregate(query, callback);
     }
-    findById: (_id: string, callback: (error: any, result: ISubscriberModel) => void) => void;
+
+    findOne(query: any, callback: (error: any, result: ISubscriberModel) => void) {
+        this._subscriberRepository.findOne(query, callback);
+    }
+    findById(_id: string, callback: (error: any, result: ISubscriberModel) => void) {
+        this._subscriberRepository.findById(_id, callback);
+    }
     create(item: ISubscriberModel, callback: (error: any, result: any) => void) {
         item._id = mongoose.Types.ObjectId();
         this._subscriberRepository.create(item, callback);
     };
-    update: (_id: string, item: ISubscriberModel, callback: (error: any, result: any) => void) => void;
-    delete: (_id: string, callback: (error: any, result: any) => void) => void;
+    update(_id: string, item: ISubscriberModel, callback: (error: any, result: any) => void) {     
+        this._subscriberRepository.update(item._id, item, callback);
+    }
+    delete(_id: string, callback: (error: any, result: any) => void) {
+        this._subscriberRepository.delete(_id, callback);
+    }
     deleteMany: (query: any, callback: (error: any, result: any) => void) => void;
 
 

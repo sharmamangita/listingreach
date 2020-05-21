@@ -17,6 +17,9 @@ export const adminActions = {
     getAgents,
     getSubscribers,
     getCount,
+    deletesubscriber,
+    subscriberStatus
+
 };
 
 
@@ -121,6 +124,42 @@ function getSubscribers() {
     function request() { return { type: adminConstants.SUBSCRIBERS_REQUEST } }
     function success(subscribers) { return { type: adminConstants.SUBSCRIBERS_SUCCESS, subscribers } }
     function failure(error) { return { type: adminConstants.SUBSCRIBERS_FAILURE, error } }
+}
+
+function deletesubscriber(id) {
+    return dispatch => {
+        dispatch(request(id));
+        adminService.deletesubscriber(id)
+            .then(
+                admins => dispatch(success(id)),
+                error => dispatch(failure(id, error.toString()))
+            );
+    };
+
+    function request(id) { return { type: adminConstants.DELETE_REQUEST, id } }
+    function success(id) { return { type: adminConstants.DELETE_SUCCESS, id } }
+    function failure(id, error) { return { type: adminConstants.DELETE_FAILURE, id, error } }
+}
+
+function subscriberStatus(id) {
+    return dispatch => {
+        dispatch(request({ id }));
+        adminService.subscriberStatus(id)
+            .then(
+                user => {
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error(error.toString()));
+                }
+
+            );
+    };
+
+    function request(user) { return { type: adminConstants.GETBYID_REQUEST, user } }
+    function success(user) { return { type: adminConstants.GETBYID_SUCCESS, user } }
+    function failure(error) { return { type: adminConstants.GETBYID_FAILURE, error } }
 }
 
 function deleteusers(id) {

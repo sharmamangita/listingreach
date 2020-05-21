@@ -22,7 +22,9 @@ class AdminUserRoutes {
         router.get("/adminusers/subscribers", controller.getSubscribers);
         router.put("/adminusers/", controller.update);
         router.delete("/adminusers/:_id", controller.deleteusers);
+        router.delete("/adminusers/deletesubscriber/:_id", controller.deleteSubscriber);
         router.get("/userStatus/:_id", controller.userStatus);
+        router.get("/adminuser/subscriberstatus/:_id", controller.changeSubscriberStatus);
         router.get("/adminusers/:_id", controller.findById);
         //   router.post("/adminusers/PlanRegister", controller.PlanRegister);
         router.get("/adminusers/counts/:flag", controller.getCount);
