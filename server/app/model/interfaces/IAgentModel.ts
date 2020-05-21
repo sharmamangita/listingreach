@@ -6,7 +6,7 @@ import mongoose = require("mongoose");
 
 interface IAgentModel extends mongoose.Document {
     _id: mongoose.Types.ObjectId,
-    user_id : string,
+    user_id : mongoose.Types.ObjectId,
     name : string,
     designation:string;
     email : string,

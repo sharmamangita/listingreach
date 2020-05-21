@@ -56,7 +56,7 @@ class CreateFlyerPage extends React.Component {
   }
 
 
-   componentDidMount() {
+  componentDidMount() {
      var user = JSON.parse(localStorage.getItem("user"));
      if(user && user.userId){
       const { dispatch } = this.props;
