@@ -18,7 +18,7 @@ class BillingPage extends React.Component {
   const { dispatch } = this.props;
  // this.props.dispatch(userActions.getapagecontent({page:'About Us'})); 
   window.scrollTo(0,0);
-  $('#example').DataTable();
+//  $('#example').DataTable();
   }
 
   render() {

@@ -118,24 +118,8 @@ class PaypalButton extends React.Component {
 
     return (
       <div>
-      <Modal {...this.props} >
-          <div className="modal-header">
-            <h4 className="modal-title">Payment Details</h4>
-          </div>
-          <div className="modal-body">
-            <form  className="p-3 bg-white" >
-              <div className="row">
-                <div className="col-md-12 col-lg-12 mb-5">
-                  <div className="aos-init aos-animate" data-aos="fade-up" data-aos-delay="100">
-                    <span className="d-block icon flaticon-calculator mb-3 text-primary"></span>
-                      <h3>According to Candidate's Experience, <br></br>your payable amount is
-                      <span className="counting"> ${total}</span></h3>
-                        
-                    
-                  </div>
-                </div>
-                </div>
-              <div> 
+    
+               
               {showButton && <paypal.Button.react
               env={env}
               client={client}
@@ -146,16 +130,7 @@ class PaypalButton extends React.Component {
              
               onError={onError}
             />}
-            </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={this.props.onClickBackdrop}>
-                  Cancel
-              </button>
-              </div>
-            </form>
-          </div>
-      </Modal>
-        
+          
       </div>
     );
   }

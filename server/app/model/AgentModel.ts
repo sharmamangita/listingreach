@@ -46,10 +46,10 @@ class AgentModel {
         return this._agentModel.logo_url;
     }
     get createdOn (): Date {
-        return this._userModel.createdOn;
+        return this._agentModel.createdOn;
     }
     get updateOn (): Date {
-        return this._userModel.updateOn;
+        return this._agentModel.updateOn;
     }
 	
 }

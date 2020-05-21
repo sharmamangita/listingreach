@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { userActions } from "../actions";
+import CommonDownload from './CommonDownload'
 import {
   Nav,
   Navbar,
@@ -21,9 +22,22 @@ class PaymentTab extends React.Component {
     this.state = {
       userId: "",
     };
+    this.dispatchval = ({
+      tagName : 'span',
+      className : '',
+      children : null,
+      dispatch :this.props
+    });
   }
 
   render() {
+    var downloadLink=
+      (
+      <CommonDownload
+        dispatchval = {this.dispatchval}
+        total='20'
+      />
+    );
     return (
       <div
         className="tab-pane fade mt-2"
@@ -239,10 +253,9 @@ class PaymentTab extends React.Component {
             </div>
           </div>
           <div className="col-md-12 mt-4 text-center">
-            <a href="javascript:void(0)" className="btn btn-primary">
-              Complete Order
-            </a>
+            {downloadLink ? downloadLink:""}
           </div>
+           
         </div>
       </div>
     );
