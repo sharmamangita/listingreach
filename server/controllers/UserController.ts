@@ -844,7 +844,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 	    	 	var _agent: IAgentModel = <IAgentModel>req.body;
 	    	 	console.log("_agent====",companyUserData);
 	    	 	_agent.createdOn = new Date();
-	    	 	_agent.userId=companyUserData._id;
+	    	 	_agent.user_id=companyUserData._id;
 				var _agentBusiness = new AgentBusiness();
 				_agentBusiness.findOne({'userId':companyUserData._id}, (error:any, agentresult:any) => {
 		    	 	

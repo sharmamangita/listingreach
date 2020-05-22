@@ -1,11 +1,12 @@
 import DataAccess = require('../DataAccess');
+import mongo = require("mongoose");
 var mongoose = DataAccess.mongooseInstance;
 var mongooseConnection = DataAccess.mongooseConnection;
 
 class SubscriberSchema {
     static get schema() {
         var schema = mongoose.Schema({
-            _id: mongoose.Schema.Types.ObjectId,
+            _id: mongo.Schema.Types.ObjectId,
             name: {
                 type: String,
                 required: true
@@ -29,13 +30,15 @@ class SubscriberSchema {
                 required: true
             },
             propertyTypes: {
-                type: Array,
+                type: [String],
                 required: true
             },
-            priceRanges: {
-                type: Array,
-                required: true
-            },
+            priceRanges:
+                [{
+                    text: { type: String },
+                    min: { type: Number },
+                    max: { type: Number }
+                }],
             includeRentedProperties: {
                 type: Boolean,
                 default: false
@@ -45,10 +48,10 @@ class SubscriberSchema {
                 default: true
             },
             agentTypes: {
-                type: Array
+                type: [String]
             },
             mailingLists: {
-                type: Array,
+                type: [String],
                 required: true
             },
             createdOn: {
@@ -58,14 +61,14 @@ class SubscriberSchema {
             updateOn: {
                 type: Date
             }
-        });
+        }, { _id: false });
 
         return schema;
     }
 }
 
 // we need to create a model using it
-var AgentModel = mongooseConnection.model("Subscribers", SubscriberSchema.schema);
-export = AgentModel;
+var SubscriberModal = mongooseConnection.model("Subscribers", SubscriberSchema.schema);
+export = SubscriberModal;
 
 

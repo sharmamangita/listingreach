@@ -178,15 +178,17 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 			_subscriberBusiness.findById(mongoose.Types.ObjectId(uid), (error, subscriber) => {
 				if (error) {
 					res.send({ "error": error });
-				} else {
-					subscriber.status = subscriber.status == "verified" ? "unverified" : "verified";			
-					console.log("s s s",subscriber)
-					_subscriberBusiness.update(uid, subscriber, (error: any, resultUpdate: any) => {
+				} else {					
+					subscriber.status = subscriber.status == "verified" ? "unverified" : "verified";
+					subscriber.updateOn = new Date();
+					console.log("sub",subscriber)
+					
+					_subscriberBusiness.update(mongoose.Types.ObjectId(uid), subscriber, (error: any, resultUpdate: any) => {
 						if (error) {
-							console.log("error",error);
+							console.log("error", error);
 							res.send({ "error": error });
 						} else {
-							console.log("res",resultUpdate);
+							console.log("res", resultUpdate);
 							res.send({ "success": "success" });
 						}
 					})
@@ -196,7 +198,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 		catch (e) {
 
-			console.log("exception:",e);
+			console.log("exception:", e);
 			res.send({ "error": "error in your request" });
 		}
 
@@ -317,12 +319,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				var _blastSettingsBusiness = new BlastSettingsBusiness();
 				var id: string = req.body;
 				var mongoose = require('mongoose');
-
-				//	blastsettings._id = mongoose.ObjectId(id);
-				//	blastsettings.per_email_blast_price = req.body.peremailblastprice;
-				//	blastsettings.additional_email_blast_price = req.body.additionalemailblastprice;
 				blastsettings.modifiedOn = new Date();
-				//		console.log('ffffffffffffff', blastsettings);
 				_blastSettingsBusiness.findOne({ '_id': id }, (error, blastsettingsData) => {
 					if (blastsettingsData) {
 						var _id = blastsettingsData._id.toString();

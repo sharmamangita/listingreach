@@ -8,8 +8,7 @@ var mongooseConnection = DataAccess.mongooseConnection;
 
 class BlastSettingsSchema {
     static get schema() {
-        var schema = mongoose.Schema({
-            _id: mongoose.Schema.Types.ObjectId,
+        var schema = mongoose.Schema({           
             per_email_blast_price: {
                 type: Number,
                 required: true

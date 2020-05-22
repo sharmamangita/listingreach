@@ -5,20 +5,26 @@
 import mongoose = require("mongoose");
 
 interface ISubscriberModel extends mongoose.Document {
-    name: String,
+    _id: mongoose.Types.ObjectId,
+    name:  String,
     email: String,
-    phone: String
+    phone: String,
     city: String,
     state: String,
     status: String,
-    propertyTypes: Array<String>,
-    priceRanges: Array<String>
+    propertyTypes: [String],
+    priceRanges: [{
+        text: String,
+        min: Number,
+        max: Number
+    }],
     includeRentedProperties: Boolean,
     includeOutsideAreaProperties: Boolean,
-    agentTypes: Array<String>
-    mailingLists: Array<String>
+    agentTypes: [String],
+    mailingLists: [String],
     createdOn: Date,
     updateOn: Date
 }
 
 export = ISubscriberModel;
+

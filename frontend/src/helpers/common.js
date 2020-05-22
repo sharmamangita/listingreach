@@ -114,13 +114,13 @@ export const common = {
       field: 'actions',
       sort: 'asc',
       width: 50
-    },
-    {
-      label: 'Status',
-      field: 'status',
-      sort: 'asc',
-      width: 50
-    },
+    }
+    // {
+    //   label: 'Status',
+    //   field: 'status',
+    //   sort: 'asc',
+    //   width: 50
+    // },
   ],
 
   empdata: [

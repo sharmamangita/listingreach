@@ -48,7 +48,7 @@ function register(subscriber) {
                 subscriber => {
                     dispatch(success());
                     console.log("user====", subscriber);
-                    if (user.error) {
+                    if (subscriber.error) {
                         dispatch(alertActions.error('This email address is already used, please try with another email.'));
                     } else {
                         //   history.push('/login');
@@ -61,9 +61,9 @@ function register(subscriber) {
                 }
             );
     };
-    function request(user) { return { type: userConstants.REGISTER_REQUEST, user } }
-    function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } }
-    function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } }
+    function request(subscriber) { return { type: userConstants.SUBSCRIBER_REQUEST, subscriber } }
+    function success(subscriber) { return { type: userConstants.SUBSCRIBER_SUCCESS, subscriber } }
+    function failure(error) { return { type: userConstants.SUBSCRIBER_FAILURE, error } }
 }
 
 function update(user, employee) {

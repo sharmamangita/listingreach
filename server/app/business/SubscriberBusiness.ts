@@ -35,7 +35,7 @@ class SubscriberBusiness implements BaseBusiness<ISubscriberModel> {
         item._id = mongoose.Types.ObjectId();
         this._subscriberRepository.create(item, callback);
     };
-    update(_id: string, item: ISubscriberModel, callback: (error: any, result: any) => void) {     
+    update(_id: any, item: ISubscriberModel, callback: (error: any, result: any) => void) {
         this._subscriberRepository.update(item._id, item, callback);
     }
     delete(_id: string, callback: (error: any, result: any) => void) {

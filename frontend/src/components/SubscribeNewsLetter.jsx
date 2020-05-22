@@ -6,6 +6,16 @@ import { Modal } from 'react-bootstrap';
 class SubscribeNewsLetter extends React.Component {
     constructor(props) {
         super(props);
+        this.state = this.resetState();
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleShow = this.handleShow.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleStateChange = this.handleStateChange.bind(this);
+        this.clearAgentDataBase = this.clearAgentDataBase.bind(this);
+    }
+
+    resetState() {
         const propertyTypes = ["Single Family", "Condo/townhome/row home/co-op", "Duplex", "Farm/Ranch", "Mfd/Mobile/Modular Home", "Vacant Lot / Vacant Land", "Rental Income Property", "Buyer’s Requirement / Acquisition Needs"];
         const priceFilters = [
             { text: "Up to $299,999", min: 0, max: 299999 },
@@ -13,9 +23,10 @@ class SubscribeNewsLetter extends React.Component {
             { text: "$600,000 or more", min: 600000, max: 900000000 }
         ];
         const preferedVendors = ["Lender / Mortgage Broker", "Education", "Building inspection", "Closing Assistance", "Staging", "Photography / Videography", "Other, N/A"];
-        this.state =
+        const state =
         {
             show: false,
+            clearForm: false,
             isFormValid: false,
             submitted: false,
             agentDatabase: [],
@@ -36,13 +47,8 @@ class SubscribeNewsLetter extends React.Component {
                 agentTypes: [],
                 mailingLists: []
             }
-        }
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleShow = this.handleShow.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleStateChange = this.handleStateChange.bind(this);
-        this.clearAgentDataBase = this.clearAgentDataBase.bind(this);
+        };
+        return JSON.parse(JSON.stringify(state)) ;// pass a copy of object
     }
 
     handleClose() {
@@ -63,7 +69,6 @@ class SubscribeNewsLetter extends React.Component {
     }
     componentDidMount() {
         var subscribeButton = document.querySelector('#sub-button')
-        console.log('btn ', subscribeButton)
         if (subscribeButton) {
             subscribeButton.addEventListener('click', function () {
                 document.body.classList.remove('box-collapse-closed');
@@ -164,8 +169,7 @@ class SubscribeNewsLetter extends React.Component {
             && subscriber.agentTypes.length > 0
             && subscriber.mailingLists.length > 0
         ) {
-            this.props.dispatch(subscriberActions.register(this.state.subscriber
-            ));
+            this.props.dispatch(subscriberActions.register(this.state.subscriber));
         }
     }
     renderdataBaseModal() {
@@ -220,7 +224,7 @@ class SubscribeNewsLetter extends React.Component {
     };
     render() {
         var { subscriber, submitted, propertyTypes, priceFilters, preferedVendors } = this.state;
-        //      console.log("subscriber", this.state)
+             console.log("state in render", this.state)
         return (
             <React.Fragment>
                 <div className="box-collapse">
@@ -391,14 +395,20 @@ class SubscribeNewsLetter extends React.Component {
     };
     componentWillReceiveProps(props) {
         this.setState({ agentDatabase: props.agentData })
+        if (props.clearForm) {
+            var defaultstate = this.resetState();
+            this.setState(defaultstate);
+        }
     }
 }
 function mapStateToProps(state) {
     console.log("stae11====", state);
-    const { users } = state;
+    const { users, registration } = state;
     const { agentData } = users;
+    const { clearForm } = registration;
     console.log(agentData);
     return {
+        clearForm,
         agentData: agentData ? agentData.agentDatabase : null
     };
 }

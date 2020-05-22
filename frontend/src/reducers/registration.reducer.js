@@ -1,5 +1,5 @@
 import { userConstants } from '../constants';
-
+import objectAssign from 'object-assign';
 export function registration(state = {}, action) {
   let newState;
   switch (action.type) {
@@ -14,7 +14,8 @@ export function registration(state = {}, action) {
       return { registering: true };
     case userConstants.SUBSCRIBER_SUCCESS:
       newState = objectAssign({}, state, {
-        subscriber: action.subscriber
+        //subscriber: action.subscriber,
+        clearForm: true
       });
       return newState;
     case userConstants.SUBSCRIBER_FAILURE:

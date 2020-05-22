@@ -66,7 +66,7 @@ class SubscriberPage extends React.Component {
 	}
 
 	deleteUsers(id) {
-		this.props.dispatch(adminActions.deleteusers(id));
+		this.props.dispatch(adminActions.deletesubscriber(id));
 	}
 
 	createdDate(createdOn) {
@@ -174,8 +174,8 @@ class SubscriberPage extends React.Component {
 					),
 					actions: (
 						<span> {this.deletelink(subscriber._id)} </span>
-					),
-					status: (this.status(subscriber.status, subscriber._id))
+					)
+					// status: (this.status(subscriber.status, subscriber._id))
 				});
 			}
 		}
