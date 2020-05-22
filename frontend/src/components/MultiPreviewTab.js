@@ -47,8 +47,8 @@ class MultiPreviewTab extends React.Component {
     //console.log('stateeeeeee',this.state);return false;
     const { previewData } = this.props;
     const { email } = this.state;
-    console.log("propertyDetailswewe===", propertyDetails);
-    const { dispatch } = this.props;
+
+    const { dispatch } = this.props.dispatchval.dispatch;
     if (email && previewData) {
       dispatch(userActions.emailPreviewTemplate(email, previewData));
       //window.scrollTo(0,0);
@@ -70,6 +70,44 @@ class MultiPreviewTab extends React.Component {
     console.log("this.props===preview== templates", this.props);
     const { previewData } = this.props;
     return (
+      <div>
+        <h4>Preview Blast</h4>
+        <p>Finalize your Blast.</p>
+        <div className="row">
+          <div className="col-md-12 mb-3">
+            Thoroughly read the email including -
+            <ul>
+              <li>The "From Name"</li>
+              <li>The "Email Subject Line"</li>
+              <li>The entire body of the email</li>
+            </ul>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-5 mb-3">
+            <div className="form-group">
+              <label>Additional proofs may be emailed here</label>
+              <input
+                value={this.state.email}
+                onChange={this.handleChangepreview}
+                name="email"
+                type="text"
+                className="form-control form-control-lg form-control-a"
+                placeholder="Email Address"
+              />
+              {!this.state.email && (
+                <div className="help-block red">Email is required</div>
+              )}
+            </div>
+          </div>
+          <div className="col-md-2 mb-3">
+            <div className="form-group pt-4">
+              <a onClick={this.handleSubmitPreviw} className="btn btn-primary">
+                Send
+              </a>
+            </div>
+          </div>
+        </div>
       <div
         className="blast-box"
         style={{
@@ -681,6 +719,7 @@ class MultiPreviewTab extends React.Component {
           </div>
         </div>
       </div>
+       </div>
     );
   }
 }

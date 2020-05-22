@@ -48,7 +48,6 @@ class PreviewTab extends React.Component {
   //console.log('stateeeeeee',this.state);return false; 
    const { previewData } = this.props;
     const {email } = this.state;
-    console.log("propertyDetailswewe===",propertyDetails);
     const { dispatch } = this.props;
     if(email && previewData){
     dispatch(userActions.emailPreviewTemplate(email,previewData)); 

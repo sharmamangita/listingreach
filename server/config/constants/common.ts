@@ -1292,9 +1292,9 @@ static EMAIL_FOR_LOGIN_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
         <p><a href="`+Common.SITE_URL+`/login?ref=#autotoken#">Post Reference</a> to see the application.</p>
 ` +Common.EMAIL_TEMPLATE_FOOTER;
 
- 
-static PREVIEW_EMAIL_TEMPLATE:string =  ` 
-<!DOCTYPE html>
+
+
+static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`<!DOCTYPE html>
 <html>
    <head>
       <meta charset='UTF-8'>
@@ -1375,7 +1375,55 @@ static PREVIEW_EMAIL_TEMPLATE:string =  `
          border-radius: 0.25rem;
          box-shadow 0.15s ease-in-out;">Forward to Associate</button>
                      </div>
+                  </div>`;
+static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
+                     <div class="row mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
+                        <div class="text-center" style="width:16%;text-align: center !important;">
+                           <img alt="Photo" class="img-square" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-logo.png">
+                        </div>
+                        <div class="text-center" style="width:66%;text-align: center !important;">
+                           <b> Vinod</b><br>
+                           Manager<br>
+                           vinod@gmail.com<br>
+                           http://www.website.com<br>
+                           21212121212<br><br>
+                           Agent Other Contacts Details will come here: (Optional)<br><br>
+                           Company Details will come here,<br>
+                           Company name<br>
+                           Company Address, Mai Phone Number, Company Website, etc.
+                        </div>
+                        <div class="text-center pl-0" style="width:16%;text-align: center !important;">
+                           <img alt="Photo" class="img-circle" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-profile.png">
+                        </div>
+                     </div>
                   </div>
+                  <div class="flyer-btm" style="background: #8c8c8c;
+         padding: 10px;
+         font-size: 0.8rem;
+         color: #fff;
+         margin-top: 10px;">
+                     <div class="row" style="display: flex;flex-wrap: wrap;">
+                        <div style="width:100%">
+                           This e-blast was delivered by ListingReach.com, a real estate email marketing service. The ListingReach.com service and information provided therein, while believed to be accurate, are provided "as is". ListingReach.com disclaims any and all representations, warranties, or guarantees of any kind. ListingReach.com assumes no liability for errors or omissions.
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html> `;						
+
+
+
+
+
+static PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE:string= Common.PREVIEW_EMAIL_TEMPLATE_HEADER+`
+<p>#multiproperty#</p>
+`+ Common.PREVIEW_EMAIL_TEMPLATE_FOOTER;
+
+static PREVIEW_EMAIL_TEMPLATE:string =  ` 
                   <div class="row" style="display: flex;flex-wrap: wrap;">
                      <div style="width:100%">
                         <div class="flyer-header" style="display: block;overflow: hidden;
@@ -1448,46 +1496,9 @@ static PREVIEW_EMAIL_TEMPLATE:string =  `
          border-bottom: 2px solid #ccc;"><a href="http://66.235.194.119/listingreach" style="color: #000000;transition: all .5s ease;"><u>Click Here to Email Agent for More Information</u></a></h4>
                         </div>
                      </div>
-                  </div>
-                  <div class="flyer-footer">
-                     <div class="row mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
-                        <div class="text-center" style="width:16%;text-align: center !important;">
-                           <img alt="Photo" class="img-square" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-logo.png">
-                        </div>
-                        <div class="text-center" style="width:66%;text-align: center !important;">
-                           <b> Vinod</b><br>
-                           Manager<br>
-                           vinod@gmail.com<br>
-                           http://www.website.com<br>
-                           21212121212<br><br>
-                           Agent Other Contacts Details will come here: (Optional)<br><br>
-                           Company Details will come here,<br>
-                           Company name<br>
-                           Company Address, Mai Phone Number, Company Website, etc.
-                        </div>
-                        <div class="text-center pl-0" style="width:16%;text-align: center !important;">
-                           <img alt="Photo" class="img-circle" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-profile.png">
-                        </div>
-                     </div>
-                  </div>
-                  <div class="flyer-btm" style="background: #8c8c8c;
-         padding: 10px;
-         font-size: 0.8rem;
-         color: #fff;
-         margin-top: 10px;">
-                     <div class="row" style="display: flex;flex-wrap: wrap;">
-                        <div style="width:100%">
-                           This e-blast was delivered by ListingReach.com, a real estate email marketing service. The ListingReach.com service and information provided therein, while believed to be accurate, are provided "as is". ListingReach.com disclaims any and all representations, warranties, or guarantees of any kind. ListingReach.com assumes no liability for errors or omissions.
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </body>
-</html>  
-`;
+                  </div>`;
+
+
 
 
 
