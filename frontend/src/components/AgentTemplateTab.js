@@ -108,7 +108,11 @@ this.selectDesignTemplate = this.selectDesignTemplate.bind(this);
                     - Create a Blast from Scratch <br></br>- Feature Multiple
                     Properties{" "}
                   </p>
-                  <a href="javascript:void(0)" className="btn btn-primary">
+                  <a href="javascript:void(0)"
+                   className="btn btn-primary"
+                    onClick={(e) =>
+                      this.selectDesignTemplate(e, "MultipleProperties")
+                    }>
                     Select
                   </a>
                 </div>

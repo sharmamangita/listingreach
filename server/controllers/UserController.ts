@@ -879,136 +879,243 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 
      saveProperty(req: express.Request, res: express.Response): void {
         try {
-           var _propertyforms: IPropertyModel = <IPropertyModel>req.body;
-			var _propertyBusiness = new PropertyBusiness();
-			 var _templateforms: IAgentTemplateModel = <IAgentTemplateModel>req.body;
-			 var _templateBusiness = new AgentTemplateBusiness();
-				let _propertyform ={};
-				let _templateform={};
+	           var _propertyforms: IPropertyModel = <IPropertyModel>req.body;
+	           var _propertyBusiness = new PropertyBusiness();
 
-			if(_templateforms.property.Email){
-				_templateform.email_subject = _templateforms.property.Email.formSubject;
-				_templateform.from_line = _templateforms.property.Email.formLine;
-				_templateform.address = _templateforms.property.Email.formReply;
-				_templateform.userId = _templateforms.property.userId;
-				_templateform.headline = _templateforms.property.blastHeadline;
-			}
-			
-			if(_propertyforms.property.propertyAddress){
-				_propertyform.display_method=_propertyforms.property.propertyAddress.displayMethod;
-				_propertyform.street_address=_propertyforms.property.propertyAddress.streetAddress;
-				_propertyform.city=_propertyforms.property.propertyAddress.city;
-				_propertyform.state=_propertyforms.property.propertyAddress.state;
-				_propertyform.zipcode=_propertyforms.property.propertyAddress.zipCode;
-				_propertyform.userId = _propertyforms.property.userId;
-   			
-			}
-
-			if(_propertyforms.property.mlsNumber){
-				_propertyform.mls_number=_propertyforms.property.mlsNumber.numberProperty;
-				_propertyform.board=_propertyforms.property.mlsNumber.boardAssociation;
-			}
-
-			if(_propertyforms.property.pricingInfo){
-				_propertyform.pricingInfo=_propertyforms.property.pricingInfo; 
-			}
-
-			if(_propertyforms.property.linksToWebsites){
-				var linksData=[];
-				let data = _propertyforms.property.linksToWebsites.linkData;
-							data.forEach(function(links:any) {
-							if(links){
-								linksData.push({linksToWebsiteData:links.linksToWebsiteData});
-							}
-						});
-			   _propertyform.linksToWebsites=linksData; 
-			}
-
-			if(_propertyforms.property.isOpenHouse){
-				var opneHouseData=[];
-				let data = _propertyforms.property.isOpenHouse.openHouseData;
-							data.forEach(function(house:any) {
-							if(house){
-								opneHouseData.push({openHouseData:house.openHouseData});
-							}
-						});
-			   _propertyform.isOpenHouse=opneHouseData;
+			   console.log("_propertyforms======",_propertyforms);
 
 
-			}
+           if(_propertyforms && _propertyforms.property && _propertyforms.property.length && _propertyforms.agentData){
+           		var _templateforms: IAgentTemplateModel = <IAgentTemplateModel>req.body;
+           		var _templateBusiness = new AgentTemplateBusiness();
 
-			if(_propertyforms.property.generalPropertyInformation){
-				console.log("_propertyforms.property.generalPropertyInformation===",_propertyforms.property.generalPropertyInformation);
-				_propertyform.property_type=_propertyforms.property.generalPropertyInformation.propertyType;
-				_propertyform.property_style=_propertyforms.property.generalPropertyInformation.propertyStyle;
-				_propertyform.lot_size=_propertyforms.property.generalPropertyInformation.lotSize;
-				_propertyform.number_bedrooms=_propertyforms.property.generalPropertyInformation.numberOfBedrooms;
-				_propertyform.building_size=_propertyforms.property.generalPropertyInformation.buildingSize;
-				_propertyform.number_stories=_propertyforms.property.generalPropertyInformation.numberOfStories;
-				_propertyform.number_bathrooms=_propertyforms.property.generalPropertyInformation.numberOfBathrooms;
-				_propertyform.year_built =_propertyforms.property.generalPropertyInformation.yearBuilt;
-				_propertyform.garage=_propertyforms.property.generalPropertyInformation.garage;
-				_propertyform.garageSize=_propertyforms.property.generalPropertyInformation.garageSize;
-				_propertyform.price = _propertyforms.property.generalPropertyInformation.pricePerSquareFoot;
+           		let _templateform = {};
 
-			}
-
-			if(_propertyforms.property.propertyDetail){
-				_propertyform.property_details=_propertyforms.property.propertyDetail;
-			}
-
- 
-
-        	
-
-			
-			var _id: string = _propertyforms.property.propertyId;
-			
-			_propertyBusiness.findById(_id, (error, resultuser) => {  
-			
-				if(resultuser && resultuser._id !=undefined && resultuser._id){
-			
-					_propertyBusiness.update(_id, _propertyform, (error, resultUpdate) => { 
-						if(error){
-							res.send({"error": error});
-						} else {
-							_templateBusiness.findOne({"Property_id":_id}, (error, result) => {
-								if(error){
-									res.send({"error": error});
-								}
-								let _id: string = result._id.toString();
-								 _templateBusiness.update(_id,_templateform, (error, result) => { 
-								 	if(error){
-								 		res.send({"error": error});
-								 	} else {
-								 		console.log("resultrerresult===",result);
-								 		res.send({"success": "success"});
-								 	}
-								 })
-							})	 
-						}
-					});
-				} else {
+           		_propertyforms.property.forEach(function(property){
+           			let _propertyform = {};
+           			_propertyform.agentData=_propertyforms.agentData;
+					_templateform.email_subject = _templateforms.Email.formSubject;
+					_templateform.from_line = _templateforms.Email.formLine;
+					_templateform.address = _templateforms.Email.formReply;
+					_templateform.headline = _templateforms.blastHeadline;
 					
-						_propertyBusiness.create(_propertyform, (error, result) => {
-				                if(error) {
-									console.log(error);
-									res.send({"error": error});
-								}
 
-								_templateform.Property_id = result._id.toString();
-								 _templateBusiness.create(_templateform, (error, result) => { 
-					                if(error) {
-										console.log(error);
-										res.send({"error": error});
-									} else {
-										res.send({"success": "success"});
-									}
-				                }); 
-				        }); 
-				}
-			});
-        }
+
+	           		_propertyform.display_method=property.propertyAddress.displayMethod;
+					_propertyform.street_address=property.propertyAddress.streetAddress;
+					_propertyform.city=property.propertyAddress.city;
+					_propertyform.state=property.propertyAddress.state;
+					_propertyform.zipcode=property.propertyAddress.zipCode;
+					_propertyform.userId = property.userId;
+
+					_propertyform.mls_number=property.mlsNumber.numberProperty;
+					_propertyform.board=property.mlsNumber.boardAssociation;
+
+					_propertyform.pricingInfo=property.pricingInfo;  
+
+						if(property.linksToWebsites){
+								var linksData=[];
+								let data = property.linksToWebsites.linkData;
+											data.forEach(function(links:any) {
+											if(links){
+												linksData.push({linksToWebsiteData:links.linksToWebsiteData});
+											}
+										});
+							   _propertyform.linksToWebsites=linksData; 
+						}
+
+						if(property.isOpenHouse){
+								var opneHouseData=[];
+								let data = property.isOpenHouse.openHouseData;
+											data.forEach(function(house:any) {
+											if(house){
+												opneHouseData.push({openHouseData:house.openHouseData});
+											}
+										});
+							   _propertyform.isOpenHouse=opneHouseData;
+						}
+
+				_propertyform.property_type = property.generalPropertyInformation.propertyType;
+				_propertyform.property_style = property.generalPropertyInformation.propertyStyle;
+				_propertyform.lot_size = property.generalPropertyInformation.lotSize;
+				_propertyform.number_bedrooms = property.generalPropertyInformation.numberOfBedrooms;
+				_propertyform.building_size = property.generalPropertyInformation.buildingSize;
+				_propertyform.number_stories = property.generalPropertyInformation.numberOfStories;
+				_propertyform.number_bathrooms = property.generalPropertyInformation.numberOfBathrooms;
+				_propertyform.year_built = property.generalPropertyInformation.yearBuilt;
+				_propertyform.garage = property.generalPropertyInformation.garage;
+				_propertyform.garageSize = property.generalPropertyInformation.garageSize;
+				_propertyform.price = property.generalPropertyInformation.pricePerSquareFoot;
+
+				_propertyform.property_details=property.propertyDetail;
+
+					var _id: string = _templateforms.templateId;
+
+								
+/*								_propertyBusiness.findById(_id, (error, resultuser) => {  
+								
+									if(resultuser && resultuser._id !=undefined && resultuser._id){
+								
+										_propertyBusiness.update(_id, _propertyform, (error, resultUpdate) => { 
+											if(error){
+												res.send({"error": error});
+											} else {
+												_templateBusiness.findOne({"Property_id":_id}, (error, result) => {
+													if(error){
+														res.send({"error": error});
+													}
+													let _id: string = result._id.toString();
+													 _templateBusiness.update(_id,_templateform, (error, result) => { 
+													 	if(error){
+													 		res.send({"error": error});
+													 	} else {
+													 		console.log("resultrerresult===",result);
+													 		res.send({"success": "success"});
+													 	}
+													 })
+												})	 
+											}
+										});
+									} else {*/
+										
+											_propertyBusiness.create(_propertyform, (error, result) => {
+									                if(error) {
+														console.log(error);
+														res.send({"error": error});
+													}
+													_templateform.Property_id = result._id.toString();
+													_templateBusiness.update(_id, _templateform, (error, resultUpdate) => {
+										                if(error) {
+															console.log(error);
+															res.send({"error": error});
+														} else {
+															//res.send({"success": "success",userId:_propertyform.userId});
+														 		var propertyAggregate = [
+														            {
+															                $lookup:                       
+															                {
+															                    from: "users",
+															                    localField: "userId",   
+															                    foreignField: "_id",        
+															                    as: "users"               
+															                }
+															            },
+															            {
+																      	  	$unwind:"$users"
+																        
+																      	},
+															          	
+															            {
+															                $lookup:                       
+															                {
+															                    from: "templates",
+															                    localField: "_id",   
+															                    foreignField: "Property_id",        
+															                    as: "templates"               
+															                }
+															            },
+															            {
+															                $project:                       
+															                {    
+															                    "_id":1,
+															                    "userId":1,
+												         		                "display_method":1,
+															                    "street_address":1,
+															                    "city":1,
+															                    "state":1,
+															                    "zipcode":1,
+															                    "mls_number":1,
+																				"board":1,
+															                    "property_type":1,
+															                    "property_style":1,
+															                    "lot_size":1,
+															                    "number_bedrooms":1,
+															                    "agentData":1,
+															                    "building_size":1,
+															                    "number_stories":1,
+																				"number_bathrooms":1,
+																				"year_built":1,
+																				"garage":1,
+																				"garageSize":1,
+																				"price":1,
+																				"pricingInfo":1,
+																				"property_details":1,
+																				"isOpenHouse":1,
+																				"linksToWebsites":1,
+																				"templates.email_subject":1,
+																				"templates.from_line":1,
+																				"templates.address":1,
+																				"templates.Property_id":1,
+																				"templates.headline":1,
+																				"templates.template_type":1,
+																				"templates.userId":1,
+																				"users.userName":1,
+																				"users.firstName":1,
+																				"users.lastName":1,
+																				"users.roles":1,
+
+																		    }
+															            },
+															            {
+															                $match:
+														                    {
+																					userId: mongoose.Types.ObjectId(property.userId.toString())      
+																			}
+															            }
+															        ];
+
+															         _propertyBusiness.aggregate( propertyAggregate, (error:any, result:any) => { 
+															        	if(error) {
+																			res.send({"error": error});
+																		} else {
+																			var returnObj = result.map(function(obj: any): any {
+																            return {
+																		        id: obj._id,
+																		        firstName:obj.users.firstName,
+																		        lastName:obj.users.lastName,
+																		        middleName:obj.users.middleName,
+																		        building_size:obj.building_size,
+																		        number_bathrooms:obj.number_bathrooms,
+																		        isOpenHouse:obj.isOpenHouse,
+																		        property_type:obj.property_type,
+																		        property_style:obj.property_style,
+																		        mls_number:obj.mls_number,
+																		        linksToWebsites:obj.linksToWebsites,
+																		        property_detail:obj.property_details,
+																		        pricingInfo:obj.pricingInfo,
+																		        board:obj.board,
+																		        zipcode:obj.zipcode,
+																		        city:obj.city,
+																		        display_method:obj.display_method,
+																		        street_address:obj.street_address,
+																		        number_bedrooms:obj.number_bedrooms,
+																		        year_built:obj.year_built,
+																		        number_stories:obj.number_stories,
+																		        lot_size:obj.lot_size,
+																		        templates:obj.templates,
+																		        price:obj.price,
+																		        garageSize:obj.garageSize,
+																		        agentData:obj.agentData
+																		    };
+
+																	});
+																			console.log("returnObj=====",returnObj);
+																			return res.json(returnObj);
+																}
+															});	
+
+
+														}
+									                }); 
+									        }); 
+									//}
+							//	});
+
+           		});
+
+           }
+
+    	}
         catch (e)  {
             console.log(e);
             res.send({"error": "error in your request"});
@@ -1017,7 +1124,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 
 
  savePropertyImages(data:any,id:any, res: express.Response): void { 
-
  	var _blastimageBusiness= new BlastImageBusiness();
 	var _blastimage: IBlastImageModel = <IBlastImageModel >data;
 		
@@ -1059,8 +1165,8 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			                $lookup:                       
 			                {
 			                    from: "templates",
-			                    localField: "userId",   
-			                    foreignField: "userId",        
+			                    localField: "_id",   
+			                    foreignField: "Property_id",        
 			                    as: "templates"               
 			                }
 			            },
@@ -1088,6 +1194,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 								"garageSize":1,
 								"price":1,
 								"pricingInfo":1,
+								"agentData":1,
 								"property_details":1,
 								"isOpenHouse":1,
 								"linksToWebsites":1,
@@ -1143,11 +1250,13 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 						        lot_size:obj.lot_size,
 						        templates:obj.templates,
 						        price:obj.price,
-						        garageSize:obj.garageSize
+						        garageSize:obj.garageSize,
+						        agentData:obj.agentData
 						    };
 
 					});
-							return res.json(returnObj[0]);
+							console.log("returnObj=====",returnObj);
+							return res.json(returnObj);
 				}
 			});				
 	  

@@ -81,6 +81,10 @@ class PropertyModel {
         return this.propertyModel.pricingInfo;
     }
 
+    get agentData (): object {
+        return this.propertyModel.agentData;
+    }
+
     get number_bathrooms (): object {
         return this.propertyModel.number_bathrooms;
     } 
@@ -100,6 +104,8 @@ class PropertyModel {
     get userId (): mongoose.Types.ObjectId {
         return this.propertyModel.isOpenHouse;
     }
+
+
 
     
     
