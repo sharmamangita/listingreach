@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { userActions } from "../actions";
 import CommonDownload from './CommonDownload'
+import { globalData } from '../constants/data.constants';
 import {
   Nav,
   Navbar,
@@ -147,7 +148,7 @@ class PaymentTab extends React.Component {
                   <input
                     className="form-control form-control-lg form-control-a"
                     type="date"
-                    value="2011-08-19"
+                    value=""
                     id="example-date-input"
                   />
                 </div>
@@ -201,31 +202,14 @@ class PaymentTab extends React.Component {
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <label>State</label>
-                  <select
-                    className="form-control form-control-lg form-control-a"
-                    id="Type"
-                    name="state"
-                    value=""
-                  >
-                    <option value="">-- Select a State --</option>
-                    <option>Alabama</option>
-                    <option>Alaska</option>
-                    <option>Arizona</option>
-                    <option>Arkansas</option>
-                    <option>California</option>
-                    <option>Colorado</option>
-                    <option>Connecticut</option>
-                    <option>Delaware</option>
-                    <option>District of Columbia</option>
-                    <option>Florida</option>
-                    <option>Georgia</option>
-                    <option>Hawaii</option>
-                    <option>Idaho</option>
-                    <option>Illinois</option>
-                    <option>Indiana</option>
-                    <option>Iowa</option>
-                    <option>Kansas</option>
-                  </select>
+                   <select className="form-control form-control-a" >
+                        <option>Select State</option>
+                        {
+                            globalData.USstates.map((st) => (
+                                <option key={st}>{st}</option>
+                            ))
+                        }
+                    </select>
                 </div>
               </div>
               <div className="col-md-12 mb-3">

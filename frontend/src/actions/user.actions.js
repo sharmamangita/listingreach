@@ -9,7 +9,6 @@ export const userActions = {
     logout,
     register,
     update,
-  
     getVerification,
     getAll,
     getById,
@@ -25,7 +24,9 @@ export const userActions = {
     saveProperty,
     saveAgents,
     getTemplateOrPropertydata,
-    designTemplate
+    designTemplate,
+    savePayment,
+    getPayment
 };
 /* Get References */
 function getReferences(userid){
@@ -337,7 +338,6 @@ function getById(id) {
         userService.getById(id)
         .then(
             user => { 
-                
                 if(user.error){
                         if(id){
                          localStorage.setItem("srcid",id) 
@@ -346,7 +346,6 @@ function getById(id) {
                     dispatch(alertActions.success('Please login first to view candidates profile.'));
                    
                 }else{
-                    console.log("user===",user);
                   dispatch(success(user));
                 }
             },
@@ -393,8 +392,6 @@ function _delete(id,flag) {
     function success(id) { return { type: userConstants.DELETE_SUCCESS, id } }
     function failure(id, error) { return { type: userConstants.DELETE_FAILURE, id, error } }
 }
-
-
 
 
 function getTemplateOrPropertydata(userId){
@@ -450,6 +447,7 @@ function designTemplate(designTemplate,user){
 
 function saveProperty(property,agentData,Email,blastHeadline,templateId){
    console.log("property====",property);
+
     return dispatch => {
         dispatch(request());
         userService.saveProperty(property,agentData,Email,blastHeadline,templateId)
@@ -488,10 +486,44 @@ function saveAgents(agentData){
 
         );
     };
-  
-
     function request() { return { type: userConstants.AGENT_REQUEST } }
     function success(users) { return { type: userConstants.AGENT_SUCCESS, users } }
     function failure(error) { return { type: userConstants.AGENT_FAILURE, error } }
 }
 
+function savePayment(payment){
+    return dispatch => {
+        dispatch(request());
+        userService.savePayment(payment)
+           .then(
+            user => { 
+            dispatch(success());
+            if(user.success){
+                dispatch(alertActions.success(user.success));
+                window.scrollTo(0,0);
+            } else {
+                  dispatch(alertActions.error(user.error));
+                }
+            }
+
+        );
+    };
+    function request() { return { type: userConstants.AGENT_REQUEST } }
+    function success(users) { return { type: userConstants.AGENT_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.AGENT_FAILURE, error } }  
+}
+
+
+function getPayment(id){
+    return dispatch => {
+        dispatch(request());
+        userService.getPayment(id)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request(users) { return { type: userConstants.GETBYPAYMENTID_REQUEST, users } }
+    function success(users) { return { type: userConstants.GETBYPAYMENTID_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.GETBYPAYMENTID_FAILURE, error } } 
+}

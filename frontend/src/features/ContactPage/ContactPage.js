@@ -147,7 +147,7 @@ class ContactPage extends React.Component {
                 </div>
                 <div className="icon-box-content table-cell">
                   <div className="icon-box-title">
-                    <h5 className="icon-title">Have you seen our <a>FAQ page?</a></h5>
+                    <h5 className="icon-title" style={{fontWeight:"550"}}>Have you seen our <a>FAQ page?</a></h5>
                   </div>                  
                 </div>
               </div>
@@ -157,7 +157,7 @@ class ContactPage extends React.Component {
                 </div>
                 <div className="icon-box-content table-cell">
                   <div className="icon-box-title">
-                    <h5 className="icon-title">Have you seen our <a>Tutorial videos?</a></h5>
+                    <h5 className="icon-title" style={{fontWeight:"550"}}>Have you seen our <a>Tutorial videos?</a></h5>
                   </div>                  
                 </div>
               </div>
@@ -167,7 +167,7 @@ class ContactPage extends React.Component {
                 </div>
                 <div className="icon-box-content table-cell">
                   <div className="icon-box-title">
-                    <h5 className="icon-title">Do you need <a>Pricing?</a></h5>
+                    <h5 className="icon-title" style={{fontWeight:"550"}}>Do you need <a>Pricing?</a></h5>
                   </div>                  
                 </div>
               </div>

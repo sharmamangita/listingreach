@@ -37,7 +37,6 @@ export function users(state = {}, action) {
       });
       return newState;
     case userConstants.GETBYID_SUCCESS:
-
       newState = objectAssign({}, state, {
         loading: true,
         profile: action.user.data.userData[0],
@@ -86,7 +85,12 @@ export function users(state = {}, action) {
       return {
         error: action.error
       };
-
+      
+      case userConstants.BLAST_SUCCESS:
+            newState = objectAssign({}, state,{
+              tab:'designTemplateTab'
+            });
+          return newState ;
 
       case userConstants.DESIGNTEMPLATE_SUCCESS:
         newState = objectAssign({}, state,{
@@ -99,7 +103,7 @@ export function users(state = {}, action) {
       console.log("action.result===",action.result);
         newState = objectAssign({}, state,{
           tab:'photo',
-          tabsData:action.result
+          tabsData:action.users
         });
       return newState ; 
 
@@ -108,13 +112,13 @@ export function users(state = {}, action) {
         loading: true
       };
 
-    case userConstants.GETDOWNLOADEDALL_SUCCESS:
+    case userConstants.GETBYPAYMENTID_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,
-        downloaded: action.downloaded
+        payment: action.users.payment
       });
       return newState;
-    case userConstants.GETDOWNLOADEDALL_FAILURE:
+    case userConstants.GETBYPAYMENTID_FAILURE:
       return {
         error: action.error
       };

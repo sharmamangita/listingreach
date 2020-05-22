@@ -5,65 +5,65 @@ import express = require("express");
 import mongoose = require("mongoose");
 
 import BaseBusiness = require("./BaseBusiness");
-import PlanRepository = require("./../repository/PlanRepository");
-import IPlanModel = require("./../model/interfaces/IPlanModel");
-import PlanModel = require("./../model/PlanModel");
+import PaymentRepository = require("./../repository/PaymentRepository");
+import IPaymentModel = require("./../model/interfaces/IPaymentModel");
+import PaymentModel = require("./../model/PaymentModel");
 
 
-class PlanBusiness implements BaseBusiness<IPlanModel> {
-    private _userRepository: PlanRepository;
+class PaymentBusiness implements BaseBusiness<IPaymentModel> {
+    private _paymentRepository: PaymentRepository;
 
     constructor () {
-        this._userRepository = new PlanRepository();
+        this._paymentRepository = new PaymentRepository();
     }
-    create (item: IPlanModel, callback: (error: any, result: any) => void) {
+    create (item: IPaymentModel, callback: (error: any, result: any) => void) {
 	   item._id=mongoose.Types.ObjectId();
-       this._userRepository.create(item, callback);
+       this._paymentRepository.create(item, callback);
     }
 
     retrieve (query: any, callback: (error: any, result: any) => void) {
-        this._userRepository.retrieve(query, callback);
+        this._paymentRepository.retrieve(query, callback);
     }
     aggregate (query: any, callback: (error: any, result: any) => void) {
-        this._userRepository.aggregate(query, callback);
+        this._paymentRepository.aggregate(query, callback);
     }
 	retrieveFields (query: any, fields: any, callback: (error: any, result: any) => void) {
-        this._userRepository.retrieveFields(query, fields,callback);
+        this._paymentRepository.retrieveFields(query, fields,callback);
     }
 
     update (_id: string, item: IUserModel, callback: (error: any, result: any) => void) {
 
-        this._userRepository.findById(_id, (err, res) => {
+        this._paymentRepository.findById(_id, (err, res) => {
             if(err) callback(err, res);
 
             else
-                this._userRepository.update(res._id, item, callback);
+                this._paymentRepository.update(res._id, item, callback);
 
         });
     }
 
     delete (_id: string, callback:(error: any, result: any) => void) {
-        this._userRepository.delete(_id , callback);
+        this._paymentRepository.delete(_id , callback);
     }
 
     deleteMany (query: any, callback:(error: any, result: any) => void) {
-        this._userRepository.deleteMany(query , callback);
+        this._paymentRepository.deleteMany(query , callback);
     }
 
     findById (_id: string, callback: (error: any, result: IUserModel) => void) {
-        this._userRepository.findById(_id, callback);
+        this._paymentRepository.findById(_id, callback);
     }
 
     count (query: any, callback: (error: any, result: Number) => void) {
-        this._userRepository.count(query, callback);
+        this._paymentRepository.count(query, callback);
     }
 	
     findOne (query: any, callback: (error: any, result: IUserModel) => void) {
-        this._userRepository.findOne(query, callback);
+        this._paymentRepository.findOne(query, callback);
     }
 		
 }
 
 
-Object.seal(PlanBusiness);
-export = PlanBusiness;
+Object.seal(PaymentBusiness);
+export = PaymentBusiness;

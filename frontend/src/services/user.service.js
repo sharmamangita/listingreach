@@ -15,7 +15,7 @@ export const userService = {
 	emailPreviewTemplate,
     deleteprofilepic,
     deleteprofileCover,
-   delete: _delete,
+    delete: _delete,
     getReferences,
     updateStatus,
     unsetsrcid,
@@ -23,7 +23,9 @@ export const userService = {
     saveProperty,
     saveAgents,
     getTemplateOrPropertydata,
-    designTemplate
+    designTemplate,
+    savePayment,
+    getPayment
 };
 
 function login(email, password) {
@@ -263,7 +265,9 @@ function designTemplate(template_type,userId){
 
 
 
+
 function saveProperty(property,agentData,Email,blastHeadline,templateId){
+
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -273,7 +277,6 @@ function saveProperty(property,agentData,Email,blastHeadline,templateId){
 }
 
 function saveAgents(agentData){
-    console.log("save agentData====",agentData);
     const requestOptions = {
         method: 'POST',
         
@@ -287,4 +290,25 @@ function saveAgents(agentData){
        
 }
 
-    
+function savePayment(payment){
+    console.log("payment====",payment);
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(payment)
+    };
+    return fetch(`${config.apiUrl}/users/savePayment`, requestOptions).then(handleResponse);    
+}
+
+function getPayment(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${config.apiUrl}/users/getPayment/${id}`, requestOptions).then(handleResponse)
+    .then(user => {
+        return user;
+    }).catch(this.handleError);
+}
+ 
