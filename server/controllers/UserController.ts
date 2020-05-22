@@ -16,8 +16,8 @@ import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
 import ContactformBusiness = require("./../app/business/ContactformBusiness");
 import BlastBusiness = require("./../app/business/BlastBusiness");
 import PropertyBusiness = require("./../app/business/PropertyBusiness");
-
-
+import PaymentBusiness = require("./../app/business/PaymentBusiness");
+import IPaymentModel = require("./../app/model/interfaces/IPaymentModel");
 
 import AgentTemplateBusiness = require("./../app/business/AgentTemplateBusiness");
 
@@ -162,7 +162,7 @@ class UserController implements IBaseController<UserBusiness> {
     create(req: express.Request, res: express.Response): void {
         try {
         	var _userBusiness = new UserBusiness();
-        	_userBusiness.verifyToken(req, res,  (companyUserData) => { 
+        	_userBusiness.verifyToken(req, res,  (userData) => { 
 				var _user: IUserModel = <IUserModel>req.body;
 				
 				_user.createdOn = new Date();
@@ -321,7 +321,7 @@ updateUser(req: express.Request, res: express.Response): void {
     retrieve(req: express.Request, res: express.Response): void {
     	 try {
 			var _userBusiness = new UserBusiness();
-            _userBusiness.verifyToken(req, res, (companyUserData) => {
+            _userBusiness.verifyToken(req, res, (userData) => {
 				_userBusiness.retrieve(req.body, (error, result) => {
 					if(error) res.send({"error": "error"});
 					else res.send(result);
@@ -739,7 +739,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
    
 	verifytoken(req: express.Request, res: express.Response): void {
 		var _userBusiness = new UserBusiness();
-		_userBusiness.verifyToken(req, res, (companyUserData) => {
+		_userBusiness.verifyToken(req, res, (userData) => {
 			res.status(201).send({
 				token: "valid"
 			});
@@ -840,13 +840,15 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
     saveAgents(req: express.Request, res: express.Response): void {
     	 try {
     	 	var _userBusiness = new UserBusiness();
-        	_userBusiness.verifyToken(req, res,  (companyUserData) => { 
+        	_userBusiness.verifyToken(req, res,  (userData) => { 
 	    	 	var _agent: IAgentModel = <IAgentModel>req.body;
-	    	 	console.log("_agent====",companyUserData);
+	    	 	console.log("_agent====",userData);
 	    	 	_agent.createdOn = new Date();
+
 	    	 	_agent.user_id=companyUserData._id;
+
 				var _agentBusiness = new AgentBusiness();
-				_agentBusiness.findOne({'userId':companyUserData._id}, (error:any, agentresult:any) => {
+				_agentBusiness.findOne({'userId':userData._id}, (error:any, agentresult:any) => {
 		    	 	
 					if(agentresult){
 						var _id:string = agentresult._id.toString();
@@ -1127,22 +1129,84 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
  	var _blastimageBusiness= new BlastImageBusiness();
 	var _blastimage: IBlastImageModel = <IBlastImageModel >data;
 		
-    	var type= data.mimetype.split("/");
- 	 	var userid:string = id.toString();
-		
-		_blastimage.user_id=userid;
-		_blastimage.url=data.filename;
-		_blastimageBusiness.create(_blastimage, (error, resultData) => {
-				if(error){
-					console.log("error===",error);
-				}else {
-					 return res.json({url:resultData.url});
-				}
-			});
-		}
-		
+	var type= data.mimetype.split("/");
+	 	var userid:string = id.toString();
+	
+	_blastimage.user_id=userid;
+	_blastimage.url=data.filename;
+	_blastimageBusiness.create(_blastimage, (error, resultData) => {
+			if(error){
+				console.log("error===",error);
+			}else {
+				 return res.json({url:resultData.url});
+			}
+		});
+	}
 
- getTemplateOrPropertydata(req: express.Request, res: express.Response): void { 
+	savePayment(req: express.Request, res: express.Response){
+		 try {
+    	 	var _userBusiness = new UserBusiness();
+        	_userBusiness.verifyToken(req, res,  (userData) => { 
+	    	 	var _payment: IPaymentModel = <IPaymentModel>req.body;
+	    	 	_payment.createdOn = new Date();
+	    	 	_payment.user_id=userData._id;
+				var _paymentBusiness = new PaymentBusiness();
+				_payment.blast_id=userData._id;
+				_payment.amount=_payment.total;
+				_payment.paymentID=_payment.paymentID;
+				console.log("_payment=====",_payment);
+			_paymentBusiness.retrieve({"blast_id":userData._id}, (error, result) => {
+				if(result && result.length > 0) {
+                    lastInvoiceId = +invoiceData[0].maxNumber + +1;
+                    _payment.invoice_id = lastInvoiceId;
+                }
+                else {
+                    invoice_number = 1;
+                    _payment.invoice_id = invoice_number;
+                }
+				_paymentBusiness.create(_payment, (error, paymentresultData) => {
+					if(error){
+						console.log("error====",error)
+					}else {
+						res.status(201).send({ "success":"Your payment successfully done." });
+					}
+				});
+			});
+		    	 	
+				
+			});
+    	 }
+    	  catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+	}		
+
+	getPayment(req: express.Request, res: express.Response){
+		 try {
+    	 	var _userBusiness = new UserBusiness();
+        	_userBusiness.verifyToken(req, res,  (userData) => { 
+	    	 	var _payment: IPaymentModel = <IPaymentModel>req.body;
+	    	 	var _paymentBusiness = new PaymentBusiness();
+				_paymentBusiness.retrieve({"blast_id":userData._id}, (error, result) => {
+					if(error){
+						console.log("error====",error)
+					}else {
+						console.log("result=====",result)
+						return res.json({payment:result});
+					}
+				});
+			
+		    	 	
+				
+			});
+    	 }
+    	  catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+	}	
+ 	getTemplateOrPropertydata(req: express.Request, res: express.Response): void { 
  		try {
  			var _property: IPropertyModel = <IPropertyModel>req.body;
 			var _propertyBusiness = new PropertyBusiness();

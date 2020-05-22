@@ -55,16 +55,20 @@ class DashboardPage extends React.Component {
                   </div>
                   <div className="col-lg-6">
                     <div className="jumbotron">
+                      <Link to="/SubscriberPage">					
                       <span className="dashbrd-icons"><i className="fa fa-fw fa-list-alt"></i></span>
                       <h3>{this.props.blastscount}</h3>
                       <h6>Paid Email Blasts</h6>
+					  </Link>
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="jumbotron">
+                      <Link to="/AgentsPage">					
                       <span className="dashbrd-icons"><i className="fa fa-fw fa-money"></i></span>
                       <h3>{this.props.totalpayment}</h3>
                       <h6>Total Payments</h6>
+					  </Link>
                     </div>
                   </div>
                 </div>

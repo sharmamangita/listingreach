@@ -37,7 +37,6 @@ export function users(state = {}, action) {
       });
       return newState;
     case userConstants.GETBYID_SUCCESS:
-
       newState = objectAssign({}, state, {
         loading: true,
         profile: action.user.data.userData[0],
@@ -108,13 +107,13 @@ export function users(state = {}, action) {
         loading: true
       };
 
-    case userConstants.GETDOWNLOADEDALL_SUCCESS:
+    case userConstants.GETBYPAYMENTID_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,
-        downloaded: action.downloaded
+        payment: action.users.payment
       });
       return newState;
-    case userConstants.GETDOWNLOADEDALL_FAILURE:
+    case userConstants.GETBYPAYMENTID_FAILURE:
       return {
         error: action.error
       };

@@ -15,11 +15,17 @@ class AgentModel {
     get _id (): mongoose.Types.ObjectId {
         return this._paymentModel._id;
     }
+    get invoice_id (): string {
+        return this._paymentModel.invoice_id;
+    }
     get user_id (): mongoose.Types.ObjectId {
         return this._paymentModel.user_id;
     }
     get blast_id (): mongoose.Types.ObjectId {
         return this._paymentModel.blast_id;
+    }
+    get paymentID():mongoose.Types.ObjectId{
+        return this._paymentModel.paymentID;
     }
     get amount (): mongoose.Types.ObjectId {
         return this._paymentModel.amount;

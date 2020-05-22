@@ -57,45 +57,38 @@ class PaypalButton extends React.Component {
       }
     }
   }
-  onSuccess(payment){
-   console.log('Successful payment!', payment);
-  
-   payment.flag='download';
-   console.log("this.props====",this.props);
-    if(this.props.page=='candidate'){
-      this.props.dispatch(userActions.updateCandidateAmount( payment));
-
-    }else{
-      this.props.dispatch(userActions.savedCandidates(payment)); 
-    }
+  onSuccess(payment,dispatch){
+    console.log('Successful payment!', payment);
+    console.log("this.props.dispatchval===",dispatch.dispatchval.dispatch);
+    dispatch.dispatchval.dispatch.dispatch(userActions.savePayment(payment)); 
   }
   render() {
     console.log("showpayment===");
+    const { total,id,currency,env,commit,client,dispatch,page
+    } = this.props;
     const onError = (error) =>
     console.log('Erroneous payment OR failed to load script!', error);
     
     const onCancel = (data) =>
     console.log('Cancelled payment!', data);
     const { submitted,showpayment,modalpaymentid} = this.state;
-    const { total,id,currency,env,commit,client,dispatch,page
-    } = this.props;
-   
+    
     const {
       showButton,
     } = this.state;
 
     const payment = () =>
-      paypal.rest.payment.create(env, client, {
-        transactions: [
-          {
-            amount: {
-              total,
-              currency,
-            }
-          },
-        ],
-      });
-
+    paypal.rest.payment.create(env, client, {
+      transactions: [
+        {
+          amount: {
+            total,
+            currency,
+          }
+        },
+      ],
+    });
+    console.log("dispatch=====",dispatch);
     const onAuthorize = (data, actions) =>
       actions.payment.execute()
         .then(() => {
@@ -105,6 +98,7 @@ class PaypalButton extends React.Component {
             payerID: data.payerID,
             orderID:data.orderID,
             total:total,
+            dispatch:dispatch,
             currency:currency,
             id:id,
             paymentID: data.paymentID,
@@ -113,7 +107,7 @@ class PaypalButton extends React.Component {
           };
           this.props.onClickBackdrop();
           this.handleClose();
-          this.onSuccess(payment);
+          this.onSuccess(payment,dispatch);
         });
 
     return (

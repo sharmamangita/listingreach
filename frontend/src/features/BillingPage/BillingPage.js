@@ -8,27 +8,54 @@ import ListingSubmenu from '../../components/ListingSubmenu';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 import { userActions } from "../../actions";
 const Entities = require('html-entities').XmlEntities;
+import moment from "moment";
 const entities = new Entities();
 class BillingPage extends React.Component {
   constructor(props) {
-    super(props);
-  }
-
-  componentDidMount(){
-  const { dispatch } = this.props;
- // this.props.dispatch(userActions.getapagecontent({page:'About Us'})); 
-  window.scrollTo(0,0);
-//  $('#example').DataTable();
-  }
-
-  render() {
-	  if(this.props.users && this.props.users.items){
-		  console.log("test",this.props.users);
-      if(this.props.users.items[0]){
+	    super(props);
+	    this.state = {
+	    	payment: Object.assign({
+	        InvoiceId: '',
+	        date: '',
+	        amount: '',
+	        status:'',
+	      }, this.props.payment),
+	    }
+	    this.createdDate = this.createdDate.bind(this);
+  	}
+  	componentWillReceiveProps(nextProps) {
+  		console.log("nextProps====",nextProps);
+	    if ((nextProps.payment != undefined && nextProps.payment) ) {
+	      this.propsDataupdate(nextProps.payment);
+	    }
+ 	}
+ 	propsDataupdate(data) {
+	    let states = Object.assign({}, this.state);
+	    let propsData = data;
+	    if ((propsData != undefined && propsData) ) {
+	      states.payment = propsData;
+	      this.setState({ payment: states.payment });
+	    }
+	}
+  	componentDidMount(){
+	  	const { dispatch } = this.props;
+		this.props.dispatch(userActions.getPayment('2')); 
+	}
+	createdDate(createdOn) {
+   		var expDate = new moment(createdOn, "YYYY-MM-DD");
+   		var created = moment(expDate).format("DD-MM-YYYY");
+    		return created;
+ 	}
+  	render() {
+  	const { submitted, submittedagent, user, payment } = this.state;
+	console.log("paymentData====",payment);	
+  	if(this.props.users && this.props.users.items){
+	  	if(this.props.users.items[0]){
 		  var abouttitle = entities.decode(this.props.users.items[0].page);
 		  var aboutpage = entities.decode(this.props.users.items[0].content);
-		  }
-    }
+		}
+	}
+	
     return (
 		<div>
 			<ListingSubmenu/>
@@ -49,14 +76,19 @@ class BillingPage extends React.Component {
 								<th>Total</th>
 								<th>Status</th>
 							</tr>
+							{
+		                     payment && payment.length>0 && payment.map((payments) => (
+		                            <tr>
+										<td>{payments.invoice_id}</td>
+										<td>{this.createdDate(payments.createdOn)}</td>
+										<td>{payments.amount}</td>
+										<td>Email Sent</td>
+									</tr> 
+								))
+                          	}  
 						</thead>
 						<tbody>
-							<tr>
-								<td>LR001</td>
-								<td>04/29/2020</td>
-								<td>$90</td>
-								<td>Email Sent</td>
-							</tr>   
+						
 						</tbody>       
 					</table>
 				</div>
@@ -68,9 +100,11 @@ class BillingPage extends React.Component {
 
 function mapStateToProps(state) {
   const { alert,users } = state;
+  const { payment } = users;
   return {
     alert,
-    users
+    users,
+    payment
   };
 }
 

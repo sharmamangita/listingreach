@@ -36,7 +36,8 @@ class UserRoutes {
         router.put("/userUpdate", controller.updateUser);
         router.post("/users/getReferences", controller.getReferences);
         router.post("/users/saveAgents",controller.saveAgents);
-     
+        router.post("/users/savePayment",controller.savePayment);
+        router.get("/users/getPayment/:_id", controller.getPayment);
 
 
         /* blast routes */ 

@@ -31,14 +31,12 @@ handleShow() {
      });
 }
 renderPaymentModal(amount) {
-  console.log("amount===",amount);	
-  console.log("this.props.dispatchval===",this.props.dispatchval.dispatch);
-  let modalClose = () => this.setState({ showpayment: false });
+ let modalClose = () => this.setState({ showpayment: false });
   if(amount && this.props.dispatchval){
   return  (
       <PaypalButton
           modalpaymentid={this.state.modalpaymentid} 
-          dispatch = {this.props.dispatchval.dispatch.dispatch} 
+          dispatch = {this.props.dispatchval.dispatch} 
           visible={this.state.showpayment} 
           onClickBackdrop={modalClose}  
           dialogClassName="modal-lg"

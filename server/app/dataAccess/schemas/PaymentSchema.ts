@@ -19,6 +19,14 @@ class PaymentSchema {
                 type: mongoose.Schema.Types.ObjectId,
                 required: true
             },
+            invoice_id : {
+                type: String
+                
+            },
+            paymentID : {
+                type: String,
+                required: true
+            },
             amount : {
                 type: String,
                 required: true
