@@ -83,7 +83,27 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	}
 
+	getBlasts(req: express.Request, res: express.Response): void {
+		try {
+			var blastBusiness = new BlastBusiness();
+			//var condition: Object = { roles: /subscriber/ }
+			var fields: Object = { _id: 1, name: 1, email: 1, phone: 1, city: 1, state: 1, createdOn: 1 }
+			blastBusiness.retrieveFields("", fields, (error, result) => {
+				if (error) {
+					console.log("error in getBlasts -", error);
+					res.send({ "error": error });
+				} else {
+					//console.log("getAgents response - ", result);
+					res.send(result);
+				}
+			})
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
 
+	}
 	deleteusers(req: express.Request, res: express.Response): void {
 		var _id: string = req.params._id;
 

@@ -9,12 +9,11 @@ import SubscriberPreferencesModal from "../../../components/SubscriberPreference
 class EmailBlastsPage extends React.Component {
 	constructor(props) {
 		super(props);
-		// reset login status
 		this.state = {
 			show: false,
 			blasts: this.props.blasts,
 			prefrences: {},
-			totaldatacad: ""
+			totalblasts: []
 		};
 		this.handleShow = this.handleShow.bind(this);
 		this.deleteUsers = this.deleteUsers.bind(this);
@@ -223,7 +222,7 @@ class EmailBlastsPage extends React.Component {
 			}
 		}
 		const caddata = {
-			columns: common.agentcolumns,
+			columns: common.blastscolumns,
 			rows: totaldata
 		};
 		return { totaldata, caddata };

@@ -18,8 +18,8 @@ export const adminActions = {
     getSubscribers,
     getCount,
     deletesubscriber,
-    subscriberStatus
-
+    subscriberStatus,
+    getBlasts
 };
 
 
@@ -124,6 +124,20 @@ function getSubscribers() {
     function request() { return { type: adminConstants.SUBSCRIBERS_REQUEST } }
     function success(subscribers) { return { type: adminConstants.SUBSCRIBERS_SUCCESS, subscribers } }
     function failure(error) { return { type: adminConstants.SUBSCRIBERS_FAILURE, error } }
+}
+
+function getBlasts() {
+    return dispatch => {
+        dispatch(request());
+        adminService.getBlasts()
+            .then(
+                blasts => dispatch(success(blasts)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request() { return { type: adminConstants.BLASTS_REQUEST } }
+    function success(blasts) { return { type: adminConstants.BLASTS_SUCCESS, blasts } }
+    function failure(error) { return { type: adminConstants.BLASTS_FAILURE, error } }
 }
 
 function deletesubscriber(id) {

@@ -122,6 +122,25 @@ export function admins(state = {}, action) {
       };
 
 
+      case adminConstants.BLASTS_REQUEST:
+        newState = objectAssign({}, state, {
+          loading: true
+        });
+        return newState;
+      case adminConstants.BLASTS_SUCCESS:
+        newState = objectAssign({}, state, {
+          loading: true,
+          blasts: action.blasts
+        });
+        return newState;
+      case adminConstants.BLASTS_FAILURE:
+        return {
+          error: action.error
+        };
+  
+  
+
+
     case adminConstants.GETALLHR_REQUEST:
       newState = objectAssign({}, state, {
         loading: true

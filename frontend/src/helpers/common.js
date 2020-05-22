@@ -65,6 +65,68 @@ export const common = {
       width: 50
     },
   ],
+  blastscolumns: [
+    {
+      label: 'Blast Type',
+      field: 'name',
+      sort: 'asc',
+      width: 250
+    },
+    {
+      label: 'Headline',
+      field: 'email',
+      sort: 'asc',
+      width: 270
+    },
+    {
+      label: 'Agent',
+      field: 'company',
+      sort: 'asc',
+      width: 200
+    },
+    {
+      label: 'Email',
+      field: 'blastssent',
+      sort: 'asc',
+      width: 50
+    },
+    {
+      label: 'Company',
+      field: 'totalpaid',
+      sort: 'asc',
+      width: 50
+    },
+    {
+      label: 'Sent Date',
+      field: 'registered',
+      sort: 'asc',
+      width: 200
+    },   
+    {
+      label: 'Tootal Paid',
+      field: 'registered',
+      sort: 'asc',
+      width: 200
+    },   
+    {
+      label: 'Paid On',
+      field: 'registered',
+      sort: 'asc',
+      width: 200
+    },   
+    {
+      label: 'Approve',
+      field: 'actions',
+      sort: 'asc',
+      width: 50
+    },
+    {
+      label: 'Send',
+      field: 'status',
+      sort: 'asc',
+      width: 50
+    },
+  ],
 
   subscribercolumns: [
     {

@@ -13,6 +13,7 @@ export const adminService = {
     updateBlastSettings,
     getAgents,
     getSubscribers,
+    getBlasts,
     deletesubscriber,
     subscriberStatus
 };
@@ -38,6 +39,13 @@ function getSubscribers() {
         method: 'GET'
     };
     return fetch(`${config.apiUrl}/adminusers/subscribers`, requestOptions).then(handleResponse);
+}
+
+function getBlasts() {
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(`${config.apiUrl}/adminusers/blasts`, requestOptions).then(handleResponse);
 }
 
 function deleteusers(id) {
