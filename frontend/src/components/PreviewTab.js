@@ -12,7 +12,7 @@ import {
 import Modal from "react-bootstrap4-modal";
 import { connect } from "react-redux";
 import { common } from "../helpers";
-import moment from "moment";
+import Moment from "moment";
 
 class PreviewTab extends React.Component {
   constructor(props) {
@@ -126,7 +126,7 @@ class PreviewTab extends React.Component {
                   <label>From: </label>
                 </div>
                 <div className="col-md-8 mb-3 mt-3">
-                  Agent Name via Listingreach.com
+                  {previewData && previewData[0] && previewData[0].agentData && previewData[0].agentData[0].name} via Listingreach.com
                 </div>
                 <div className="col-md-4 mb-3 text-right">
                   <label>Email Subject Line:</label>

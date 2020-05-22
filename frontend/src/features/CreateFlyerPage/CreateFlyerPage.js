@@ -17,6 +17,8 @@ import DatabaseTab from "../../components/DatabaseTab";
 import SetDateTab from "../../components/SetDateTab";
 import TermsTab from "../../components/TermsTab";
 import PaymentTab from "../../components/PaymentTab";
+import MultiPreviewTab from "../../components/MultiPreviewTab";
+
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 
@@ -73,14 +75,14 @@ class CreateFlyerPage extends React.Component {
          this.moveTab(tab)
      }
 
-     if((nextProps.users!=undefined && nextProps.users.items )|| (nextProps.agentData!=undefined && nextProps.agentData) || (nextProps.profile!=undefined && nextProps.profile) || nextProps.imageData!=undefined &&  nextProps.imageData){
+     if((nextProps.users!=undefined && nextProps.users.tabsData )|| (nextProps.agentData!=undefined && nextProps.agentData) || (nextProps.profile!=undefined && nextProps.profile) || nextProps.imageData!=undefined &&  nextProps.imageData){
             this.stateSettingsForTabs(nextProps.users);
       }
  }
 
  stateSettingsForTabs(nextProps){
-   if(nextProps.items!=undefined && nextProps.items){
-     this.setState({previewData:nextProps.items});   
+   if(nextProps.tabsData!=undefined && nextProps.tabsData){
+     this.setState({previewData:nextProps.tabsData});   
    }
 
    if(nextProps.templateName!=undefined && nextProps.templateName){
@@ -102,6 +104,7 @@ setKey(tab){
       previewData,
       propertyData
     } = this.state;
+    console.log("previewDataw232=====",previewData);
     const { users } = this.props;
     return (
       <div>
@@ -141,7 +144,13 @@ setKey(tab){
                         <PhotoTab dispatchval={this.dispatchval} />
                       </Tab>
                       <Tab eventKey="preview" title="Preview">
+                      {previewData && previewData[0] && previewData[0].templates &&
+                       previewData[0].templates[0] && previewData[0].templates[0].template_type=="MultipleProperties" ?
+                        <MultiPreviewTab dispatchval={this.dispatchval} previewData={previewData} />
+                        : 
                         <PreviewTab dispatchval={this.dispatchval} previewData={previewData} />
+                      }
+                        
                       </Tab>
                       <Tab eventKey="selectdatabase" title="Select Database">
                         <DatabaseTab dispatchval={this.dispatchval} />

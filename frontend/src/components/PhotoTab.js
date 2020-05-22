@@ -27,12 +27,16 @@ class PhotoTab extends React.Component {
       imageData:Object.assign({
        url:''
       },this.props.imageData),
+      visible:false,
     };
 
     this.openUpload = this.openUpload.bind(this);
     this.imageChange = this.imageChange.bind(this);
     this.handleChangepreview = this.handleChangepreview.bind(this);
     this.handleSubmitPreviw = this.handleSubmitPreviw.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.modelClose = this.modelClose.bind(this);
+    
   }
 
   handleChangepreview(e) {
@@ -53,11 +57,11 @@ class PhotoTab extends React.Component {
         email:"",
        submitted:false 
       });
-      this.setState({visible:true},()=>{
+/*      this.setState({visible:true},()=>{
         window.setTimeout(()=>{
           this.setState({visible:false})
         },5000)
-      }); 
+      }); */
     }    
   }
     
@@ -65,8 +69,14 @@ class PhotoTab extends React.Component {
     $("#imgupload").trigger("click");
   }
 
-  imageChange(e) {
+  showModal(){
+    this.setState({visible:true});
+  }
+  modelClose(){
+    this.setState({visible:false});
+  }
 
+  imageChange(e) {
     const configs = {
       headers: {
        ...authHeader(), 'content-type': 'multipart/form-data'
@@ -82,19 +92,20 @@ class PhotoTab extends React.Component {
     
       .then((response) => {
         console.log("response===",response);
+        this.modelClose();
         this.setState({updateimage:response.data.url});
-
-        alert("The file is successfully uploaded");
+        //alert("The file is successfully uploaded");
       })
-      .catch((error) => {});
+      .catch((error) => {
+         this.modelClose();
+      });
   }
 
 
 
 
   render() {
-     const { imageData } = this.state;
-    
+     const { imageData,visible } = this.state;
     return (
       <div
         className="tab-pane fade mt-2"
@@ -183,7 +194,8 @@ class PhotoTab extends React.Component {
           </div>
         </div>
 
-        <div id="myModal" className="modal fade" role="dialog">
+
+        <Modal id="myModal" visible={visible} className="modal fade" role="dialog">
           <div className="modal-dialog">
             <div className="modal-content">
               <div classNames="modal-body">
@@ -234,7 +246,7 @@ class PhotoTab extends React.Component {
               </div>
             </div>
           </div>
-        </div>
+      </Modal>
 
         <p>Click on the image(s) below to upload your photo(s)</p>
         <div className="row">

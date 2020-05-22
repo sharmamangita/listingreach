@@ -139,6 +139,11 @@ class PropertyTab extends React.Component {
           formReply: "",
         },
         blastHeadline: "",
+        agentData:{
+          name:'',
+          phone_number:'',
+          company_details:'',
+        }
       },
 
       Email: {
@@ -654,6 +659,29 @@ class PropertyTab extends React.Component {
             : "";
         break;
 
+        case "name":
+        error.agentData.name =
+          value.length < 8
+            ? "Agent name must be at least 3 characters long!"
+            : "";
+        break;
+
+        case "phone_number":
+        error.agentData.phone_number =
+          value.length < 8
+            ? "Please enter vaild phone number"
+            : "";
+        break;
+
+        case "company_details":
+        error.agentData.company_details =
+          value.length < 8
+            ? "Company Detail line must be at least 8 characters long!"
+            : "";
+        break;
+
+  
+
       case "numberProperty":
         errors[id].propertyDetails.mlsNumber.numberProperty = parseInt(value)
           ? ""
@@ -818,7 +846,7 @@ class PropertyTab extends React.Component {
 
     // for edit blast case use this all properties with array
     /*if (propsData != undefined && propsData) {
-      if (propsData.templates.length) {
+      if (propsData.templates.length) { 
         let template = propsData.templates[0];
         states.propertyDetails.Email.formSubject = template.email_subject;
         states.propertyDetails.Email.formLine = template.from_line;
@@ -1056,7 +1084,9 @@ class PropertyTab extends React.Component {
                   placeholder="Agent Name"
                   onChange={(e) => this.handleChange("AgentContactInfo", e)}
                 />
-                <div className="validation"></div>
+                <div className="validation">
+                {error.agentData.name}
+                </div>
               </div>
             </div>
             <div className="col-md-6 mb-3">
@@ -1090,6 +1120,7 @@ class PropertyTab extends React.Component {
                 <input
                   type="text"
                   name="website_url"
+                  placeholder="Website URL"
                   value={agentData && agentData.website_url}
                   className="form-control form-control-lg form-control-a"
                   onChange={(e) => this.handleChange("AgentContactInfo", e)}
@@ -1107,7 +1138,9 @@ class PropertyTab extends React.Component {
                   placeholder="Phone Number"
                   onChange={(e) => this.handleChange("AgentContactInfo", e)}
                 />
-                <div className="validation"></div>
+                <div className="validation">
+                  {error.agentData.phone_number}
+                </div>
               </div>
             </div>
             <div className="col-md-3 mb-3">
@@ -1167,6 +1200,9 @@ class PropertyTab extends React.Component {
                   onChange={(e) => this.handleChange("AgentContactInfo", e)}
                   placeholder="Company Details"
                 ></textarea>
+                <div className="validation">
+                  {error.agentData.company_details}
+                </div>
               </div>
             </div>
             <div className="col-md-6 mb-3">
