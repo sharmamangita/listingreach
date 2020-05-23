@@ -1059,7 +1059,7 @@ class UserController implements IBaseController<UserBusiness> {
 			console.log(e);
 			res.send({ "error": "error in your request" });
 		}
-	});
+	};
 
 	saveProperty(req: express.Request, res: express.Response): void {
 		try {
@@ -1316,214 +1316,214 @@ class UserController implements IBaseController<UserBusiness> {
 			console.log(e);
 			res.send({ "error": "error in your request" });
 		}
+	}
 
 
+	savePropertyImages(data: any, id: any, res: express.Response): void {
+		var _blastimageBusiness = new BlastImageBusiness();
+		var _blastimage: IBlastImageModel = <IBlastImageModel>data;
 
-		savePropertyImages(data: any, id: any, res: express.Response): void {
-			var _blastimageBusiness = new BlastImageBusiness();
-			var _blastimage: IBlastImageModel = <IBlastImageModel>data;
+		var type = data.mimetype.split("/");
+		var userid: string = id.toString();
 
-			var type = data.mimetype.split("/");
-			var userid: string = id.toString();
-
-			_blastimage.user_id = userid;
-			_blastimage.url = data.filename;
-			_blastimageBusiness.create(_blastimage, (error, resultData) => {
-				if (error) {
-					console.log("error===", error);
-				} else {
-					return res.json({ url: resultData.url });
-				}
-			});
-		}
-
-		savePayment(req: express.Request, res: express.Response){
-			try {
-				var _userBusiness = new UserBusiness();
-				_userBusiness.verifyToken(req, res, (userData) => {
-					var _payment: IPaymentModel = <IPaymentModel>req.body;
-					_payment.createdOn = new Date();
-					_payment.user_id = userData._id;
-					var _paymentBusiness = new PaymentBusiness();
-					_payment.blast_id = userData._id;
-					_payment.amount = _payment.total;
-					_payment.paymentID = _payment.paymentID;
-					console.log("_payment=====", _payment);
-					_paymentBusiness.retrieve({ "blast_id": userData._id }, (error, result) => {
-						if (result && result.length > 0) {
-							lastInvoiceId = +invoiceData[0].maxNumber + +1;
-							_payment.invoice_id = lastInvoiceId;
-						}
-						else {
-							invoice_number = 1;
-							_payment.invoice_id = invoice_number;
-						}
-						_paymentBusiness.create(_payment, (error, paymentresultData) => {
-							if (error) {
-								console.log("error====", error)
-							} else {
-								res.status(201).send({ "success": "Your payment successfully done." });
-							}
-						});
-					});
-
-
-				});
+		_blastimage.user_id = userid;
+		_blastimage.url = data.filename;
+		_blastimageBusiness.create(_blastimage, (error, resultData) => {
+			if (error) {
+				console.log("error===", error);
+			} else {
+				return res.json({ url: resultData.url });
 			}
-			catch (e) {
-				console.log(e);
-				res.send({ "error": "error in your request" });
-			}
-		}
+		});
+	}
 
-		getPayment(req: express.Request, res: express.Response){
-			try {
-				var _userBusiness = new UserBusiness();
-				_userBusiness.verifyToken(req, res, (userData) => {
-					var _payment: IPaymentModel = <IPaymentModel>req.body;
-					var _paymentBusiness = new PaymentBusiness();
-					_paymentBusiness.retrieve({ "blast_id": userData._id }, (error, result) => {
+	savePayment(req: express.Request, res: express.Response) {
+		try {
+			var _userBusiness = new UserBusiness();
+			_userBusiness.verifyToken(req, res, (userData) => {
+				var _payment: IPaymentModel = <IPaymentModel>req.body;
+				_payment.createdOn = new Date();
+				_payment.user_id = userData._id;
+				var _paymentBusiness = new PaymentBusiness();
+				_payment.blast_id = userData._id;
+				_payment.amount = _payment.total;
+				_payment.paymentID = _payment.paymentID;
+				console.log("_payment=====", _payment);
+				_paymentBusiness.retrieve({ "blast_id": userData._id }, (error, result) => {
+					if (result && result.length > 0) {
+						lastInvoiceId = +invoiceData[0].maxNumber + +1;
+						_payment.invoice_id = lastInvoiceId;
+					}
+					else {
+						invoice_number = 1;
+						_payment.invoice_id = invoice_number;
+					}
+					_paymentBusiness.create(_payment, (error, paymentresultData) => {
 						if (error) {
 							console.log("error====", error)
 						} else {
-							console.log("result=====", result)
-							return res.json({ payment: result });
+							res.status(201).send({ "success": "Your payment successfully done." });
 						}
 					});
-
-
-
-				});
-			}
-			catch (e) {
-				console.log(e);
-				res.send({ "error": "error in your request" });
-			}
-		}
-		getTemplateOrPropertydata(req: express.Request, res: express.Response): void {
-			try {
-				var _property: IPropertyModel = <IPropertyModel>req.body;
-				var _propertyBusiness = new PropertyBusiness();
-				var propertyAggregate = [
-					{
-						$lookup:
-						{
-							from: "users",
-							localField: "userId",
-							foreignField: "_id",
-							as: "users"
-						}
-					},
-					{
-						$unwind: "$users"
-
-					},
-
-					{
-						$lookup:
-						{
-							from: "templates",
-							localField: "_id",
-							foreignField: "Property_id",
-							as: "templates"
-						}
-					},
-					{
-						$project:
-						{
-							"_id": 1,
-							"userId": 1,
-							"display_method": 1,
-							"street_address": 1,
-							"city": 1,
-							"state": 1,
-							"zipcode": 1,
-							"mls_number": 1,
-							"board": 1,
-							"property_type": 1,
-							"property_style": 1,
-							"lot_size": 1,
-							"number_bedrooms": 1,
-							"building_size": 1,
-							"number_stories": 1,
-							"number_bathrooms": 1,
-							"year_built": 1,
-							"garage": 1,
-							"garageSize": 1,
-							"price": 1,
-							"pricingInfo": 1,
-							"agentData": 1,
-							"property_details": 1,
-							"isOpenHouse": 1,
-							"linksToWebsites": 1,
-							"templates.email_subject": 1,
-							"templates.from_line": 1,
-							"templates.address": 1,
-							"templates.Property_id": 1,
-							"templates.headline": 1,
-							"templates.template_type": 1,
-							"templates.userId": 1,
-							"users.userName": 1,
-							"users.firstName": 1,
-							"users.lastName": 1,
-							"users.roles": 1,
-
-						}
-					},
-					{
-						$match:
-						{
-							userId: mongoose.Types.ObjectId(_property.userId.toString())
-						}
-					}
-				];
-
-				_propertyBusiness.aggregate(propertyAggregate, (error: any, result: any) => {
-					if (error) {
-						res.send({ "error": error });
-					} else {
-						var returnObj = result.map(function (obj: any): any {
-							return {
-								id: obj._id,
-								firstName: obj.users.firstName,
-								lastName: obj.users.lastName,
-								middleName: obj.users.middleName,
-								building_size: obj.building_size,
-								number_bathrooms: obj.number_bathrooms,
-								isOpenHouse: obj.isOpenHouse,
-								property_type: obj.property_type,
-								property_style: obj.property_style,
-								mls_number: obj.mls_number,
-								linksToWebsites: obj.linksToWebsites,
-								property_detail: obj.property_details,
-								pricingInfo: obj.pricingInfo,
-								board: obj.board,
-								zipcode: obj.zipcode,
-								city: obj.city,
-								display_method: obj.display_method,
-								street_address: obj.street_address,
-								number_bedrooms: obj.number_bedrooms,
-								year_built: obj.year_built,
-								number_stories: obj.number_stories,
-								lot_size: obj.lot_size,
-								templates: obj.templates,
-								price: obj.price,
-								garageSize: obj.garageSize,
-								agentData: obj.agentData
-							};
-
-						});
-						console.log("returnObj=====", returnObj);
-						return res.json(returnObj);
-					}
 				});
 
-			}  catch(e) {
-				console.log(e);
-				res.send({ "error": "error in your request" });
-			}
+
+			});
 		}
-
-
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
 	}
-	export = UserController;
+
+	getPayment(req: express.Request, res: express.Response) {
+		try {
+			var _userBusiness = new UserBusiness();
+			_userBusiness.verifyToken(req, res, (userData) => {
+				var _payment: IPaymentModel = <IPaymentModel>req.body;
+				var _paymentBusiness = new PaymentBusiness();
+				_paymentBusiness.retrieve({ "blast_id": userData._id }, (error, result) => {
+					if (error) {
+						console.log("error====", error)
+					} else {
+						console.log("result=====", result)
+						return res.json({ payment: result });
+					}
+				});
+
+
+
+			});
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
+	getTemplateOrPropertydata(req: express.Request, res: express.Response): void {
+		try {
+			var _property: IPropertyModel = <IPropertyModel>req.body;
+			var _propertyBusiness = new PropertyBusiness();
+			var propertyAggregate = [
+				{
+					$lookup:
+					{
+						from: "users",
+						localField: "userId",
+						foreignField: "_id",
+						as: "users"
+					}
+				},
+				{
+					$unwind: "$users"
+
+				},
+
+				{
+					$lookup:
+					{
+						from: "templates",
+						localField: "_id",
+						foreignField: "Property_id",
+						as: "templates"
+					}
+				},
+				{
+					$project:
+					{
+						"_id": 1,
+						"userId": 1,
+						"display_method": 1,
+						"street_address": 1,
+						"city": 1,
+						"state": 1,
+						"zipcode": 1,
+						"mls_number": 1,
+						"board": 1,
+						"property_type": 1,
+						"property_style": 1,
+						"lot_size": 1,
+						"number_bedrooms": 1,
+						"building_size": 1,
+						"number_stories": 1,
+						"number_bathrooms": 1,
+						"year_built": 1,
+						"garage": 1,
+						"garageSize": 1,
+						"price": 1,
+						"pricingInfo": 1,
+						"agentData": 1,
+						"property_details": 1,
+						"isOpenHouse": 1,
+						"linksToWebsites": 1,
+						"templates.email_subject": 1,
+						"templates.from_line": 1,
+						"templates.address": 1,
+						"templates.Property_id": 1,
+						"templates.headline": 1,
+						"templates.template_type": 1,
+						"templates.userId": 1,
+						"users.userName": 1,
+						"users.firstName": 1,
+						"users.lastName": 1,
+						"users.roles": 1,
+
+					}
+				},
+				{
+					$match:
+					{
+						userId: mongoose.Types.ObjectId(_property.userId.toString())
+					}
+				}
+			];
+
+			_propertyBusiness.aggregate(propertyAggregate, (error: any, result: any) => {
+				if (error) {
+					res.send({ "error": error });
+				} else {
+					var returnObj = result.map(function (obj: any): any {
+						return {
+							id: obj._id,
+							firstName: obj.users.firstName,
+							lastName: obj.users.lastName,
+							middleName: obj.users.middleName,
+							building_size: obj.building_size,
+							number_bathrooms: obj.number_bathrooms,
+							isOpenHouse: obj.isOpenHouse,
+							property_type: obj.property_type,
+							property_style: obj.property_style,
+							mls_number: obj.mls_number,
+							linksToWebsites: obj.linksToWebsites,
+							property_detail: obj.property_details,
+							pricingInfo: obj.pricingInfo,
+							board: obj.board,
+							zipcode: obj.zipcode,
+							city: obj.city,
+							display_method: obj.display_method,
+							street_address: obj.street_address,
+							number_bedrooms: obj.number_bedrooms,
+							year_built: obj.year_built,
+							number_stories: obj.number_stories,
+							lot_size: obj.lot_size,
+							templates: obj.templates,
+							price: obj.price,
+							garageSize: obj.garageSize,
+							agentData: obj.agentData
+						};
+
+					});
+					console.log("returnObj=====", returnObj);
+					return res.json(returnObj);
+				}
+			});
+
+		} catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
+
+
+}
+export = UserController;
