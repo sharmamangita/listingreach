@@ -34,7 +34,7 @@ class PaymentSchema {
             createdOn: {
                 type: Date,
                 required: true
-            }
+            },
             updateOn: {
                 type: Date
                 

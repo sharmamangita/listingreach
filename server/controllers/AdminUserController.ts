@@ -87,7 +87,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 		try {
 			var blastBusiness = new BlastBusiness();
 			//var condition: Object = { roles: /subscriber/ }
-			var fields: Object = { _id: 1, name: 1, email: 1, phone: 1, city: 1, state: 1, createdOn: 1 }
+			var fields: Object = { _id: 1, blast_type: 1}
 			blastBusiness.retrieveFields("", fields, (error, result) => {
 				if (error) {
 					console.log("error in getBlasts -", error);

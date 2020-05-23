@@ -68,55 +68,55 @@ export const common = {
   blastscolumns: [
     {
       label: 'Blast Type',
-      field: 'name',
+      field: 'blasttype',
       sort: 'asc',
       width: 250
     },
     {
       label: 'Headline',
-      field: 'email',
+      field: 'headline',
       sort: 'asc',
       width: 270
     },
     {
       label: 'Agent',
-      field: 'company',
+      field: 'agent',
       sort: 'asc',
       width: 200
     },
     {
       label: 'Email',
-      field: 'blastssent',
+      field: 'email',
       sort: 'asc',
       width: 50
     },
     {
       label: 'Company',
-      field: 'totalpaid',
+      field: 'company',
       sort: 'asc',
       width: 50
     },
     {
       label: 'Sent Date',
-      field: 'registered',
+      field: 'sentdate',
       sort: 'asc',
       width: 200
     },   
     {
       label: 'Tootal Paid',
-      field: 'registered',
+      field: 'totalpaid',
       sort: 'asc',
       width: 200
     },   
     {
       label: 'Paid On',
-      field: 'registered',
+      field: 'paidon',
       sort: 'asc',
       width: 200
     },   
     {
       label: 'Approve',
-      field: 'actions',
+      field: 'approve',
       sort: 'asc',
       width: 50
     },

@@ -38,7 +38,7 @@ class EmailBlastsPage extends React.Component {
 		}
 	}
 	componentWillMount() {
-		this.props.dispatch(adminActions.getSubscribers());
+		this.props.dispatch(adminActions.getBlasts());
 
 	}
 	componentDidMount() {
@@ -201,23 +201,25 @@ class EmailBlastsPage extends React.Component {
 				// var spliturlk = Url.split('=');
 				// console.log("spliturlk[1]=====", typeof spliturlk[1]);
 				// var subscriber = '';
-				var subscriber = this.props.blasts[cad];
+				var blast = this.props.blasts[cad];
 				totaldata.push({
-					name: subscriber.firstName ? subscriber.firstName + ' ' + subscriber.lastName : "--",
-					email: subscriber.email ? subscriber.email : "--",
-					phone: "--",
-					city: "--",
-					state: "--",
-					subscribedon: this.createdDate(subscriber.createdOn),
-					prefrences: (
-						<a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={subscriber._id} onClick={this.handleModalOpem()} data-target="#intro">
-							<span className="fa fa-settings"></span>
-						</a>						
+					blasttype: blast.blast_type,
+					headline: blast.email ? subscriber.email : "--",
+					agent: "--",
+					email: "--",
+					company: "--",
+					sentdate: this.createdDate(blast.createdOn),
+					totalpaid:'--',
+					paidon:'--',
+					// prefrences: (
+					// 	<a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={subscriber._id} onClick={this.handleModalOpem()} data-target="#intro">
+					// 		<span className="fa fa-settings"></span>
+					// 	</a>						
+					// ),
+					approve: (
+						<span> {this.deletelink(blast._id)} </span>
 					),
-					actions: (
-						<span> {this.deletelink(subscriber._id)} </span>
-					),
-					status: (this.status(subscriber.status, subscriber._id))
+					status: (this.status(blast.status, blast._id))
 				});
 			}
 		}
