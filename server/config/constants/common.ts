@@ -12,7 +12,7 @@ class Common {
 	static STUDYING_ID: string ='599a92797c086869cba64408';
 	static INTERCOM_ACCESS_TOKEN: string = process.env.INTERCOM_ACCESS_TOKEN || 'dG9rOmJmNGQ2ZWViX2I1ZmVfNDE2Zl9iZGFlXzY3ODNiY2UxZGYzMzoxOjA=';
 
-    static SEND_FROM_EMAIL: string ="info@76east.com";
+    static SEND_FROM_EMAIL: string ="ds771343@gmail.com";
     static ADMIN_EMAIL: string = "info@76east.com";
 
     static SITE_URL: string = "http://66.235.194.119:3006";
@@ -1321,7 +1321,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`<!DOCTYPE html>
          margin-bottom: 0.5rem;">From:	</label>
                      </div>
                      <div style="display: block;width:66%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;" class="mb-3 mt-3 ml-3">
-                        Vinod via Listingreach.com
+                        #agentName# via Listingreach.com
                      </div>
                      <div class="mb-3 text-right" style="display: block;width:30%;text-align: right !important;margin-bottom: 1rem !important;text-align: right !important;">					 
                         <label style="display: inline-block;
@@ -1379,21 +1379,18 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`<!DOCTYPE html>
 static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
                      <div class="row mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
                         <div class="text-center" style="width:16%;text-align: center !important;">
-                           <img alt="Photo" class="img-square" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-logo.png">
+                           <img alt="Photo" class="img-square" style="width:100px;" src="#companyLogo#">
                         </div>
                         <div class="text-center" style="width:66%;text-align: center !important;">
-                           <b> Vinod</b><br>
-                           Manager<br>
-                           vinod@gmail.com<br>
-                           http://www.website.com<br>
-                           21212121212<br><br>
-                           Agent Other Contacts Details will come here: (Optional)<br><br>
-                           Company Details will come here,<br>
-                           Company name<br>
-                           Company Address, Mai Phone Number, Company Website, etc.
+                           <b> #agentName# </b><br>
+                           Agent<br>
+                           #agentEmail#<br>
+                           #WebsiteUrl#<br>
+                           #phone_number#<br><br>
+                          	#companyDetail#,<br>
                         </div>
                         <div class="text-center pl-0" style="width:16%;text-align: center !important;">
-                           <img alt="Photo" class="img-circle" style="width:100px;" src="http://66.235.194.119/listingreach/img/dummy-profile.png">
+                           <img alt="Photo" class="img-circle" style="width:100px;" src="#agentImage#">
                         </div>
                      </div>
                   </div>
@@ -1420,7 +1417,7 @@ static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
 
 
 static PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE:string= Common.PREVIEW_EMAIL_TEMPLATE_HEADER+`
-<p>#multiproperty#</p>
+#multiproperty#
 `+ Common.PREVIEW_EMAIL_TEMPLATE_FOOTER;
 
 static PREVIEW_EMAIL_TEMPLATE:string =  ` 

@@ -88,7 +88,8 @@ export function users(state = {}, action) {
       
       case userConstants.BLAST_SUCCESS:
             newState = objectAssign({}, state,{
-              tab:'designTemplateTab'
+              tab:'designTemplateTab',
+              blastData:action.users
             });
           return newState ;
 
@@ -103,7 +104,7 @@ export function users(state = {}, action) {
       console.log("action.result===",action.result);
         newState = objectAssign({}, state,{
           tab:'photo',
-          tabsData:action.users
+          propertyData:action.users
         });
       return newState ; 
 

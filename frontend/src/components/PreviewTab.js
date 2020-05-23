@@ -48,7 +48,7 @@ class PreviewTab extends React.Component {
   //console.log('stateeeeeee',this.state);return false; 
    const { previewData } = this.props;
     const {email } = this.state;
-    const { dispatch } = this.props;
+    const { dispatch } = this.props.dispatchval.dispatch;
     if(email && previewData){
     dispatch(userActions.emailPreviewTemplate(email,previewData)); 
       //window.scrollTo(0,0);

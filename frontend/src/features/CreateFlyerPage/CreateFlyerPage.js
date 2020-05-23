@@ -75,19 +75,28 @@ class CreateFlyerPage extends React.Component {
          this.moveTab(tab)
      }
 
-     if((nextProps.users!=undefined && nextProps.users.tabsData )|| (nextProps.agentData!=undefined && nextProps.agentData) || (nextProps.profile!=undefined && nextProps.profile) || nextProps.imageData!=undefined &&  nextProps.imageData){
+     if((nextProps.users!=undefined && nextProps.users.blastData ) || (nextProps.agentData!=undefined && nextProps.agentData) || (nextProps.profile!=undefined && nextProps.profile) || nextProps.imageData!=undefined &&  nextProps.imageData){
             this.stateSettingsForTabs(nextProps.users);
       }
  }
 
  stateSettingsForTabs(nextProps){
-   if(nextProps.tabsData!=undefined && nextProps.tabsData){
-     this.setState({previewData:nextProps.tabsData});   
+   if(nextProps.blastData!=undefined && nextProps.blastData){
+     let blast={};
+      blast.blastData = nextProps.blastData.data;
+     this.setState({propertyData:blast}); 
+     //previewData:nextProps.propertyData  
+   }
+   if(nextProps.templateName!=undefined && nextProps.templateName){
+     let template={};
+       template.templateData=nextProps.templateName.data;
+     this.setState({propertyData:template});   
    }
 
-   if(nextProps.templateName!=undefined && nextProps.templateName){
-     this.setState({propertyData:nextProps.templateName});   
+   if(nextProps.propertyData!=undefined && nextProps.propertyData){
+     this.setState({previewData:nextProps.propertyData});   
    }
+
  }
 
 moveTab(tab){
@@ -104,7 +113,7 @@ setKey(tab){
       previewData,
       propertyData
     } = this.state;
-    console.log("previewDataw232=====",previewData);
+    console.log("previewData=====",previewData);
     const { users } = this.props;
     return (
       <div>

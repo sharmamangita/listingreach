@@ -6,6 +6,7 @@ import mongoose = require("mongoose");
 
 interface IPropertyModel extends mongoose.Document {
     _id: mongoose.Types.ObjectId,
+    blast_id:mongoose.Types.ObjectId,
     display_method : string,
     street_address : string,
     city:string,

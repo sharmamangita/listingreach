@@ -445,12 +445,12 @@ function designTemplate(designTemplate,user){
 
 
 
-function saveProperty(property,agentData,Email,blastHeadline,templateId){
+function saveProperty(property,agentData,Email,blastHeadline,templateId,blast_id){
    console.log("property====",property);
 
     return dispatch => {
         dispatch(request());
-        userService.saveProperty(property,agentData,Email,blastHeadline,templateId)
+        userService.saveProperty(property,agentData,Email,blastHeadline,templateId,blast_id)
             .then(
                 users => dispatch(success(users)),
                 error => dispatch(failure(error.toString()))

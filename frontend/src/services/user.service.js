@@ -266,12 +266,12 @@ function designTemplate(template_type,userId){
 
 
 
-function saveProperty(property,agentData,Email,blastHeadline,templateId){
+function saveProperty(property,agentData,Email,blastHeadline,templateId,blast_id){
 
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({property,agentData,Email,blastHeadline,templateId})
+        body: JSON.stringify({property,agentData,Email,blastHeadline,templateId,blast_id})
     };
     return fetch(`${config.apiUrl}/users/saveProperty`, requestOptions).then(handleResponse);    
 }

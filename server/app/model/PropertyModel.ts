@@ -15,6 +15,9 @@ class PropertyModel {
     get _id (): mongoose.Types.ObjectId {
         return this.propertyModel._id;
     }
+    get blast_id (): mongoose.Types.ObjectId {
+        return this.propertyModel.blast_id;
+    }
     get display_method (): string {
         return this.propertyModel.display_method;
     }

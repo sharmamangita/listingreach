@@ -462,8 +462,6 @@ updateUser(req: express.Request, res: express.Response): void {
 	
 emailPreviewTemplate(req: express.Request, res: express.Response): void { 
 		try { 
-			
-
 			var _propertyData: IPropertyModel = <IPropertyModel>req.body;
 			console.log("propertyDetails====",_propertyData);
 			let property =  _propertyData.propertyDetails;
@@ -476,7 +474,106 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			let formReply = property[0].templates[0].address;
 			let headline  = property[0].templates[0].headline;
 
-			
+			let agentData = property[0].agentData[0]; 
+
+		if(property && property.length>1){
+			var html = '';
+			property.forEach(function(proDta){	
+						html += `<div class="flyer-bg" style="background: #f1f1f1;">
+			                     <div class="row" style="display: block;display: flex;flex-wrap: wrap;border-top: 2px solid #ccc;">
+			                        <div style="width:50%;display: block; background:#f1f1f1;height: 400px;">
+			                           <img src="http://66.235.194.119/listingreach/img/img4.jpg" alt="image" style="width:100%;height: 400px;">
+			                        </div>`;
+						html += `<div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
+			                           <div class="row" style="display: flex;flex-wrap: wrap;">
+			                              <div style="width:100%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">
+			                                 <h4 style=" background: #f1f1f1;font-size: 1.5rem;margin-top: 0;
+			                                    margin-bottom: 1rem;">Price: ${proDta.price} per Square Foot</h4>
+			                              </div>
+			                              <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+			                                 <label class="flyer-label" style="color: #EE8C3A;
+			                                    font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Key Features:</label>
+			                                 <ul>
+			                                    <li>Property Type: ${proDta.property_type}  </li>
+			                                    <li>Property Style: ${proDta.property_style}  </li>
+			                                    <li> ${proDta.number_bedrooms} Bedrooms</li>
+			                                    <li>${proDta.number_bathrooms[0].full} Full ${proDta.number_bathrooms[0].half} Half Bathrooms</li>
+			                                    <li>1 Full +2 Half Bathrooms</li>
+			                                    <li>${proDta.building_size} square feet</li>
+			                                    <li>${proDta.price}  /sqft</li>
+			                                    <li>Lot Size: ${proDta.lot_size} sqft</li>
+			                                    <li>  Built ${proDta.year_built} </li>
+			                                    <li>${proDta.garageSize} Garage</li>
+			                                    <li> ${proDta.number_stories} </li>
+			                                 </ul>
+			                              </div>
+			                           </div>
+			                        </div>
+			                     </div>`;
+						html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
+			                        <div class="row">
+			                           <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
+			                              <label class="flyer-label" style="color: #EE8C3A;
+			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
+			                              <p>${proDta.street_address}, ${proDta.city}, ${proDta.zipcode}</p>
+			                           </div>`;
+						proDta.isOpenHouse.forEach(function (resut) {
+							html += `<div class="text-center" style="width:100%;text-align: center !important;">
+			                              <label class="flyer-label" style="color: #EE8C3A;
+			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.openHouseData.houseType}:</label>
+			                              <span>${resut.openHouseData.date} ${resut.openHouseData.startTime}  - ${resut.openHouseData.endTime} </span><br>
+			                           </div>`;
+						});
+
+						html += `<div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+			                              <label class="flyer-label" style="color: #EE8C3A;
+			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">MLS#:</label>
+			                              <span>${proDta.mls_number}</span>
+			                           </div>
+			                           <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+			                              <label class="flyer-label" style="color: #EE8C3A;
+			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Description:</label>
+			                              <span>${proDta.property_details}</span>         
+			                           </div>
+			                           <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+			                              <label class="flyer-label" style="color: #EE8C3A;
+			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Links:</label>`;
+						proDta.isOpenHouse.forEach(function (resut) {
+							html += `<br><a href="http://66.235.194.119/listingreach" style="color: #000000;transition: all .5s ease;"><u> Websitename with hyperlink</a></u>`;
+			             });
+
+			             html +=  ` </div>
+			                        </div>
+			                     </div>
+							</div>`;								
+		});
+
+			var previewTemplatememail =Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;	
+					var emailtemplate = previewTemplatememail
+					.replace(/#multiproperty#/g,html)
+					.replace(/#agentName#/g,agentData.name)
+					.replace(/#agentEmail#/g,agentData.Email)
+					.replace(/#agentImage#/g,agentData.image_url || "http://66.235.194.119/listingreach/img/dummy-profile.png")
+					.replace(/#companyLogo#/g,agentData.logo_url || "http://66.235.194.119/listingreach/img/dummy-logo.png")
+					.replace(/#WebsiteUrl#/g,agentData.website_url)
+					.replace(/#phone_number#/g,agentData.phone_number)
+					.replace(/#companyDetail#/g,agentData.company_details)
+					.replace(/#subject#/g,subject)
+					.replace(/#formLine#/g,formLine)
+					.replace(/#formReply#/g,formReply)
+					.replace(/#blastHeadline#/g,headline);
+
+
+		Common.sendMail(property.email,'support@employeemirror.com','Property Details', null,emailtemplate, function(error: any, response: any){ 
+			if(error){ 
+				console.log(error);
+				res.end("error");
+				}
+			});
+		res.status(201).send({ "success":"done" }); 
+
+	} else {
+=======
 
 			let agentData = property[0].agentData[0]; 
 
@@ -601,6 +698,7 @@ console.log("html======",html);
 				let numberOfStories = property.generalPropertyInformation.numberOfBathrooms;*/
 	
 
+console.log("else====");
 			let openData = '';
 			if(property[0].isOpenHouse.openHouseData !=undefined && property[0].isOpenHouse.openHouseData.length){
 				let houseArray = property[0].isOpenHouse.openHouseData;
@@ -623,10 +721,6 @@ console.log("html======",html);
 				 </div>`;
 				})
 			}
-
-
-
-
 
 			var previewTemplatememail =Common.PREVIEW_EMAIL_TEMPLATE;	
 					var emailtemplate = previewTemplatememail
@@ -654,12 +748,10 @@ console.log("html======",html);
 					.replace(/#agentName#/g,agentData.name)
 					.replace(/#agentEmail#/g,agentData.Email)
 					.replace(/#agentImage#/g,agentData.image_url || "http://66.235.194.119/listingreach/img/dummy-profile.png")
-					.replace(/#companyLogo#/g,agentData.logo_url)
+					.replace(/#companyLogo#/g,agentData.logo_url || "http://66.235.194.119/listingreach/img/dummy-logo.png")
 					.replace(/#WebsiteUrl#/g,agentData.website_url)
-					.replace(/#multiproperty#/g,agentData.phone_number);
-
-					
-
+					.replace(/#phone_number#/g,agentData.phone_number)
+					.replace(/#companyDetail#/g,agentData.company_details);
 					
 					Common.sendMail(property.email,'support@employeemirror.com','Property Details', null,emailtemplate, function(error: any, response: any){ 
 					if(error){ 
@@ -668,13 +760,9 @@ console.log("html======",html);
 					}
 					});
 					res.status(201).send({ "success":"done" }); 
+		}
+	
 
-
-
-	}
-
-
-				
 			
 		}  catch (e)  {
 			console.log(e);
@@ -887,7 +975,7 @@ console.log("html======",html);
 						console.log(error);
 						res.send({"error": error});
 					}
-	                else res.send({"success": "success"});
+	                else res.send({"success": "success",data:result});
 	        	}); 
         }
         catch (e)  {
@@ -999,6 +1087,7 @@ console.log("html======",html);
 
 
 	           		_propertyform.display_method=property.propertyAddress.displayMethod;
+	           		_propertyform.blast_id = _propertyforms.blast_id;
 					_propertyform.street_address=property.propertyAddress.streetAddress;
 					_propertyform.city=property.propertyAddress.city;
 					_propertyform.state=property.propertyAddress.state;
@@ -1111,6 +1200,15 @@ console.log("html======",html);
 															                    as: "templates"               
 															                }
 															            },
+															            															            {
+															                $lookup:                       
+															                {
+															                    from: "blasts",
+															                    localField: "blast_id",   
+															                    foreignField: "_id",        
+															                    as: "blasts"               
+															                }
+															            },
 															            {
 															                $project:                       
 															                {    
@@ -1121,6 +1219,7 @@ console.log("html======",html);
 															                    "city":1,
 															                    "state":1,
 															                    "zipcode":1,
+															                    "blast_id":1,
 															                    "mls_number":1,
 																				"board":1,
 															                    "property_type":1,
@@ -1156,7 +1255,7 @@ console.log("html======",html);
 															            {
 															                $match:
 														                    {
-																					userId: mongoose.Types.ObjectId(property.userId.toString())      
+																					blast_id: mongoose.Types.ObjectId(_propertyforms.blast_id.toString())      
 																			}
 															            }
 															        ];
@@ -1192,7 +1291,8 @@ console.log("html======",html);
 																		        templates:obj.templates,
 																		        price:obj.price,
 																		        garageSize:obj.garageSize,
-																		        agentData:obj.agentData
+																		        agentData:obj.agentData,
+																		        blast_id:obj.blast_id
 																		    };
 
 																	});

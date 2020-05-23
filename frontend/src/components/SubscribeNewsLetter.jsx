@@ -407,7 +407,7 @@ function mapStateToProps(state) {
     const { users, registration } = state;
     const { agentData } = users;
     const { clearForm } = registration;
-    console.log(agentData);
+    
     return {
         clearForm,
         agentData: agentData ? agentData.agentDatabase : null

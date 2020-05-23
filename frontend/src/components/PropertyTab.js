@@ -64,6 +64,7 @@ class PropertyTab extends React.Component {
 
     this.property = [
       {
+        blast_id:'',
         userId: "",
         propertyId: "",
         Email: {
@@ -124,6 +125,8 @@ class PropertyTab extends React.Component {
 
     this.state = {
       userId: "",
+      blast_id:'',
+      propertyCount:1,
       templateId:"",
       disabled: true,
       alert: {
@@ -301,6 +304,7 @@ class PropertyTab extends React.Component {
   addProperty(index) {
     this.property.push({
       userId: "",
+      blast_id:'',
       propertyId: "",
       Email: {
         formSubject: "",
@@ -390,16 +394,21 @@ class PropertyTab extends React.Component {
         },
       },
     });
-
+let propertyCount = this.state.propertyCount+1;
     this.setState({
       propertyDetails: this.property,
+      propertyCount:propertyCount,
       errors: this.propertyError,
     });
   }
 
   deleteProperty(i) {
     let propertyArray = Object.assign({}, this.state);
+    console.log("this.state.propertyCount====",this.state.propertyCount);
+    let propertyCount = this.state.propertyCount-1;
+    console.log("propertCount====",propertyCount);
     propertyArray.propertyDetails.splice(i, 1);
+    propertyArray.propertyCount = propertyCount;
     this.setState(propertyArray);
   }
 
@@ -813,20 +822,39 @@ class PropertyTab extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps && nextProps.propertyData && nextProps.propertyData.data){
-      let templateId = nextProps.propertyData.data._id;
-      this.setState({templateId:templateId});
+    console.log("nextProps232",nextProps);
+    if(nextProps.propertyData && nextProps.propertyData.blastData){
+      let blast = nextProps.propertyData;
+       this.propsDataupdate(blast); 
     }
+
+    if(nextProps.propertyData && nextProps.propertyData.templateData){
+       let templateData = nextProps.propertyData;
+      this.propsDataupdate(templateData);
+    }
+/*    if(nextProps && nextProps.propertyData && nextProps.propertyData.data ||  nextProps.propertyData.data){
+      let templateId = nextProps.propertyData.data._id;
+      let blast_id = nextProps.propertyData.data.blast_id;
+      this.setState({templateId:templateId,blast_id:blast_id});
+    }*/
     //if((nextProps.propertyData!=undefined && nextProps.propertyData) || (nextProps.users!=undefined && nextProps.users.items )|| (nextProps.agentData!=undefined && nextProps.agentData) || (nextProps.profile!=undefined && nextProps.profile) || nextProps.imageData!=undefined &&  nextProps.imageData){
     //this.propsDataupdate(nextProps.users,nextProps.agentData, nextProps.profile,nextProps.imageData);
     //this.propsDataupdate(nextProps.propertyData);
     // }
   }
 
-  propsDataupdate(data, agentData, profile, images) {
-    //propsDataupdate(templateName){
+  //propsDataupdate(data, agentData, profile, images) {
+    propsDataupdate(data){
     let states = Object.assign({}, this.state);
-    let propsData = data.items;
+    if(data && data.blastData){
+      states.blast_id = data.blastData._id;
+    }
+
+    if(data && data.templateData){
+      states.templateId = data.templateData._id;
+    }
+
+    /*let propsData = data.items;
     let propsagentData = agentData;
     let profileData = profile;
     let propsimageData = images;
@@ -841,7 +869,7 @@ class PropertyTab extends React.Component {
       this.setState({ imageData: states.imageData });
       this.setState({ agentData: states.agentData });
       this.setState({ profile: states.profile });
-    }
+    }*/
 
 
     // for edit blast case use this all properties with array
@@ -906,6 +934,7 @@ class PropertyTab extends React.Component {
       //states.propertyDetails.generalPropertyInformation.numberOfBathrooms.half = propsData.price
       this.setState(states);
     }*/
+    this.setState(states);
   }
 
   componentDidMount() {
@@ -924,24 +953,20 @@ class PropertyTab extends React.Component {
 
   saveProperty(event) {
     event.preventDefault();
-    const { propertyDetails, submitted,agentData,Email,blastHeadline,templateId} = this.state;
+    const { propertyDetails, submitted,agentData,Email,blastHeadline,templateId,blast_id} = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
-    /*    if (
+       if (
       propertyDetails &&
-      propertyDetails.Email.formSubject &&
-      propertyDetails.Email.formReply &&
-      propertyDetails.blastHeadline &&
-      propertyDetails.propertyDetail &&
-      propertyDetails.pricingInfo.price
+      Email.formSubject &&
+      Email.formReply &&
+      blastHeadline &&
+      propertyDetails[0].propertyDetail &&
+      propertyDetails[0].pricingInfo.price
     ) {
-      console.log(
-        "propertyDetails.Email.formSubject====",
-        propertyDetails.Email.formSubject
-      );*/
-    dispatch(userActions.saveProperty(propertyDetails,agentData,Email,blastHeadline,templateId));
-    /*    } else {
+    dispatch(userActions.saveProperty(propertyDetails,agentData,Email,blastHeadline,templateId,blast_id));
+        } else {
       this.setState({ submitted: true });
-    }*/
+    }
   }
 
   render() {
@@ -957,6 +982,7 @@ class PropertyTab extends React.Component {
       submitted,
       error,
       Email,
+      propertyCount,
       blastHeadline,
     } = this.state;
     const { propertyData } = this.props;
@@ -1228,9 +1254,9 @@ class PropertyTab extends React.Component {
                   style={{
                     display:
                       propertyData &&
-                      propertyData.data &&
-                      propertyData.data.template_type &&
-                      propertyData.data.template_type == "MultipleProperties"
+                      propertyData.templateData &&
+                      propertyData.templateData.template_type &&
+                      propertyData.templateData.template_type == "MultipleProperties"
                         ? "inline"
                         : "none",
                   }}
@@ -1243,6 +1269,16 @@ class PropertyTab extends React.Component {
                     type="button"
                     className="btn btn-primary mb-3"
                     onClick={() => this.addProperty({ i })}
+                    style={{
+                      display:
+                      propertyData &&
+                      propertyData.templateData &&
+                      propertyData.templateData.template_type &&
+                      propertyData.templateData.template_type == "MultipleProperties"
+                      && propertyCount<4
+                        ? "inline"
+                        : "none",
+                    }}
                   >
                     Add Property
                   </button>
