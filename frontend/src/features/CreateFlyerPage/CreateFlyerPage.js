@@ -7,7 +7,7 @@ import { render } from "react-dom";
 import config from "config";
 import { authHeader } from "../../helpers";
 import ListingSubmenu from "../../components/ListingSubmenu";
-
+import UploadBlastAndBrokeragePreviewTab from "../../components/UploadBlastAndBrokeragePreviewTab";
 import BlastTab from "../../components/BlastTab";
 import AgentTemplateTab from "../../components/AgentTemplateTab";
 import PropertyTab from "../../components/PropertyTab";
@@ -19,8 +19,6 @@ import TermsTab from "../../components/TermsTab";
 import PaymentTab from "../../components/PaymentTab";
 import MultiPreviewTab from "../../components/MultiPreviewTab";
 import UploadBlastTab from "../../components/UploadBlastTab";
-//import UploadBlastAndBrokeragePreviewTab from "../../components/UploadBlastAndBrokeragePreviewTab";
-
 
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
@@ -51,7 +49,7 @@ class CreateFlyerPage extends React.Component {
       moveTab: "blast",
       previewData: "",
       propertyData: "",
-      uploadBlast:''
+      uploadBlast: "",
     };
 
     this.moveTab = this.moveTab.bind(this);
@@ -88,7 +86,7 @@ class CreateFlyerPage extends React.Component {
     if (nextProps.blastData != undefined && nextProps.blastData) {
       let blast = {};
       blast.blastData = nextProps.blastData.data;
-      this.setState({ propertyData: blast,uploadBlast:blast});
+      this.setState({ propertyData: blast, uploadBlast: blast });
       //previewData:nextProps.propertyData
     }
     if (nextProps.templateName != undefined && nextProps.templateName) {
@@ -111,7 +109,7 @@ class CreateFlyerPage extends React.Component {
   }
 
   render() {
-    const { moveTab, previewData, propertyData,uploadBlast} = this.state;
+    const { moveTab, previewData, propertyData, uploadBlast } = this.state;
     const { users } = this.props;
     return (
       <div>
@@ -175,26 +173,36 @@ class CreateFlyerPage extends React.Component {
                         </Tab>
                       )}
 
-
-
-                      <Tab eventKey="preview" title="Preview">
-                        {previewData &&
-                        previewData[0] &&
-                        previewData[0].templates &&
-                        previewData[0].templates[0] &&
-                        previewData[0].templates[0].template_type ==
-                          "MultipleProperties" ? (
-                          <MultiPreviewTab
-                            dispatchval={this.dispatchval}
-                            previewData={previewData}
-                          />
-                        ) : (
-                          <PreviewTab
-                            dispatchval={this.dispatchval}
-                            previewData={previewData}
-                          />
-                        )}
-                      </Tab>
+                      {previewData &&
+                      previewData[0] &&
+                      previewData[0].templates &&
+                      previewData[0].templates[0] &&
+                      previewData[0].templates[0].template_type ==
+                        "UploadBlast" ? (
+                        <Tab eventKey="uploadblastpreview" title="Preview">
+                          <UploadBlastAndBrokeragePreviewTab dispatchval={this.dispatchval} 
+                          previewData={previewData} />{" "}
+                        </Tab>
+                      ) : (
+                        <Tab eventKey="preview" title="Preview">
+                          {previewData &&
+                          previewData[0] &&
+                          previewData[0].templates &&
+                          previewData[0].templates[0] &&
+                          previewData[0].templates[0].template_type ==
+                            "MultipleProperties" ? (
+                            <MultiPreviewTab
+                              dispatchval={this.dispatchval}
+                              previewData={previewData}
+                            />
+                          ) : (
+                            <PreviewTab
+                              dispatchval={this.dispatchval}
+                              previewData={previewData}
+                            />
+                          )}
+                        </Tab>
+                      )}
 
                       <Tab eventKey="selectdatabase" title="Select Database">
                         <DatabaseTab dispatchval={this.dispatchval} />

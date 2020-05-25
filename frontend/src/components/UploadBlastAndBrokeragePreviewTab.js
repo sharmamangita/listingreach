@@ -69,12 +69,8 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
 
 
   render() {
-    console.log("this.props===preview== templates",this.props);
+    console.log("upload blast",this.props);
     const { previewData } = this.props;
-    let agentData='';
-    if(previewData && previewData.length){
-      agentData = previewData[0].agentData[0].agentData;
-    }
     return (
       <div
         className="tab-pane fade mt-2"
@@ -129,7 +125,8 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
                   <label>From: </label>
                 </div>
                 <div className="col-md-8 mb-3 mt-3">
-                  {agentData.name} via Listingreach.com
+                 {previewData && previewData[0] &&
+                        previewData[0].firstName} via Listingreach.com
                 </div>
                 <div className="col-md-4 mb-3 text-right">
                   <label>Email Subject Line:</label>
@@ -161,14 +158,6 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
               </div>
               <div className="row">
                 <div className="col-md-12">
-                  <div className="flyer-header">
-                  {previewData && previewData[0] && previewData[0].templates && previewData[0].templates[0] &&
-                    previewData[0].templates[0].headline}
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-12">
                   <img
                     src="public/assets/images/img1.jpg"
                     alt="image"
@@ -181,7 +170,7 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
                   <div className="col-md-12 mt-3 mb-3 ml-3">
                     <h4>
                       Price: $
-                      {previewData && previewData[0] && previewData[0].price}
+                      {previewData && previewData[0] && previewData[0].pricingInfo && previewData[0].pricingInfo[0].price}
                        {" "}per Square Foot
                     </h4>
                   </div>
@@ -202,9 +191,9 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
 
                   <div className="col-md-12 text-center">
                     {previewData && previewData[0] && previewData[0].isOpenHouse &&
-                      previewData[0].isOpenHouse.openHouseData != undefined &&
-                      previewData[0].isOpenHouse.openHouseData.length > 0 &&
-                      previewData[0].isOpenHouse.openHouseData.map(function (
+                      previewData[0].isOpenHouse != undefined &&
+                      previewData[0].isOpenHouse.length > 0 &&
+                      previewData[0].isOpenHouse.map(function (
                         data,
                         i
                       ) {
@@ -214,11 +203,11 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
                               {data.openHouseData.houseType}:
                             </label>
                             <span>
-                              <Moment parse="YYYY-MM-DD HH:mm">
+                            
                                 {data.openHouseData.date},
                                 {data.openHouseData.startTime},
                                 {data.openHouseData.endTime}
-                              </Moment>
+                         
                             </span>
                             <br />
                           </div>
@@ -240,8 +229,8 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
                     <label className="flyer-label">Links:</label>
                     <p>
                       {previewData && previewData[0] &&
-                        previewData[0].linksToWebsites && previewData[0].linksToWebsites.linkData && previewData[0].linksToWebsites.linkData.length > 0 &&
-                        previewData[0].linksToWebsites.linkData.map(function (
+                        previewData[0].linksToWebsites && previewData[0].linksToWebsites && previewData[0].linksToWebsites.length > 0 &&
+                        previewData[0].linksToWebsites.map(function (
                           data,
                           i
                         ) {

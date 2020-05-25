@@ -150,6 +150,9 @@ class UploadBlastTab extends React.Component {
         {
           userId: "",
           propertyId: "",
+          propertyImages:{
+            img:[]
+          },
           isOpenHouse: {
             display: true,
             houseType: "",
@@ -228,9 +231,13 @@ class UploadBlastTab extends React.Component {
       .post(`${config.uploadapiUrl}/propertyupload`, formData, configs)
 
       .then((response) => {
-        console.log("response===", response);
-        this.setState({ blastImageUrl: response.data.url });
-        //alert("The file is successfully uploaded");
+        let imageids = {};
+            imageids.id = response.data.imageId;
+        let setimagesData = Object.assign({}, this.state);
+
+        setimagesData.blastImageUrl=response.data.url;
+        setimagesData.propertyDetails[0].propertyImages.img[0]=imageids;
+        this.setState(setimagesData);
       })
       .catch((error) => {});
   }
@@ -558,7 +565,6 @@ class UploadBlastTab extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.uploadBlast && nextProps.uploadBlast.blastData) {
-      alert('1');
       let blast = nextProps.uploadBlast; 
       this.propsDataupdate(blast);
     }
@@ -575,16 +581,13 @@ class UploadBlastTab extends React.Component {
 
     if (data && data.templateData) {
       states.templateId = data.templateData._id;
-      this.setState(states);
+      this.setState({templateId:data.templateData._id});
     }
 
     if (data && data.blastData) {
-     alert(data.blastData._id);
       states.blast_id = data.blastData._id;
-      this.setState(states);
+      this.setState({blast_id:data.blastData._id});
     }
-
-
 
   }
 
@@ -1268,9 +1271,12 @@ class UploadBlastTab extends React.Component {
                       <label>Street Address</label>
                       <input
                         type="text"
-                        name="address"
+                        name="streetAddress"
                         className="form-control form-control-lg form-control-a"
                         placeholder="Street Address"
+                        onChange={(e) =>
+                          this.handleChange("propertyAddress", e)
+                        }
                       />
                     </div>
                   </div>

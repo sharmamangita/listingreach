@@ -1092,6 +1092,19 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 							   _propertyform.isOpenHouse=opneHouseData;
 						}
 
+						if(property.propertyImages){
+								var propertyImages=[];
+								let data = property.propertyImages.img;
+											data.forEach(function(images:any) {
+											if(images){
+												propertyImages.push({img:images.img});
+											}
+										});
+							   _propertyform.propertyImages=propertyImages;
+						}
+
+
+
 				_propertyform.property_type = property.generalPropertyInformation.propertyType;
 				_propertyform.property_style = property.generalPropertyInformation.propertyStyle;
 				_propertyform.lot_size = property.generalPropertyInformation.lotSize;
@@ -1290,7 +1303,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			if(error){
 				console.log("error===",error);
 			}else {
-				 return res.json({url:resultData.url});
+				 return res.json({url:resultData.url,imageId:resultData._id}); 
 			}
 		});
 	}

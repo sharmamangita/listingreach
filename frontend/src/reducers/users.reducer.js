@@ -1,5 +1,5 @@
-import { userConstants } from '../constants';
-import objectAssign from 'object-assign';
+import { userConstants } from "../constants";
+import objectAssign from "object-assign";
 
 export function users(state = {}, action) {
   let newState;
@@ -7,33 +7,33 @@ export function users(state = {}, action) {
   switch (action.type) {
     case userConstants.GETALL_REQUEST:
       newState = objectAssign({}, state, {
-        loading: true
+        loading: true,
       });
       return newState;
     case userConstants.GETALL_SUCCESS:
       newState = objectAssign({}, state, {
-        items: action.users
+        items: action.users,
       });
       return newState;
     case userConstants.GETSAVEDALL_SUCCESS:
       newState = objectAssign({}, state, {
-        saveditems: action.users
+        saveditems: action.users,
       });
       return newState;
     case userConstants.UPDATE_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,
-        profile: action.users.user
+        profile: action.users.user,
       });
       return newState;
 
     case userConstants.GETALL_FAILURE:
       return {
-        error: action.error
+        error: action.error,
       };
     case userConstants.GETBYID_REQUEST:
       newState = objectAssign({}, state, {
-        loading: true
+        loading: true,
       });
       return newState;
     case userConstants.GETBYID_SUCCESS:
@@ -41,22 +41,21 @@ export function users(state = {}, action) {
         loading: true,
         profile: action.user.data.userData[0],
         agentData: action.user.data.agentData[0],
-        imageData: action.user.data.imageData
+        imageData: action.user.data.imageData,
       });
       return newState;
 
     case userConstants.GETBYID_FAILURE:
       return {
-        error: action.error
+        error: action.error,
       };
     case userConstants.UPDATESAVED_SUCCESS:
-
       newState = objectAssign({}, state);
       return newState;
 
     case userConstants.GETREVIEW_REQUEST:
       newState = objectAssign({}, state, {
-        loading: true
+        loading: true,
       });
       return newState;
     case userConstants.REVIEWUPDATE_SUCCESS:
@@ -65,80 +64,88 @@ export function users(state = {}, action) {
 
     case userConstants.REVIEW_FAILURE:
       return {
-        error: action.error
+        error: action.error,
       };
-
 
     case userConstants.AGENT_DATABASE_REQUEST:
       newState = objectAssign({}, state, {
-        loading: true
+        loading: true,
       });
       return newState;
     case userConstants.AGENT_DATABASE_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,
-        agentData: action.agentDatabase
+        agentData: action.agentDatabase,
       });
       return newState;
 
     case userConstants.AGENT_DATABASE_FAILURE:
       return {
-        error: action.error
+        error: action.error,
       };
-      
-      case userConstants.BLAST_SUCCESS:
-            newState = objectAssign({}, state,{
-              tab:'designTemplateTab',
-              blastData:action.users
-            });
-          return newState ;
 
-      case userConstants.DESIGNTEMPLATE_SUCCESS:
-        newState = objectAssign({}, state,{
-          tab:'property',
-          templateName:action.users
-        });
-      return newState ; 
+    case userConstants.BLAST_SUCCESS:
+      newState = objectAssign({}, state, {
+        tab: "designTemplateTab",
+        blastData: action.users,
+      });
+      return newState;
 
-      case userConstants.PROPERTY_SUCCESS:
-      console.log("action.result===",action.result);
-        newState = objectAssign({}, state,{
-          tab:'photo',
-          propertyData:action.users
+    case userConstants.DESIGNTEMPLATE_SUCCESS:
+      newState = objectAssign({}, state, {
+        tab: "property",
+        templateName: action.users,
+      });
+      return newState;
+
+    case userConstants.PROPERTY_SUCCESS:
+      console.log("action.users====", action.users);
+      let tab = '';
+      if (action.users && action.users.length) {
+        if(action.users[0].templates.length && action.users[0].templates[0] && action.users[0].templates[0].template_type=="UploadBlast"){
+          tab = "uploadblastpreview";
+          console.log("action.users===qw=", action.users);
+        } else {
+          tab="photo";
+        }
+        newState = objectAssign({}, state, {
+          tab: tab,
+          propertyData: action.users,
         });
-      return newState ; 
+      }
+
+      return newState;
 
     case userConstants.GETDOWNLOADEDALL_REQUEST:
       return {
-        loading: true
+        loading: true,
       };
 
     case userConstants.GETBYPAYMENTID_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,
-        payment: action.users.payment
+        payment: action.users.payment,
       });
       return newState;
     case userConstants.GETBYPAYMENTID_FAILURE:
       return {
-        error: action.error
+        error: action.error,
       };
     case userConstants.DELETE_REQUEST:
       // add 'deleting:true' property to user being deleted
       return {
-        loading: true
-
+        loading: true,
       };
     case userConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
-        items: state.items.filter(user => user.id !== action.id)
+        items: state.items.filter((user) => user.id !== action.id),
       };
     case userConstants.DELETE_FAILURE:
-      // remove 'deleting:true' property and add 'deleteError:[error]' property to user 
+      // remove 'deleting:true' property and add 'deleteError:[error]' property to user
       return {
         ...state,
-        items: state.items.map(user => {
+        items: state.items.map((user) => {
           if (user.id === action.id) {
             // make copy of user without 'deleting:true' property
             const { deleting, ...userCopy } = user;
@@ -147,10 +154,10 @@ export function users(state = {}, action) {
           }
 
           return user;
-        })
+        }),
       };
 
     default:
-      return state
+      return state;
   }
 }
