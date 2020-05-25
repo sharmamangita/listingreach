@@ -15,7 +15,8 @@ export const adminService = {
     getSubscribers,
     getBlasts,
     deletesubscriber,
-    subscriberStatus
+    subscriberStatus,
+    sendBlast
 };
 
 function updateBlastSettings( blastsettings) {
@@ -47,7 +48,16 @@ function getBlasts() {
     };
     return fetch(`${config.apiUrl}/adminusers/blasts`, requestOptions).then(handleResponse);
 }
-
+function sendBlast(id) {
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(`${config.apiUrl}/adminuser/sendblast/${id}`, requestOptions).then(handleResponse)
+        .then(user => {
+            location.reload();
+            return user;
+        }).catch(this.handleError)
+}
 function deleteusers(id) {
     const requestOptions = {
         method: 'DELETE',

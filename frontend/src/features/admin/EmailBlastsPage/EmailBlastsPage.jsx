@@ -19,7 +19,7 @@ class EmailBlastsPage extends React.Component {
 		this.deleteUsers = this.deleteUsers.bind(this);
 		this.createdDate = this.createdDate.bind(this);
 		this.lastLogin = this.lastLogin.bind(this);
-		this.status = this.status.bind(this);
+		this.sendBlast = this.sendBlast.bind(this);
 		this.userStatus = this.userStatus.bind(this);
 		this.getById = this.getById.bind(this);
 		this.deletelink = this.deletelink.bind(this);
@@ -39,7 +39,6 @@ class EmailBlastsPage extends React.Component {
 	}
 	componentWillMount() {
 		this.props.dispatch(adminActions.getBlasts());
-
 	}
 	componentDidMount() {
 		setTimeout(() => {
@@ -87,32 +86,8 @@ class EmailBlastsPage extends React.Component {
 		this.props.dispatch(adminActions.userStatus(id));
 	}
 
-	status(status, id) {
-		if (status == "verified") {
-			return (
-				<a href="javascript:void(0)"
-					onClick={() => {
-						if (
-							window.confirm("Are you sure you wish to unverified this users?")
-						)
-							this.userStatus(id);
-					}}>
-					<i className="fa status-active fa-dot-circle-o text-success" aria-hidden="true" ></i>
-				</a>
-			);
-		}
-		else {
-			return (
-				<a
-					href="javascript:void(0)"
-					onClick={() => {
-						if (window.confirm("Are you sure you wish to verified this users?"))
-							this.userStatus(id);
-					}} >
-					<i className="fa status-active fa-dot-circle-o text-danger" aria-hidden="true" ></i>
-				</a>
-			);
-		}
+	sendBlast(e,id) {
+		this.props.dispatch(adminActions.sendBlast(id));
 	}
 
 	getById(id) {
@@ -209,8 +184,8 @@ class EmailBlastsPage extends React.Component {
 					email: "--",
 					company: "--",
 					sentdate: this.createdDate(blast.createdOn),
-					totalpaid:'--',
-					paidon:'--',
+					totalpaid: '--',
+					paidon: '--',
 					// prefrences: (
 					// 	<a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={subscriber._id} onClick={this.handleModalOpem()} data-target="#intro">
 					// 		<span className="fa fa-settings"></span>
@@ -219,7 +194,11 @@ class EmailBlastsPage extends React.Component {
 					approve: (
 						<span> {this.deletelink(blast._id)} </span>
 					),
-					status: (this.status(blast.status, blast._id))
+					send: (
+						<button  className="btn btn-success" onClick={(event)=>this.sendBlast(event,blast._id)} >
+							Send
+					 	</button>
+						)
 				});
 			}
 		}

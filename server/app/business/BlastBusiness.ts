@@ -7,11 +7,10 @@ import mongoose = require("mongoose");
 import BaseBusiness = require("./BaseBusiness");
 import BlastRepository = require("./../repository/BlastRepository");
 import IBlastModel = require("./../model/interfaces/IBlastModel");
-import BlastModel = require("./../model/BlastModel");
 
 
 class BlastBusiness implements BaseBusiness<IBlastModel> {
-    private _blastRepository: blastRepository;
+    private _blastRepository: BlastRepository;
 
     constructor () {
         this._blastRepository = new BlastRepository();

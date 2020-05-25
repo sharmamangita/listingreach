@@ -21,6 +21,7 @@ class AdminUserRoutes {
         router.get("/adminusers/agents", controller.getAgents);
         router.get("/adminusers/subscribers", controller.getSubscribers);
         router.get("/adminusers/blasts", controller.getBlasts);
+        router.get("/adminuser/sendblast/:id", controller.sendBlast);
         router.put("/adminusers/", controller.update);
         router.delete("/adminusers/:_id", controller.deleteusers);
         router.delete("/adminusers/deletesubscriber/:_id", controller.deleteSubscriber);

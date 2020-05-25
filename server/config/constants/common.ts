@@ -3,7 +3,8 @@ var nodemailer = require("nodemailer");
 
 class Common {
     
-
+  static ActiveCampaignUrl:string= "https://listingreach.api-us1.com/admin/api.php";
+  static ActiveCampaignLey:string="99471542c0366492af8ba8f2c475901bd799d068ba41a903dbb80f7d737c5eabd79ea57a";
 	static STRIPEPUBLICKEY: string = 'pk_test_W3AWlvrzo3jtQnDsKtyCGCUS';
 	static STRIPESECRETKEY: string = 'sk_test_aediX53shAzQkRvioEKu6CXV';
 	static STRIPEWEBHOOKKEY: string ='whsec_4qQvss7pZ1TRBO8NDuQjPHndTN84r3W4';

@@ -19,7 +19,8 @@ export const adminActions = {
     getCount,
     deletesubscriber,
     subscriberStatus,
-    getBlasts
+    getBlasts,
+    sendBlast,
 };
 
 
@@ -55,7 +56,25 @@ function getCount(flag) {
     function failure(error) { return { type: adminConstants.GETDASHBOARDALL_FAILURE, error } }
 }
 
-
+function sendBlast(id) {
+    return dispatch => {
+        dispatch(request(id));
+        adminService.sendBlast(id)
+            .then(
+                prices => {
+                    dispatch(success());
+                    dispatch(alertActions.success('Sent successfully.'));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error('Not updated, please try again.'));
+                }
+            );
+    };
+    function request(blastsettings) { return { type: adminConstants.SEND_BLAST_REQUEST, blastsettings } }
+    function success(blastsettings) { return { type: adminConstants.SEND_BLAST_SUCCESS, blastsettings } }
+    function failure(error) { return { type: adminConstants.SEND_BLAST_FAILURE, error } }
+}
 function updateBlastSettings(blastsetting) {
     return dispatch => {
         dispatch(request(blastsetting));
@@ -73,7 +92,7 @@ function updateBlastSettings(blastsetting) {
                 }
             );
     };
-    function request(blastsettings) { return { type: adminConstants.GETALL_REQUEST } }
+    function request(blastsettings) { return { type: adminConstants.GETALL_REQUEST, blastsettings } }
     function success(blastsettings) { return { type: adminConstants.UPDATE_SUCCESS, blastsettings } }
     function failure(error) { return { type: adminConstants.GETAL_FAILURE, error } }
 }
