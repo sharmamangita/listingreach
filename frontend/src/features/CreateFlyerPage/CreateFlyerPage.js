@@ -18,6 +18,9 @@ import SetDateTab from "../../components/SetDateTab";
 import TermsTab from "../../components/TermsTab";
 import PaymentTab from "../../components/PaymentTab";
 import MultiPreviewTab from "../../components/MultiPreviewTab";
+import UploadBlastTab from "../../components/UploadBlastTab";
+//import UploadBlastAndBrokeragePreviewTab from "../../components/UploadBlastAndBrokeragePreviewTab";
+
 
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
@@ -29,8 +32,6 @@ import ReactHtmlParser, {
   htmlparser2,
 } from "react-html-parser";
 import { userActions } from "../../actions";
-
-
 
 const Entities = require("html-entities").XmlEntities;
 const entities = new Entities();
@@ -47,73 +48,70 @@ class CreateFlyerPage extends React.Component {
     };
 
     this.state = {
-       moveTab:'blast',
-       previewData:'',
-       propertyData:''
+      moveTab: "blast",
+      previewData: "",
+      propertyData: "",
+      uploadBlast:''
     };
 
     this.moveTab = this.moveTab.bind(this);
     this.setKey = this.setKey.bind(this);
     this.stateSettingsForTabs = this.stateSettingsForTabs.bind(this);
-    
   }
-
 
   componentDidMount() {
-     var user = JSON.parse(localStorage.getItem("user"));
-     if(user && user.userId){
+    var user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.userId) {
       const { dispatch } = this.props;
-      dispatch(userActions.getTemplateOrPropertydata(user.userId))
-          //window.scrollTo(0, 0);
-     }
-
+      dispatch(userActions.getTemplateOrPropertydata(user.userId));
+      //window.scrollTo(0, 0);
+    }
   }
- componentWillReceiveProps(nextProps) {
-    console.log("nextProps==tetetete==",nextProps);  
-     if(nextProps && nextProps.users && nextProps.users.tab){
-         let tab = nextProps.users.tab;
-         this.moveTab(tab)
-     }
+  componentWillReceiveProps(nextProps) {
+    console.log("nextProps==tetetete==", nextProps);
+    if (nextProps && nextProps.users && nextProps.users.tab) {
+      let tab = nextProps.users.tab;
+      this.moveTab(tab);
+    }
 
-     if((nextProps.users!=undefined && nextProps.users.blastData ) || (nextProps.agentData!=undefined && nextProps.agentData) || (nextProps.profile!=undefined && nextProps.profile) || nextProps.imageData!=undefined &&  nextProps.imageData){
-            this.stateSettingsForTabs(nextProps.users);
-      }
- }
+    if (
+      (nextProps.users != undefined && nextProps.users.blastData) ||
+      (nextProps.agentData != undefined && nextProps.agentData) ||
+      (nextProps.profile != undefined && nextProps.profile) ||
+      (nextProps.imageData != undefined && nextProps.imageData)
+    ) {
+      this.stateSettingsForTabs(nextProps.users);
+    }
+  }
 
- stateSettingsForTabs(nextProps){
-   if(nextProps.blastData!=undefined && nextProps.blastData){
-     let blast={};
+  stateSettingsForTabs(nextProps) {
+    if (nextProps.blastData != undefined && nextProps.blastData) {
+      let blast = {};
       blast.blastData = nextProps.blastData.data;
-     this.setState({propertyData:blast}); 
-     //previewData:nextProps.propertyData  
-   }
-   if(nextProps.templateName!=undefined && nextProps.templateName){
-     let template={};
-       template.templateData=nextProps.templateName.data;
-     this.setState({propertyData:template});   
-   }
+      this.setState({ propertyData: blast,uploadBlast:blast});
+      //previewData:nextProps.propertyData
+    }
+    if (nextProps.templateName != undefined && nextProps.templateName) {
+      let template = {};
+      template.templateData = nextProps.templateName.data;
+      this.setState({ propertyData: template });
+    }
 
-   if(nextProps.propertyData!=undefined && nextProps.propertyData){
-     this.setState({previewData:nextProps.propertyData});   
-   }
+    if (nextProps.propertyData != undefined && nextProps.propertyData) {
+      this.setState({ previewData: nextProps.propertyData });
+    }
+  }
 
- }
+  moveTab(tab) {
+    this.setState({ moveTab: tab });
+  }
 
-moveTab(tab){
-  this.setState({moveTab:tab});
-}
-
-setKey(tab){
-  this.setState({moveTab:tab});
-}
+  setKey(tab) {
+    this.setState({ moveTab: tab });
+  }
 
   render() {
-    const {
-      moveTab,
-      previewData,
-      propertyData
-    } = this.state;
-    console.log("previewData=====",previewData);
+    const { moveTab, previewData, propertyData,uploadBlast} = this.state;
     const { users } = this.props;
     return (
       <div>
@@ -138,29 +136,66 @@ setKey(tab){
                   </div>
 
                   <div className="tabs-falyer">
-                    <Tabs id="tab-example" activeKey={moveTab}
-                      onSelect={(tab) => this.setKey(tab)}>
+                    <Tabs
+                      id="tab-example"
+                      activeKey={moveTab}
+                      onSelect={(tab) => this.setKey(tab)}
+                    >
                       <Tab eventKey="blast" title="Blast Type">
                         <BlastTab dispatchval={this.dispatchval} />
                       </Tab>
+
                       <Tab eventKey="designTemplateTab" title="Design Template">
                         <AgentTemplateTab dispatchval={this.dispatchval} />
                       </Tab>
+
                       <Tab eventKey="property" title="Property Details">
-                        <PropertyTab dispatchval={this.dispatchval} propertyData={propertyData} />
+                        {propertyData &&
+                        propertyData.templateData &&
+                        propertyData.templateData.template_type ==
+                          "UploadBlast" ? (
+                          <UploadBlastTab
+                            dispatchval={this.dispatchval}
+                            propertyData={propertyData}
+                            uploadBlast={uploadBlast}
+                          />
+                        ) : (
+                          <PropertyTab
+                            dispatchval={this.dispatchval}
+                            propertyData={propertyData}
+                          />
+                        )}
                       </Tab>
-                      <Tab eventKey="photo" title="Photos">
-                        <PhotoTab dispatchval={this.dispatchval} />
-                      </Tab>
+                      {propertyData &&
+                      propertyData.templateData &&
+                      propertyData.templateData.template_type ==
+                        "UploadBlast" ? null : (
+                        <Tab eventKey="photo" title="Photos">
+                          <PhotoTab dispatchval={this.dispatchval} />
+                        </Tab>
+                      )}
+
+
+
                       <Tab eventKey="preview" title="Preview">
-                      {previewData && previewData[0] && previewData[0].templates &&
-                       previewData[0].templates[0] && previewData[0].templates[0].template_type=="MultipleProperties" ?
-                        <MultiPreviewTab dispatchval={this.dispatchval} previewData={previewData} />
-                        : 
-                        <PreviewTab dispatchval={this.dispatchval} previewData={previewData} />
-                      }
-                        
+                        {previewData &&
+                        previewData[0] &&
+                        previewData[0].templates &&
+                        previewData[0].templates[0] &&
+                        previewData[0].templates[0].template_type ==
+                          "MultipleProperties" ? (
+                          <MultiPreviewTab
+                            dispatchval={this.dispatchval}
+                            previewData={previewData}
+                          />
+                        ) : (
+                          <PreviewTab
+                            dispatchval={this.dispatchval}
+                            previewData={previewData}
+                          />
+                        )}
                       </Tab>
+
                       <Tab eventKey="selectdatabase" title="Select Database">
                         <DatabaseTab dispatchval={this.dispatchval} />
                       </Tab>

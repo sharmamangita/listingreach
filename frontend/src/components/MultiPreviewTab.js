@@ -69,6 +69,10 @@ class MultiPreviewTab extends React.Component {
   render() {
     console.log("this.props===preview== templates", this.props);
     const { previewData } = this.props;
+        let agentData='';
+    if(previewData && previewData.length){
+      agentData = previewData[0].agentData[0].agentData;
+    }
     return (
       <div>
         <h4>Preview Blast</h4>
@@ -159,10 +163,7 @@ class MultiPreviewTab extends React.Component {
                 }}
                 className="mb-3 mt-3 ml-3"
               >
-                {previewData &&
-                  previewData[0] &&
-                  previewData[0].agentData &&
-                  previewData[0].agentData[0].name}{" "}
+                {agentData.name}{" "}
                 via Listingreach.com
               </div>
               <div
@@ -627,11 +628,7 @@ class MultiPreviewTab extends React.Component {
                     className="img-square"
                     style={{ width: "100px" }}
                     src={
-                      (previewData &&
-                        previewData[0] &&
-                        previewData[0].agentData &&
-                        previewData[0].agentData[0] &&
-                        previewData[0].agentData[0].logo_url) ||
+                      (agentData.logo_url) ||
                       "public/assets/images/dummy-logo.png"
                     }
                   />
@@ -642,27 +639,15 @@ class MultiPreviewTab extends React.Component {
                 >
                   <b>
                     {" "}
-                    {previewData &&
-                      previewData[0] &&
-                      previewData[0].agentData &&
-                      previewData[0].agentData[0].name}{" "}
+                    {agentData.name}{" "}
                   </b>{" "}
                   <br />
                   Agent <br />
-                  {previewData &&
-                    previewData[0] &&
-                    previewData[0].agentData &&
-                    previewData[0].agentData[0].email}
+                  {agentData.email}
                   <br />
-                  {previewData &&
-                    previewData[0] &&
-                    previewData[0].agentData &&
-                    previewData[0].agentData[0].website_url}
+                  {agentData.website_url}
                   <br />
-                  {previewData &&
-                    previewData[0] &&
-                    previewData[0].agentData &&
-                    previewData[0].agentData[0].phone_number}
+                  {agentData.phone_number}
                   <br />
                   <br />
                   <br />
@@ -681,11 +666,7 @@ class MultiPreviewTab extends React.Component {
                     className="img-circle"
                     style={{ width: "100px" }}
                     src={
-                      (previewData &&
-                        previewData[0] &&
-                        previewData[0].agentData &&
-                        previewData[0].agentData[0] &&
-                        previewData[0].agentData[0].image_url) ||
+                      (agentData.image_url) ||
                       "public/assets/images/dummy-profile.png"
                     }
                   />

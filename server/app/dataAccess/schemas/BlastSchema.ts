@@ -25,7 +25,36 @@ class BlastSchema {
             selected_template_date: {
                 type: Date,
                 required: true
-            }
+            },
+            agentData:[{
+                name:{
+                 type:String
+                },
+                designation:{
+                 type:String
+                },
+                email:{
+                 type:String
+                },
+                website_url:{
+                 type:String
+                },
+                phone_number:{
+                 type:String
+                },
+                company_details:{
+                 type:String
+                },
+                other_information:{
+                 type:String
+                },
+                image_url:{
+                 type:String
+                },
+                logo_url:{
+                 type:String
+                }
+            }]
         });
 
         return schema;

@@ -76,7 +76,6 @@ class PropertySchema {
                  type:String
                 }
             }],
-
             number_bathrooms:[{
                 full:{
                  type:String
@@ -89,41 +88,17 @@ class PropertySchema {
             linksToWebsites:[{
                 linksToWebsiteData:Object
             }],
-            agentData:[{
-                name:{
-                 type:String
-                },
-                designation:{
-                 type:String
-                },
-                email:{
-                 type:String
-                },
-                website_url:{
-                 type:String
-                },
-                phone_number:{
-                 type:String
-                },
-                company_details:{
-                 type:String
-                },
-                other_information:{
-                 type:String
-                },
-                image_url:{
-                 type:String
-                },
-                logo_url:{
-                 type:String
-                }
-            }],
+
             isOpenHouse:[{
                 openHouseData:Object
             }],
             userId:{
                 type:mongoose.Schema.Types.ObjectId
             },
+            propertyImages:[{
+               img:Object
+            }],
+
         });
 
         return schema;

@@ -137,7 +137,10 @@ this.selectDesignTemplate = this.selectDesignTemplate.bind(this);
                   <p className="card-text">
                     Upload in seconds a Single Page Blast you already have
                   </p>
-                  <a href="javascript:void(0)" className="btn btn-primary">
+                  <a href="javascript:void(0)" className="btn btn-primary"
+                     onClick={(e) =>
+                      this.selectDesignTemplate(e, "UploadBlast")
+                    }>
                     Select
                   </a>
                 </div>

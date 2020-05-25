@@ -474,7 +474,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			let formReply = property[0].templates[0].address;
 			let headline  = property[0].templates[0].headline;
 
-			let agentData = property[0].agentData[0]; 
+			let agentData = property[0].agentData[0].agentData; 
 
 		if(property && property.length>1){
 			var html = '';
@@ -645,10 +645,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 							</div>`;								
 		});
 
-
-
-console.log("html======",html);
-
 			var previewTemplatememail =Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;	
 					var emailtemplate = previewTemplatememail
 					.replace(/#multiproperty#/g,html)
@@ -669,32 +665,10 @@ console.log("html======",html);
 				res.end("error");
 				}
 			});
-		res.status(201).send({ "success":"done" }); 
+			res.status(201).send({ "success":"done" }); 
 
-	} else {
-/*				 property     =  property[0].building_size
-				let propertyDetail = property.propertyDetail;
-	
-				let streetAddress = property.propertyAddress.streetAddress;
-				let city = property.propertyAddress.city;
-				let zipCode =  property.propertyAddress.zipCode;
-				let displayMethod = property.propertyAddress.displayMethod;
+			} else {
 
-				let mlsNumber = property.mlsNumber.numberProperty;
-				let blastHeadline =  property.blastHeadline;
-				let numberOfBedrooms=  property.generalPropertyInformation.numberOfBedrooms;
-				let pricePerSquareFoot = property.generalPropertyInformation.pricePerSquareFoot;
-				let yearBuilt = property.generalPropertyInformation.yearBuilt;
-				let lotSize = property.generalPropertyInformation.lotSize;
-				let propertyType = property.generalPropertyInformation.propertyType;
-				let propertyStyle = property.generalPropertyInformation.propertyStyle;
-				let garageSize = property.generalPropertyInformation.garageSize;
-				let full = property.generalPropertyInformation.numberOfBathrooms.full;
-				let half = property.generalPropertyInformation.numberOfBathrooms.half;
-				let numberOfStories = property.generalPropertyInformation.numberOfBathrooms;*/
-	
-
-console.log("else====");
 			let openData = '';
 			if(property[0].isOpenHouse.openHouseData !=undefined && property[0].isOpenHouse.openHouseData.length){
 				let houseArray = property[0].isOpenHouse.openHouseData;
@@ -1056,25 +1030,26 @@ console.log("else====");
             console.log(e);
             res.send({"error": "error in your request"});
 		}
-    });
+    }
 
      saveProperty(req: express.Request, res: express.Response): void {
         try {
 	           var _propertyforms: IPropertyModel = <IPropertyModel>req.body;
 	           var _propertyBusiness = new PropertyBusiness();
 
-			   console.log("_propertyforms======",_propertyforms);
+			  console.log("_propertyforms======",_propertyforms);
 
 
-           if(_propertyforms && _propertyforms.property && _propertyforms.property.length && _propertyforms.agentData){
+           if(_propertyforms && _propertyforms.property && _propertyforms.property.length){
            		var _templateforms: IAgentTemplateModel = <IAgentTemplateModel>req.body;
            		var _templateBusiness = new AgentTemplateBusiness();
+           		var _blastform: IBlastModel = <IBlastModel>req.body;
+				var _blastBusiness = new BlastBusiness();
 
            		let _templateform = {};
 
            		_propertyforms.property.forEach(function(property){
            			let _propertyform = {};
-           			_propertyform.agentData=_propertyforms.agentData;
 					_templateform.email_subject = _templateforms.Email.formSubject;
 					_templateform.from_line = _templateforms.Email.formLine;
 					_templateform.address = _templateforms.Email.formReply;
@@ -1128,50 +1103,36 @@ console.log("else====");
 				_propertyform.garage = property.generalPropertyInformation.garage;
 				_propertyform.garageSize = property.generalPropertyInformation.garageSize;
 				_propertyform.price = property.generalPropertyInformation.pricePerSquareFoot;
-
 				_propertyform.property_details=property.propertyDetail;
+					
 
-					var _id: string = _templateforms.templateId;
-
-								
-/*								_propertyBusiness.findById(_id, (error, resultuser) => {  
-								
-									if(resultuser && resultuser._id !=undefined && resultuser._id){
-								
-										_propertyBusiness.update(_id, _propertyform, (error, resultUpdate) => { 
-											if(error){
-												res.send({"error": error});
-											} else {
-												_templateBusiness.findOne({"Property_id":_id}, (error, result) => {
-													if(error){
-														res.send({"error": error});
-													}
-													let _id: string = result._id.toString();
-													 _templateBusiness.update(_id,_templateform, (error, result) => { 
-													 	if(error){
-													 		res.send({"error": error});
-													 	} else {
-													 		console.log("resultrerresult===",result);
-													 		res.send({"success": "success"});
-													 	}
-													 })
-												})	 
-											}
-										});
-									} else {*/
 										
 											_propertyBusiness.create(_propertyform, (error, result) => {
 									                if(error) {
 														console.log(error);
 														res.send({"error": error});
 													}
+													console.log("dasdasdasdasd====",result);
 													_templateform.Property_id = result._id.toString();
+													console.log("3434343====",result._id.toString());
+
+													let _id: string = _templateforms.templateId;
 													_templateBusiness.update(_id, _templateform, (error, resultUpdate) => {
 										                if(error) {
 															console.log(error);
 															res.send({"error": error});
 														} else {
-															//res.send({"success": "success",userId:_propertyform.userId});
+
+														   let _blastforms ={};
+														   let _id: string = _blastform.blast_id;
+														   
+														   if(_blastform && _blastform.agentData!=undefined){
+														   		_blastforms.agentData=_blastform.agentData;
+															   _blastBusiness.update(_id, _blastforms, (error, blastUpadte) => { 
+															   		if(error){
+															   			res.send({"error": error});
+															   		}
+															   																	
 														 		var propertyAggregate = [
 														            {
 															                $lookup:                       
@@ -1196,7 +1157,7 @@ console.log("else====");
 															                    as: "templates"               
 															                }
 															            },
-															            															            {
+															            {
 															                $lookup:                       
 															                {
 															                    from: "blasts",
@@ -1222,7 +1183,6 @@ console.log("else====");
 															                    "property_style":1,
 															                    "lot_size":1,
 															                    "number_bedrooms":1,
-															                    "agentData":1,
 															                    "building_size":1,
 															                    "number_stories":1,
 																				"number_bathrooms":1,
@@ -1245,6 +1205,7 @@ console.log("else====");
 																				"users.firstName":1,
 																				"users.lastName":1,
 																				"users.roles":1,
+																				"blasts":1
 
 																		    }
 															            },
@@ -1287,8 +1248,8 @@ console.log("else====");
 																		        templates:obj.templates,
 																		        price:obj.price,
 																		        garageSize:obj.garageSize,
-																		        agentData:obj.agentData,
-																		        blast_id:obj.blast_id
+																		        blast_id:obj.blast_id,
+																		        agentData:obj.blasts
 																		    };
 
 																	});
@@ -1297,12 +1258,12 @@ console.log("else====");
 																}
 															});	
 
+															   	});   	
+														    }
 
 														}
 									                }); 
 									        }); 
-									//}
-							//	});
 
            		});
 

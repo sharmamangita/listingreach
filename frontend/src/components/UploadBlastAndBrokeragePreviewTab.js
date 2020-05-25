@@ -14,7 +14,7 @@ import { connect } from "react-redux";
 import { common } from "../helpers";
 import Moment from "moment";
 
-class PreviewTab extends React.Component {
+class UploadBlastAndBrokeragePreviewTab extends React.Component {
   constructor(props) {
     super(props);
     this.navId = "";
@@ -235,71 +235,7 @@ class PreviewTab extends React.Component {
                         previewData[0].mls_number}
                     </span>
                   </div>
-                  <div className="col-md-12 ml-3">
-                    <label className="flyer-label">Property Description:</label>
-                    <span>
-                      {previewData && previewData[0] && previewData[0].property_detail}
-                    </span>
-                  </div>
-                  <div className="col-md-12 ml-3">
-                    <label className="flyer-label">Key Features:</label>
-                    <ul>
-                      <li>
-                        Property Type:{" "}
-                        {previewData &&  previewData[0] &&
-                            previewData[0].property_type}{" "}
-                      </li>
-                      <li>
-                        Property Style:{" "}
-                        {previewData && previewData[0] && previewData[0].property_style}{" "}
-                      </li>
-                      <li>
-                        {" "}
-                        {previewData && previewData[0] &&
-                          previewData.number_bedrooms}{" "}
-                        Bedrooms
-                      </li>
-                      <li>
-                        {previewData && previewData[0] && previewData[0].number_bathrooms &&
-                          previewData[0]
-                            .number_bathrooms[0] &&
-                          previewData[0].number_bathrooms[0].full}{" "}
-                        Full{" "}
-                        {previewData && previewData[0] && previewData[0].number_bathrooms &&
-                          previewData[0].number_bathrooms[0] &&
-                          previewData[0].number_bathrooms[0].half}{" "}
-                        Half Bathrooms
-                      </li>
-                      <li>
-                        {previewData &&  previewData[0] && previewData[0] 
-                            .building_size}{" "}
-                        square feet
-                      </li>
 
-                      <li>$ {previewData && previewData[0] && previewData[0].price} /sqft</li>
-                      <li>
-                        Lot Size:{" "}
-                        {previewData && previewData[0] &&
-                          previewData[0].lot_size}{" "}
-                        sqft
-                      </li>
-                      <li>
-                        {" "}
-                        Built{" "}
-                        {previewData && previewData[0] && 
-                          previewData[0].year_built }
-                      </li>
-                      <li>
-                        Garage:
-                        {previewData && previewData[0] && previewData.garageSize}{" "}
-                      </li>
-                      <li>
-                        {" "}
-                        {previewData && previewData[0] &&
-                          previewData[0].number_stories}{" "}
-                      </li>
-                    </ul>
-                  </div>
                   <div className="col-md-12 ml-3">
                     <label className="flyer-label">Links:</label>
                     <p>
@@ -319,58 +255,6 @@ class PreviewTab extends React.Component {
                         },
                         this)}
                     </p>
-                  </div>
-                  <div className="col-md-12 text-center">
-                    <h4>
-                      <a href="">
-                        <u>Click Here to Email Agent for More Information</u>
-                      </a>
-                    </h4>
-                  </div>
-                </div>
-              </div>
-              <div className="flyer-footer">
-                <div className="row mt-3">
-                  <div className="col-md-2 text-center">
-                    <img
-                      alt="Photo"
-                      className="img-square"
-                      style={{ width: "100px" }}
-                      src={agentData.logo_url || "public/assets/images/dummy-logo.png"}
-                    />
-                  </div>
-                  <div className="col-md-8 text-center">
-                    <b> {agentData.name} </b>
-                    <br />
-                    Agent
-                    <br />
-                    {agentData.email}
-                    <br />
-                    <br />
-                    {agentData.phone_number}
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    {agentData.website_url}
-                    <br />
-                    
-                    {previewData && previewData[0] &&
-                      previewData[0].street_address}
-                    ,{" "}
-                    {previewData && previewData[0] && previewData[0].zipcode}
-                    ,
-                    {previewData && previewData[0] &&
-                      previewData[0].city}
-                    .
-                  </div>
-                  <div className="col-md-2 text-center pl-0">
-                    <img
-                      alt="Photo"
-                      className="img-circle"
-                      style={{ width: "100px" }}
-                      src={agentData.image_url || "public/assets/images/dummy-profile.png"}
-                    />
                   </div>
                 </div>
               </div>
@@ -404,4 +288,4 @@ class PreviewTab extends React.Component {
   }
 }
 
-export default PreviewTab;
+export default UploadBlastAndBrokeragePreviewTab;

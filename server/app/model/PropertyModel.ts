@@ -36,6 +36,10 @@ class PropertyModel {
         return this.propertyModel.mls_number;
     }
 
+    get propertyImages (): string {
+        return this.propertyModel.propertyImages;
+    }
+
 	get board (): string {
         return this.propertyModel.board;
     }
@@ -82,10 +86,6 @@ class PropertyModel {
 
     get pricingInfo (): object {
         return this.propertyModel.pricingInfo;
-    }
-
-    get agentData (): object {
-        return this.propertyModel.agentData;
     }
 
     get number_bathrooms (): object {

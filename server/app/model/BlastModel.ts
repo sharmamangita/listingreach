@@ -24,6 +24,9 @@ class BlastModel {
     get selected_template_id (): string {
         return this._blastModel.selected_template_id;
     }
+     get agentData (): object {
+        return this._blastModel.agentData;
+    }
     get selected_template_date (): string {
         return this._blastModel.selected_template_id;
     }
