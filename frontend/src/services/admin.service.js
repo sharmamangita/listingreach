@@ -3,6 +3,7 @@ import { authHeader } from '../helpers';
 
 export const adminService = {
     deleteusers,
+	deleteagents,
     userStatus,
     PlanRegister,
     getPlan,
@@ -75,7 +76,13 @@ function deletesubscriber(id) {
     location.reload();
     return fetch(`${config.apiUrl}/adminusers/deletesubscriber/${id}`, requestOptions).then(handleResponse);
 }
-
+function deleteagents(id) {
+    const requestOptions = {
+        method: 'PUT',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' }
+    };
+    return fetch(`${config.apiUrl}/adminusers/deleteagents/${id}`, requestOptions).then(handleResponse);;
+}
 function userStatus(id) {
     const requestOptions = {
         method: 'GET'

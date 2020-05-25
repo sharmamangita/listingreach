@@ -74,6 +74,10 @@ class UserSchema {
                 type: Date,
                 required: true
             },
+			
+			isDeleted: {
+                type: Boolean,
+            },
         });
 
         return schema;

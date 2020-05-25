@@ -6,6 +6,7 @@ import { history } from '../helpers';
 
 export const adminActions = {
     deleteusers,
+	deleteagents,
     userStatus,
     PlanRegister,
     getPlan,
@@ -173,7 +174,25 @@ function deletesubscriber(id) {
     function success(id) { return { type: adminConstants.DELETE_SUCCESS, id } }
     function failure(id, error) { return { type: adminConstants.DELETE_FAILURE, id, error } }
 }
+function deleteagents(id) {
+    return dispatch => {
+        dispatch(request({id}));
+        adminService.deleteagents(id)
+            .then(
+                user => {
+                    dispatch(success(user));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error(error.toString()));
+                }
 
+            );
+	};
+	function request(id) { return { type: adminConstants.DELETE_REQUEST, id } }
+    function success(id) { return { type: adminConstants.DELETE_SUCCESS, id } }
+    function failure(id, error) { return { type: adminConstants.DELETE_FAILURE, id, error } }
+}
 function subscriberStatus(id) {
     return dispatch => {
         dispatch(request({ id }));

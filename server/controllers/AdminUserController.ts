@@ -225,7 +225,39 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 			res.send({ "error": "error in your request" });
 		}
 	}
+	deleteagents(req: express.Request, res: express.Response): void {
+		var uid: string = req.params._id;
+		console.log('deletedddddddddd id------:',uid);
+		try {
+			var _userBusiness = new UserBusiness();
+			_userBusiness.findOne({ "_id": uid }, (error, result) => {
+				console.log('try----------------------',result);
+				if (error) {
+					res.send({ "error": "error" });
+				} else {
+					var _user: IUserModel = <IUserModel>req.body;
+					if (result.isDeleted === false) {
+						console.log('is deleted-------------------');
+						_user.isDeleted = "true";
+						_userBusiness.update(uid, _user, (error: any, resultUpdate: any) => {
+							if (error) {
+								res.send({ "error": "error" });
+							} else {
+								res.send({ "success": "success" });
+							}
+						})
+					}
+				}
+			});
+		}
+		
+		catch (e) {
 
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+
+	}
 	userStatus(req: express.Request, res: express.Response): void {
 		var uid: string = req.params._id;
 		// console.log("uid============>",uid)

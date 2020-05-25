@@ -24,6 +24,7 @@ interface IUserModel extends mongoose.Document {
     lastLogin: Date,
     token: string,
     createdOn: Date,
+	isDeleted:boolean,
 }
 
 export = IUserModel;

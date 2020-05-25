@@ -17,6 +17,7 @@ class AgentsPage extends React.Component {
 		};
 		this.handleShow = this.handleShow.bind(this);
 		this.deleteUsers = this.deleteUsers.bind(this);
+		this.deleteAgents = this.deleteAgents.bind(this);
 		this.createdDate = this.createdDate.bind(this);
 		this.lastLogin = this.lastLogin.bind(this);
 		this.status = this.status.bind(this);
@@ -52,7 +53,7 @@ class AgentsPage extends React.Component {
 		return (
 			<a href="javascript:void(0)" className="pl-1" onClick={() => {
 				if (window.confirm("Are you sure you wish to delete this users?"))
-					this.deleteUsers(id);
+					this.deleteAgents(id);
 			}
 			}><i className="fa fa-trash" aria-hidden="true"></i>
 			</a>)
@@ -60,6 +61,9 @@ class AgentsPage extends React.Component {
 
 	deleteUsers(id) {
 		this.props.dispatch(adminActions.deleteusers(id));
+	}
+	deleteAgents(id) {
+		this.props.dispatch(adminActions.deleteagents(id));
 	}
 
 	createdDate(createdOn) {
