@@ -134,7 +134,11 @@ class BlastTab extends React.Component {
                     Permitted
                   </p>
 
-                  <a href="javascript:void(0)" className="btn btn-primary">
+                  <a href="javascript:void(0)" className="btn btn-primary"
+                    onClick={(e) =>
+                      this.selectBlast(e, "RealEstateBrokerage")
+                    }>
+
                     Select
                   </a>
                 </div>

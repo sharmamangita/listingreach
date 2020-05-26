@@ -99,12 +99,16 @@ export function users(state = {}, action) {
       return newState;
 
     case userConstants.PROPERTY_SUCCESS:
-      console.log("action.users====", action.users);
       let tab = '';
       if (action.users && action.users.length) {
-        if(action.users[0].templates.length && action.users[0].templates[0] && action.users[0].templates[0].template_type=="UploadBlast"){
+        console.log("action.users[0]======",action.users[0]);
+        if(action.users[0].templates.length && 
+          action.users[0].templates[0] && 
+          action.users[0].templates[0].template_type=="UploadBlast" ||
+          action.users[0].templates.length && 
+          action.users[0].templates[0] && 
+          action.users[0].templates[0].template_type=="UploadYourOwnBlast"){
           tab = "uploadblastpreview";
-          console.log("action.users===qw=", action.users);
         } else {
           tab="photo";
         }
@@ -113,7 +117,6 @@ export function users(state = {}, action) {
           propertyData: action.users,
         });
       }
-
       return newState;
 
     case userConstants.GETDOWNLOADEDALL_REQUEST:

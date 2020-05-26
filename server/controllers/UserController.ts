@@ -1147,7 +1147,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 															   		}
 															   																	
 														 		var propertyAggregate = [
-														            {
+														            	{
 															                $lookup:                       
 															                {
 															                    from: "users",
@@ -1155,12 +1155,11 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 															                    foreignField: "_id",        
 															                    as: "users"               
 															                }
-															            },
+															            },   
 															            {
 																      	  	$unwind:"$users"
 																        
 																      	},
-															          	
 															            {
 															                $lookup:                       
 															                {
@@ -1218,7 +1217,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 																				"users.firstName":1,
 																				"users.lastName":1,
 																				"users.roles":1,
-																				"blasts":1
+																				"blasts":1,
 
 																		    }
 															            },
