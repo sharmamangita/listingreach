@@ -50,6 +50,18 @@ class CreateFlyerPage extends React.Component {
       previewData: "",
       propertyData: "",
       uploadBlast: "",
+      tabs:{
+        blast:false,
+        designTemplateTab:true,
+        property:true,
+        photo:true,
+        preview:true,
+        uploadblastpreview:true,
+        selectdatabase:true,
+        setDate:true,
+        terms:true,
+        payment:true
+      }
     };
 
     this.moveTab = this.moveTab.bind(this);
@@ -101,7 +113,10 @@ class CreateFlyerPage extends React.Component {
   }
 
   moveTab(tab) {
-    this.setState({ moveTab: tab });
+     let tabs = Object.assign({}, this.state);
+     tabs.moveTab=tab;
+     tabs.tabs[tab]=false;
+     this.setState(tabs);
   }
 
   setKey(tab) {
@@ -109,7 +124,7 @@ class CreateFlyerPage extends React.Component {
   }
 
   render() {
-    const { moveTab, previewData, propertyData, uploadBlast } = this.state;
+    const { moveTab, previewData, propertyData, uploadBlast,tabs } = this.state;
     const { users } = this.props;
     return (
       <div>
@@ -138,20 +153,28 @@ class CreateFlyerPage extends React.Component {
                       id="tab-example"
                       activeKey={moveTab}
                       onSelect={(tab) => this.setKey(tab)}
+
                     >
                       <Tab eventKey="blast" title="Blast Type">
                         <BlastTab dispatchval={this.dispatchval} />
                       </Tab>
 
-                      <Tab eventKey="designTemplateTab" title="Design Template">
-                        <AgentTemplateTab dispatchval={this.dispatchval} />
+                      <Tab eventKey="designTemplateTab" title="Design Template" disabled={tabs.designTemplateTab?true:false}>
+                        <AgentTemplateTab
+                          dispatchval={this.dispatchval}
+                          blastType={uploadBlast}
+                        />
                       </Tab>
 
-                      <Tab eventKey="property" title="Property Details">
-                        {propertyData &&
-                        propertyData.templateData &&
-                        propertyData.templateData.template_type ==
-                          "UploadBlast" ? (
+                      <Tab eventKey="property" title="Property Details" disabled={tabs.property?true:false}>
+                        {(propertyData &&
+                          propertyData.templateData &&
+                          propertyData.templateData.template_type ==
+                            "UploadBlast") ||
+                        (propertyData &&
+                          propertyData.templateData &&
+                          propertyData.templateData.template_type ==
+                            "UploadYourOwnBlast") ? (
                           <UploadBlastTab
                             dispatchval={this.dispatchval}
                             propertyData={propertyData}
@@ -164,27 +187,41 @@ class CreateFlyerPage extends React.Component {
                           />
                         )}
                       </Tab>
-                      {propertyData &&
-                      propertyData.templateData &&
-                      propertyData.templateData.template_type ==
-                        "UploadBlast" ? null : (
-                        <Tab eventKey="photo" title="Photos">
+                      {(propertyData &&
+                        propertyData.templateData &&
+                        propertyData.templateData.template_type ==
+                          "UploadBlast") ||
+                      (propertyData &&
+                        propertyData.templateData &&
+                        propertyData.templateData.template_type ==
+                          "UploadYourOwnBlast") ? null : (
+                        <Tab eventKey="photo" title="Photos" disabled={tabs.photo?true:false}>
                           <PhotoTab dispatchval={this.dispatchval} />
                         </Tab>
                       )}
 
-                      {previewData &&
-                      previewData[0] &&
-                      previewData[0].templates &&
-                      previewData[0].templates[0] &&
-                      previewData[0].templates[0].template_type ==
-                        "UploadBlast" ? (
-                        <Tab eventKey="uploadblastpreview" title="Preview">
-                          <UploadBlastAndBrokeragePreviewTab dispatchval={this.dispatchval} 
-                          previewData={previewData} />{" "}
+                      {(previewData &&
+                        previewData[0] &&
+                        previewData[0].templates &&
+                        previewData[0].templates[0] &&
+                        previewData[0].templates[0].template_type ==
+                          "UploadBlast") ||
+                      (previewData &&
+                        previewData[0] &&
+                        previewData[0].templates &&
+                        previewData[0].templates[0] &&
+                        previewData[0].templates[0].template_type ==
+                          "UploadYourOwnBlast") ? (
+                        <Tab eventKey="uploadblastpreview" title="Preview" disabled={tabs.uploadblastpreview?true:false}>
+                          <UploadBlastAndBrokeragePreviewTab
+                            dispatchval={this.dispatchval}
+                            previewData={previewData}
+                            blastType={uploadBlast}
+
+                          />{" "}
                         </Tab>
                       ) : (
-                        <Tab eventKey="preview" title="Preview">
+                        <Tab eventKey="preview" title="Preview" disabled={tabs.preview?true:false}>
                           {previewData &&
                           previewData[0] &&
                           previewData[0].templates &&
@@ -204,16 +241,16 @@ class CreateFlyerPage extends React.Component {
                         </Tab>
                       )}
 
-                      <Tab eventKey="selectdatabase" title="Select Database">
+                      <Tab eventKey="selectdatabase" title="Select Database" disabled={tabs.selectdatabase?true:false}>
                         <DatabaseTab dispatchval={this.dispatchval} />
                       </Tab>
-                      <Tab eventKey="setDate" title="Set Date">
+                      <Tab eventKey="setDate" title="Set Date" disabled={tabs.setDate?true:false}>
                         <SetDateTab dispatchval={this.dispatchval} />
                       </Tab>
-                      <Tab eventKey="terms" title="Terms & Condition">
+                      <Tab eventKey="terms" title="Terms & Condition" disabled={tabs.terms?true:false}>
                         <TermsTab dispatchval={this.dispatchval} />
                       </Tab>
-                      <Tab eventKey="payment" title="Payment">
+                      <Tab eventKey="payment" title="Payment" disabled={tabs.payment?true:false}>
                         <PaymentTab dispatchval={this.dispatchval} />
                       </Tab>
                     </Tabs>

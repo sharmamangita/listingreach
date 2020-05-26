@@ -19,7 +19,7 @@ class AgentTemplateTab extends React.Component {
     this.state = {
       userId: "",
     };
-this.selectDesignTemplate = this.selectDesignTemplate.bind(this);
+    this.selectDesignTemplate = this.selectDesignTemplate.bind(this);
   }
 
   componentDidMount() {
@@ -39,6 +39,7 @@ this.selectDesignTemplate = this.selectDesignTemplate.bind(this);
   }
 
   render() {
+    const { blastType } = this.props;
     return (
       <div
         className="tab-pane fade mt-2"
@@ -55,98 +56,141 @@ this.selectDesignTemplate = this.selectDesignTemplate.bind(this);
           method="post"
           role="form"
         >
-          <div className="row">
-            <div className="col-md-4 mb-3">
-              <div
-                className="card"
-                style={{
-                  width: "20rem",
-                  margin: "20px 0 24px 0",
-                }}
-              >
-                <img
-                  className="card-img-top"
-                  src="../../../public/assets/images/img-4.png"
-                  alt="image"
-                  style={{ width: "100%" }}
-                />
-                <div className="card-body">
-                  <h4 className="card-title">Single Property</h4>
-                  <p className="card-text">
-                    - Create a Blast from Scratch
-                    <br />- Feature One Property
-                  </p>
-                  <a
-                    href="javascript:void(0)"
-                    className="btn btn-primary"
-                    onClick={(e) =>
-                      this.selectDesignTemplate(e, "SingleProperty")
-                    }
-                  >
-                    Select
-                  </a>
+          {blastType &&
+          blastType.blastData &&
+          blastType.blastData.blast_type == "RealEstateBrokerage" ? (
+            <div className="row">
+              <div className="col-md-4 mb-3">
+                <div
+                  className="card"
+                  style={{
+                    width: "20rem",
+                    margin: "20px 0 24px 0",
+                  }}
+                >
+                  <img
+                    className="card-img-top"
+                    src="../../../public/assets/images/img-4.png"
+                    alt="image"
+                    style={{ width: "100%" }}
+                  />
+                  <div className="card-body">
+                    <h4 className="card-title">Upload Your Own Blast</h4>
+                    <p className="card-text">
+                      Upload in seconds a Single Page Blast you already have
+                    </p>
+                    <a
+                      href="javascript:void(0)"
+                      className="btn btn-primary"
+                      onClick={(e) =>
+                        this.selectDesignTemplate(e, "UploadYourOwnBlast")
+                      }
+                    >
+                      Select
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="col-md-4 mb-3">
-              <div
-                className="card"
-                style={{
-                  width: "20rem",
-                  margin: "20px 0 24px 0",
-                }}
-              >
-                <img
-                  className="card-img-top"
-                  src="../../../public/assets/images/img-4.png"
-                  alt="image"
-                  style={{ width: "100%" }}
-                />
-                <div className="card-body">
-                  <h4 className="card-title">Multiple Properties</h4>
-                  <p className="card-text">
-                    - Create a Blast from Scratch <br></br>- Feature Multiple
-                    Properties{" "}
-                  </p>
-                  <a href="javascript:void(0)"
-                   className="btn btn-primary"
-                    onClick={(e) =>
-                      this.selectDesignTemplate(e, "MultipleProperties")
-                    }>
-                    Select
-                  </a>
+          ) : (
+            <div className="row">
+              <div className="col-md-4 mb-3">
+                <div
+                  className="card"
+                  style={{
+                    width: "20rem",
+                    margin: "20px 0 24px 0",
+                  }}
+                >
+                  <img
+                    className="card-img-top"
+                    src="../../../public/assets/images/img-4.png"
+                    alt="image"
+                    style={{ width: "100%" }}
+                  />
+                  <div className="card-body">
+                    <h4 className="card-title">Single Property</h4>
+                    <p className="card-text">
+                      - Create a Blast from Scratch
+                      <br />- Feature One Property
+                    </p>
+                    <a
+                      href="javascript:void(0)"
+                      className="btn btn-primary"
+                      onClick={(e) =>
+                        this.selectDesignTemplate(e, "SingleProperty")
+                      }
+                    >
+                      Select
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 mb-3">
+                <div
+                  className="card"
+                  style={{
+                    width: "20rem",
+                    margin: "20px 0 24px 0",
+                  }}
+                >
+                  <img
+                    className="card-img-top"
+                    src="../../../public/assets/images/img-4.png"
+                    alt="image"
+                    style={{ width: "100%" }}
+                  />
+                  <div className="card-body">
+                    <h4 className="card-title">Multiple Properties</h4>
+                    <p className="card-text">
+                      - Create a Blast from Scratch <br></br>- Feature Multiple
+                      Properties{" "}
+                    </p>
+                    <a
+                      href="javascript:void(0)"
+                      className="btn btn-primary"
+                      onClick={(e) =>
+                        this.selectDesignTemplate(e, "MultipleProperties")
+                      }
+                    >
+                      Select
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 mb-3">
+                <div
+                  className="card"
+                  style={{
+                    width: "20rem",
+                    margin: "20px 0 24px 0",
+                  }}
+                >
+                  <img
+                    className="card-img-top"
+                    src="../../../public/assets/images/img-4.png"
+                    alt="image"
+                    style={{ width: "100%" }}
+                  />
+                  <div className="card-body">
+                    <h4 className="card-title">Upload Your Own Blast</h4>
+                    <p className="card-text">
+                      Upload in seconds a Single Page Blast you already have
+                    </p>
+                    <a
+                      href="javascript:void(0)"
+                      className="btn btn-primary"
+                      onClick={(e) =>
+                        this.selectDesignTemplate(e, "UploadBlast")
+                      }
+                    >
+                      Select
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="col-md-4 mb-3">
-              <div
-                className="card"
-                style={{
-                  width: "20rem",
-                  margin: "20px 0 24px 0",
-                }}
-              >
-                <img
-                  className="card-img-top"
-                  src="../../../public/assets/images/img-4.png"
-                  alt="image"
-                  style={{ width: "100%" }}
-                />
-                <div className="card-body">
-                  <h4 className="card-title">Upload Your Own Blast</h4>
-                  <p className="card-text">
-                    Upload in seconds a Single Page Blast you already have
-                  </p>
-                  <a href="javascript:void(0)" className="btn btn-primary"
-                     onClick={(e) =>
-                      this.selectDesignTemplate(e, "UploadBlast")
-                    }>
-                    Select
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
         </form>
       </div>
     );

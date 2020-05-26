@@ -69,8 +69,7 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
 
 
   render() {
-    console.log("upload blast",this.props);
-    const { previewData } = this.props;
+    const { previewData,uploadBlast} = this.props;
     return (
       <div
         className="tab-pane fade mt-2"
@@ -165,6 +164,10 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
                   />
                 </div>
               </div>
+
+              {uploadBlast &&
+                uploadBlast.blastData &&
+                uploadBlast.blastData.blast_type == "UploadBlast" ? (
               <div className="flyer-bg">
                 <div className="row">
                   <div className="col-md-12 mt-3 mb-3 ml-3">
@@ -247,6 +250,8 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
                   </div>
                 </div>
               </div>
+               ) : null}
+
               <div className="flyer-btm">
                 <div className="row">
                   <div className="col-md-12 ">
