@@ -22,13 +22,13 @@ class AdminUserRoutes {
         router.get("/adminusers/subscribers", controller.getSubscribers);
         router.get("/adminusers/blasts", controller.getBlasts);
         router.get("/adminuser/sendblast/:id", controller.sendBlast);
+        router.get("/adminusers/activecampaignassociations", controller.getActiveCampaignAssociations);
         router.put("/adminusers/", controller.update);
         router.delete("/adminusers/:_id", controller.deleteusers);
 		router.put("/adminusers/deleteagents/:_id", controller.deleteagents);
         router.get("/userStatus/:_id", controller.userStatus);
         router.get("/adminuser/subscriberstatus/:_id", controller.changeSubscriberStatus);
         router.get("/adminusers/:_id", controller.findById);
-        //   router.post("/adminusers/PlanRegister", controller.PlanRegister);
         router.get("/adminusers/counts/:flag", controller.getCount);
 
         router.get("/adminusers-bytoken", controller.findByToken);

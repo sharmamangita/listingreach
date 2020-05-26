@@ -22,6 +22,7 @@ export const adminActions = {
     subscriberStatus,
     getBlasts,
     sendBlast,
+    getActiveCampaignAssociations
 };
 
 
@@ -55,6 +56,26 @@ function getCount(flag) {
 
     }
     function failure(error) { return { type: adminConstants.GETDASHBOARDALL_FAILURE, error } }
+}
+
+function getActiveCampaignAssociations() {
+    return dispatch => {
+        dispatch(request());
+        adminService.getActiveCampaignAssociations()
+            .then(
+                activeCampaign => {
+                    dispatch(success(activeCampaign));
+                    dispatch(alertActions.success('Sent successfully.'));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error('Not updated, please try again.'));
+                }
+            );
+    };
+    function request(activeCampaign) { return { type: adminConstants.GET_ASSOCIATIONS_REQUEST, activeCampaign } }
+    function success(activeCampaign) { return { type: adminConstants.GET_ASSOCIATIONS_SUCCESS, activeCampaign } }
+    function failure(error) { return { type: adminConstants.GET_ASSOCIATIONS_FAILURE, error } }
 }
 
 function sendBlast(id) {

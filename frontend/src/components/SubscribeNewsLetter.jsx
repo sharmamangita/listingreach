@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { subscriberActions } from '../actions/subscriber.actions'
 import { globalData } from '../constants/data.constants';
 import { Modal } from 'react-bootstrap';
+import { adminActions } from '../actions';
 class SubscribeNewsLetter extends React.Component {
     constructor(props) {
         super(props);
@@ -29,7 +30,10 @@ class SubscribeNewsLetter extends React.Component {
             clearForm: false,
             isFormValid: false,
             submitted: false,
-            agentDatabase: [],
+            activeCampaign: {
+                associations: [],
+                segments: []
+            },
             propertyTypes: propertyTypes,
             priceFilters: priceFilters,
             preferedVendors: preferedVendors,
@@ -45,10 +49,10 @@ class SubscribeNewsLetter extends React.Component {
                 includeRentedProperties: false,
                 includeOutsideAreaProperties: true,
                 agentTypes: [],
-                mailingLists: []
+                mailingLists: []// segment ids from activeCampaign
             }
         };
-        return JSON.parse(JSON.stringify(state)) ;// pass a copy of object
+        return JSON.parse(JSON.stringify(state));// pass a copy of object
     }
 
     handleClose() {
@@ -57,15 +61,25 @@ class SubscribeNewsLetter extends React.Component {
     clearAgentDataBase() {
         const { subscriber } = this.state;
         subscriber.mailingLists = [];
-        this.setState({ subscriber: subscriber, show: false, agentDatabase: [] });
+        this.setState({ subscriber: subscriber, show: false, associations: [] });
     }
     handleShow() {
         this.setState({ show: true });
+        this.props.dispatch(adminActions.getActiveCampaignAssociations());
     }
     handleStateChange(e) {
-        this.setState({ agentDatabase: [] })
-        const state = e.target.value;
-        this.props.dispatch(subscriberActions.getAgentsDatabase(state))
+        const associationid = e.target.value;
+        const { activeCampaign } = this.state;
+        const filteredSegments = activeCampaign.segments.filter((segment) => (
+            segment.lists[associationid]
+        ));
+        console.log(filteredSegments)
+        activeCampaign.segment = [];
+        this.setState({
+            activeCampaign,
+            filteredSegments
+        });
+
     }
     componentDidMount() {
         var subscribeButton = document.querySelector('#sub-button')
@@ -81,6 +95,7 @@ class SubscribeNewsLetter extends React.Component {
                 document.body.classList.add('box-collapse-closed');
             });
         }
+
     }
 
     handleChange(e, selectedItem) {
@@ -173,38 +188,39 @@ class SubscribeNewsLetter extends React.Component {
         }
     }
     renderdataBaseModal() {
-        const { show, agentDatabase } = this.state;
-        // console.log("state in model ", this.props)
-        // const { agentData } = this.props;
+        const { show, activeCampaign, filteredSegments, loading } = this.state;
+        console.log("state in model ", this.state)      
         return (
             <Modal show={show} onHide={this.handleClose} size="lg">;
                 <Modal.Header >
                     <h4 className="modal-title">Select Databases</h4>
                 </Modal.Header>
                 <Modal.Body>
+                    {!loading?
+                    <React.Fragment>
                     <form className="form">
                         <div className="form-group col-md-6">
-                            <select className="form-control form-control-a" onChange={this.handleStateChange} >
+                            <select className="form-control form-control-a" onChange={(event) => this.handleStateChange(event)} >
                                 <option>Select State</option>
                                 {
-                                    globalData.USstates.map((st) => (
-                                        <option key={st}>{st}</option>
+                                    activeCampaign && activeCampaign.associations.map((st) => (
+                                        <option key={st.id} value={st.id}>{st.name}</option>
                                     ))
                                 }
                             </select>
                         </div>
 
-                        {agentDatabase && agentDatabase.length > 0 ?
+                        {filteredSegments && filteredSegments.length > 0 ?
                             <div className="form-group">
                                 <label htmlFor="property"><b>City wise Agents</b></label>
                                 <div className="row">
                                     <div className="col-md-6 mb-2">
                                         {
-                                            agentDatabase.map((city) => (
-                                                <div className="form-check" key={city._id} >
+                                            filteredSegments.map((segment) => (
+                                                <div className="form-check" key={segment.id} >
                                                     <label className="form-check-label">
-                                                        <input type="checkbox" name="agentdatabase" value={city._id} onChange={(event) => this.handleChange(event, city._id)} className="form-check-input" />
-                                                        {city._id + "  (" + city.agents + " Agents)"}
+                                                        <input type="checkbox" name="agentdatabase" value={segment.id} onChange={(event) => this.handleChange(event, segment.id)} className="form-check-input" />
+                                                        {segment.name}
                                                     </label>
                                                 </div>)
                                             )
@@ -215,6 +231,8 @@ class SubscribeNewsLetter extends React.Component {
                             : null
                         }
                     </form>
+                    </React.Fragment>
+                :<h4>Loading....</h4>}
                 </Modal.Body>
                 <Modal.Footer>
                     <button type="button" className="btn btn-b" onClick={this.clearAgentDataBase}>Cancel</button>
@@ -225,7 +243,7 @@ class SubscribeNewsLetter extends React.Component {
     };
     render() {
         var { subscriber, submitted, propertyTypes, priceFilters, preferedVendors } = this.state;
-             console.log("state in render", this.state)
+        console.log("state in render", this.state)
         return (
             <React.Fragment>
                 <div className="box-collapse">
@@ -395,7 +413,7 @@ class SubscribeNewsLetter extends React.Component {
         );
     };
     componentWillReceiveProps(props) {
-        this.setState({ agentDatabase: props.agentData })
+        this.setState({ activeCampaign: props.activeCampaign,loading:props.loading })
         if (props.clearForm) {
             var defaultstate = this.resetState();
             this.setState(defaultstate);
@@ -404,13 +422,13 @@ class SubscribeNewsLetter extends React.Component {
 }
 function mapStateToProps(state) {
     console.log("stae11====", state);
-    const { users, registration } = state;
-    const { agentData } = users;
+    const { admins, registration } = state;
+    const { activeCampaign, loading } = admins;
     const { clearForm } = registration;
-    
     return {
+        loading,
         clearForm,
-        agentData: agentData ? agentData.agentDatabase : null
+        activeCampaign
     };
 }
 export default connect(mapStateToProps)(SubscribeNewsLetter);

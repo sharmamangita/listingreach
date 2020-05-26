@@ -17,7 +17,8 @@ export const adminService = {
     getBlasts,
     deletesubscriber,
     subscriberStatus,
-    sendBlast
+    sendBlast,
+    getActiveCampaignAssociations
 };
 
 function updateBlastSettings( blastsettings) {
@@ -41,6 +42,13 @@ function getSubscribers() {
         method: 'GET'
     };
     return fetch(`${config.apiUrl}/adminusers/subscribers`, requestOptions).then(handleResponse);
+}
+
+function getActiveCampaignAssociations() {
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(`${config.apiUrl}/adminusers/activecampaignassociations`, requestOptions).then(handleResponse);
 }
 
 function getBlasts() {

@@ -121,6 +121,22 @@ export function admins(state = {}, action) {
         error: action.error
       };
 
+      
+      case adminConstants.GET_ASSOCIATIONS_REQUEST:
+        newState = objectAssign({}, state, {
+          loading: true
+        });
+        return newState;
+      case adminConstants.GET_ASSOCIATIONS_SUCCESS:
+        newState = objectAssign({}, state, {
+          loading: false,
+          activeCampaign: action.activeCampaign
+        });
+        return newState;
+      case adminConstants.GET_ASSOCIATIONS_FAILURE:
+        return {
+          error: action.error
+        };
 
       case adminConstants.BLASTS_REQUEST:
         newState = objectAssign({}, state, {

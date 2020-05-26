@@ -183,6 +183,55 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 		}
 	}
 
+	getActiveCampaignAssociations(req: express.Request, res: express.Response): void {
+		try {
+			var options = {
+				method: 'GET',
+				url: 'https://listingreach.api-us1.com/api/3/lists',
+				headers: {
+					"Api-Token": Common.ActiveCampaignLey
+				}
+			};
+
+			request(options, function (error: any, response: any, associations: any) {
+				if (error) throw new Error(error);
+
+				var options = {
+					method: 'GET',
+					url: 'https://listingreach.api-us1.com/api/2/segment/list',
+					headers: {
+						"Api-Token": Common.ActiveCampaignLey
+					}
+				};
+				request(options, function (error: any, response: any, segments: any) {
+					if (error) throw new Error(error);
+					//	console.log(JSON.parse(states).lists)
+					var st = JSON.parse(associations);
+					var ct = JSON.parse(segments)
+					res.send({ associations: st.lists, segments: ct })
+				});
+				//res.send({ states });
+
+			});
+
+			// request.get(Common.ActiveCampaignUrl + "?api_action=list_list&api_key="+Common.ActiveCampaignLey+"&ids=all&api_output=json", {			
+			// }, function (er: any, response: { statusCode: number; }, body: any) {
+			// 	if (!er) {
+			// 		console.log("message body  : ", body)
+			// 		res.send(body.associations);
+			// 	} else {
+			// 		console.log("Error   : ", er)
+			// 		res.send(er);
+			// 	}
+			// });
+		}
+		catch (e) {
+
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
+
 	deleteusers(req: express.Request, res: express.Response): void {
 		var _id: string = req.params._id;
 
@@ -227,18 +276,18 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 	}
 	deleteagents(req: express.Request, res: express.Response): void {
 		var uid: string = req.params._id;
-		console.log('deletedddddddddd id------:',uid);
+		console.log('deletedddddddddd id------:', uid);
 		try {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.findOne({ "_id": uid }, (error, result) => {
-				console.log('try----------------------',result);
+				console.log('try----------------------', result);
 				if (error) {
 					res.send({ "error": "error" });
 				} else {
 					var _user: IUserModel = <IUserModel>req.body;
 					if (result.isDeleted === false) {
 						console.log('is deleted-------------------');
-						_user.isDeleted = "true";
+						_user.isDeleted = true;
 						_userBusiness.update(uid, _user, (error: any, resultUpdate: any) => {
 							if (error) {
 								res.send({ "error": "error" });
@@ -250,7 +299,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				}
 			});
 		}
-		
+
 		catch (e) {
 
 			console.log(e);
