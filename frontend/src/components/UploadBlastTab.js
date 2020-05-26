@@ -228,10 +228,10 @@ class UploadBlastTab extends React.Component {
 
     axios
       .post(`${config.uploadapiUrl}/propertyupload`, formData, configs)
-
       .then((response) => {
         let imageids = {};
         imageids.id = response.data.imageId;
+        imageids.imgUrl = response.data.url;
         let setimagesData = Object.assign({}, this.state);
 
         setimagesData.blastImageUrl = response.data.url;
@@ -639,14 +639,17 @@ class UploadBlastTab extends React.Component {
       submitted,
       error,
       Email,
-      blastImageUrl,
+      blastImageUrl
+
     } = this.state;
+
     let propertyImg = "";
     if (blastImageUrl) {
       propertyImg = config.uploadapiUrl + "/uploads/" + blastImageUrl;
     }
 
     const { propertyData, uploadBlast } = this.props;
+    console.log("uploadBlast=====",uploadBlast);
     return (
       <div
         className="tab-pane fade mt-2"
@@ -944,7 +947,7 @@ class UploadBlastTab extends React.Component {
 
                 {uploadBlast &&
                 uploadBlast.blastData &&
-                uploadBlast.blastData.blast_type == "UploadBlast" ? (
+                uploadBlast.blastData.blast_type == "ResidentialListings" ? (
                   <div>
                     <h5>Is this an Open House?</h5>
                     <div className="row">

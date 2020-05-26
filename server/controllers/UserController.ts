@@ -672,7 +672,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			let openData = '';
 			if(property[0].isOpenHouse.openHouseData !=undefined && property[0].isOpenHouse.openHouseData.length){
 				let houseArray = property[0].isOpenHouse.openHouseData;
-				console.log("houseArray===",houseArray);
+				//console.log("houseArray===",houseArray);
 				houseArray.forEach(function(item){
 				 openData +=`<div>
 				 <label class="flyer-label">${item.openHouseData.houseType}:</label>
@@ -1093,11 +1093,12 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 						}
 
 						if(property.propertyImages){
+							console.log("property.propertyImages======",property.propertyImages);
 								var propertyImages=[];
 								let data = property.propertyImages.img;
 											data.forEach(function(images:any) {
 											if(images){
-												propertyImages.push({img:images.img});
+												propertyImages.push({imageId:images.id,imageUrl:images.imgUrl});
 											}
 										});
 							   _propertyform.propertyImages=propertyImages;
@@ -1127,7 +1128,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 													}
 													console.log("dasdasdasdasd====",result);
 													_templateform.Property_id = result._id.toString();
-													console.log("3434343====",result._id.toString());
+													//console.log("3434343====",result._id.toString());
 
 													let _id: string = _templateforms.templateId;
 													_templateBusiness.update(_id, _templateform, (error, resultUpdate) => {
@@ -1205,6 +1206,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 																				"pricingInfo":1,
 																				"property_details":1,
 																				"isOpenHouse":1,
+																				"propertyImages":1,
 																				"linksToWebsites":1,
 																				"templates.email_subject":1,
 																				"templates.from_line":1,
@@ -1261,11 +1263,12 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 																		        price:obj.price,
 																		        garageSize:obj.garageSize,
 																		        blast_id:obj.blast_id,
-																		        agentData:obj.blasts
+																		        agentData:obj.blasts,
+																		        propertyImages:obj.propertyImages
 																		    };
 
 																	});
-																			console.log("returnObj=====",returnObj);
+																			//console.log("returnObj=====",returnObj);
 																			return res.json(returnObj);
 																}
 															});	

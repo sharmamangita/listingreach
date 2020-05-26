@@ -42,7 +42,8 @@ interface IPropertyModel extends mongoose.Document {
         openHouseData:Object
     }],
     propertyImages:[{
-        img:Object
+        imageId:String,
+        imageUrl:String
     }]
 
     

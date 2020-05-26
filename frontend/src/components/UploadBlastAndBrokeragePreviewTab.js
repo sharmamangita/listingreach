@@ -13,7 +13,7 @@ import Modal from "react-bootstrap4-modal";
 import { connect } from "react-redux";
 import { common } from "../helpers";
 import Moment from "moment";
-
+import config from "config";
 class UploadBlastAndBrokeragePreviewTab extends React.Component {
   constructor(props) {
     super(props);
@@ -21,6 +21,7 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
     this.state = {
       email: "",
     };
+
     let user = JSON.parse(localStorage.getItem("user"));
     if(user && user.userId &&  this.props && this.props.dispatchval){
        const { dispatch } = this.props.dispatchval.dispatch;
@@ -70,6 +71,13 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
 
   render() {
     const { previewData,uploadBlast} = this.props;
+    let imageUrl='';
+     console.log("propertyImages=====",this.props);
+    if(previewData && previewData.length && previewData[0].propertyImages){
+      let image = previewData[0].propertyImages[0].imageUrl;
+     imageUrl = config.uploadapiUrl+"/uploads/"+image;
+     console.log("imageUrl======",imageUrl);
+    }
     return (
       <div
         className="tab-pane fade mt-2"
@@ -158,7 +166,7 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
               <div className="row">
                 <div className="col-md-12">
                   <img
-                    src="public/assets/images/img1.jpg"
+                    src={ imageUrl || "public/assets/images/img1.jpg"}
                     alt="image"
                     style={{ width: "100%", height: "400px" }}
                   />

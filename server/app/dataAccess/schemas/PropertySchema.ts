@@ -96,7 +96,8 @@ class PropertySchema {
                 type:mongoose.Schema.Types.ObjectId
             },
             propertyImages:[{
-               img:Object
+               imageId:String,
+               imageUrl:String
             }],
 
         });
