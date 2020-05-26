@@ -280,15 +280,16 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 		try {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.findOne({ "_id": uid }, (error, result) => {
-				console.log('try----------------------', result);
+			//	console.log('try----------------------', result);
 				if (error) {
 					res.send({ "error": "error" });
 				} else {
-					var _user: IUserModel = <IUserModel>req.body;
-					if (result.isDeleted === false) {
+					//var _user: IUserModel = <IUserModel>req.body;
+					console.log("del ",result.isDeleted)
+					if (typeof(result.isDeleted)=="undefined" || !result.isDeleted) {
 						console.log('is deleted-------------------');
-						_user.isDeleted = true;
-						_userBusiness.update(uid, _user, (error: any, resultUpdate: any) => {
+						result.isDeleted = true;
+						_userBusiness.update(uid, result, (error: any, resultUpdate: any) => {
 							if (error) {
 								res.send({ "error": "error" });
 							} else {
@@ -298,6 +299,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					}
 				}
 			});
+			res.send("no action taken");
 		}
 
 		catch (e) {

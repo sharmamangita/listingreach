@@ -64,8 +64,8 @@ class SubscribeNewsLetter extends React.Component {
         this.setState({ subscriber: subscriber, show: false, associations: [] });
     }
     handleShow() {
-        this.setState({ show: true });
         this.props.dispatch(adminActions.getActiveCampaignAssociations());
+        this.setState({ show: true });
     }
     handleStateChange(e) {
         const associationid = e.target.value;
@@ -152,9 +152,9 @@ class SubscribeNewsLetter extends React.Component {
                 break;
             case "agentdatabase":
                 if (checked) {
-                    subscriber.mailingLists.push(value);
+                    subscriber.mailingLists.push(selectedItem);
                 } else {
-                    var index = subscriber.mailingLists.indexOf(value);
+                    var index = subscriber.mailingLists.indexOf(selectedItem);
                     if (index > -1) {
                         subscriber.mailingLists.splice(index, 1)
                     }
@@ -219,7 +219,7 @@ class SubscribeNewsLetter extends React.Component {
                                             filteredSegments.map((segment) => (
                                                 <div className="form-check" key={segment.id} >
                                                     <label className="form-check-label">
-                                                        <input type="checkbox" name="agentdatabase" value={segment.id} onChange={(event) => this.handleChange(event, segment.id)} className="form-check-input" />
+                                                        <input type="checkbox" name="agentdatabase" value={segment.id} onChange={(event) => this.handleChange(event, segment)} className="form-check-input" />
                                                         {segment.name}
                                                     </label>
                                                 </div>)

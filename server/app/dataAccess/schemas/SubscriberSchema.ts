@@ -51,7 +51,7 @@ class SubscriberSchema {
                 type: [String]
             },
             mailingLists: {
-                type: [String],
+                type: [],
                 required: true
             },
             createdOn: {
