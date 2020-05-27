@@ -206,7 +206,8 @@ function updatepassword(user,currentpassword,newspassword) {
                 if(user.success){
                     if(userroles=="agents"){
                        
-                       history.push('/AgentDashboardPage');
+                       //history.push('/AgentDashboardPage');
+					   dispatch(alertActions.success('Password has been Updated successfully'));
                     }
                 dispatch(alertActions.success(user.success));
                 window.scrollTo(0,0);

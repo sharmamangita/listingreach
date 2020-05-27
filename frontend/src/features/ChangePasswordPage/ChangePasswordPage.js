@@ -100,53 +100,78 @@ class ChangePasswordPage extends React.Component {
 	  } 
 
     return (
-      <div className="site-section bg-light">
-        <div className="container">
-          <div className="text-center mb-5 section-heading">
-            <h2>Change Password</h2>
-            { alert.message &&
-          	<Alert className={`alert ${alert.type}`} isOpen={this.state.visible} > <button type="button" onClick={this.closebtn} className="close" >
-				    <span aria-hidden="true">&times;</span>
-				    </button>{alert.message}</Alert>
-             }
-          </div>
-          <div className="row">
-              <div className="col-md-12 col-lg-3">
-              </div>
-              <div className="col-md-12 col-lg-6 mb-5">
-                <form onSubmit={this.handleSubmit} className="p-5 bg-white" > 
-                  <div className="row form-group">
-                    <div className="col-md-12 mb-3 mb-md-0">
-                    <label className="font-weight-bold" htmlFor="fullname">Enter details to change the password</label>
-                      <input type="password" id="currentpassword" name="currentpassword" className='form-control mb-3' value={currentpassword} onChange={this.handleChange}  placeholder="Current Password" />
+	<div>
+		 <section className="intro-single">
+				<div className="container">
+				  <div className="row">
+					<div className="col-md-12 col-lg-8">
+					  <div className="title-single-box">
+						<h1 className="title-single">Change Password</h1> 
+			             <span className="color-text-a">To change your password, please enter your old password and new password below.</span>	
+					  </div>
+					</div>
+					<div className="col-md-12 col-lg-4">
+					  <nav aria-label="breadcrumb" className="breadcrumb-box d-flex justify-content-lg-end">
+						<ol className="breadcrumb">
+						  <li className="breadcrumb-item">
+							<Link to="HomePage">Home</Link>
+						  </li>
+						  <li className="breadcrumb-item active" aria-current="page">
+							Change Password
+						  </li>
+						</ol>
+					  </nav>
+					</div>
+				  </div>
+				</div>
+			</section>
+		  <section className="contact">
+			<div className="container">
+			
+			  <div className="row">
+				
+				<div className="col-sm-12 section-t2">
+				  <div className="row">
+					<div className="col-md-7">
+					  <form className="form-a contactForm" onSubmit={this.handleSubmit}>
+					  { alert.message &&
+						<Alert className={`alert ${alert.type}`} isOpen={this.state.visible} > <button type="button" onClick={this.closebtn} className="close" >
+								<span aria-hidden="true">&times;</span>
+								</button>{alert.message}</Alert>
+						}
+						<div className="row">
+							
+						  <div className="col-md-12 mb-3">
+						  <div class="form-group">
+							<input type="password" id="currentpassword" name="currentpassword" className='form-control form-control-lg form-control-a' value={currentpassword} onChange={this.handleChange}  placeholder="Current Password" />
                       {submitted && !currentpassword &&
                         <div className="help-block red">This filed is required</div>
                       }
-                      <input type="password" id="newpassword" name="newpassword" className="form-control mb-3" value={newpassword} minLength={6} onChange={this.handleChange}  placeholder="New Password" />
+                      <input type="password" id="newpassword" name="newpassword" className="form-control form-control-lg form-control-a" value={newpassword} minLength={6} onChange={this.handleChange}  placeholder="New Password" />
                       {submitted && !newpassword &&
                         <div className="help-block red">This filed is required</div>
                       }
                       <div className="help-block red">
                       {passnewstr==true?'Please add one uppercase one special character.':''} </div>
 
-                      <input type="password" id="confirmpassword" name="confirmpassword" className="form-control" value={confirmpassword}  minLength={6} onChange={this.handleChange} placeholder="Re-type New Password" />
+                      <input type="password" id="confirmpassword" name="confirmpassword" className="form-control form-control-lg form-control-a" value={confirmpassword}  minLength={6} onChange={this.handleChange} placeholder="Re-type New Password" />
                       {submitted && !confirmpassword &&
                       <div className="help-block red">This filed is required</div>   }
                       {notmatached}
-                    </div>
-                  </div>  
-                  <div className="row form-group">
-                    <div className="col-md-4">
-                      <input type="submit" value="Update" className="btn btn-primary pill px-4 py-2" onClick={this.toggleError} />
-                    </div>				
-                  </div>			  
-                </form>
-              </div>          
-              <div className="col-md-12 col-lg-3">
-              </div>
-          </div>
-        </div>
-      </div>
+						  </div>
+						  </div>
+						  <div className="col-md-12">
+							<button type="submit" value="Update" className="btn btn-a  mb-3" onClick={this.toggleError} >Update</button>				
+						  </div>
+						</div>
+					  </form>
+					</div>
+				  </div>
+				</div>
+			  </div>
+			</div>
+		  </section>
+		</div>  
       );
     }
 }

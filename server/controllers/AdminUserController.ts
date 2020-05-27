@@ -46,7 +46,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 	getAgents(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
-			var condition: Object = { roles: /agents/, isDeletd: false }
+			var condition: Object = {$and:[{ roles: /agents/  },{isDeleted:{$eq:false}}]}
 			var fields: Object = { _id: 1, firstName: 1, lastName: 1, email: 1, status: 1, createdOn: 1, lastLogin: 1 }
 			_userBusiness.retrieveFields(condition, fields, (error, result) => {
 				if (error) {
@@ -305,32 +305,33 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 	}
 	deleteagents(req: express.Request, res: express.Response): void {
 		var uid: string = req.params._id;
+		console.log('deletedddddddddd id------:', uid);
 		try {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.findOne({ "_id": uid }, (error, result) => {
-				//	console.log('try----------------------', result);
+			//	console.log('try----------------------', result);
 				if (error) {
-					res.send({ "error": error });
+					console.log('error----');
+					res.send({ "error": "error" });
 				} else {
-					//var _user: IUserModel = <IUserModel>req.body;
-					console.log("del ", result.isDeleted)
-					if (typeof (result.isDeleted) == "undefined" || !result.isDeleted) {
-						console.log('is deleted-------------------');
-						result.isDeleted = true;
-						_userBusiness.update(uid, result, (error1: any, resultUpdate: any) => {
-							if (error1) {
-								console.log("error", error1)
-								res.send({ "error": error1 });
+					var _user: IUserModel = <IUserModel>req.body;
+					console.log("del ",result.isDeleted)
+					if (typeof(result.isDeleted)=="undefined" || !result.isDeleted) {
+						console.log('is deleted-------------------',result.isDeleted);
+						_user.isDeleted = true;
+						_userBusiness.update(uid, _user, (error: any, resultUpdate: any) => {
+							if (error) {
+								console.log('errorrr........',resultUpdate);
+								res.send({ "error": "error" });
 							} else {
-								res.send({ "success": resultUpdate });
+								console.log('success---',resultUpdate);
+								res.send({ "success": "success" });
 							}
 						})
-					} else {
-
-						res.send("no action taken");
 					}
 				}
 			});
+			res.send("no action taken");
 		}
 
 		catch (e) {
