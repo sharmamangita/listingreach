@@ -12,7 +12,7 @@ class PaymentsPage extends React.Component {
 		// reset login status
 		this.state = {
 			show: false,
-			subscribers: this.props.subscribers,
+			payments: this.props.payments,
 			prefrences: {},
 			totaldatacad: ""
 		};
@@ -113,8 +113,8 @@ class PaymentsPage extends React.Component {
 	}
 
 	getById(id) {
-		if (this.props.subscribers) {
-			var filteredEmployee = this.props.subscribers.filter(item => {
+		if (this.props.payments) {
+			var filteredEmployee = this.props.payments.filter(item => {
 				return item._id == id;
 			});
 			if (filteredEmployee.length > 0) {
@@ -170,7 +170,7 @@ class PaymentsPage extends React.Component {
 		console.log('totaldata   ', totaldata)
 		return (
 			<main className="col-xs-12 col-sm-8 col-lg-9 col-xl-10 pt-3 pl-4 ml-auto">
-				<h3 className="admin-title">  Subscribers</h3>
+				<h3 className="admin-title">Payments</h3>
 				{/* {this.renderSubscriberPreferencesModal()} */}
 				<section className="row">
 					<div className="col-sm-12">
@@ -191,35 +191,34 @@ class PaymentsPage extends React.Component {
 	}
 
 	prepareTable() {
-		if (this.props.subscribers && this.props.subscribers.length > 0) {
+		if (this.props.payments && this.props.payments.length > 0) {
 			var totaldata = [];
-			for (var cad = 0; cad <= this.props.subscribers.length - 1; cad++) {
-				// var Url = window.location.href;
-				// var spliturlk = Url.split('=');
-				// console.log("spliturlk[1]=====", typeof spliturlk[1]);
-				// var subscriber = '';
-				var subscriber = this.props.subscribers[cad];
+			for (var cad = 0; cad <= this.props.payments.length - 1; cad++) {
+				var payment = this.props.payments[cad];
 				totaldata.push({
-					name: subscriber.firstName ? subscriber.firstName + ' ' + subscriber.lastName : "--",
-					email: subscriber.email ? subscriber.email : "--",
-					phone: "--",
-					city: "--",
-					state: "--",
-					subscribedon: this.createdDate(subscriber.createdOn),
-					prefrences: (
-						<a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={subscriber._id} onClick={this.handleModalOpem()} data-target="#intro">
-							<span className="fa fa-settings"></span>
-						</a>						
-					),
-					actions: (
-						<span> {this.deletelink(subscriber._id)} </span>
-					),
-					status: (this.status(subscriber.status, subscriber._id))
+					payentId: payment.paymentID,
+					paidOn: this.createdDate(payment.createdOn),
+					amount: "$" + payment.amount,
+					headline: payment.template && payment.template.length > 0 ? payment.template[0].headline : "",
+					agentName: payment.blast && payment.blast.length > 0 ? payment.blast[0].agentData.name : "",
+					email: payment.blast && payment.blast.length > 0 ? payment.blast[0].agentData.email : "",
+					company: payment.blast && payment.blast.length > 0 ? payment.blast[0].agentData.company_details : "",
+					sentOn: payment.blast && payment.blast.length > 0 ? this.createdDate(payment.blast[0].selected_template_date) : "",
+
+					// prefrences: (
+					// 	<a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={subscriber._id} onClick={this.handleModalOpem()} data-target="#intro">
+					// 		<span className="fa fa-settings"></span>
+					// 	</a>						
+					// ),
+					// actions: (
+					// 	<span> {this.deletelink(subscriber._id)} </span>
+					// ),
+					// status: (this.status(subscriber.status, subscriber._id))
 				});
 			}
 		}
 		const caddata = {
-			columns: common.agentcolumns,
+			columns: common.paymentcolumns,
 			rows: totaldata
 		};
 		return { totaldata, caddata };
@@ -229,7 +228,7 @@ class PaymentsPage extends React.Component {
 
 		return event => {
 			var id = event.currentTarget.dataset.id;
-			var filteredEmployee = this.props.subscribers.filter(item => {
+			var filteredEmployee = this.props.payments.filter(item => {
 				return item.id == id;
 			});
 			if (filteredEmployee.length > 0) {
@@ -242,11 +241,11 @@ class PaymentsPage extends React.Component {
 function mapStateToProps(state) {
 	const { authentication, admins } = state;
 	const { user } = authentication;
-	const { subscribers } = admins;
-	console.log("subscribers====", subscribers);
+	const { payments } = admins;
+	console.log("payments====", payments);
 	return {
 		user,
-		subscribers
+		payments
 	};
 }
 

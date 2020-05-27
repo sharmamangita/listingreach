@@ -65,6 +65,56 @@ export const common = {
       width: 50
     },
   ],
+  paymentcolumns: [
+    {
+      label: 'PaymentId',
+      field: 'payentId',
+      sort: 'asc',
+      width: 250
+    },
+    {
+      label: 'Paid On',
+      field: 'paidOn',
+      sort: 'asc',
+      width: 200
+    },   
+    {
+      label: 'Amount',
+      field: 'amount',
+      sort: 'asc',
+      width: 20
+    },   
+    {
+      label: 'Blast Headline',
+      field: 'headline',
+      sort: 'asc',
+      width: 200
+    },
+    {
+      label: 'Agent',
+      field: 'agentName',
+      sort: 'asc',
+      width: 50
+    },
+    {
+      label: 'Email',
+      field: 'email',
+      sort: 'asc',
+      width: 270
+    },
+    {
+      label: 'Company',
+      field: 'company',
+      sort: 'asc',
+      width: 200
+    },
+    {
+      label: 'Sent On',
+      field: 'sentOn',
+      sort: 'asc',
+      width: 50
+    }
+  ],
   blastscolumns: [
     {
       label: 'Blast Type',

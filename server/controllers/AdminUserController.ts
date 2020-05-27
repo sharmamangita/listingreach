@@ -45,15 +45,48 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 	getPayments(req: express.Request, res: express.Response): void {
 		try {
 			const paymentBusiness = new PaymentBusiness();
-			paymentBusiness.retrieve("", (error, result) => {
-				if (error) {					
+			var query: Array<any> = [
+				{
+					$lookup: {
+						from: "blasts",
+						localField: "blast_id",
+						foreignField: "_id",
+						as: "blast"
+					}
+				},
+				{
+
+					$lookup: {
+						from: "templates",
+						localField: "blast.selected_template_id",
+						foreignField: "_id",
+						as: "template"
+					}
+				},
+				{
+					$project: {
+						_id: 1,
+						paymentID: 1,
+						createdOn: 1,
+						amount: 1,
+						"blast.blast_type": 1,
+						"template.headline": 1,
+						"blast.agentData.name": 1,
+						"blast.agentData.email": 1,
+						"blast.agentData.company_details": 1,
+						"blast.selected_template_date": 1,
+					}
+				}
+			];
+			paymentBusiness.aggregate(query, (error, result) => {
+				if (error) {
 					console.log(error);
 					res.send({ "error": error });
 				}
-				else{
+				else {
 					//console.log(result);
 					res.send(result);
-				} 
+				}
 			});
 
 		}
@@ -93,7 +126,6 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 						foreignField: "user_id",
 						as: "payments"
 					},
-
 				},
 				{
 					$group: {
