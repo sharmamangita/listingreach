@@ -23,14 +23,15 @@ import interactionPlugin from '@fullcalendar/interaction'; // needed for dayClic
 import { connect } from "react-redux";
 import { common } from "../helpers";
 import moment from "moment";
-
+require('./main.css');
 
 class SetDateTab extends React.Component {
   constructor(props) {
     super(props);
     this.navId = "";
+   
     this.state = {
-     calendarWeekends: true,
+     calendarWeekends: false,
       calendarEvents: [ // initial event data
       { title: 'Event Now', start: new Date() }
       ]
@@ -62,6 +63,7 @@ class SetDateTab extends React.Component {
     }
   }
   render() {
+    const { calendarWeekends,calendarEvents} = this.state;
     return (
       <div
         className="tab-pane fade mt-2"
@@ -72,7 +74,7 @@ class SetDateTab extends React.Component {
       >
         <h4>Set Date</h4>
         <p>Choose date for emailing the Blast.</p>
-         <div className='demo-app'>
+        <div className='demo-app'>
         <div className='demo-app-top'>
           <button onClick={ this.toggleWeekends }>toggle weekends</button>&nbsp;
           <button onClick={ this.gotoPast }>go to a date in the past</button>&nbsp;

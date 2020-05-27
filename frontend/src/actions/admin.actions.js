@@ -202,9 +202,11 @@ function deleteagents(id) {
         adminService.deleteagents(id)
             .then(
                 user => {
-                    dispatch(success(user));
+					dispatch(success(user));
+					location.reload();
                 },
                 error => {
+					location.reload();
                     dispatch(failure(error.toString()));
                     dispatch(alertActions.error(error.toString()));
                 }

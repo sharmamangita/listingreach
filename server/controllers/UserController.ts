@@ -81,6 +81,7 @@ class UserController implements IBaseController<UserBusiness> {
             user.roles='agents';
             user.lastName=req.body.user.lastName.toLowerCase();
             user.paidOn= false;
+			user.isDeleted= false;
             var userBusiness = new UserBusiness();
             var token = userBusiness.createToken(user);
 
@@ -123,29 +124,34 @@ class UserController implements IBaseController<UserBusiness> {
                 else {
                 	
 					if(result && result.password && result.password==_user.password ) {
-						if(result.status=='unverified') {
-							return res.status(401).send({"error": "Your account is not active. Please contact admin."});
-						} else {
-							var token = _userBusiness.createToken(result);
-							var _updateData: IUserModel = <IUserModel>req.body;
-							_updateData.lastLogin = new Date();
-							_updateData.token = token;
-							var _id: string = result._id.toString();
-							var _userBusinessUpdate = new UserBusiness();
-							_userBusinessUpdate.update(_id, _updateData, (error, resultUpdate) => {
-								if(error) res.send({"error": "error", "message": "Authentication error"});//res.status(401).send({"error": "Authentication error"});
-								else {
-									console.log("here i am login ")
-									res.send({
-										userId: result._id,
-										email: result.email,
-										firstName: result.firstName,
-										lastName: result.lastName,
-										token: token,
-										roles:result.roles
-									});
-								}
-							});
+						if(result.isDeleted && result.isDeleted ===true) {
+							return res.status(401).send({"error": "Your account is no longer available. Please contact admin."});
+						}
+						else{
+							if(result.status=='unverified') {
+									return res.status(401).send({"error": "Your account is not active. Please contact admin."});
+							} else {
+								var token = _userBusiness.createToken(result);
+								var _updateData: IUserModel = <IUserModel>req.body;
+								_updateData.lastLogin = new Date();
+								_updateData.token = token;
+								var _id: string = result._id.toString();
+								var _userBusinessUpdate = new UserBusiness();
+								_userBusinessUpdate.update(_id, _updateData, (error, resultUpdate) => {
+									if(error) res.send({"error": "error", "message": "Authentication error"});//res.status(401).send({"error": "Authentication error"});
+									else {
+										console.log("here i am login ")
+										res.send({
+											userId: result._id,
+											email: result.email,
+											firstName: result.firstName,
+											lastName: result.lastName,
+											token: token,
+											roles:result.roles
+										});
+									}
+								});
+							}
 						}
 					} else {
 						return res.status(401).send({"error": "The username or password don't match"});
