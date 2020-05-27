@@ -30,6 +30,10 @@ class BlastModel {
     get selected_template_date (): string {
         return this._blastModel.selected_template_id;
     }
+    get status (): string {
+        return this._blastModel.status;
+    }
+    
 	
 }
 Object.seal(BlastModel);

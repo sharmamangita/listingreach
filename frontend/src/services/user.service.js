@@ -25,7 +25,9 @@ export const userService = {
     getTemplateOrPropertydata,
     designTemplate,
     savePayment,
-    getPayment
+    getPayment,
+    getSavedBlast,
+    deleteSavedBlast
 };
 
 function login(email, password) {
@@ -122,6 +124,8 @@ function forgotpassword(email) {
         return user;
     }).catch(this.handleError);
 }
+
+
 /* change password */
 function updatepassword(user,currentpassword,newpassword) {
     const requestOptions = {
@@ -234,12 +238,12 @@ var user = {"userid":uid};
 	}	
 
 
-function getTemplateOrPropertydata(userId) {
-   console.log("test====",JSON.stringify(userId));
+function getTemplateOrPropertydata(blast_id) {
+   console.log("test====",JSON.stringify(blast_id));
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({userId})
+        body: JSON.stringify({blast_id})
     };
     return fetch(`${config.apiUrl}/users/propertyDetail`, requestOptions).then(handleResponse);
 }	
@@ -311,4 +315,25 @@ function getPayment(id) {
         return user;
     }).catch(this.handleError);
 }
- 
+
+function getSavedBlast(agentId) {
+    const requestOptions = {
+            method: 'GET',
+            headers: authHeader()
+        };
+    return fetch(`${config.apiUrl}/users/getSavedBlast/${agentId}`, requestOptions).then(handleResponse)
+    .then(user => {
+        return user;
+    }).catch(this.handleError);
+}
+
+function deleteSavedBlast(id){
+    const requestOptions = {
+            method: 'GET',
+            headers: authHeader()
+        };
+    return fetch(`${config.apiUrl}/users/deleteSavedBlast/${id}`, requestOptions).then(handleResponse)
+    .then(user => {
+        return user;
+    }).catch(this.handleError);
+}

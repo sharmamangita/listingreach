@@ -64,7 +64,7 @@ class PropertyTab extends React.Component {
 
     this.property = [
       {
-        blast_id:'',
+        blast_id: "",
         userId: "",
         propertyId: "",
         Email: {
@@ -125,9 +125,9 @@ class PropertyTab extends React.Component {
 
     this.state = {
       userId: "",
-      blast_id:'',
-      propertyCount:1,
-      templateId:"",
+      blast_id: "",
+      propertyCount: 1,
+      templateId: "",
       disabled: true,
       alert: {
         alertIsOpenHouse: false,
@@ -142,11 +142,11 @@ class PropertyTab extends React.Component {
           formReply: "",
         },
         blastHeadline: "",
-        agentData:{
-          name:'',
-          phone_number:'',
-          company_details:'',
-        }
+        agentData: {
+          name: "",
+          phone_number: "",
+          company_details: "",
+        },
       },
 
       Email: {
@@ -304,7 +304,7 @@ class PropertyTab extends React.Component {
   addProperty(index) {
     this.property.push({
       userId: "",
-      blast_id:'',
+      blast_id: "",
       propertyId: "",
       Email: {
         formSubject: "",
@@ -394,19 +394,19 @@ class PropertyTab extends React.Component {
         },
       },
     });
-let propertyCount = this.state.propertyCount+1;
+    let propertyCount = this.state.propertyCount + 1;
     this.setState({
       propertyDetails: this.property,
-      propertyCount:propertyCount,
+      propertyCount: propertyCount,
       errors: this.propertyError,
     });
   }
 
   deleteProperty(i) {
     let propertyArray = Object.assign({}, this.state);
-    console.log("this.state.propertyCount====",this.state.propertyCount);
-    let propertyCount = this.state.propertyCount-1;
-    console.log("propertCount====",propertyCount);
+    console.log("this.state.propertyCount====", this.state.propertyCount);
+    let propertyCount = this.state.propertyCount - 1;
+    console.log("propertCount====", propertyCount);
     propertyArray.propertyDetails.splice(i, 1);
     propertyArray.propertyCount = propertyCount;
     this.setState(propertyArray);
@@ -453,18 +453,18 @@ let propertyCount = this.state.propertyCount+1;
     const { id, name, value } = event.target;
     let keys = id.split("-");
     let linkArray = Object.assign({}, this.state);
-    linkArray.propertyDetails[keys[0]].linksToWebsites.linkData[keys[1]].linksToWebsiteData[
-      name
-    ] = value;
+    linkArray.propertyDetails[keys[0]].linksToWebsites.linkData[
+      keys[1]
+    ].linksToWebsiteData[name] = value;
   }
 
   openHouseArrayChange(event) {
     const { id, name, value } = event.target;
     let keys = id.split("-");
     let openHouseArray = Object.assign({}, this.state);
-    openHouseArray.propertyDetails[keys[0]].isOpenHouse.openHouseData[keys[1]].openHouseData[
-      name
-    ] = value;
+    openHouseArray.propertyDetails[keys[0]].isOpenHouse.openHouseData[
+      keys[1]
+    ].openHouseData[name] = value;
     if (
       openHouseArray.propertyDetails[keys[0]].isOpenHouse.openHouseData[keys[1]]
         .openHouseData[name]
@@ -490,11 +490,14 @@ let propertyCount = this.state.propertyCount+1;
     let isState = this.setState(openHouseArray);
   }
 
-  linkArrayDelete(event,linkIndex) {
+  linkArrayDelete(event, linkIndex) {
     const { id } = event.target;
     let keys = linkIndex.split("-");
     let linkArray = Object.assign({}, this.state);
-    linkArray.propertyDetails[keys[0]].linksToWebsites.linkData.splice([keys[1]], 1);
+    linkArray.propertyDetails[keys[0]].linksToWebsites.linkData.splice(
+      [keys[1]],
+      1
+    );
     this.setState(linkArray);
   }
 
@@ -554,7 +557,7 @@ let propertyCount = this.state.propertyCount+1;
     }
   }
 
-  editOrDelete(event, flag,indexList) {
+  editOrDelete(event, flag, indexList) {
     let keys = indexList.split("-");
     const { id, title } = event.target;
     console.log(event.target);
@@ -566,7 +569,10 @@ let propertyCount = this.state.propertyCount+1;
     } else {
       if (title == "linkDelete") {
         let linkArray = Object.assign({}, this.state);
-        linkArray.propertyDetails[keys[0]].linksToWebsites.linkData.splice(keys[1], 1);
+        linkArray.propertyDetails[keys[0]].linksToWebsites.linkData.splice(
+          keys[1],
+          1
+        );
         this.setState(linkArray);
       } else if (title == "openHoueDelete") {
         let openHoueArray = Object.assign({}, this.state);
@@ -668,28 +674,24 @@ let propertyCount = this.state.propertyCount+1;
             : "";
         break;
 
-        case "name":
+      case "name":
         error.agentData.name =
           value.length < 8
             ? "Agent name must be at least 3 characters long!"
             : "";
         break;
 
-        case "phone_number":
+      case "phone_number":
         error.agentData.phone_number =
-          value.length < 8
-            ? "Please enter vaild phone number"
-            : "";
+          value.length < 8 ? "Please enter vaild phone number" : "";
         break;
 
-        case "company_details":
+      case "company_details":
         error.agentData.company_details =
           value.length < 8
             ? "Company Detail line must be at least 8 characters long!"
             : "";
         break;
-
-  
 
       case "numberProperty":
         errors[id].propertyDetails.mlsNumber.numberProperty = parseInt(value)
@@ -786,8 +788,8 @@ let propertyCount = this.state.propertyCount+1;
         break;
       case "propertyAddress":
         states.propertyDetails[id].propertyAddress[name] = value;
-           let user = JSON.parse(localStorage.getItem("user"));
-            states.propertyDetails[id].userId = user.userId;
+        let user = JSON.parse(localStorage.getItem("user"));
+        states.propertyDetails[id].userId = user.userId;
         this.setState(states);
         break;
       case "mlsNumber":
@@ -822,17 +824,24 @@ let propertyCount = this.state.propertyCount+1;
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("nextProps232",nextProps);
-    if(nextProps.propertyData && nextProps.propertyData.blastData){
+    if (
+      (nextProps.propertyData && nextProps.propertyData.blastData) ||
+      nextProps.propertyData.blast_id
+    ) {
       let blast = nextProps.propertyData;
-       this.propsDataupdate(blast); 
+      this.propsDataupdate(blast);
     }
 
-    if(nextProps.propertyData && nextProps.propertyData.templateData){
-       let templateData = nextProps.propertyData;
+    if (nextProps.propertyData && nextProps.propertyData.templateData) {
+      let templateData = nextProps.propertyData;
       this.propsDataupdate(templateData);
     }
-/*    if(nextProps && nextProps.propertyData && nextProps.propertyData.data ||  nextProps.propertyData.data){
+
+    if (nextProps.saveBlastData) {
+      this.propsDataupdate(nextProps);
+    }
+
+    /*    if(nextProps && nextProps.propertyData && nextProps.propertyData.data ||  nextProps.propertyData.data){
       let templateId = nextProps.propertyData.data._id;
       let blast_id = nextProps.propertyData.data.blast_id;
       this.setState({templateId:templateId,blast_id:blast_id});
@@ -844,118 +853,107 @@ let propertyCount = this.state.propertyCount+1;
   }
 
   //propsDataupdate(data, agentData, profile, images) {
-    propsDataupdate(data){
+  propsDataupdate(data) {
     let states = Object.assign({}, this.state);
-    if(data && data.blastData){
+    if (data && data.blastData) {
       states.blast_id = data.blastData._id;
     }
-
-    if(data && data.templateData){
+    if (data && data.templateData) {
       states.templateId = data.templateData._id;
     }
+    if (data && data.blast_id) {
+      states.blast_id = data.blast_id;
+    }
+    if (data && data.saveBlastData) {
+      let states = Object.assign({}, this.state);
+      data.saveBlastData.forEach(function (saveData, i) {
+        let templates = saveData.templates[0];
+        states.Email.formSubject = templates.email_subject;
+        states.Email.formLine = templates.from_line;
+        states.Email.formReply = templates.address;
+        states.blastHeadline = templates.headline;
 
-    /*let propsData = data.items;
-    let propsagentData = agentData;
-    let profileData = profile;
-    let propsimageData = images;
-    if (
-      (propsagentData != undefined && propsagentData) ||
-      (profileData != undefined && profileData) ||
-      (images != undefined && images)
-    ) {
-      states.agentData = propsagentData;
-      states.profile = profileData;
-      states.imageData = propsimageData;
-      this.setState({ imageData: states.imageData });
-      this.setState({ agentData: states.agentData });
-      this.setState({ profile: states.profile });
-    }*/
+        states.propertyDetails[i].propertyAddress.zipCode = saveData.zipcode;
+        states.propertyDetails[i].propertyAddress.city = saveData.city;
+        states.propertyDetails[i].propertyAddress.streetAddress =
+          saveData.street_address;
+        states.propertyDetails[i].propertyAddress.displayMethod =
+          saveData.display_method;
 
+        states.propertyDetails[i].mlsNumber.numberProperty =
+          saveData.mls_number;
+        states.propertyDetails[i].mlsNumber.boardAssociation = saveData.board;
 
-    // for edit blast case use this all properties with array
-    /*if (propsData != undefined && propsData) {
-      if (propsData.templates.length) { 
-        let template = propsData.templates[0];
-        states.propertyDetails.Email.formSubject = template.email_subject;
-        states.propertyDetails.Email.formLine = template.from_line;
-        states.propertyDetails.Email.formReply = template.address;
-        states.propertyDetails.blastHeadline = template.headline;
-      }
-      if (propsData.pricingInfo.length) {
-        states.propertyDetails.pricingInfo.price =
-          propsData.pricingInfo[0].price;
-        states.propertyDetails.pricingInfo.priceType =
-          propsData.pricingInfo[0].priceType;
-      }
+        if (saveData.pricingInfo.length) {
+          states.propertyDetails[i].pricingInfo.price =
+            saveData.pricingInfo[0].price;
+          states.propertyDetails[i].pricingInfo.priceType =
+            saveData.pricingInfo[0].priceType;
+        }
 
-      states.propertyDetails.propertyDetail = propsData.property_detail;
-      states.propertyDetails.generalPropertyInformation.yearBuilt =
-        propsData.year_built;
-      states.propertyDetails.propertyId = propsData.id;
+        states.propertyDetails[i].propertyDetail = saveData.property_detail;
+        states.propertyDetails[i].generalPropertyInformation.yearBuilt =
+          saveData.year_built;
+        states.propertyDetails[i].propertyId = saveData.id;
 
-      states.propertyDetails.linksToWebsites.linkData =
-        propsData.linksToWebsites;
-      states.propertyDetails.isOpenHouse.openHouseData = propsData.isOpenHouse;
+        states.propertyDetails[i].linksToWebsites.linkData =
+          saveData.linksToWebsites;
+        states.propertyDetails[i].isOpenHouse.openHouseData =
+          saveData.isOpenHouse;
 
-      states.propertyDetails.propertyAddress.zipCode = propsData.zipcode;
-      states.propertyDetails.propertyAddress.city = propsData.city;
-      states.propertyDetails.propertyAddress.streetAddress =
-        propsData.street_address;
-      states.propertyDetails.propertyAddress.displayMethod =
-        propsData.display_method;
+        states.propertyDetails[i].generalPropertyInformation.yearBuilt =
+          saveData.year_built;
+        states.propertyDetails[i].generalPropertyInformation.lotSize =
+          saveData.lot_size;
+        states.propertyDetails[i].generalPropertyInformation.buildingSize =
+          saveData.building_size;
+        states.propertyDetails[i].generalPropertyInformation.numberOfBedrooms =
+          saveData.number_bedrooms;
+        states.propertyDetails[i].generalPropertyInformation.numberOfStories =
+          saveData.number_stories;
+        states.propertyDetails[
+          i
+        ].generalPropertyInformation.pricePerSquareFoot = saveData.price;
+        states.propertyDetails[i].generalPropertyInformation.propertyType =
+          saveData.property_type;
+        states.propertyDetails[i].generalPropertyInformation.propertyStyle =
+          saveData.property_style;
 
-      states.propertyDetails.mlsNumber.numberProperty = propsData.mls_number;
-      states.propertyDetails.mlsNumber.boardAssociation = propsData.board;
+        if (saveData.number_bathrooms.length) {
+          states.propertyDetails[
+            i
+          ].generalPropertyInformation.numberOfBathrooms.full =
+            saveData.number_bathrooms[0].full;
+          states.propertyDetails[
+            i
+          ].generalPropertyInformation.numberOfBathrooms.half =
+            saveData.number_bathrooms[0].half;
+        }
 
-      if (propsData.number_bathrooms.length) {
-        states.propertyDetails.generalPropertyInformation.numberOfBathrooms.full =
-          propsData.number_bathrooms[0].full;
-        states.propertyDetails.generalPropertyInformation.numberOfBathrooms.half =
-          propsData.number_bathrooms[0].half;
-      }
-
-      states.propertyDetails.generalPropertyInformation.yearBuilt =
-        propsData.year_built;
-      states.propertyDetails.generalPropertyInformation.lotSize =
-        propsData.lot_size;
-      states.propertyDetails.generalPropertyInformation.buildingSize =
-        propsData.building_size;
-      states.propertyDetails.generalPropertyInformation.numberOfBedrooms =
-        propsData.number_bedrooms;
-      states.propertyDetails.generalPropertyInformation.numberOfStories =
-        propsData.number_stories;
-      states.propertyDetails.generalPropertyInformation.pricePerSquareFoot =
-        propsData.price;
-      states.propertyDetails.generalPropertyInformation.propertyType =
-        propsData.property_type;
-      states.propertyDetails.generalPropertyInformation.propertyStyle =
-        propsData.property_style;
-
-      //states.propertyDetails.generalPropertyInformation.numberOfBathrooms.half = propsData.price
-      this.setState(states);
-    }*/
+      });
+    }
+    
     this.setState(states);
   }
 
   componentDidMount() {
     let user = JSON.parse(localStorage.getItem("user"));
     const { dispatch } = this.props;
-    if (user && user.userId) {
-      const { dispatch } = this.props.dispatchval.dispatch;
-      //dispatch(userActions.getTemplateOrPropertydata(user.userId))
-
-      this.setState({
-        userId: user.userId,
-      });
-      window.scrollTo(0, 0);
-    }
   }
 
   saveProperty(event) {
     event.preventDefault();
-    const { propertyDetails, submitted,agentData,Email,blastHeadline,templateId,blast_id} = this.state;
+    const {
+      propertyDetails,
+      submitted,
+      agentData,
+      Email,
+      blastHeadline,
+      templateId,
+      blast_id,
+    } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
-       if (
+    if (
       propertyDetails &&
       Email.formSubject &&
       Email.formReply &&
@@ -963,8 +961,17 @@ let propertyCount = this.state.propertyCount+1;
       propertyDetails[0].propertyDetail &&
       propertyDetails[0].pricingInfo.price
     ) {
-    dispatch(userActions.saveProperty(propertyDetails,agentData,Email,blastHeadline,templateId,blast_id));
-        } else {
+      dispatch(
+        userActions.saveProperty(
+          propertyDetails,
+          agentData,
+          Email,
+          blastHeadline,
+          templateId,
+          blast_id
+        )
+      );
+    } else {
       this.setState({ submitted: true });
     }
   }
@@ -998,6 +1005,7 @@ let propertyCount = this.state.propertyCount+1;
     } else {
       profilelogo = "/public/assets/images/dummy-logo.png";
     }
+
     console.log("this.state===", this.state);
     return (
       <div
@@ -1110,9 +1118,7 @@ let propertyCount = this.state.propertyCount+1;
                   placeholder="Agent Name"
                   onChange={(e) => this.handleChange("AgentContactInfo", e)}
                 />
-                <div className="validation">
-                {error.agentData.name}
-                </div>
+                <div className="validation">{error.agentData.name}</div>
               </div>
             </div>
             <div className="col-md-6 mb-3">
@@ -1164,9 +1170,7 @@ let propertyCount = this.state.propertyCount+1;
                   placeholder="Phone Number"
                   onChange={(e) => this.handleChange("AgentContactInfo", e)}
                 />
-                <div className="validation">
-                  {error.agentData.phone_number}
-                </div>
+                <div className="validation">{error.agentData.phone_number}</div>
               </div>
             </div>
             <div className="col-md-3 mb-3">
@@ -1256,7 +1260,8 @@ let propertyCount = this.state.propertyCount+1;
                       propertyData &&
                       propertyData.templateData &&
                       propertyData.templateData.template_type &&
-                      propertyData.templateData.template_type == "MultipleProperties"
+                      propertyData.templateData.template_type ==
+                        "MultipleProperties"
                         ? "inline"
                         : "none",
                   }}
@@ -1271,13 +1276,14 @@ let propertyCount = this.state.propertyCount+1;
                     onClick={() => this.addProperty({ i })}
                     style={{
                       display:
-                      propertyData &&
-                      propertyData.templateData &&
-                      propertyData.templateData.template_type &&
-                      propertyData.templateData.template_type == "MultipleProperties"
-                      && propertyCount<4
-                        ? "inline"
-                        : "none",
+                        propertyData &&
+                        propertyData.templateData &&
+                        propertyData.templateData.template_type &&
+                        propertyData.templateData.template_type ==
+                          "MultipleProperties" &&
+                        propertyCount < 4
+                          ? "inline"
+                          : "none",
                     }}
                   >
                     Add Property
@@ -1463,7 +1469,7 @@ let propertyCount = this.state.propertyCount+1;
                                   ) : (
                                     <select
                                       className="form-control form-control-lg form-control-a"
-                                      id={i+"-"+openHouseIndex}
+                                      id={i + "-" + openHouseIndex}
                                       name="houseType"
                                       disabled={disabled}
                                       onChange={this.openHouseArrayChange}
@@ -1486,7 +1492,7 @@ let propertyCount = this.state.propertyCount+1;
                                     type="date"
                                     name="date"
                                     onChange={this.openHouseArrayChange}
-                                    id={i+"-"+openHouseIndex}
+                                    id={i + "-" + openHouseIndex}
                                     className="form-control form-control-lg form-control-a"
                                     value={openHouse.openHouseData.date}
                                     disabled={disabled}
@@ -1497,7 +1503,7 @@ let propertyCount = this.state.propertyCount+1;
                                     type="time"
                                     name="startTime"
                                     onChange={this.openHouseArrayChange}
-                                    id={i+"-"+openHouseIndex}
+                                    id={i + "-" + openHouseIndex}
                                     className="form-control form-control-lg form-control-a"
                                     value={openHouse.openHouseData.startTime}
                                     disabled={disabled}
@@ -1505,7 +1511,7 @@ let propertyCount = this.state.propertyCount+1;
                                   -{" "}
                                   <input
                                     type="time"
-                                    id={i+"-"+openHouseIndex}
+                                    id={i + "-" + openHouseIndex}
                                     onChange={this.openHouseArrayChange}
                                     className="form-control form-control-lg form-control-a"
                                     name="endTime"
@@ -1518,7 +1524,11 @@ let propertyCount = this.state.propertyCount+1;
                                     href="javascript:void(0)"
                                     title="Edit"
                                     onClick={(e) =>
-                                      this.editOrDelete(e, "edit",i+"-"+openHouseIndex)
+                                      this.editOrDelete(
+                                        e,
+                                        "edit",
+                                        i + "-" + openHouseIndex
+                                      )
                                     }
                                   >
                                     <i className="fa fa-edit"></i>
@@ -1530,7 +1540,11 @@ let propertyCount = this.state.propertyCount+1;
                                     title="openHoueDelete"
                                     id={i}
                                     onClick={(e) =>
-                                      this.editOrDelete(e, "delete",i+"-"+openHouseIndex)
+                                      this.editOrDelete(
+                                        e,
+                                        "delete",
+                                        i + "-" + openHouseIndex
+                                      )
                                     }
                                   ></i>
                                 </td>
@@ -2429,7 +2443,11 @@ let propertyCount = this.state.propertyCount+1;
                                     href="javascript:void(0)"
                                     title="Edit"
                                     onClick={(e) =>
-                                      this.editOrDelete(e, "edit",i+"-"+linkIndex)
+                                      this.editOrDelete(
+                                        e,
+                                        "edit",
+                                        i + "-" + linkIndex
+                                      )
                                     }
                                   >
                                     <i className="fa fa-edit"></i>
@@ -2438,10 +2456,14 @@ let propertyCount = this.state.propertyCount+1;
                                   <i
                                     className="fa fa-trash"
                                     aria-hidden="true"
-                                    id={i+"-"+linkIndex}
+                                    id={i + "-" + linkIndex}
                                     name="linkData"
                                     onClick={(e) =>
-                                      this.editOrDelete(e, "delete",i+"-"+linkIndex)
+                                      this.editOrDelete(
+                                        e,
+                                        "delete",
+                                        i + "-" + linkIndex
+                                      )
                                     }
                                     title="linkDelete"
                                   ></i>

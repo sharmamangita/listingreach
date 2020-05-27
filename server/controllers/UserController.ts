@@ -944,6 +944,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
         try {
            var _blastform: IBlastModel = <IBlastModel>req.body;
 			var _blastBusiness = new BlastBusiness();
+			_blastform.status = ' ';
 
 			_blastform.selected_template_date = new Date();
            _blastBusiness.create(_blastform, (error, result) => {
@@ -975,6 +976,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 					} else {
 						if(result && result._id){
 							_blastform.selected_template_id = result._id;
+							_blastform.status = 'Draft';
 							_blastBusiness.findOne({"user_id":_IagentTemplateModel.userId}, (error, user) => {	
 								let _id: string = user._id.toString();
 								_blastBusiness.update(_id, _blastform, (error:any, resultUpdate:any) => {
@@ -1126,7 +1128,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 				_propertyform.property_details=property.propertyDetail;
 					
 
-										
 											_propertyBusiness.create(_propertyform, (error, result) => {
 									                if(error) {
 														console.log(error);
@@ -1316,6 +1317,50 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 		});
 	}
 
+ deleteSavedBlast(req: express.Request, res: express.Response): void { 
+	try {
+
+			var _blastBusiness = new BlastBusiness();
+			let _agentTemplateBusiness = new AgentTemplateBusiness();
+			var _propertyBusiness = new PropertyBusiness();
+
+			var _id: string = req.params.id;
+		 _blastBusiness.findById(_id, (error, result) => {
+		 	let _id: string = result._id.toString();
+		 	let selected_template_id:string = result.selected_template_id;
+			_blastBusiness.delete(_id, (error, deleted) => {
+				if (error) {
+					res.send({ "error": "error" });
+				} else {
+					let _id = selected_template_id;
+					_agentTemplateBusiness.findById(_id, (error, result) => {
+						let propertyid:string = result.Property_id.toString();
+						_agentTemplateBusiness.delete(_id, (error, template) => {
+							if(error){
+								res.send({ "error": "error" });
+							}
+							let _id = propertyid;
+							_propertyBusiness.findById(_id, (error, result) => {
+								_propertyBusiness.delete(_id, (error, template) => {
+									res.send({ "sucess": "sucess" });
+								});
+							});
+						});
+					});
+				}
+			});
+		});
+		}
+	catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+	}
+
+}
+
+
+	
+
 	savePayment(req: express.Request, res: express.Response){
 		 try {
     	 	var _userBusiness = new UserBusiness();
@@ -1353,6 +1398,78 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
             console.log(e);
             res.send({"error": "error in your request"});
 		}
+	}
+
+	getSavedBlast(req: express.Request, res: express.Response){
+		try { 
+
+			var _blastform: IBlastModel = <IBlastModel>req.body;
+			var _blastBusiness = new BlastBusiness();
+
+			var userId: string = req.params.agentId;
+				var savedBlastAggregate = [
+	
+			            {
+			                $lookup:                       
+			                {
+			                    from: "templates",
+			                    localField: "user_id",   
+			                    foreignField: "userId",        
+			                    as: "templates"               
+			                }
+			            },
+			            {
+			                $lookup:                       
+			                {
+			                    from: "payment",
+			                    localField: "user_id",   
+			                    foreignField: "user_id",        
+			                    as: "payment"               
+			                }
+			            },
+			            {
+			                $project:                       
+			                {    
+			                    "_id":1,
+			                    "user_id":1,
+         		                "status":1,
+         		                "selected_template_date":1,
+			                    "templates.headline":1,
+			                    "payment.amount":1
+						    }
+			            },
+			            {
+			                $match:
+		                    {
+									user_id: mongoose.Types.ObjectId(userId)      
+							}
+			            }
+			        ];
+
+			         _blastBusiness.aggregate(savedBlastAggregate, (error:any, result:any) => { 
+			        	if(error) {
+							res.send({"error": error});
+						} else {
+							var returnObj = result.map(function(obj: any): any {
+				            return {
+						        id: obj._id,
+						        status:obj.status,
+						        payment:obj.payment,
+						        subject:obj.templates,
+						        createdon:obj.selected_template_date
+						    };
+
+					});
+							console.log("returnObj23232====",returnObj);
+							return res.json(returnObj);
+				}
+			});			
+
+
+		} catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
 	}		
 
 	getPayment(req: express.Request, res: express.Response){
@@ -1379,123 +1496,141 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
             res.send({"error": "error in your request"});
 		}
 	}	
+
+
  	getTemplateOrPropertydata(req: express.Request, res: express.Response): void { 
  		try {
  			var _property: IPropertyModel = <IPropertyModel>req.body;
 			var _propertyBusiness = new PropertyBusiness();
-		 		var propertyAggregate = [
+			var _blastform: IBlastModel = <IBlastModel>req.body;
+			console.log("_blastform===",_blastform);
+
+	 		var propertyAggregate = [
+	            	{
+		                $lookup:                       
+		                {
+		                    from: "users",
+		                    localField: "userId",   
+		                    foreignField: "_id",        
+		                    as: "users"               
+		                }
+		            },   
 		            {
-			                $lookup:                       
-			                {
-			                    from: "users",
-			                    localField: "userId",   
-			                    foreignField: "_id",        
-			                    as: "users"               
-			                }
-			            },
-			            {
-				      	  	$unwind:"$users"
-				        
-				      	},
-			          	
-			            {
-			                $lookup:                       
-			                {
-			                    from: "templates",
-			                    localField: "_id",   
-			                    foreignField: "Property_id",        
-			                    as: "templates"               
-			                }
-			            },
-			            {
-			                $project:                       
-			                {    
-			                    "_id":1,
-			                    "userId":1,
-         		                "display_method":1,
-			                    "street_address":1,
-			                    "city":1,
-			                    "state":1,
-			                    "zipcode":1,
-			                    "mls_number":1,
-								"board":1,
-			                    "property_type":1,
-			                    "property_style":1,
-			                    "lot_size":1,
-			                    "number_bedrooms":1,
-			                    "building_size":1,
-			                    "number_stories":1,
-								"number_bathrooms":1,
-								"year_built":1,
-								"garage":1,
-								"garageSize":1,
-								"price":1,
-								"pricingInfo":1,
-								"agentData":1,
-								"property_details":1,
-								"isOpenHouse":1,
-								"linksToWebsites":1,
-								"templates.email_subject":1,
-								"templates.from_line":1,
-								"templates.address":1,
-								"templates.Property_id":1,
-								"templates.headline":1,
-								"templates.template_type":1,
-								"templates.userId":1,
-								"users.userName":1,
-								"users.firstName":1,
-								"users.lastName":1,
-								"users.roles":1,
+			      	  	$unwind:"$users"
+			        
+			      	},
+		            {
+		                $lookup:                       
+		                {
+		                    from: "templates",
+		                    localField: "_id",   
+		                    foreignField: "Property_id",        
+		                    as: "templates"               
+		                }
+		            },
+		            {
+		                $lookup:                       
+		                {
+		                    from: "blasts",
+		                    localField: "blast_id",   
+		                    foreignField: "_id",        
+		                    as: "blasts"               
+		                }
+		            },
+		            {
+		                $project:                       
+		                {    
+		                    "_id":1,
+		                    "userId":1,
+     		                "display_method":1,
+		                    "street_address":1,
+		                    "city":1,
+		                    "state":1,
+		                    "zipcode":1,
+		                    "blast_id":1,
+		                    "mls_number":1,
+							"board":1,
+		                    "property_type":1,
+		                    "property_style":1,
+		                    "lot_size":1,
+		                    "number_bedrooms":1,
+		                    "building_size":1,
+		                    "number_stories":1,
+							"number_bathrooms":1,
+							"year_built":1,
+							"garage":1,
+							"garageSize":1,
+							"price":1,
+							"pricingInfo":1,
+							"property_details":1,
+							"isOpenHouse":1,
+							"propertyImages":1,
+							"linksToWebsites":1,
+							"templates.email_subject":1,
+							"templates.from_line":1,
+							"templates.address":1,
+							"templates.Property_id":1,
+							"templates.headline":1,
+							"templates.template_type":1,
+							"templates.userId":1,
+							"users.userName":1,
+							"users.firstName":1,
+							"users.lastName":1,
+							"users.roles":1,
+							"blasts":1,
 
-						    }
-			            },
-			            {
-			                $match:
-		                    {
-									userId: mongoose.Types.ObjectId(_property.userId.toString())      
-							}
-			            }
-			        ];
+					    }
+		            },
+		            {
+		                $match:
+	                    {
+								blast_id: mongoose.Types.ObjectId(_blastform.blast_id)      
+						}
+		            }
+		        ];
 
-			         _propertyBusiness.aggregate( propertyAggregate, (error:any, result:any) => { 
-			        	if(error) {
-							res.send({"error": error});
-						} else {
-							var returnObj = result.map(function(obj: any): any {
-				            return {
-						        id: obj._id,
-						        firstName:obj.users.firstName,
-						        lastName:obj.users.lastName,
-						        middleName:obj.users.middleName,
-						        building_size:obj.building_size,
-						        number_bathrooms:obj.number_bathrooms,
-						        isOpenHouse:obj.isOpenHouse,
-						        property_type:obj.property_type,
-						        property_style:obj.property_style,
-						        mls_number:obj.mls_number,
-						        linksToWebsites:obj.linksToWebsites,
-						        property_detail:obj.property_details,
-						        pricingInfo:obj.pricingInfo,
-						        board:obj.board,
-						        zipcode:obj.zipcode,
-						        city:obj.city,
-						        display_method:obj.display_method,
-						        street_address:obj.street_address,
-						        number_bedrooms:obj.number_bedrooms,
-						        year_built:obj.year_built,
-						        number_stories:obj.number_stories,
-						        lot_size:obj.lot_size,
-						        templates:obj.templates,
-						        price:obj.price,
-						        garageSize:obj.garageSize,
-						        agentData:obj.agentData
-						    };
 
-					});
-							console.log("returnObj=====",returnObj);
-							return res.json(returnObj);
-				}
-			});				
+		         _propertyBusiness.aggregate( propertyAggregate, (error:any, result:any) => { 
+		        	if(error) {
+						res.send({"error": error});
+					} else {
+						var returnObj = result.map(function(obj: any): any {
+			            return {
+					        id: obj._id,
+					        firstName:obj.users.firstName,
+					        lastName:obj.users.lastName,
+					        middleName:obj.users.middleName,
+					        building_size:obj.building_size,
+					        number_bathrooms:obj.number_bathrooms,
+					        isOpenHouse:obj.isOpenHouse,
+					        property_type:obj.property_type,
+					        property_style:obj.property_style,
+					        mls_number:obj.mls_number,
+					        linksToWebsites:obj.linksToWebsites,
+					        property_detail:obj.property_details,
+					        pricingInfo:obj.pricingInfo,
+					        board:obj.board,
+					        zipcode:obj.zipcode,
+					        city:obj.city,
+					        display_method:obj.display_method,
+					        street_address:obj.street_address,
+					        number_bedrooms:obj.number_bedrooms,
+					        year_built:obj.year_built,
+					        number_stories:obj.number_stories,
+					        lot_size:obj.lot_size,
+					        templates:obj.templates,
+					        price:obj.price,
+					        garageSize:obj.garageSize,
+					        blast_id:obj.blast_id,
+					        agentData:obj.blasts,
+					        propertyImages:obj.propertyImages
+					    };
+
+				});
+						console.log("returnObj==323===",returnObj);
+						return res.json(returnObj);
+			}
+		});				
 	  
  }  catch (e)  {
             console.log(e);
