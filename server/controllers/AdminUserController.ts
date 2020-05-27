@@ -46,9 +46,52 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 	getAgents(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
-			var condition: Object = {$and:[{ roles: /agents/  },{isDeleted:{$eq:false}}]}
+
+			var query: Array<any> = [
+				{
+					$match: {
+						$and: [
+							{ roles: /agents/ },
+							{
+								$or: [{ isDeleted: { $eq: false } },
+								{ isDeleted: { $exists: false } }
+								]
+							}
+						]
+					},
+					$lookup: {
+						from: "templates",
+						localField: "selected_template_id",
+						foreignField: "_id",
+						as: "template"
+					}
+				},
+				{
+					$lookup: {
+						from: "payments",
+						localField: "_id",
+						foreignField: "blast_id",
+						as: "payments"
+					}
+				},
+				{
+					$project: {
+						_id: 1,
+						blast_type: 1,
+						"agentData.email": 1,
+						"agentData.name": 1,
+						"agentData.company_details": 1,
+						"template.headline": 1,
+						"payments.amount": 1,
+						"payments.createdOn": 1
+					}
+				}
+			];
+			var condition: Object = {
+
+			};
 			var fields: Object = { _id: 1, firstName: 1, lastName: 1, email: 1, status: 1, createdOn: 1, lastLogin: 1 }
-			_userBusiness.retrieveFields(condition, fields, (error, result) => {
+			_userBusiness.aggregate(query, (error, result) => {
 				if (error) {
 					console.log("error in getAgents -", error);
 					res.send({ "error": error });
@@ -94,16 +137,16 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				{
 					$lookup: {
 						from: "templates",
-						localField: "selected_template_id",   
-						foreignField: "_id",  
+						localField: "selected_template_id",
+						foreignField: "_id",
 						as: "template"
 					}
 				},
 				{
 					$lookup: {
 						from: "payments",
-						localField: "_id",   
-						foreignField: "blast_id", 
+						localField: "_id",
+						foreignField: "blast_id",
 						as: "payments"
 					}
 				},
@@ -309,22 +352,22 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 		try {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.findOne({ "_id": uid }, (error, result) => {
-			//	console.log('try----------------------', result);
+				//	console.log('try----------------------', result);
 				if (error) {
 					console.log('error----');
 					res.send({ "error": "error" });
 				} else {
 					var _user: IUserModel = <IUserModel>req.body;
-					console.log("del ",result.isDeleted)
-					if (typeof(result.isDeleted)=="undefined" || !result.isDeleted) {
-						console.log('is deleted-------------------',result.isDeleted);
+					console.log("del ", result.isDeleted)
+					if (typeof (result.isDeleted) == "undefined" || !result.isDeleted) {
+						console.log('is deleted-------------------', result.isDeleted);
 						_user.isDeleted = true;
 						_userBusiness.update(uid, _user, (error: any, resultUpdate: any) => {
 							if (error) {
-								console.log('errorrr........',resultUpdate);
+								console.log('errorrr........', resultUpdate);
 								res.send({ "error": "error" });
 							} else {
-								console.log('success---',resultUpdate);
+								console.log('success---', resultUpdate);
 								res.send({ "success": "success" });
 							}
 						})
