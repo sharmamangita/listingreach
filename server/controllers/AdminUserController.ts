@@ -94,16 +94,16 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 				{
 					$lookup: {
 						from: "templates",
-						localField: "selected_template_id",    // field in the orders collection
-						foreignField: "_id",  // field in the items collection
+						localField: "selected_template_id",   
+						foreignField: "_id",  
 						as: "template"
 					}
 				},
 				{
 					$lookup: {
 						from: "payments",
-						localField: "_id",    // field in the orders collection
-						foreignField: "blast_id",  // field in the items collection
+						localField: "_id",   
+						foreignField: "blast_id", 
 						as: "payments"
 					}
 				},
