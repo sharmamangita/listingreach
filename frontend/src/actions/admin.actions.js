@@ -105,8 +105,9 @@ function updateBlastSettings(blastsetting) {
             .then(
                 prices => {
                     dispatch(success(blastsetting));
-                    location.reload();
                     dispatch(alertActions.success('Updated successfully.'));
+                    dispatch(getBlastSettings());
+                  //  location.reload();
                 },
                 error => {
                     dispatch(failure(error.toString()));

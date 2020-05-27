@@ -10,7 +10,7 @@ interface IBlastModel extends mongoose.Document {
     blast_type : string,
     selected_template_id:string,
     selected_template_date : Date,
-    agentData:[{
+    agentData:{
         name:string,
         designation:string,
         email:string,
@@ -20,7 +20,7 @@ interface IBlastModel extends mongoose.Document {
         other_information:string,
         image_url:string,
         logo_url:string
-    }]
+    }
 }
 
 export = IBlastModel;

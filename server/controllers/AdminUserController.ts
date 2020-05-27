@@ -46,7 +46,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 	getAgents(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
-			var condition: Object = { roles: /agents/ }
+			var condition: Object = { roles: /agents/, isDeletd: false }
 			var fields: Object = { _id: 1, firstName: 1, lastName: 1, email: 1, status: 1, createdOn: 1, lastLogin: 1 }
 			_userBusiness.retrieveFields(condition, fields, (error, result) => {
 				if (error) {
@@ -90,8 +90,37 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 		try {
 			var blastBusiness = new BlastBusiness();
 			//var condition: Object = { roles: /subscriber/ }
-			var fields: Object = { _id: 1, blast_type: 1 }
-			blastBusiness.retrieveFields("", fields, (error, result) => {
+			var query: Array<any> = [
+				{
+					$lookup: {
+						from: "templates",
+						localField: "selected_template_id",    // field in the orders collection
+						foreignField: "_id",  // field in the items collection
+						as: "template"
+					}
+				},
+				{
+					$lookup: {
+						from: "payments",
+						localField: "_id",    // field in the orders collection
+						foreignField: "blast_id",  // field in the items collection
+						as: "payments"
+					}
+				},
+				{
+					$project: {
+						_id: 1,
+						blast_type: 1,
+						"agentData.email": 1,
+						"agentData.name": 1,
+						"agentData.company_details": 1,
+						"template.headline": 1,
+						"payments.amount": 1,
+						"payments.createdOn": 1
+					}
+				}
+			];
+			blastBusiness.aggregate(query, (error, result) => {
 				if (error) {
 					console.log("error in getBlasts -", error);
 					res.send({ "error": error });
@@ -276,30 +305,32 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 	}
 	deleteagents(req: express.Request, res: express.Response): void {
 		var uid: string = req.params._id;
-		console.log('deletedddddddddd id------:', uid);
 		try {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.findOne({ "_id": uid }, (error, result) => {
-			//	console.log('try----------------------', result);
+				//	console.log('try----------------------', result);
 				if (error) {
-					res.send({ "error": "error" });
+					res.send({ "error": error });
 				} else {
 					//var _user: IUserModel = <IUserModel>req.body;
-					console.log("del ",result.isDeleted)
-					if (typeof(result.isDeleted)=="undefined" || !result.isDeleted) {
+					console.log("del ", result.isDeleted)
+					if (typeof (result.isDeleted) == "undefined" || !result.isDeleted) {
 						console.log('is deleted-------------------');
 						result.isDeleted = true;
-						_userBusiness.update(uid, result, (error: any, resultUpdate: any) => {
-							if (error) {
-								res.send({ "error": "error" });
+						_userBusiness.update(uid, result, (error1: any, resultUpdate: any) => {
+							if (error1) {
+								console.log("error", error1)
+								res.send({ "error": error1 });
 							} else {
-								res.send({ "success": "success" });
+								res.send({ "success": resultUpdate });
 							}
 						})
+					} else {
+
+						res.send("no action taken");
 					}
 				}
 			});
-			res.send("no action taken");
 		}
 
 		catch (e) {

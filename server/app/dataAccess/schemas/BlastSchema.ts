@@ -26,7 +26,7 @@ class BlastSchema {
                 type: Date,
                 required: true
             },
-            agentData:[{
+            agentData:{
                 name:{
                  type:String
                 },
@@ -54,7 +54,7 @@ class BlastSchema {
                 logo_url:{
                  type:String
                 }
-            }]
+            }
         });
 
         return schema;

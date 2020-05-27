@@ -86,7 +86,7 @@ class EmailBlastsPage extends React.Component {
 		this.props.dispatch(adminActions.userStatus(id));
 	}
 
-	sendBlast(e,id) {
+	sendBlast(e, id) {
 		this.props.dispatch(adminActions.sendBlast(id));
 	}
 
@@ -172,20 +172,16 @@ class EmailBlastsPage extends React.Component {
 		if (this.props.blasts && this.props.blasts.length > 0) {
 			var totaldata = [];
 			for (var cad = 0; cad <= this.props.blasts.length - 1; cad++) {
-				// var Url = window.location.href;
-				// var spliturlk = Url.split('=');
-				// console.log("spliturlk[1]=====", typeof spliturlk[1]);
-				// var subscriber = '';
 				var blast = this.props.blasts[cad];
 				totaldata.push({
 					blasttype: blast.blast_type,
-					headline: blast.email ? subscriber.email : "--",
-					agent: "--",
-					email: "--",
-					company: "--",
-					sentdate: this.createdDate(blast.createdOn),
-					totalpaid: '--',
-					paidon: '--',
+					headline: blast.template && blast.template.length > 0 ? blast.template[0].headline : "",
+					agent: blast.agentData ? blast.agentData.name : "",
+					email: blast.agentData ? blast.agentData.email : "",
+					company: blast.agentData ? blast.agentData.company_details : "",
+					sentdate: blast.createdOn ? this.createdDate(blast.createdOn) : "",
+					totalpaid: blast.payments && blast.payments.length > 0 ? blast.payments[0].amount : '',
+					paidon: blast.payments && blast.payments.length > 0 ? blast.payments[0].createdOn : '',
 					// prefrences: (
 					// 	<a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={subscriber._id} onClick={this.handleModalOpem()} data-target="#intro">
 					// 		<span className="fa fa-settings"></span>
@@ -195,10 +191,10 @@ class EmailBlastsPage extends React.Component {
 						<span> {this.deletelink(blast._id)} </span>
 					),
 					send: (
-						<button  className="btn btn-success" onClick={(event)=>this.sendBlast(event,blast._id)} >
+						<button className="btn btn-success" onClick={(event) => this.sendBlast(event, blast._id)} >
 							Send
-					 	</button>
-						)
+						</button>
+					)
 				});
 			}
 		}
