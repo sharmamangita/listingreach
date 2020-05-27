@@ -39,13 +39,9 @@ class PaymentsPage extends React.Component {
 		}
 	}
 	componentWillMount() {
-		this.props.dispatch(adminActions.getSubscribers());
-
+		this.props.dispatch(adminActions.getPayments());
 	}
 	componentDidMount() {
-		setTimeout(() => {
-			this.setState({ subscribers: this.props.subscribers });
-		}, 1000);
 	}
 
 	deletelink(id) {

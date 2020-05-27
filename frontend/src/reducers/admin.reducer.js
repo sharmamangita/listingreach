@@ -48,7 +48,7 @@ export function admins(state = {}, action) {
     case adminConstants.GET_TOTAL_PAYMENT_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,
-        totalpayment: action.admin.totalpayment
+        payments: action.admin.payments
       });
       return newState;
     case adminConstants.GETDASHBOARDALL_FAILURE:
@@ -104,6 +104,22 @@ export function admins(state = {}, action) {
       return {
         error: action.error
       };
+
+      case adminConstants.GET_PAYMENTS_REQUEST:
+        newState = objectAssign({}, state, {
+          loading: true
+        });
+        return newState;
+      case adminConstants.GET_PAYMENTS_SUCCESS:
+        newState = objectAssign({}, state, {
+          loading: true,
+          payments: action.payments
+        });
+        return newState;
+      case adminConstants.GET_PAYMENTS_FAILURE:
+        return {
+          error: action.error
+        };
 
     case adminConstants.SUBSCRIBERS_REQUEST:
       newState = objectAssign({}, state, {

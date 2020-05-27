@@ -18,7 +18,8 @@ export const adminService = {
     deletesubscriber,
     subscriberStatus,
     sendBlast,
-    getActiveCampaignAssociations
+    getActiveCampaignAssociations,
+    getPayments
 };
 
 function updateBlastSettings( blastsettings) {
@@ -35,6 +36,12 @@ function getAgents() {
         method: 'GET'
     };
     return fetch(`${config.apiUrl}/adminusers/agents`, requestOptions).then(handleResponse);
+}
+function getPayments() {
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(`${config.apiUrl}/adminusers/payments`, requestOptions).then(handleResponse);
 }
 
 function getSubscribers() {

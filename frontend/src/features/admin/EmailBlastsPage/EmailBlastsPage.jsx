@@ -148,7 +148,7 @@ class EmailBlastsPage extends React.Component {
 		console.log('totaldata   ', totaldata)
 		return (
 			<main className="col-xs-12 col-sm-8 col-lg-9 col-xl-10 pt-3 pl-4 ml-auto">
-				<h3 className="admin-title">  blasts</h3>
+				<h3 className="admin-title"> Paid Blasts</h3>
 				{/* {this.renderSubscriberPreferencesModal()} */}
 				<section className="row">
 					<div className="col-sm-12">
@@ -179,9 +179,9 @@ class EmailBlastsPage extends React.Component {
 					agent: blast.agentData ? blast.agentData.name : "",
 					email: blast.agentData ? blast.agentData.email : "",
 					company: blast.agentData ? blast.agentData.company_details : "",
-					sentdate: blast.createdOn ? this.createdDate(blast.createdOn) : "",
-					totalpaid: blast.payments && blast.payments.length > 0 ? blast.payments[0].amount : '',
-					paidon: blast.payments && blast.payments.length > 0 ? blast.payments[0].createdOn : '',
+					sentdate: blast.selected_template_date ? this.createdDate(blast.selected_template_date) : "",
+					totalpaid: "$" + blast.payments.amount,
+					paidon: this.createdDate(blast.payments.createdOn),
 					// prefrences: (
 					// 	<a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={subscriber._id} onClick={this.handleModalOpem()} data-target="#intro">
 					// 		<span className="fa fa-settings"></span>

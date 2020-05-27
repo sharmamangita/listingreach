@@ -14,7 +14,7 @@ import IUserModel = require("./../app/model/interfaces/IUserModel");
 import IPagesModel = require("./../app/model/interfaces/IPagesModel");
 import Common = require("./../config/constants/common");
 import IBlastSettingsModel = require("./../app/model/interfaces/IBlastSettingsModel");
-import CampaignBusiness = require("./../app/business/CampaignBusiness");
+import PaymentBusiness = require("./../app/business/PaymentBusiness");
 const request = require('request');
 const querystring = require('querystring');
 var mongoose = require('mongoose');
@@ -42,11 +42,29 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 	}
 
 	////////////////Admin//////////////////////////////////////////
+	getPayments(req: express.Request, res: express.Response): void {
+		try {
+			const paymentBusiness = new PaymentBusiness();
+			paymentBusiness.retrieve("", (error, result) => {
+				if (error) {					
+					console.log(error);
+					res.send({ "error": error });
+				}
+				else{
+					//console.log(result);
+					res.send(result);
+				} 
+			});
+
+		}
+		catch (e) {
+			res.send(e);
+		}
+	}
 
 	getAgents(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
-
 			var query: Array<any> = [
 				{
 					$match: {
@@ -58,45 +76,49 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 								]
 							}
 						]
-					},
+					}
+				},
+				{
 					$lookup: {
-						from: "templates",
-						localField: "selected_template_id",
-						foreignField: "_id",
-						as: "template"
+						from: "blasts",
+						localField: "_id",
+						foreignField: "user_id",
+						as: "blasts"
 					}
 				},
 				{
 					$lookup: {
 						from: "payments",
 						localField: "_id",
-						foreignField: "blast_id",
+						foreignField: "user_id",
 						as: "payments"
-					}
+					},
+
 				},
 				{
-					$project: {
-						_id: 1,
-						blast_type: 1,
-						"agentData.email": 1,
-						"agentData.name": 1,
-						"agentData.company_details": 1,
-						"template.headline": 1,
-						"payments.amount": 1,
-						"payments.createdOn": 1
+					$group: {
+						_id: "$_id",
+						totalPaid: { $sum: "$payments.amount" },
+						totalBlsts: { $sum: "$blasts._id" },
+						firstName: { $first: "$firstName" },
+						lastName: { $first: "$lastName" },
+						email: { $first: "$email" },
+						status: { $first: "$status" },
+						company: { $first: "$blasts.agentData.company_details" },
+						registeredOn: { $first: "$createdOn" }
 					}
 				}
 			];
-			var condition: Object = {
 
-			};
+
+
 			var fields: Object = { _id: 1, firstName: 1, lastName: 1, email: 1, status: 1, createdOn: 1, lastLogin: 1 }
 			_userBusiness.aggregate(query, (error, result) => {
 				if (error) {
 					console.log("error in getAgents -", error);
 					res.send({ "error": error });
 				} else {
-					//console.log("getAgents response - ", result);
+					console.log("getAgents response - ", result);
 					res.send(result);
 				}
 			})
@@ -151,9 +173,16 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					}
 				},
 				{
+					$unwind: {
+						path: "$payments",
+						preserveNullAndEmptyArrays: false
+					}
+				},
+				{
 					$project: {
 						_id: 1,
 						blast_type: 1,
+						selected_template_date: 1,
 						"agentData.email": 1,
 						"agentData.name": 1,
 						"agentData.company_details": 1,
@@ -502,37 +531,32 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					}
 					);
 					break;
-				case "blasts":
-					res.send({ blastscount: 0 });
-					// var blastBusiness = new BlastBusiness();
-					// subscriberBusiness.count("", (error, result) => {
-					// 	if (error) {
-					// 		console.log(error);
-					// 		res.send({ "error": error });
-					// 	}
-					// 	else {
-					// 		//	console.log('response', result);
-					// 		var subscriberBusiness = new SubscriberBusiness();
-					// 		res.send({ subscriberscount: result });
-					// 	}
-					// }
-					// );
-					break;
 				case "payments":
-					res.send({ totalpayment: 0 });
-					// var blastBusiness = new BlastBusiness();
-					// subscriberBusiness.count("", (error, result) => {
-					// 	if (error) {
-					// 		console.log(error);
-					// 		res.send({ "error": error });
-					// 	}
-					// 	else {
-					// 		//	console.log('response', result);
-					// 		var subscriberBusiness = new SubscriberBusiness();
-					// 		res.send({ subscriberscount: result });
-					// 	}
-					// }
-					// );
+					var paymentBusiness = new PaymentBusiness();
+					const query = [
+						{
+							$match: {
+								blast_id: { $ne: "" }
+							}
+						},
+						{
+							$group: {
+								_id: "$_id",
+								paidBlasts: { $sum: 1 },
+								totalAmount: { $sum: "$amount" }
+							}
+						}
+					];
+					paymentBusiness.aggregate(query, (error, result) => {
+						if (error) {
+							console.log(error);
+							res.send({ "error": error });
+						}
+						else {
+							res.send({ payments: result });
+						}
+					}
+					);
 					break;
 				default:
 					break;

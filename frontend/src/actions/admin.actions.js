@@ -6,7 +6,7 @@ import { history } from '../helpers';
 
 export const adminActions = {
     deleteusers,
-	deleteagents,
+    deleteagents,
     userStatus,
     PlanRegister,
     getPlan,
@@ -22,7 +22,8 @@ export const adminActions = {
     subscriberStatus,
     getBlasts,
     sendBlast,
-    getActiveCampaignAssociations
+    getActiveCampaignAssociations,
+    getPayments,
 };
 
 
@@ -43,9 +44,6 @@ function getCount(flag) {
                 break;
             case "subscribers":
                 return { type: adminConstants.GET_SUBSCRIBERS_COUNT_SUCCESS, admin }
-                break;
-            case "blasts":
-                return { type: adminConstants.GET_BLASTSCOUNT_SUCCESS, admin }
                 break;
             case "payments":
                 return { type: adminConstants.GET_TOTAL_PAYMENT_SUCCESS, admin }
@@ -107,7 +105,7 @@ function updateBlastSettings(blastsetting) {
                     dispatch(success(blastsetting));
                     dispatch(alertActions.success('Updated successfully.'));
                     dispatch(getBlastSettings());
-                  //  location.reload();
+                    //  location.reload();
                 },
                 error => {
                     dispatch(failure(error.toString()));
@@ -154,6 +152,20 @@ function getAgents() {
     function failure(error) { return { type: adminConstants.AGENTS_FAILURE, error } }
 }
 
+function getPayments() {
+    return dispatch => {
+        dispatch(request());
+        adminService.getPayments()
+            .then(
+                payments => dispatch(success(payments)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request() { return { type: adminConstants.GET_PAYMENTS_REQUEST } }
+    function success(payments) { return { type: adminConstants.GET_PAYMENTS_SUCCESS, payments } }
+    function failure(error) { return { type: adminConstants.GET_PAYMENTS_FAILURE, error } }
+}
+
 function getSubscribers() {
     return dispatch => {
         dispatch(request());
@@ -198,22 +210,22 @@ function deletesubscriber(id) {
 }
 function deleteagents(id) {
     return dispatch => {
-        dispatch(request({id}));
+        dispatch(request({ id }));
         adminService.deleteagents(id)
             .then(
                 user => {
-					dispatch(success(user));
-					location.reload();
+                    dispatch(success(user));
+                    location.reload();
                 },
                 error => {
-					location.reload();
+                    location.reload();
                     dispatch(failure(error.toString()));
                     dispatch(alertActions.error(error.toString()));
                 }
 
             );
-	};
-	function request(id) { return { type: adminConstants.DELETE_REQUEST, id } }
+    };
+    function request(id) { return { type: adminConstants.DELETE_REQUEST, id } }
     function success(id) { return { type: adminConstants.DELETE_SUCCESS, id } }
     function failure(id, error) { return { type: adminConstants.DELETE_FAILURE, id, error } }
 }

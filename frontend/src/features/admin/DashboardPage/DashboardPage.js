@@ -13,17 +13,15 @@ class DashboardPage extends React.Component {
     this.state = {
       agentscount: 0,
       subscriberscount: 0,
-      blastscount: 0,
-      totalpayment: 0
+      payments: null
     };
 
   }
   componentDidMount() {
     this.props.dispatch(adminActions.getCount("agents"));
     this.props.dispatch(adminActions.getCount("subscribers"));
-    this.props.dispatch(adminActions.getCount("blasts"));
     this.props.dispatch(adminActions.getCount("payments"));
-  
+
   }
 
   render() {
@@ -55,20 +53,20 @@ class DashboardPage extends React.Component {
                   </div>
                   <div className="col-lg-6">
                     <div className="jumbotron">
-                      <Link to="/SubscriberPage">					
-                      <span className="dashbrd-icons"><i className="fa fa-fw fa-list-alt"></i></span>
-                      <h3>{this.props.blastscount}</h3>
-                      <h6>Paid Email Blasts</h6>
-					  </Link>
+                      <Link to="/EmailBlastsPage">
+                        <span className="dashbrd-icons"><i className="fa fa-fw fa-list-alt"></i></span>
+                        <h3>{this.props.payments && this.props.payments.length ? this.props.payments[0].paidBlasts : 0}</h3>
+                        <h6>Paid Email Blasts</h6>
+                      </Link>
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="jumbotron">
-                      <Link to="/AgentsPage">					
-                      <span className="dashbrd-icons"><i className="fa fa-fw fa-money"></i></span>
-                      <h3>{this.props.totalpayment}</h3>
-                      <h6>Total Payments</h6>
-					  </Link>
+                      <Link to="/PaymentsPage">
+                        <span className="dashbrd-icons"><i className="fa fa-fw fa-money"></i></span>
+                        <h3>{this.props.payments && this.props.payments.length ? this.props.payments[0].totalAmount : 0}</h3>
+                        <h6>Total Payments</h6>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -86,10 +84,10 @@ function mapStateToProps(state) {
   console.log("stae11====", state);
   const { authentication, admins } = state;
   const { user } = authentication;
-  const { agentscount, subscriberscount, blastscount, totalpayment } = admins;
+  const { agentscount, subscriberscount, payments } = admins;
   return {
     user,
-    agentscount, subscriberscount, blastscount, totalpayment
+    agentscount, subscriberscount, payments
   };
 }
 

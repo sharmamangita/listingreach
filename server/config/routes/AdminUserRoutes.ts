@@ -19,13 +19,14 @@ class AdminUserRoutes {
         router.put("/adminuser/updateblastsettings", controller.updateBlastSetings);
         router.get("/adminusers/getContent", controller.getContent);
         router.get("/adminusers/agents", controller.getAgents);
+        router.get("/adminusers/payments", controller.getPayments);
         router.get("/adminusers/subscribers", controller.getSubscribers);
         router.get("/adminusers/blasts", controller.getBlasts);
         router.get("/adminuser/sendblast/:id", controller.sendBlast);
         router.get("/adminusers/activecampaignassociations", controller.getActiveCampaignAssociations);
         router.put("/adminusers/", controller.update);
         router.delete("/adminusers/:_id", controller.deleteusers);
-		router.put("/adminusers/deleteagents/:_id", controller.deleteagents);
+        router.put("/adminusers/deleteagents/:_id", controller.deleteagents);
         router.get("/userStatus/:_id", controller.userStatus);
         router.get("/adminuser/subscriberstatus/:_id", controller.changeSubscriberStatus);
         router.get("/adminusers/:_id", controller.findById);

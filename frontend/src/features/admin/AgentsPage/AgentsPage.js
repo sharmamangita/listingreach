@@ -172,21 +172,21 @@ class AgentsPage extends React.Component {
 		if (this.props.agents && this.props.agents.length > 0) {
 			var totaldata = [];
 			for (var cad = 0; cad <= this.props.agents.length - 1; cad++) {
-				var cadporps = this.props.agents[cad];
+				var agent = this.props.agents[cad];
 				totaldata.push({
-					name: cadporps.firstName ? cadporps.firstName + ' ' + cadporps.lastName : "--",
-					email: cadporps.email ? cadporps.email : "--",
-					company: "--",
-					blastssent: "--",
-					totalpaid: "--",
-					registered: this.createdDate(cadporps.createdOn),
+					name: agent.firstName ? agent.firstName + ' ' + agent.lastName : "--",
+					email: agent.email ? agent.email : "--",
+					company: agent.company,
+					blastssent: agent.totalBlsts,
+					totalpaid: agent.totalPaid,
+					registered: this.createdDate(agent.registeredOn),
 					actions: (<span>
 						{/* <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={cadporps.id} onClick={this.handleModalOpem()} data-target="#intro">
 							<span className="fa fa-edit"></span>
 						</a> */}
-						{this.deletelink(cadporps._id)}
+						{this.deletelink(agent._id)}
 					</span>),
-					status: (this.status(cadporps.status, cadporps._id))
+					status: (this.status(agent.status, agent._id))
 				});
 			}
 		}
