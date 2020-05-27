@@ -26,7 +26,9 @@ export const userActions = {
     getTemplateOrPropertydata,
     designTemplate,
     savePayment,
-    getPayment
+    getPayment,
+    getSavedBlast,
+    deleteSavedBlast
 };
 /* Get References */
 function getReferences(userid){
@@ -109,6 +111,27 @@ function contactForm(fullname,email,phone,message){
  function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
  function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } }
  function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }	
+}
+
+function getSavedBlast(agentId){
+        return dispatch => {
+        dispatch(request({agentId}));
+        userService.getSavedBlast(agentId)
+            .then(
+                user => { 
+                    dispatch(success(user));
+                   //dispatch(alertActions.success('Email has been sent successfully'));
+                }, 
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error(error.toString()));
+                }
+            );
+    };
+    
+ function request(user) { return { type: userConstants.SAVEDBLAST_REQUEST, user } }
+ function success(user) { return { type: userConstants.SAVEDBLAST_SUCCESS, user } }
+ function failure(error) { return { type: userConstants.SAVEDBLAST_FAILURE, error } }    
 }
 
 
@@ -527,4 +550,18 @@ function getPayment(id){
     function request(users) { return { type: userConstants.GETBYPAYMENTID_REQUEST, users } }
     function success(users) { return { type: userConstants.GETBYPAYMENTID_SUCCESS, users } }
     function failure(error) { return { type: userConstants.GETBYPAYMENTID_FAILURE, error } } 
+}
+
+function deleteSavedBlast(id){
+    return dispatch => {
+        dispatch(request());
+        userService.deleteSavedBlast(id)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request(users) { return { type: userConstants.DELETE_REQUEST, users } }
+    function success(users) { return { type: userConstants.DELETE_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.DELETE_FAILURE, error } } 
 }

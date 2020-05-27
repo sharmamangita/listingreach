@@ -46,6 +46,7 @@ class CreateFlyerPage extends React.Component {
     };
 
     this.state = {
+      blast_id:'',
       moveTab: "blast",
       previewData: "",
       propertyData: "",
@@ -73,16 +74,23 @@ class CreateFlyerPage extends React.Component {
     var user = JSON.parse(localStorage.getItem("user"));
     if (user && user.userId) {
       const { dispatch } = this.props;
-      dispatch(userActions.getTemplateOrPropertydata(user.userId));
+     // dispatch(userActions.getTemplateOrPropertydata(user.userId));
       //window.scrollTo(0, 0);
     }
   }
   componentWillReceiveProps(nextProps) {
-    console.log("nextProps==tetetete==", nextProps);
+    console.log("nextProps==1==",nextProps);
+   const {location} = nextProps;
     if (nextProps && nextProps.users && nextProps.users.tab) {
       let tab = nextProps.users.tab;
       this.moveTab(tab);
     }
+
+  if(location && location.savedProps && location.savedProps.moveTab){
+        if(location.savedProps.moveTab=="property" && this.state.blast_id==""){
+          this.stateSettingsForTabs(location.savedProps);
+        }
+      }
 
     if (
       (nextProps.users != undefined && nextProps.users.blastData) ||
@@ -94,6 +102,8 @@ class CreateFlyerPage extends React.Component {
     }
   }
 
+
+
   stateSettingsForTabs(nextProps) {
     if (nextProps.blastData != undefined && nextProps.blastData) {
       let blast = {};
@@ -101,6 +111,16 @@ class CreateFlyerPage extends React.Component {
       this.setState({ propertyData: blast, uploadBlast: blast });
       //previewData:nextProps.propertyData
     }
+
+    if(nextProps.moveTab !=undefined && nextProps.moveTab){
+      let blast = {};
+      blast.blast_id = nextProps.blast_id;
+        this.setState({moveTab:nextProps.moveTab,propertyData:blast,blast_id:nextProps.blast_id});
+          const { dispatch } = this.props;
+          dispatch(userActions.getTemplateOrPropertydata(nextProps.blast_id));
+      }
+
+
     if (nextProps.templateName != undefined && nextProps.templateName) {
       let template = {};
       template.templateData = nextProps.templateName.data;
@@ -110,6 +130,8 @@ class CreateFlyerPage extends React.Component {
     if (nextProps.propertyData != undefined && nextProps.propertyData) {
       this.setState({ previewData: nextProps.propertyData });
     }
+
+
   }
 
   moveTab(tab) {
@@ -124,8 +146,9 @@ class CreateFlyerPage extends React.Component {
   }
 
   render() {
-    const { moveTab, previewData, propertyData, uploadBlast,tabs } = this.state;
-    const { users } = this.props;
+    const { moveTab, previewData, propertyData, uploadBlast,tabs,blast_id } = this.state;
+   
+    const { users} = this.props;
     return (
       <div>
         <ListingSubmenu />
@@ -178,12 +201,16 @@ class CreateFlyerPage extends React.Component {
                           <UploadBlastTab
                             dispatchval={this.dispatchval}
                             propertyData={propertyData}
+                            blast_id={blast_id}
                             uploadBlast={uploadBlast}
+                            saveBlastData={users && users.saveBlastData!=undefined && users.saveBlastData}
                           />
                         ) : (
                           <PropertyTab
                             dispatchval={this.dispatchval}
                             propertyData={propertyData}
+                            blast_id={blast_id}
+                            saveBlastData={users && users.saveBlastData!=undefined && users.saveBlastData}
                           />
                         )}
                       </Tab>

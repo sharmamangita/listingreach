@@ -20,7 +20,9 @@ interface IBlastModel extends mongoose.Document {
         other_information:string,
         image_url:string,
         logo_url:string
-    }
+
+    },
+    status:string,
 }
 
 export = IBlastModel;

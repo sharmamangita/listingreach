@@ -54,7 +54,10 @@ class BlastSchema {
                 logo_url:{
                  type:String
                 }
-            }
+            },
+            status : {
+               type:String,
+            },
         });
 
         return schema;

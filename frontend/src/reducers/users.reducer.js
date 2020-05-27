@@ -13,6 +13,7 @@ export function users(state = {}, action) {
     case userConstants.GETALL_SUCCESS:
       newState = objectAssign({}, state, {
         items: action.users,
+        saveBlastData:action.users
       });
       return newState;
     case userConstants.GETSAVEDALL_SUCCESS:
@@ -118,6 +119,14 @@ export function users(state = {}, action) {
         });
       }
       return newState;
+
+     case userConstants.SAVEDBLAST_SUCCESS:
+       newState = objectAssign({}, state, {
+        loading: true,
+        savedBlast: action.user,
+      });
+      return newState;
+
 
     case userConstants.GETDOWNLOADEDALL_REQUEST:
       return {
