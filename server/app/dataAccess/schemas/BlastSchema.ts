@@ -8,55 +8,59 @@ var mongoose = DataAccess.mongooseInstance;
 var mongooseConnection = DataAccess.mongooseConnection;
 
 class BlastSchema {
-    static get schema () {
-        var schema =  mongoose.Schema({
-           _id: mongoose.Schema.Types.ObjectId,
-            user_id : {
+    static get schema() {
+        var schema = mongoose.Schema({
+            _id: mongoose.Schema.Types.ObjectId,
+            user_id: {
                 type: mongoose.Schema.Types.ObjectId,
                 required: true
             },
-            blast_type : {
+            blast_type: {
                 type: String,
                 required: true
             },
-            selected_template_id : {
+            scheduledDate: {
+                type: Date,
+                required: true
+            },
+            selected_template_id: {
                 type: String
             },
             selected_template_date: {
                 type: Date,
                 required: true
             },
-            agentData:{
-                name:{
-                 type:String
+            agentData: {
+                name: {
+                    type: String
                 },
-                designation:{
-                 type:String
+                designation: {
+                    type: String
                 },
-                email:{
-                 type:String
+                email: {
+                    type: String
                 },
-                website_url:{
-                 type:String
+                website_url: {
+                    type: String
                 },
-                phone_number:{
-                 type:String
+                phone_number: {
+                    type: String
                 },
-                company_details:{
-                 type:String
+                company_details: {
+                    type: String
                 },
-                other_information:{
-                 type:String
+                other_information: {
+                    type: String
                 },
-                image_url:{
-                 type:String
+                image_url: {
+                    type: String
                 },
-                logo_url:{
-                 type:String
+                logo_url: {
+                    type: String
                 }
             },
-            status : {
-               type:String,
+            status: {
+                type: String,
             },
         });
 
