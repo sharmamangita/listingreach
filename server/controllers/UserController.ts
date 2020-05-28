@@ -838,6 +838,35 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 		}
     }
 
+    selectDatabase(req: express.Request, res: express.Response): void {
+    	try { 
+    	   	var _blastform: IBlastModel = <IBlastModel>req.body;
+    	   	let _id:string =_blastform.blast_id;
+			var _blastBusiness = new BlastBusiness();
+			//console.log("_blastform=====",_blastform);
+/*					if(property.isOpenHouse){
+						var opneHouseData=[];
+						let data = property.isOpenHouse.openHouseData;
+									data.forEach(function(house:any) {
+									if(house){
+										opneHouseData.push({openHouseData:house.openHouseData});
+									}
+								});
+					   _propertyform.isOpenHouse=opneHouseData;
+				}*/
+			_blastBusiness.update(_id, _blastform, (error, resultUpdate) => { 
+				if(error){
+					res.send({"error": "error"});
+				} else {
+					res.send({"success": "success"});
+				}
+			})
+		}
+		 catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+        }
+    }
 
     forgetSAdminPassword(req: express.Request, res: express.Response): void {
         try {

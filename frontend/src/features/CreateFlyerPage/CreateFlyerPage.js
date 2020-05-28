@@ -13,7 +13,7 @@ import AgentTemplateTab from "../../components/AgentTemplateTab";
 import PropertyTab from "../../components/PropertyTab";
 import PhotoTab from "../../components/PhotoTab";
 import PreviewTab from "../../components/PreviewTab";
-import DatabaseTab from "../../components/DatabaseTab";
+import DatabaseTab from "../../components/DatabaseTab.jsx";
 import SetDateTab from "../../components/SetDateTab";
 import TermsTab from "../../components/TermsTab";
 import PaymentTab from "../../components/PaymentTab";
@@ -79,7 +79,7 @@ class CreateFlyerPage extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    console.log("nextProps==1==",nextProps);
+    console.log("nextProps==232===",nextProps);
    const {location} = nextProps;
     if (nextProps && nextProps.users && nextProps.users.tab) {
       let tab = nextProps.users.tab;
@@ -108,7 +108,7 @@ class CreateFlyerPage extends React.Component {
     if (nextProps.blastData != undefined && nextProps.blastData) {
       let blast = {};
       blast.blastData = nextProps.blastData.data;
-      this.setState({ propertyData: blast, uploadBlast: blast });
+      this.setState({ propertyData: blast, uploadBlast: blast,blast_id:nextProps.blastData.data._id});
       //previewData:nextProps.propertyData
     }
 
@@ -132,6 +132,8 @@ class CreateFlyerPage extends React.Component {
     }
 
 
+
+
   }
 
   moveTab(tab) {
@@ -147,7 +149,9 @@ class CreateFlyerPage extends React.Component {
 
   render() {
     const { moveTab, previewData, propertyData, uploadBlast,tabs,blast_id } = this.state;
-   
+   // disabled={tabs.selectdatabase?true:false}
+   // disabled={tabs.preview?true:false}
+   // disabled={tabs.photo?true:false}
     const { users} = this.props;
     return (
       <div>
@@ -222,7 +226,7 @@ class CreateFlyerPage extends React.Component {
                         propertyData.templateData &&
                         propertyData.templateData.template_type ==
                           "UploadYourOwnBlast") ? null : (
-                        <Tab eventKey="photo" title="Photos" disabled={tabs.photo?true:false}>
+                        <Tab eventKey="photo" title="Photos" >
                           <PhotoTab dispatchval={this.dispatchval} />
                         </Tab>
                       )}
@@ -248,7 +252,7 @@ class CreateFlyerPage extends React.Component {
                           />{" "}
                         </Tab>
                       ) : (
-                        <Tab eventKey="preview" title="Preview" disabled={tabs.preview?true:false}>
+                        <Tab eventKey="preview" title="Preview" >
                           {previewData &&
                           previewData[0] &&
                           previewData[0].templates &&
@@ -268,8 +272,9 @@ class CreateFlyerPage extends React.Component {
                         </Tab>
                       )}
 
-                      <Tab eventKey="selectdatabase" title="Select Database" disabled={tabs.selectdatabase?true:false}>
-                        <DatabaseTab dispatchval={this.dispatchval} />
+                      <Tab eventKey="selectdatabase" title="Select Database">
+                        <DatabaseTab dispatchval={this.dispatchval}
+                        blast_id = {blast_id} />
                       </Tab>
                       <Tab eventKey="setDate" title="Set Date" disabled={tabs.setDate?true:false}>
                         <SetDateTab dispatchval={this.dispatchval} />

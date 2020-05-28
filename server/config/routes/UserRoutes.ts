@@ -41,6 +41,7 @@ class UserRoutes {
 
 
         /* blast routes */ 
+        router.post("/users/selectDatabase",controller.selectDatabase);
         router.post("/users/saveBlast",controller.saveBlast);
         router.post("/users/saveDesignTemplate",controller.saveDesignTemplate);
         router.post("/users/saveProperty",controller.saveProperty);

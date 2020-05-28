@@ -27,7 +27,8 @@ export const userService = {
     savePayment,
     getPayment,
     getSavedBlast,
-    deleteSavedBlast
+    deleteSavedBlast,
+    selectDatabase
 };
 
 function login(email, password) {
@@ -304,6 +305,15 @@ function savePayment(payment){
     return fetch(`${config.apiUrl}/users/savePayment`, requestOptions).then(handleResponse);    
 }
 
+function selectDatabase(blast_id,associations){
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({blast_id,associations})
+    };
+    return fetch(`${config.apiUrl}/users/selectDatabase`, requestOptions).then(handleResponse);    
+}
+
 function getPayment(id) {
     const requestOptions = {
         method: 'GET',
@@ -337,3 +347,5 @@ function deleteSavedBlast(id){
         return user;
     }).catch(this.handleError);
 }
+
+

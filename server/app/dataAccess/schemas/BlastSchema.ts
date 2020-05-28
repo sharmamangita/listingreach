@@ -62,6 +62,18 @@ class BlastSchema {
             status: {
                 type: String,
             },
+            associations:[{
+                association:{
+                    id:{
+                     type:String
+                    },
+                    name:{
+                       type:String 
+                    }   
+                },
+                segments:[]
+            }]
+
         });
 
         return schema;

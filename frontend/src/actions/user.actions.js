@@ -28,7 +28,8 @@ export const userActions = {
     savePayment,
     getPayment,
     getSavedBlast,
-    deleteSavedBlast
+    deleteSavedBlast,
+    selectDatabase
 };
 /* Get References */
 function getReferences(userid){
@@ -550,6 +551,20 @@ function getPayment(id){
     function request(users) { return { type: userConstants.GETBYPAYMENTID_REQUEST, users } }
     function success(users) { return { type: userConstants.GETBYPAYMENTID_SUCCESS, users } }
     function failure(error) { return { type: userConstants.GETBYPAYMENTID_FAILURE, error } } 
+}
+
+function selectDatabase(blast_id,associations){
+    return dispatch => {
+        dispatch(request());
+        userService.selectDatabase(blast_id,associations)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request(users) { return { type: userConstants.SELECTDATABASE_REQUEST, users } }
+    function success(users) { return { type: userConstants.SELECTDATABASE_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.SELECTDATABASE_FAILURE, error } } 
 }
 
 function deleteSavedBlast(id){

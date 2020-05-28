@@ -99,10 +99,17 @@ export function users(state = {}, action) {
       });
       return newState;
 
+    case userConstants.SELECTDATABASE_SUCCESS:
+      newState = objectAssign({}, state, {
+        tab: "setDate",
+      });
+      return newState;
+
+      
+
     case userConstants.PROPERTY_SUCCESS:
       let tab = '';
       if (action.users && action.users.length) {
-        console.log("action.users[0]======",action.users[0]);
         if(action.users[0].templates.length && 
           action.users[0].templates[0] && 
           action.users[0].templates[0].template_type=="UploadBlast" ||
@@ -110,16 +117,16 @@ export function users(state = {}, action) {
           action.users[0].templates[0] && 
           action.users[0].templates[0].template_type=="UploadYourOwnBlast"){
           tab = "uploadblastpreview";
-        } else {
+        } else{
           tab="photo";
         }
         newState = objectAssign({}, state, {
           tab: tab,
           propertyData: action.users,
         });
+         return newState;
       }
-      return newState;
-
+     
      case userConstants.SAVEDBLAST_SUCCESS:
        newState = objectAssign({}, state, {
         loading: true,
