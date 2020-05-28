@@ -974,7 +974,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
            var _blastform: IBlastModel = <IBlastModel>req.body;
 			var _blastBusiness = new BlastBusiness();
 			_blastform.status = ' ';
-
+			console.log("_blastform====",_blastform);
 			_blastform.selected_template_date = new Date();
            _blastBusiness.create(_blastform, (error, result) => {
 	                if(error) {
@@ -1387,8 +1387,17 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 
 }
 
+	saveImages(req: express.Request, res: express.Response){
+		 try { 
+ 			var _property: IPropertyModel = <IPropertyModel>req.body;
+			var _propertyBusiness = new PropertyBusiness();
+			console.log("_propertyimg",_property);
 
-	
+		 } 	catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+	}
 
 	savePayment(req: express.Request, res: express.Response){
 		 try {
@@ -1532,7 +1541,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
  			var _property: IPropertyModel = <IPropertyModel>req.body;
 			var _propertyBusiness = new PropertyBusiness();
 			var _blastform: IBlastModel = <IBlastModel>req.body;
-			console.log("_blastform===",_blastform);
+			//console.log("_blastform===",_blastform);
 
 	 		var propertyAggregate = [
 	            	{
@@ -1656,7 +1665,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 					    };
 
 				});
-						console.log("returnObj==323===",returnObj);
+						
 						return res.json(returnObj);
 			}
 		});				
