@@ -143,7 +143,7 @@ class AgentsPage extends React.Component {
 		);
 	}
 	render() {
-		
+
 		var { totaldata, caddata } = this.prepareTable();
 		console.log('totaldata   ', totaldata)
 		return (
@@ -178,7 +178,7 @@ class AgentsPage extends React.Component {
 					email: agent.email ? agent.email : "--",
 					company: agent.company,
 					blastssent: agent.totalBlsts,
-					totalpaid: agent.totalPaid,
+					totalpaid: "$" + agent.totalPaid,
 					registered: this.createdDate(agent.registeredOn),
 					actions: (<span>
 						{/* <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={cadporps.id} onClick={this.handleModalOpem()} data-target="#intro">

@@ -64,7 +64,7 @@ class DashboardPage extends React.Component {
                     <div className="jumbotron">
                       <Link to="/PaymentsPage">
                         <span className="dashbrd-icons"><i className="fa fa-fw fa-money"></i></span>
-                        <h3>{this.props.payments && this.props.payments.length ? this.props.payments[0].totalAmount : 0}</h3>
+                        <h3>${ this.props.payments && this.props.payments.length ? this.props.payments[0].totalAmount : 0}</h3>
                         <h6>Total Payments</h6>
                       </Link>
                     </div>

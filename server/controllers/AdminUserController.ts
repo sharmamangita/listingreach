@@ -128,10 +128,17 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					},
 				},
 				{
+					$unwind: {
+						path: "$payments",
+						preserveNullAndEmptyArrays: true
+					}
+				},
+				{
 					$group: {
 						_id: "$_id",
 						totalPaid: { $sum: "$payments.amount" },
-						totalBlsts: { $sum: "$blasts._id" },
+						//	totalBlsts: { $sum: "$blasts._id" },
+						totalBlsts: { $sum: 1 },
 						firstName: { $first: "$firstName" },
 						lastName: { $first: "$lastName" },
 						email: { $first: "$email" },

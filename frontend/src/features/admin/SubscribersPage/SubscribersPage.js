@@ -211,9 +211,9 @@ class SubscriberPage extends React.Component {
 											<li className="list-group-item no-border no-padding"><h5>Mail Lists</h5></li>
 											{
 												subscriberPreferences.mailingLists.map((mail) => (
-													<li className="list-group-item no-border no-padding" key={mail}>
+													<li className="list-group-item no-border no-padding" key={mail.id}>
 														<span className="">
-															{mail}
+															{mail.name}
 														</span>
 													</li>
 												))
