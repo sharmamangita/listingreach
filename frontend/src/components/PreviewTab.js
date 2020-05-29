@@ -81,8 +81,7 @@ class PreviewTab extends React.Component {
         id="preview"
         role="tabpanel"
         aria-labelledby="group-dropdown2-tab"
-        aria-expanded="false"
-      >
+        aria-expanded="false">
         <h4>Preview Blast</h4>
         <p>Finalize your Blast.</p>
         <div className="row">
