@@ -21,7 +21,6 @@ class BlastSchema {
             },
             scheduledDate: {
                 type: Date,
-                required: false
             },
             selected_template_id: {
                 type: String
@@ -62,16 +61,19 @@ class BlastSchema {
             status: {
                 type: String,
             },
-            associations:[{
-                association:{
-                    id:{
-                     type:String
+            associations: [{
+                association: {
+                    id: {
+                        type: String
                     },
-                    name:{
-                       type:String 
-                    }   
+                    name: {
+                        type: String
+                    }
                 },
-                segments:[]
+                segments: [{
+                    id: { type: String },
+                    lists: { type: [String] }
+                }]
             }]
 
         });

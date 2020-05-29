@@ -29,7 +29,8 @@ export const userActions = {
     getPayment,
     getSavedBlast,
     deleteSavedBlast,
-    selectDatabase
+    selectDatabase,
+    saveImages
 };
 /* Get References */
 function getReferences(userid){
@@ -566,6 +567,22 @@ function selectDatabase(blast_id,associations){
     function success(users) { return { type: userConstants.SELECTDATABASE_SUCCESS, users } }
     function failure(error) { return { type: userConstants.SELECTDATABASE_FAILURE, error } } 
 }
+
+function saveImages(property_id,images){
+    return dispatch => {
+        dispatch(request());
+        userService.saveImages(property_id,images)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request(users) { return { type: userConstants.SAVEIMAGES_REQUEST, users } }
+    function success(users) { return { type: userConstants.SAVEIMAGES_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.SAVEIMAGES_FAILURE, error } } 
+}
+
+
 
 function deleteSavedBlast(id){
     return dispatch => {

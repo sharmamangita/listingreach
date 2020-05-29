@@ -11,7 +11,7 @@ import PropertyModel = require("./../model/PropertyModel");
 
 
 class PropertyBusiness implements BaseBusiness<IPropertyModel> {
-    private _propertyRepository: propertyRepository;
+    private _propertyRepository: PropertyRepository;
 
     constructor () {
         this._propertyRepository = new PropertyRepository();
@@ -61,7 +61,6 @@ class PropertyBusiness implements BaseBusiness<IPropertyModel> {
     findOne (query: any, callback: (error: any, result: IPropertyModel) => void) {
         this._propertyRepository.findOne(query, callback);
     }
-		
 }
 
 

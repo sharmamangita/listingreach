@@ -28,7 +28,8 @@ export const userService = {
     getPayment,
     getSavedBlast,
     deleteSavedBlast,
-    selectDatabase
+    selectDatabase,
+    saveImages
 };
 
 function login(email, password) {
@@ -347,5 +348,15 @@ function deleteSavedBlast(id){
         return user;
     }).catch(this.handleError);
 }
+
+function saveImages(property_id,propertyImages){
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({property_id,propertyImages})
+    };
+    return fetch(`${config.apiUrl}/users/saveImages`, requestOptions).then(handleResponse);    
+}
+
 
 
