@@ -349,11 +349,11 @@ function deleteSavedBlast(id){
     }).catch(this.handleError);
 }
 
-function saveImages(property_id,propertyImages){
+function saveImages(property_ids,propertyImages){
     const requestOptions = {
         method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({property_id,propertyImages})
+        body: JSON.stringify({property_ids,propertyImages})
     };
     return fetch(`${config.apiUrl}/users/saveImages`, requestOptions).then(handleResponse);    
 }

@@ -127,6 +127,13 @@ export function users(state = {}, action) {
          return newState;
       }
      
+      
+      case userConstants.SAVEIMAGES_SUCCESS:
+          newState = objectAssign({}, state, {
+          tab: "preview",
+      });
+      return newState;
+
      case userConstants.SAVEDBLAST_SUCCESS:
        newState = objectAssign({}, state, {
         loading: true,
