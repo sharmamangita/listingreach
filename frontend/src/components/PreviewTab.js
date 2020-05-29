@@ -22,57 +22,57 @@ class PreviewTab extends React.Component {
       email: "",
     };
     let user = JSON.parse(localStorage.getItem("user"));
-    if(user && user.userId &&  this.props && this.props.dispatchval){
-       const { dispatch } = this.props.dispatchval.dispatch;
-      dispatch(userActions.getById(user.userId));      
+    if (user && user.userId && this.props && this.props.dispatchval) {
+      const { dispatch } = this.props.dispatchval.dispatch;
+      dispatch(userActions.getById(user.userId));
     }
-    
+
     this.handleChangepreview = this.handleChangepreview.bind(this);
     this.handleSubmitPreviw = this.handleSubmitPreviw.bind(this);
   }
 
- componentWillReceiveProps(nextProps) { 
-    console.log("nextProps====",nextProps);
-   if(nextProps && nextProps.previewData && nextProps.previewData.templates){
-       console.log("nextProps====",nextProps);
-   }
-
-  }
-    handleChangepreview(e) {
-        const { name, value } = e.target;
-        this.setState({ [name]: value });
+  componentWillReceiveProps(nextProps) {
+    console.log("nextProps====", nextProps);
+    if (nextProps && nextProps.previewData && nextProps.previewData.templates) {
+      console.log("nextProps====", nextProps);
     }
 
-    handleSubmitPreviw(e) { 
+  }
+  handleChangepreview(e) {
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
+  }
+
+  handleSubmitPreviw(e) {
     e.preventDefault();
-  //console.log('stateeeeeee',this.state);return false; 
-   const { previewData } = this.props;
-    const {email } = this.state;
+    //console.log('stateeeeeee',this.state);return false; 
+    const { previewData } = this.props;
+    const { email } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
-    if(email && previewData){
-    dispatch(userActions.emailPreviewTemplate(email,previewData)); 
+    if (email && previewData) {
+      dispatch(userActions.emailPreviewTemplate(email, previewData));
       //window.scrollTo(0,0);
       this.setState({
-        email:"",
-       submitted:false 
+        email: "",
+        submitted: false
       });
-      this.setState({visible:true},()=>{
-        window.setTimeout(()=>{
-          this.setState({visible:false})
-        },5000)
-      }); 
+      this.setState({ visible: true }, () => {
+        window.setTimeout(() => {
+          this.setState({ visible: false })
+        }, 5000)
+      });
     } else {
       alert("Please fill all required fields.")
-    }    
+    }
   }
-    
+
 
 
   render() {
-    console.log("this.props===preview== templates",this.props);
+    console.log("this.props===preview== templates", this.props);
     const { previewData } = this.props;
-    let agentData='';
-    if(previewData && previewData.length){
+    let agentData = '';
+    if (previewData && previewData.length) {
       agentData = previewData[0].agentData[0].agentData;
     }
     return (
@@ -135,7 +135,7 @@ class PreviewTab extends React.Component {
                   <label>Email Subject Line:</label>
                 </div>
                 <div className="col-md-8 mb-3">
-                  {previewData && previewData[0] && previewData[0].templates && previewData[0].templates[0] && 
+                  {previewData && previewData[0] && previewData[0].templates && previewData[0].templates[0] &&
                     previewData[0].templates[0].email_subject}
                 </div>
               </div>
@@ -162,8 +162,8 @@ class PreviewTab extends React.Component {
               <div className="row">
                 <div className="col-md-12">
                   <div className="flyer-header">
-                  {previewData && previewData[0] && previewData[0].templates && previewData[0].templates[0] &&
-                    previewData[0].templates[0].headline}
+                    {previewData && previewData[0] && previewData[0].templates && previewData[0].templates[0] &&
+                      previewData[0].templates[0].headline}
                   </div>
                 </div>
               </div>
@@ -182,7 +182,7 @@ class PreviewTab extends React.Component {
                     <h4>
                       Price: $
                       {previewData && previewData[0] && previewData[0].price}
-                       {" "}per Square Foot
+                      {" "}per Square Foot
                     </h4>
                   </div>
                 </div>
@@ -224,7 +224,7 @@ class PreviewTab extends React.Component {
                           </div>
                         );
                       },
-                      this)}
+                        this)}
                   </div>
 
                   <hr />
@@ -246,8 +246,8 @@ class PreviewTab extends React.Component {
                     <ul>
                       <li>
                         Property Type:{" "}
-                        {previewData &&  previewData[0] &&
-                            previewData[0].property_type}{" "}
+                        {previewData && previewData[0] &&
+                          previewData[0].property_type}{" "}
                       </li>
                       <li>
                         Property Style:{" "}
@@ -271,8 +271,8 @@ class PreviewTab extends React.Component {
                         Half Bathrooms
                       </li>
                       <li>
-                        {previewData &&  previewData[0] && previewData[0] 
-                            .building_size}{" "}
+                        {previewData && previewData[0] && previewData[0]
+                          .building_size}{" "}
                         square feet
                       </li>
 
@@ -286,8 +286,8 @@ class PreviewTab extends React.Component {
                       <li>
                         {" "}
                         Built{" "}
-                        {previewData && previewData[0] && 
-                          previewData[0].year_built }
+                        {previewData && previewData[0] &&
+                          previewData[0].year_built}
                       </li>
                       <li>
                         Garage:
@@ -317,7 +317,7 @@ class PreviewTab extends React.Component {
                             </div>
                           );
                         },
-                        this)}
+                          this)}
                     </p>
                   </div>
                   <div className="col-md-12 text-center">
@@ -354,7 +354,7 @@ class PreviewTab extends React.Component {
                     <br />
                     {agentData.website_url}
                     <br />
-                    
+
                     {previewData && previewData[0] &&
                       previewData[0].street_address}
                     ,{" "}

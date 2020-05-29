@@ -21,7 +21,7 @@ class BlastSchema {
             },
             scheduledDate: {
                 type: Date,
-                required: true
+                required: false
             },
             selected_template_id: {
                 type: String
