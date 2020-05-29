@@ -227,7 +227,7 @@ class CreateFlyerPage extends React.Component {
                         propertyData.templateData.template_type ==
                           "UploadYourOwnBlast") ? null : (
                         <Tab eventKey="photo" title="Photos" >
-                          <PhotoTab dispatchval={this.dispatchval} />
+                          <PhotoTab dispatchval={this.dispatchval}  previewData={previewData} />
                         </Tab>
                       )}
 

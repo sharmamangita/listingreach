@@ -1391,8 +1391,17 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 		 try { 
  			var _property: IPropertyModel = <IPropertyModel>req.body;
 			var _propertyBusiness = new PropertyBusiness();
-			console.log("_propertyimg",_property);
-
+			console.log("_propertyimg=====",_property);
+			_property.property_ids.forEach(function(item){
+				let _id:string = item.id;
+				_propertyBusiness.update(_id,_property, (error, resultUpdate) => { 
+					if(error){
+						res.send({"error": "error in your request"});
+					} else {
+						res.send({"success": "success"});
+					}
+				})
+			});
 		 } 	catch (e)  {
             console.log(e);
             res.send({"error": "error in your request"});
