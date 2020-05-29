@@ -29,16 +29,45 @@ class PaymentTab extends React.Component {
       children : null,
       dispatch :this.props
     });
+    this.createdDate = this.createdDate.bind(this);
   }
-
+ 
+ createdDate(createdOn) {
+    if(createdOn!==''){
+      var datformt = new moment(createdOn, "YYYY-MM-DD");
+      return datformt;
+    }else{
+      return '';
+    }
+      
+  }
   render() {
-    var downloadLink=
-      (
-      <CommonDownload
-        dispatchval = {this.dispatchval}
-        total='20'
-      />
-    );
+    var  scheduledDate='';
+    if(this.props.scheduledDate){
+      scheduledDate = this.props.scheduledDate;
+    }
+    var associations='';
+    var per_email_blast_price=0;
+    var additional_email_blast_price=0;
+    var invoiveTotal= 0;
+    var blast_type='';
+    if(this.props.dataBaseData && this.props.blastsettingData){
+      per_email_blast_price =this.props.blastsettingData[0].per_email_blast_price;
+      additional_email_blast_price =this.props.blastsettingData[0].additional_email_blast_price;
+      invoiveTotal=per_email_blast_price+additional_email_blast_price;
+      blast_type=this.props.dataBaseData.blast_type;
+      console.log("createdOn====",this.props.dataBaseData.associations);
+      associations=this.props.dataBaseData.associations;
+       var downloadLink=
+        (
+        <CommonDownload
+          dispatchval = {this.dispatchval}
+          dataBaseData={this.props.dataBaseData}
+          total= {this.props.blastsettingData[0].per_email_blast_price}
+        />
+      );
+    }
+   
     return (
       <div
         className="tab-pane fade mt-2"
@@ -53,7 +82,7 @@ class PaymentTab extends React.Component {
           below.
         </p>
         <div className="alert alert-info">
-          <strong>Your Selected Send Date is: Thursday, May 7, 2020</strong>
+          <strong>Your Selected Send Date is: {scheduledDate}</strong>
         </div>
         <div className="alert alert-success">
           <strong>Estimated Blast Email Volume: 1,352 Recipients</strong>
@@ -73,29 +102,16 @@ class PaymentTab extends React.Component {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Flyer - Homes for Sale - FlyerID: 324021, BlastID: 201314</td>
-              <td>$19.95</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>
-                - Additional Real Estate Agent List : Bonita Springs-Estero Real
-                Estate Agent List
-              </td>
-              <td>$0.00</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td className="text-right">Invoice Total</td>
-              <td>$19.95</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td className="text-right">Amount Due Today</td>
-              <td>$19.95</td>
-            </tr>
+            
+            { associations && associations.map((result) => (
+                   <tr>
+                    <td>1</td>
+                    <td>Blast Type ${blast_type} - ${result.name}</td>
+                    <td>${per_email_blast_price}</td>
+                  </tr>
+                ))
+            }
+            
           </tbody>
         </table>
         <br />

@@ -38,6 +38,8 @@ import IAgentModel = require("./../app/model/interfaces/IAgentModel");
 import IBlastImageModel = require("./../app/model/interfaces/IBlastImageModel");
 import BlastImageBusiness = require("./../app/business/BlastImageBusiness");
 
+var BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
+
 var moment = require('moment');
 var mammoth = require("mammoth");
 const fs = require('fs');
@@ -97,7 +99,6 @@ class UserController implements IBaseController<UserBusiness> {
                     var emailtemplate = signupemailtemplatetouser.replace(/#email#/g, userdata.email).replace(/#password#/g, userdata.password);
                      Common.sendMail(userdata.email, Common.ADMIN_EMAIL, 'Welcome to ListingReach!', null, emailtemplate, function(error: any, response: any) {
                         if (error) {
-                            console.log(error);
                             res.send("error");
                         }else{
                         	res.send({ "success": "success"});
@@ -106,8 +107,7 @@ class UserController implements IBaseController<UserBusiness> {
                 }
             });
         } catch (e) {
-            console.log(e);
-            res.send({
+             res.send({
                 "error": "error in your request"
             });
 
@@ -140,7 +140,6 @@ class UserController implements IBaseController<UserBusiness> {
 								_userBusinessUpdate.update(_id, _updateData, (error, resultUpdate) => {
 									if(error) res.send({"error": "error", "message": "Authentication error"});//res.status(401).send({"error": "Authentication error"});
 									else {
-										console.log("here i am login ")
 										res.send({
 											userId: result._id,
 											email: result.email,
@@ -175,7 +174,6 @@ class UserController implements IBaseController<UserBusiness> {
 	            var _userBusiness = new UserBusiness();
 	            _userBusiness.create(_user, (error, result) => {
 	                if(error) {
-						console.log(error);
 						res.send({"error": error});
 					}
 	                else res.send({"success": "success"});
@@ -276,7 +274,6 @@ updateUser(req: express.Request, res: express.Response): void {
  	 	var userid:string = id.toString();
 		var _id=userid;
 		_agent.userId=userid;
-		console.log("userId=====",flag);
 		if(flag == 'logo'){
 			_agent.logo_url=data.filename;
 		}
@@ -293,7 +290,6 @@ updateUser(req: express.Request, res: express.Response): void {
 					}
 				});
 			}else{
-				console.log("_agent=====",_agent);
 				_agentBusiness.create(_agent, (error, agentresultData) => {
 					if(error){
 					}else {
@@ -446,14 +442,12 @@ updateUser(req: express.Request, res: express.Response): void {
 			_contactform.createdOn = new Date();
 			_contactformBusiness.create(_contactform, (error, result) => {
 				if(error) {
-					console.log(error);
 					res.send({"error=========": error});
 				} else {
 					var contactFormemail =Common.CONTACT_FORM;	
 					var emailtemplate = contactFormemail.replace(/#fullname#/g,_contactform.fullname).replace(/#email#/g,_contactform.email).replace(/#phone#/g,_contactform.phone).replace(/#message#/g,_contactform.message) .replace(/#date#/g,_contactform.createdOn);
 					Common.sendMail(_contactform.email,'support@ListingReach.com','Contact Form', null,emailtemplate, function(error: any, response: any){ 
 					if(error){ 
-					console.log(error);
 					res.end("error");
 					}
 					});
@@ -469,7 +463,6 @@ updateUser(req: express.Request, res: express.Response): void {
 emailPreviewTemplate(req: express.Request, res: express.Response): void { 
 		try { 
 			var _propertyData: IPropertyModel = <IPropertyModel>req.body;
-			console.log("propertyDetails====",_propertyData);
 			let property =  _propertyData.property_details;
 			var _contactformBusiness = new ContactformBusiness();
 			property.email = req.body.email;
@@ -807,8 +800,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
     
     
     UpdateUserPassword(req: express.Request, res: express.Response): void {
-    console.log("Dsadasdasd")
-    	try {
+     	try {
 			var _user: IUserModel = <IUserModel>req.body; 
 			var _userBusiness = new UserBusiness();
 			var _idc = req.body.user;
@@ -974,7 +966,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
            var _blastform: IBlastModel = <IBlastModel>req.body;
 			var _blastBusiness = new BlastBusiness();
 			_blastform.status = ' ';
-			console.log("_blastform====",_blastform);
 			_blastform.selected_template_date = new Date();
            _blastBusiness.create(_blastform, (error, result) => {
 	                if(error) {
@@ -1032,7 +1023,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
     	 	var _userBusiness = new UserBusiness();
         	_userBusiness.verifyToken(req, res,  (userData) => { 
 	    	 	var _agent: IAgentModel = <IAgentModel>req.body;
-	    	 	console.log("_agent====",userData);
 	    	 	_agent.createdOn = new Date();
 
 	    	 	_agent.user_id=companyUserData._id;
@@ -1054,7 +1044,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 							if(error){
 								console.log("error====",error)
 							}else {
-								console.log("agentresultData====",agentresultData);
 							  res.status(201).send({ "success":"Your agent info successfully updated." });
 							}
 						});
@@ -1071,13 +1060,9 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 
      saveProperty(req: express.Request, res: express.Response): void {
         try {
-	           var _propertyforms: IPropertyModel = <IPropertyModel>req.body;
-	           var _propertyBusiness = new PropertyBusiness();
-
-			  console.log("_propertyforms======",_propertyforms);
-
-
-           if(_propertyforms && _propertyforms.property && _propertyforms.property.length){
+           	var _propertyforms: IPropertyModel = <IPropertyModel>req.body;
+           	var _propertyBusiness = new PropertyBusiness();
+			if(_propertyforms && _propertyforms.property && _propertyforms.property.length){
            		var _templateforms: IAgentTemplateModel = <IAgentTemplateModel>req.body;
            		var _templateBusiness = new AgentTemplateBusiness();
            		var _blastform: IBlastModel = <IBlastModel>req.body;
@@ -1130,7 +1115,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 						}
 
 						if(property.propertyImages){
-							console.log("property.propertyImages======",property.propertyImages);
 								var propertyImages=[];
 								let data = property.propertyImages.img;
 											data.forEach(function(images:any) {
@@ -1162,7 +1146,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 														console.log(error);
 														res.send({"error": error});
 													}
-													console.log("dasdasdasdasd====",result);
 													_templateform.Property_id = result._id.toString();
 													//console.log("3434343====",result._id.toString());
 
@@ -1391,7 +1374,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 		 try { 
  			var _property: IPropertyModel = <IPropertyModel>req.body;
 			var _propertyBusiness = new PropertyBusiness();
-			console.log("_propertyimg=====",_property);
 			let array = [];
 			_property.property_ids.forEach(function(item){
 				let _id:string = item.id;
@@ -1427,14 +1409,14 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 				_payment.blast_id=userData._id;
 				_payment.amount=_payment.total;
 				_payment.paymentID=_payment.paymentID;
-				console.log("_payment=====",_payment);
-			_paymentBusiness.retrieve({"blast_id":userData._id}, (error, result) => {
+				var blastId: string = req.params.blastId;
+			_paymentBusiness.retrieve({"blast_id":blastId}, (error, result) => {
 				if(result && result.length > 0) {
-                    lastInvoiceId = +invoiceData[0].maxNumber + +1;
+                    lastInvoiceId = +result + +1;
                     _payment.invoice_id = lastInvoiceId;
                 }
                 else {
-                    invoice_number = 1;
+                   var invoice_number = 1;
                     _payment.invoice_id = invoice_number;
                 }
 				_paymentBusiness.create(_payment, (error, paymentresultData) => {
@@ -1489,6 +1471,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			                    "user_id":1,
          		                "status":1,
          		                "selected_template_date":1,
+         		                "scheduledDate":1,
 			                    "templates.headline":1,
 			                    "payment.amount":1
 						    }
@@ -1511,18 +1494,17 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 						        status:obj.status,
 						        payment:obj.payment,
 						        subject:obj.templates,
-						        createdon:obj.selected_template_date
+						        createdon:obj.selected_template_date,
+						        scheduledDate:obj.scheduledDate
 						    };
 
 					});
-							console.log("returnObj23232====",returnObj);
-							return res.json(returnObj);
+					return res.json(returnObj);
 				}
 			});			
 
 
 		} catch (e)  {
-            console.log(e);
             res.send({"error": "error in your request"});
 		}
 	}		
@@ -1537,7 +1519,6 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 					if(error){
 						console.log("error====",error)
 					}else {
-						console.log("result=====",result)
 						return res.json({payment:result});
 					}
 				});
@@ -1551,8 +1532,41 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
             res.send({"error": "error in your request"});
 		}
 	}	
-
-
+	saveBlastCalender(req: express.Request, res: express.Response){
+		 try {
+    	    var _blastBusiness = new BlastBusiness();
+			
+			var _id: string = req.params.blastId;
+		 	_blastBusiness.findById(_id, (error, result) => {
+		 	let _id: string = result._id.toString();
+		 	var _blastform: IBlastModel = <IBlastModel>req.body;
+		 	_blastform.scheduledDate=_blastform.data;
+		 	_blastBusiness.findOne({"_id":_id}, (error, dataBaseData) => {	
+				_blastBusiness.update(_id, _blastform, (error:any, resultUpdate:any) => {
+					if(error){
+					} else {
+						 var _blastSettingsBusiness = new BlastSettingsBusiness();
+			            _blastSettingsBusiness.retrieve("", function (error, result) {
+			                if (error) {
+			                    res.send({ "error": error });
+			                }
+			                else {
+			                    console.log("get settings dataBaseData", dataBaseData);
+			                    res.send({"success": "success",data:_blastform.scheduledDate,dataBaseData:dataBaseData,blastsettingData:result});
+			                }
+			            });
+						
+						
+					}
+				});
+			});
+		 }
+	 	}
+    	  catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+	}
  	getTemplateOrPropertydata(req: express.Request, res: express.Response): void { 
  		try {
  			var _property: IPropertyModel = <IPropertyModel>req.body;

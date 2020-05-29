@@ -36,9 +36,16 @@ class SetDateTab extends React.Component {
       { title: 'Event Now', start: new Date() }
       ]
     };
+    let user = JSON.parse(localStorage.getItem("user"));
+    if(user && user.userId &&  this.props && this.props.dispatchval){
+     
+       const { dispatch } = this.props.dispatchval.dispatch;
+      dispatch(userActions.getById(user.userId));      
+    }
     this.toggleWeekends = this.toggleWeekends.bind(this);
     this.gotoPast = this.gotoPast.bind(this);
     this.handleDateClick=this.handleDateClick.bind(this);
+    this.submitdata=this.submitdata.bind(this);
   }
   toggleWeekends(){
     this.setState({ // update a property
@@ -52,15 +59,32 @@ class SetDateTab extends React.Component {
   }
 
   handleDateClick (arg) {
-    if (confirm('Would you like to add an event to ' + arg.dateStr + ' ?')) {
-      this.setState({  // add new event data
-        calendarEvents: this.state.calendarEvents.concat({ // creates a new array
-          title: 'New Event',
-          start: arg.date,
-          allDay: arg.allDay
-        })
-      })
+    if (confirm('Would you like to add an blast to ' + arg.dateStr + ' ?')) {
+     
+      if (arg.dateStr) {
+       
+        this.submitdata(arg.dateStr);
+         this.setState({  // add new event data
+          calendarEvents: this.state.calendarEvents.concat({ // creates a new array
+            title: 'New Event',
+            start: arg.date,
+            allDay: arg.allDay
+          })
+        }) 
+      } 
     }
+  }
+  submitdata(data){
+     const { dispatch } = this.props.dispatchval.dispatch;
+     console.log("this.props.blast_id=====",this.props)
+     console.log("blast_id=====",dispatch)
+     var blast_id='';
+     if(this.props.uploadBlast && this.props.uploadBlast.blastData){
+      blast_id=this.props.uploadBlast.blastData._id;
+      console.log("blast_id===",blast_id);
+      dispatch(userActions.saveCalenderData(data,blast_id));
+     }
+     
   }
   render() {
     const { calendarWeekends,calendarEvents} = this.state;

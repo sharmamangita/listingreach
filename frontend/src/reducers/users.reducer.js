@@ -104,7 +104,14 @@ export function users(state = {}, action) {
         tab: "setDate",
       });
       return newState;
-
+    case userConstants.SELECTSETDATE_SUCCESS:
+      newState = objectAssign({}, state, {
+        tab: "terms",
+        scheduledDate: action.users.data,
+        blastsettingData:action.users.blastsettingData,
+        dataBaseData:action.users.dataBaseData
+      });
+      return newState;
     case userConstants.PREVIEW_REQUEST:
        newState = objectAssign({}, state, {
         tab: "selectdatabase",

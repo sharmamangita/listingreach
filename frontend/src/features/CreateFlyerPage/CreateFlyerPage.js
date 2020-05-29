@@ -53,6 +53,9 @@ class CreateFlyerPage extends React.Component {
       propertyData: "",
       uploadBlast: "",
       property_images:'',
+	  scheduledDate:"",
+      blastsettingData:"",
+      dataBaseData:"",
       tabs:{
         blast:false,
         designTemplateTab:true,
@@ -111,7 +114,7 @@ class CreateFlyerPage extends React.Component {
     if (nextProps.blastData != undefined && nextProps.blastData) {
       let blast = {};
       blast.blastData = nextProps.blastData.data;
-      this.setState({ propertyData: blast, uploadBlast: blast,blast_id:nextProps.blastData.data._id});
+      this.setState({ propertyData: blast, uploadBlast: blast,blast_id:nextProps.blastData.data._id,scheduledDate:nextProps.scheduledDate,blastsettingData:nextProps.blastsettingData,dataBaseData:nextProps.dataBaseData});
       //previewData:nextProps.propertyData
     }
 
@@ -152,7 +155,7 @@ class CreateFlyerPage extends React.Component {
   }
 
   render() {
-    const { moveTab, previewData, propertyData, uploadBlast,tabs,blast_id,propertyImages } = this.state;
+    const { moveTab, previewData, propertyData, uploadBlast,tabs,blast_id,propertyImages,scheduledDate, blastsettingData,dataBaseData } = this.state;
    // disabled={tabs.selectdatabase?true:false}
    // disabled={tabs.preview?true:false}
    // disabled={tabs.photo?true:false}
@@ -283,13 +286,13 @@ class CreateFlyerPage extends React.Component {
                         blast_id = {blast_id} />
                       </Tab>
                       <Tab eventKey="setDate" title="Set Date" disabled={tabs.setDate?true:false}>
-                        <SetDateTab dispatchval={this.dispatchval} />
+                        <SetDateTab dispatchval={this.dispatchval} uploadBlast={uploadBlast} />
                       </Tab>
                       <Tab eventKey="terms" title="Terms & Condition" disabled={tabs.terms?true:false}>
                         <TermsTab dispatchval={this.dispatchval} />
                       </Tab>
                       <Tab eventKey="payment" title="Payment" disabled={tabs.payment?true:false}>
-                        <PaymentTab dispatchval={this.dispatchval} />
+                        <PaymentTab dispatchval={this.dispatchval} dataBaseData={dataBaseData} blastsettingData={blastsettingData} scheduledDate={scheduledDate}  />
                       </Tab>
                     </Tabs>
                   </div>
@@ -308,13 +311,19 @@ function mapStateToProps(state) {
   const { profile } = users;
   const { agentData } = users;
   const { imageData } = users;
-  console.log("imageData===eeee=", imageData);
+  const {scheduledDate} =users;
+  const {blastsettingData}=users;
+  const {dataBaseData}=users;
+  console.log("imageData===scheduledDate=", users);
   return {
     alert,
     users,
     profile,
     agentData,
     imageData,
+    scheduledDate,
+    blastsettingData,
+    dataBaseData
   };
 }
 

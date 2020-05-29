@@ -235,6 +235,11 @@ class ProfilePage extends React.Component {
         </section>
         <section className="news-grid grid">
           <div className="container">
+		  { alert.message &&
+						<Alert className={`alert ${alert.type}`} style={{textAlign:"center"}} isOpen={this.state.visible} > <button type="button" onClick={this.closebtn} className="close" >
+								<span aria-hidden="true">&times;</span>
+								</button>{alert.message}</Alert>
+						}
             {profileimagemodal}
             {profilelogomodal}
             <div className="row">
@@ -243,7 +248,7 @@ class ProfilePage extends React.Component {
                   <div className="col-md-6 border-rt">
                     <h4 className="mb-4">Update Your Account Details</h4>
                     <form onSubmit={this.handleSubmits} className="form-a contactForm">
-
+					
                       <div className="row">
                         <div className="col-md-12 mb-3">
                           <div className="form-group">
@@ -343,9 +348,6 @@ class ProfilePage extends React.Component {
                     <form onSubmit={this.handleSubmit} className="form-a contactForm">
 
                       <div className="row">
-                        {this.alermsg.message &&
-                          <div id="sendmessage"><div className="{`alert ${this.alermsg.type}`}">{this.alermsg.message}</div>
-                          </div>}
                         <div className="col-md-6 mb-3">
                           <div className="form-group">
                             <label className="check">Use Agent Photo

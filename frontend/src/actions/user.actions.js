@@ -32,7 +32,8 @@ export const userActions = {
     selectDatabase,
     saveImages,
     preview,
-    termsNext
+    termsNext,
+	saveCalenderData
 };
 /* Get References */
 function getReferences(userid){
@@ -258,8 +259,8 @@ function update(user) {
             .then(
                 users => { 
                     console.log("Dsadasdsa=====");
-                    history.push('/AgentDashboardPage');
-                    dispatch(success(users));
+                    //history.push('/AgentDashboardPage');
+                    //dispatch(success(users));
                     //if(users.success){
                          
                     //}
@@ -519,10 +520,10 @@ function saveAgents(agentData){
     function failure(error) { return { type: userConstants.AGENT_FAILURE, error } }
 }
 
-function savePayment(payment){
+function savePayment(payment,blastId){
     return dispatch => {
         dispatch(request());
-        userService.savePayment(payment)
+        userService.savePayment(payment,blastId)
            .then(
             user => { 
             dispatch(success());
@@ -612,6 +613,19 @@ function termsNext(){
         dispatch(request());
     };
     function request() { return { type: userConstants.TERMS_REQUEST } }
+}
+function saveCalenderData(data,blastId){
+   return dispatch => {
+        dispatch(request());
+        userService.saveCalenderData(data,blastId)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request(users) { return { type: userConstants.SELECTSETDATE_REQUEST, users } }
+    function success(users) { return { type: userConstants.SELECTSETDATE_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.SELECTSETDATE_FAILURE, error } } 
 }
 
 

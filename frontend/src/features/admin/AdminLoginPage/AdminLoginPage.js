@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { userActions } from '../../../actions';
-
+require('../../../../public/assets/admin/css/style.css');
 class AdminLoginPage extends React.Component {
     constructor(props) {
         super(props);

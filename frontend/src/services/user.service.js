@@ -29,7 +29,8 @@ export const userService = {
     getSavedBlast,
     deleteSavedBlast,
     selectDatabase,
-    saveImages
+    saveImages,
+	saveCalenderData
 };
 
 function login(email, password) {
@@ -296,14 +297,13 @@ function saveAgents(agentData){
        
 }
 
-function savePayment(payment){
-    console.log("payment====",payment);
+function savePayment(payment,blastId){
     const requestOptions = {
         method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
         body: JSON.stringify(payment)
     };
-    return fetch(`${config.apiUrl}/users/savePayment`, requestOptions).then(handleResponse);    
+    return fetch(`${config.apiUrl}/users/savePayment/${blastId}`, requestOptions).then(handleResponse);    
 }
 
 function selectDatabase(blast_id,associations){
@@ -359,4 +359,19 @@ function saveImages(property_ids,propertyImages){
 }
 
 
+
+
+function saveCalenderData(data,blastId){
+    console.log("blast_id=ssssss==",blastId);
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({"data":data})
+    };
+    return fetch(`${config.apiUrl}/saveBlastCalender/${blastId}`, requestOptions).then(handleResponse)
+    .then(user => {
+        return user;
+    }).catch(this.handleError);
+       
+}
 

@@ -37,6 +37,7 @@ renderPaymentModal(amount) {
       <PaypalButton
           modalpaymentid={this.state.modalpaymentid} 
           dispatch = {this.props.dispatchval.dispatch} 
+          uploadBlast={this.props.uploadBlast}
           visible={this.state.showpayment} 
           onClickBackdrop={modalClose}  
           dialogClassName="modal-lg"

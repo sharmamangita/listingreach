@@ -3,7 +3,7 @@ import { Link, Redirect } from 'react-router-dom';
 import { browserHistory } from 'react-router'
 import { userActions } from '../actions';
 import { Nav, Navbar, NavItem, NavDropdown, MenuItem, NavLink } from 'react-bootstrap';
-
+require('../../public/assets/admin/css/style.css');
 class AdminHeader extends React.Component {
   constructor(props) {
     super(props);

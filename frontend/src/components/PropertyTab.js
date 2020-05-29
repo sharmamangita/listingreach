@@ -660,7 +660,7 @@ class PropertyTab extends React.Component {
         break;
       case "formLine":
         error.Email.formLine =
-          value.length < 3 ? "Name must be at least 3 characters long!" : "";
+          value.length < 1 ? "Name cannot be empty!" : "";
         break;
       case "formReply":
         error.Email.formReply = validEmailRegex.test(value)
@@ -676,8 +676,8 @@ class PropertyTab extends React.Component {
 
       case "name":
         error.agentData.name =
-          value.length < 8
-            ? "Agent name must be at least 3 characters long!"
+          value.length < 1
+            ? "Agent name cannot be empty!"
             : "";
         break;
 
