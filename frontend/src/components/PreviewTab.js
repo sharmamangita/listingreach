@@ -13,6 +13,7 @@ import Modal from "react-bootstrap4-modal";
 import { connect } from "react-redux";
 import { common } from "../helpers";
 import Moment from "moment";
+import config from "config";
 
 class PreviewTab extends React.Component {
   constructor(props) {
@@ -29,6 +30,8 @@ class PreviewTab extends React.Component {
 
     this.handleChangepreview = this.handleChangepreview.bind(this);
     this.handleSubmitPreviw = this.handleSubmitPreviw.bind(this);
+    this.nexttab = this.nexttab.bind(this);
+    
   }
 
   componentWillReceiveProps(nextProps) {
@@ -45,33 +48,39 @@ class PreviewTab extends React.Component {
 
   handleSubmitPreviw(e) {
     e.preventDefault();
-    //console.log('stateeeeeee',this.state);return false; 
-    const { previewData } = this.props;
+
+    //console.log('stateeeeeee',this.state);return false;
+    const { previewData, propertyImages } = this.props;
     const { email } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
     if (email && previewData) {
-      dispatch(userActions.emailPreviewTemplate(email, previewData));
+      dispatch(userActions.emailPreviewTemplate(email, propertyImages));
       //window.scrollTo(0,0);
       this.setState({
         email: "",
-        submitted: false
+        submitted: false,
       });
       this.setState({ visible: true }, () => {
         window.setTimeout(() => {
-          this.setState({ visible: false })
-        }, 5000)
+          this.setState({ visible: false });
+        }, 5000);
       });
     } else {
-      alert("Please fill all required fields.")
+      alert("Please fill all required fields.");
     }
   }
 
 
+  nexttab(){
+    const { dispatch } = this.props.dispatchval.dispatch;
+    dispatch(userActions.preview());
+  }
 
   render() {
     console.log("this.props===preview== templates", this.props);
-    const { previewData } = this.props;
-    let agentData = '';
+
+    const { previewData, propertyImages } = this.props;
+    let agentData = "";
     if (previewData && previewData.length) {
       agentData = previewData[0].agentData[0].agentData;
     }
@@ -134,7 +143,12 @@ class PreviewTab extends React.Component {
                   <label>Email Subject Line:</label>
                 </div>
                 <div className="col-md-8 mb-3">
-                  {previewData && previewData[0] && previewData[0].templates && previewData[0].templates[0] &&
+
+                  {previewData &&
+                    previewData[0] &&
+                    previewData[0].templates &&
+                    previewData[0].templates[0] &&
+
                     previewData[0].templates[0].email_subject}
                 </div>
               </div>
@@ -161,27 +175,192 @@ class PreviewTab extends React.Component {
               <div className="row">
                 <div className="col-md-12">
                   <div className="flyer-header">
-                    {previewData && previewData[0] && previewData[0].templates && previewData[0].templates[0] &&
+
+                    {previewData &&
+                      previewData[0] &&
+                      previewData[0].templates &&
+                      previewData[0].templates[0] &&
+
                       previewData[0].templates[0].headline}
                   </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-md-12">
-                  <img
-                    src="public/assets/images/img1.jpg"
-                    alt="image"
-                    style={{ width: "100%", height: "400px" }}
-                  />
+              {propertyImages &&
+              propertyImages[0] &&
+              propertyImages[0].propertyImages &&
+              propertyImages[0].propertyImages.length == 1 ? (
+                <div className="row">
+                  <div className="col-md-12">
+                    <img
+                      src="public/assets/images/img1.jpg"
+                      alt="image"
+                      style={{ width: "100%", height: "400px" }}
+                    />
+                  </div>
                 </div>
-              </div>
+              ) : null}
+
+              {propertyImages &&
+              propertyImages[0] &&
+              propertyImages[0].propertyImages &&
+              propertyImages[0].propertyImages.length == 2 ? (
+                <div className="row">
+                  <div className="col-md-6 pr-1">
+                    <img
+                      src={
+                        config.uploadapiUrl +
+                        "/uploads/" +
+                        propertyImages[0].propertyImages[0].imageUrl
+                      }
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="col-md-6 pl-1">
+                    <img
+                      src={
+                        config.uploadapiUrl +
+                        "/uploads/" +
+                        propertyImages[0].propertyImages[1].imageUrl
+                      }
+                      alt="image"
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+                </div>
+              ) : null}
+
+              {propertyImages &&
+              propertyImages[0] &&
+              propertyImages[0].propertyImages &&
+              propertyImages[0].propertyImages.length == 2 ? (
+                <div className="row">
+                  <div className="col-md-6 pr-1">
+                    <img
+                      src={
+                        config.uploadapiUrl +
+                        "/uploads/" +
+                        propertyImages[0].propertyImages[0].imageUrl
+                      }
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+                  <div className="col-md-6 pl-1">
+                    <img
+                      src={
+                        config.uploadapiUrl +
+                        "/uploads/" +
+                        propertyImages[0].propertyImages[1].imageUrl
+                      }
+                      alt="image"
+                      style={{ width: "100%" }}
+                    />
+                  </div>
+                </div>
+              ) : null}
+
+              {propertyImages &&
+              propertyImages[0] &&
+              propertyImages[0].propertyImages &&
+              propertyImages[0].propertyImages.length == 3 ? (
+                <div className="row">
+                  <div className="col-md-8 pr-0">
+                    <img
+                      src={
+                        config.uploadapiUrl +
+                        "/uploads/" +
+                        propertyImages[0].propertyImages[0].imageUrl
+                      }
+                      alt="image"
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </div>
+                  <div className="col-md-4 pl-0 pr-0">
+                    <div className="col-md-12 pl-0">
+                      <img
+                        src={
+                          config.uploadapiUrl +
+                          "/uploads/" +
+                          propertyImages[0].propertyImages[1].imageUrl
+                        }
+                        style={{ width: "100%" }}
+                      />
+                    </div>
+                    <div className="col-md-12 pl-0">
+                      <img
+                        src={
+                          config.uploadapiUrl +
+                          "/uploads/" +
+                          propertyImages[0].propertyImages[2].imageUrl
+                        }
+                        alt="image"
+                        style={{ width: "100%" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {propertyImages &&
+              propertyImages[0] &&
+              propertyImages[0].propertyImages &&
+              propertyImages[0].propertyImages.length == 4 ? (
+                <div className="row">
+                  <div className="col-md-6 pr-1 mb-1">
+                    <img
+                      src={
+                        config.uploadapiUrl +
+                        "/uploads/" +
+                        propertyImages[0].propertyImages[0].imageUrl
+                      }
+                      alt="image"
+                      style={{ width: "100%", height: "250px" }}
+                    />
+                  </div>
+                  <div className="col-md-6 pl-0 mb-1">
+                    <img
+                      src={
+                        config.uploadapiUrl +
+                        "/uploads/" +
+                        propertyImages[0].propertyImages[1].imageUrl
+                      }
+                      alt="image"
+                      style={{ width: "100%", height: "250px" }}
+                    />
+                  </div>
+                  <div className="col-md-6 pr-1">
+                    <img
+                      src={
+                        config.uploadapiUrl +
+                        "/uploads/" +
+                        propertyImages[0].propertyImages[2].imageUrl
+                      }
+                      alt="image"
+                      style={{ width: "100%", height: "250px" }}
+                    />
+                  </div>
+                  <div className="col-md-6 pl-0">
+                    <img
+                      src={
+                        config.uploadapiUrl +
+                        "/uploads/" +
+                        propertyImages[0].propertyImages[3].imageUrl
+                      }
+                      alt="image"
+                      style={{ width: "100%", height: "250px" }}
+                    />
+                  </div>
+                </div>
+              ) : null}
+
               <div className="flyer-bg">
                 <div className="row">
                   <div className="col-md-12 mt-3 mb-3 ml-3">
                     <h4>
                       Price: $
-                      {previewData && previewData[0] && previewData[0].price}
-                      {" "}per Square Foot
+
+                      {previewData && previewData[0] && previewData[0].price}{" "}
+                      per Square Foot
+
                     </h4>
                   </div>
                 </div>
@@ -189,18 +368,18 @@ class PreviewTab extends React.Component {
                   <div className="col-md-12 mt-3 text-center">
                     <label className="flyer-label">Property Address:</label>
                     <p>
-                      {previewData && previewData[0] && previewData[0].street_address}
-                      ,{" "}
-                      {previewData && previewData[0] &&
-                        previewData[0].city}
-                      ,{" "}
-                      {previewData && previewData[0] &&
-                        previewData[0].zipcode}
+                      {previewData &&
+                        previewData[0] &&
+                        previewData[0].street_address}
+                      , {previewData && previewData[0] && previewData[0].city},{" "}
+                      {previewData && previewData[0] && previewData[0].zipcode}
                     </p>
                   </div>
 
                   <div className="col-md-12 text-center">
-                    {previewData && previewData[0] && previewData[0].isOpenHouse &&
+                    {previewData &&
+                      previewData[0] &&
+                      previewData[0].isOpenHouse &&
                       previewData[0].isOpenHouse.openHouseData != undefined &&
                       previewData[0].isOpenHouse.openHouseData.length > 0 &&
                       previewData[0].isOpenHouse.openHouseData.map(function (
@@ -230,14 +409,17 @@ class PreviewTab extends React.Component {
                   <div className="col-md-12 ml-3">
                     <label className="flyer-label">MLS#:</label>
                     <span>
-                      {previewData && previewData[0] &&
+                      {previewData &&
+                        previewData[0] &&
                         previewData[0].mls_number}
                     </span>
                   </div>
                   <div className="col-md-12 ml-3">
                     <label className="flyer-label">Property Description:</label>
                     <span>
-                      {previewData && previewData[0] && previewData[0].property_detail}
+                      {previewData &&
+                        previewData[0] &&
+                        previewData[0].property_detail}
                     </span>
                   </div>
                   <div className="col-md-12 ml-3">
@@ -245,56 +427,79 @@ class PreviewTab extends React.Component {
                     <ul>
                       <li>
                         Property Type:{" "}
-                        {previewData && previewData[0] &&
+
+                        {previewData &&
+                          previewData[0] &&
+
                           previewData[0].property_type}{" "}
                       </li>
                       <li>
                         Property Style:{" "}
-                        {previewData && previewData[0] && previewData[0].property_style}{" "}
+                        {previewData &&
+                          previewData[0] &&
+                          previewData[0].property_style}{" "}
                       </li>
                       <li>
                         {" "}
-                        {previewData && previewData[0] &&
+                        {previewData &&
+                          previewData[0] &&
                           previewData.number_bedrooms}{" "}
                         Bedrooms
                       </li>
                       <li>
-                        {previewData && previewData[0] && previewData[0].number_bathrooms &&
-                          previewData[0]
-                            .number_bathrooms[0] &&
+                        {previewData &&
+                          previewData[0] &&
+                          previewData[0].number_bathrooms &&
+                          previewData[0].number_bathrooms[0] &&
                           previewData[0].number_bathrooms[0].full}{" "}
                         Full{" "}
-                        {previewData && previewData[0] && previewData[0].number_bathrooms &&
+                        {previewData &&
+                          previewData[0] &&
+                          previewData[0].number_bathrooms &&
                           previewData[0].number_bathrooms[0] &&
                           previewData[0].number_bathrooms[0].half}{" "}
                         Half Bathrooms
                       </li>
                       <li>
-                        {previewData && previewData[0] && previewData[0]
-                          .building_size}{" "}
+
+                        {previewData &&
+                          previewData[0] &&
+                          previewData[0].building_size}{" "}
+
                         square feet
                       </li>
 
-                      <li>$ {previewData && previewData[0] && previewData[0].price} /sqft</li>
+                      <li>
+                        ${" "}
+                        {previewData && previewData[0] && previewData[0].price}{" "}
+                        /sqft
+                      </li>
                       <li>
                         Lot Size:{" "}
-                        {previewData && previewData[0] &&
+                        {previewData &&
+                          previewData[0] &&
                           previewData[0].lot_size}{" "}
                         sqft
                       </li>
                       <li>
                         {" "}
                         Built{" "}
-                        {previewData && previewData[0] &&
+
+                        {previewData &&
+                          previewData[0] &&
+
                           previewData[0].year_built}
                       </li>
                       <li>
                         Garage:
-                        {previewData && previewData[0] && previewData.garageSize}{" "}
+                        {previewData &&
+                          previewData[0] &&
+                          previewData.garageSize}{" "}
                       </li>
                       <li>
                         {" "}
-                        {previewData && previewData[0] &&
+                        {previewData &&
+                          previewData[0] &&
                           previewData[0].number_stories}{" "}
                       </li>
                     </ul>
@@ -302,8 +507,11 @@ class PreviewTab extends React.Component {
                   <div className="col-md-12 ml-3">
                     <label className="flyer-label">Links:</label>
                     <p>
-                      {previewData && previewData[0] &&
-                        previewData[0].linksToWebsites && previewData[0].linksToWebsites.linkData && previewData[0].linksToWebsites.linkData.length > 0 &&
+                      {previewData &&
+                        previewData[0] &&
+                        previewData[0].linksToWebsites &&
+                        previewData[0].linksToWebsites.linkData &&
+                        previewData[0].linksToWebsites.linkData.length > 0 &&
                         previewData[0].linksToWebsites.linkData.map(function (
                           data,
                           i
@@ -335,7 +543,10 @@ class PreviewTab extends React.Component {
                       alt="Photo"
                       className="img-square"
                       style={{ width: "100px" }}
-                      src={agentData.logo_url || "public/assets/images/dummy-logo.png"}
+                      src={
+                        agentData.logo_url ||
+                        "public/assets/images/dummy-logo.png"
+                      }
                     />
                   </div>
                   <div className="col-md-8 text-center">
@@ -354,21 +565,21 @@ class PreviewTab extends React.Component {
                     {agentData.website_url}
                     <br />
 
-                    {previewData && previewData[0] &&
+                    {previewData &&
+                      previewData[0] &&
                       previewData[0].street_address}
-                    ,{" "}
-                    {previewData && previewData[0] && previewData[0].zipcode}
-                    ,
-                    {previewData && previewData[0] &&
-                      previewData[0].city}
-                    .
+                    , {previewData && previewData[0] && previewData[0].zipcode},
+                    {previewData && previewData[0] && previewData[0].city}.
                   </div>
                   <div className="col-md-2 text-center pl-0">
                     <img
                       alt="Photo"
                       className="img-circle"
                       style={{ width: "100px" }}
-                      src={agentData.image_url || "public/assets/images/dummy-profile.png"}
+                      src={
+                        agentData.image_url ||
+                        "public/assets/images/dummy-profile.png"
+                      }
                     />
                   </div>
                 </div>
@@ -391,10 +602,10 @@ class PreviewTab extends React.Component {
         </div>
 
         <div className="col-md-12 mt-4">
-          <a href="javascript:void(0)" className="btn btn-primary">
+          <a href="javascript:void(0)" className="btn btn-primary" onClick={this.nexttab}>
             Save
           </a>
-          <a href="javascript:void(0)" className="btn btn-primary pull-right">
+          <a href="javascript:void(0)" className="btn btn-primary pull-right" onClick={this.nexttab} >
             Next
           </a>
         </div>

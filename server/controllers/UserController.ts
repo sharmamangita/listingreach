@@ -1392,13 +1392,21 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
  			var _property: IPropertyModel = <IPropertyModel>req.body;
 			var _propertyBusiness = new PropertyBusiness();
 			console.log("_propertyimg=====",_property);
+			let array = [];
 			_property.property_ids.forEach(function(item){
 				let _id:string = item.id;
 				_propertyBusiness.update(_id,_property, (error, resultUpdate) => { 
 					if(error){
 						res.send({"error": "error in your request"});
 					} else {
-						res.send({"success": "success"});
+						_propertyBusiness.findById(_id, (error, result) => { 
+							if(error){
+								res.send({"error": "error in your request"});
+							} else {
+								array.push(result);
+								res.send({"success": "success",data:array});
+							}
+						})
 					}
 				})
 			});

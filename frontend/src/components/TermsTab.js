@@ -21,6 +21,12 @@ class TermsTab extends React.Component {
     this.state = {
       userId: "",
     };
+      this.nexttab = this.nexttab.bind(this);
+  }
+
+    nexttab(){
+    const { dispatch } = this.props.dispatchval.dispatch;
+    dispatch(userActions.termsNext());
   }
 
   render() {
@@ -40,6 +46,14 @@ class TermsTab extends React.Component {
           <input type="checkbox" />
           <span className="checkmark"></span>
         </label>
+                <div className="col-md-12 mt-4">
+          <a href="javascript:void(0)" className="btn btn-primary" onClick={this.nexttab}>
+            Save
+          </a>
+          <a href="javascript:void(0)" className="btn btn-primary pull-right" onClick={this.nexttab} >
+            Next
+          </a>
+        </div>
       </div>
     );
   }

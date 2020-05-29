@@ -30,7 +30,9 @@ export const userActions = {
     getSavedBlast,
     deleteSavedBlast,
     selectDatabase,
-    saveImages
+    saveImages,
+    preview,
+    termsNext
 };
 /* Get References */
 function getReferences(userid){
@@ -597,3 +599,21 @@ function deleteSavedBlast(id){
     function success(users) { return { type: userConstants.DELETE_SUCCESS, users } }
     function failure(error) { return { type: userConstants.DELETE_FAILURE, error } } 
 }
+
+function preview(){
+    return dispatch => {
+        dispatch(request());
+    };
+    function request() { return { type: userConstants.PREVIEW_REQUEST } }
+}
+
+function termsNext(){
+    return dispatch => {
+        dispatch(request());
+    };
+    function request() { return { type: userConstants.TERMS_REQUEST } }
+}
+
+
+
+

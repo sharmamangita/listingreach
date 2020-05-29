@@ -27,6 +27,7 @@ class PhotoTab extends React.Component {
       property_ids: [],
       template: "",
       propertyImages: [{}, {}, {}, {}],
+
       imageData: Object.assign(
         {
           url: "",
@@ -46,15 +47,16 @@ class PhotoTab extends React.Component {
 
   updateImages(e) {
     e.preventDefault();
-    //console.log('stateeeeeee',this.state);return false;
-    const { property_ids, propertyImages } = this.state;
+      var { property_ids, propertyImages } = this.state;
+
+      var newArray = propertyImages.filter(value => JSON.stringify(value) !== '{}');
+  
     console.log(
-      "property_ids, propertyImages====",
       property_ids,
-      propertyImages
+      newArray
     );
     const { dispatch } = this.props.dispatchval.dispatch;
-    dispatch(userActions.saveImages(property_ids, propertyImages));
+    dispatch(userActions.saveImages(property_ids, newArray));
     //window.scrollTo(0,0);
   }
 
@@ -78,8 +80,8 @@ class PhotoTab extends React.Component {
   }
 
   imageChange(e) {
+    // const {template} = this.state;
     const { id } = e.target;
-    console.log("id====", id);
     const configs = {
       headers: {
         ...authHeader(),
@@ -98,14 +100,19 @@ class PhotoTab extends React.Component {
         this.updateimage[id] = response.data.url;
         console.log("this.updateimage==", this.updateimage);
         this.setState({ updateimage: this.updateimage });
-
+        //if(template=="SingleProperty"){
         let imageids = {};
         imageids.imageId = response.data.imageId;
         imageids.imageUrl = response.data.url;
-
         let setimagesData = Object.assign({}, this.state);
         setimagesData.propertyImages[id] = imageids;
         this.setState(setimagesData);
+        //} else {
+        /* let imageids = {};
+            imageids.imageId = response.data.imageId;
+            imageids.imageUrl = response.data.url;*/
+
+        //}
       })
       .catch((error) => {
         //this.modelClose();
@@ -136,8 +143,9 @@ class PhotoTab extends React.Component {
 
   render() {
     const { imageData, visible, divCount, updateimage, template } = this.state;
-    console.log("this.props=====", this.props);
+   // console.log("this.state=====", this.state);
     const { previewData } = this.props;
+    console.log("previewData====",previewData);
     let images = ["", "", "", ""];
     if (updateimage && updateimage.length) {
       updateimage.forEach(function (item, i) {
@@ -336,13 +344,13 @@ class PhotoTab extends React.Component {
           <div>
             {previewData &&
               previewData.length &&
-              previewData.map(function (data, i) {
+              previewData.map(function (data, index) {
                 return (
-                  <div key={i}>
+                  <div key={index}>
                     <h4>Property Photos</h4>
                     <br />
                     <h4>
-                      <u>Upload Photo for Property 1</u>
+                      <u>Upload Photo for Property {index + 1}</u>
                     </h4>
                     <div className="row">
                       <div className="col-md-4 mb-3">
@@ -354,11 +362,19 @@ class PhotoTab extends React.Component {
                             src="../../../public/assets/images/1photo.png"
                           />{" "}
                         </div>
-
+                        <input
+                          type="file"
+                          id={index}
+                          className={"imgupload" + index}
+                          style={{ display: "none" }}
+                          onChange={this.imageChange}
+                        />
                         <div className="text-left">
                           <a
                             href="javascript:void(0)"
                             className="btn btn-primary"
+                            id={index}
+                            onClick={this.openUpload}
                           >
                             Upload Photo
                           </a>
@@ -376,7 +392,10 @@ class PhotoTab extends React.Component {
                         >
                           <img
                             className="card-img-bottom"
-                            src="../../../public/assets/images/1photo.png"
+                            src={
+                              images[index] ||
+                              "../../../public/assets/images/1photo.png"
+                            }
                             alt="image"
                             style={{ width: "100%" }}
                           />
@@ -386,132 +405,18 @@ class PhotoTab extends React.Component {
                   </div>
                 );
               }, this)}
-
-            <h4>
-              <u>Upload Photo for Property 2</u>
-            </h4>
-            <div className="row">
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <img
-                    alt="Photo"
-                    className="img-square"
-                    style={{ width: "200px" }}
-                    src="../../../public/assets/images/1photo.png"
-                  />{" "}
-                </div>
-
-                <div className="text-left">
-                  <a href="javascript:void(0)" className="btn btn-primary">
-                    Upload Photo
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-8 mb-3">
-                <div
-                  className="card"
-                  style={{
-                    width: "24rem",
-                    border: "dashed",
-                    padding: "5px",
-                    "border-color": "#ccc",
-                  }}
-                >
-                  <img
-                    className="card-img-bottom"
-                    src="../../../public/assets/images/1photo.png"
-                    alt="image"
-                    style={{ width: "100%" }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <h4>
-              <u>Upload Photo for Property 3</u>
-            </h4>
-            <div className="row">
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <img
-                    alt="Photo"
-                    className="img-square"
-                    style={{ width: "200px" }}
-                    src="../../../public/assets/images/1photo.png"
-                  />{" "}
-                </div>
-
-                <div className="text-left">
-                  <a href="javascript:void(0)" className="btn btn-primary">
-                    Upload Photo
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-8 mb-3">
-                <div
-                  className="card"
-                  style={{
-                    width: "24rem",
-                    border: "dashed",
-                    padding: "5px",
-                    "border-color": "#ccc",
-                  }}
-                >
-                  <img
-                    className="card-img-bottom"
-                    src="../../../public/assets/images/1photo.png"
-                    alt="image"
-                    style={{ width: "100%" }}
-                  />
-                </div>
-              </div>
-            </div>
-            <h4>
-              <u>Upload Photo for Property 4</u>
-            </h4>
-            <div className="row">
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <img
-                    alt="Photo"
-                    className="img-square"
-                    style={{ width: "200px" }}
-                    src="../../../public/assets/images/1photo.png"
-                  />{" "}
-                </div>
-
-                <div className="text-left">
-                  <a href="javascript:void(0)" className="btn btn-primary">
-                    Upload Photo
-                  </a>
-                </div>
-              </div>
-              <div className="col-md-8 mb-3">
-                <div
-                  className="card"
-                  style={{
-                    width: "24rem",
-                    border: "dashed",
-                    padding: "5px",
-                    "border-color": "#ccc",
-                  }}
-                >
-                  <img
-                    className="card-img-bottom"
-                    src="../../../public/assets/images/1photo.png"
-                    alt="image"
-                    style={{ width: "100%" }}
-                  />
-                </div>
-              </div>
-            </div>
             <div className="col-md-12 mt-4">
-              <a href="javascript:void(0)" className="btn btn-primary">
+              <a
+                href="javascript:void(0)"
+                className="btn btn-primary"
+                onClick={this.updateImages}
+              >
                 Save
               </a>
               <a
                 href="javascript:void(0)"
                 className="btn btn-primary pull-right"
+                onClick={this.updateImages}
               >
                 Next
               </a>

@@ -30,6 +30,7 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
     
     this.handleChangepreview = this.handleChangepreview.bind(this);
     this.handleSubmitPreviw = this.handleSubmitPreviw.bind(this);
+    this.nexttab = this.nexttab.bind(this);
   }
 
  componentWillReceiveProps(nextProps) { 
@@ -43,6 +44,11 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
         const { name, value } = e.target;
         this.setState({ [name]: value });
     }
+
+  nexttab() {
+    const { dispatch } = this.props.dispatchval.dispatch;
+    dispatch(userActions.preview());
+  }
 
     handleSubmitPreviw(e) { 
     e.preventDefault();
@@ -278,10 +284,10 @@ class UploadBlastAndBrokeragePreviewTab extends React.Component {
         </div>
 
         <div className="col-md-12 mt-4">
-          <a href="javascript:void(0)" className="btn btn-primary">
+          <a href="javascript:void(0)" className="btn btn-primary" onClick={this.nexttab}>
             Save
           </a>
-          <a href="javascript:void(0)" className="btn btn-primary pull-right">
+          <a href="javascript:void(0)" className="btn btn-primary pull-right" onClick={this.nexttab}>
             Next
           </a>
         </div>

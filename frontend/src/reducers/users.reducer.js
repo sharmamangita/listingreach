@@ -105,6 +105,11 @@ export function users(state = {}, action) {
       });
       return newState;
 
+    case userConstants.PREVIEW_REQUEST:
+       newState = objectAssign({}, state, {
+        tab: "selectdatabase",
+    });
+    return newState;
       
 
     case userConstants.PROPERTY_SUCCESS:
@@ -126,13 +131,20 @@ export function users(state = {}, action) {
         });
          return newState;
       }
-     
-      
       case userConstants.SAVEIMAGES_SUCCESS:
           newState = objectAssign({}, state, {
           tab: "preview",
+          propertyImages:action.users
       });
       return newState;
+
+
+      case userConstants.TERMS_REQUEST:
+          newState = objectAssign({}, state, {
+          tab: "payment",
+      });
+      return newState;
+      
 
      case userConstants.SAVEDBLAST_SUCCESS:
        newState = objectAssign({}, state, {
@@ -146,6 +158,7 @@ export function users(state = {}, action) {
       return {
         loading: true,
       };
+
 
     case userConstants.GETBYPAYMENTID_SUCCESS:
       newState = objectAssign({}, state, {
