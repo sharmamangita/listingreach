@@ -29,65 +29,67 @@ class SetDateTab extends React.Component {
   constructor(props) {
     super(props);
     this.navId = "";
-   
+
     this.state = {
-     calendarWeekends: false,
+      calendarWeekends: false,
       calendarEvents: [ // initial event data
-      { title: 'Event Now', start: new Date() }
+        { title: 'Event Now', start: new Date() }
       ]
     };
     let user = JSON.parse(localStorage.getItem("user"));
-    if(user && user.userId &&  this.props && this.props.dispatchval){
-     
-       const { dispatch } = this.props.dispatchval.dispatch;
-      dispatch(userActions.getById(user.userId));      
+    if (user && user.userId && this.props && this.props.dispatchval) {
+
+      const { dispatch } = this.props.dispatchval.dispatch;
+      dispatch(userActions.getById(user.userId));
     }
     this.toggleWeekends = this.toggleWeekends.bind(this);
     this.gotoPast = this.gotoPast.bind(this);
-    this.handleDateClick=this.handleDateClick.bind(this);
-    this.submitdata=this.submitdata.bind(this);
+    this.handleDateClick = this.handleDateClick.bind(this);
+    this.submitdata = this.submitdata.bind(this);
   }
-  toggleWeekends(){
+  toggleWeekends() {
     this.setState({ // update a property
       calendarWeekends: !this.state.calendarWeekends
     })
   }
 
-  gotoPast (){
+  gotoPast() {
     let calendarApi = this.calendarComponentRef.current.getApi()
     calendarApi.gotoDate('2000-01-01') // call a method on the Calendar object
   }
 
-  handleDateClick (arg) {
+  handleDateClick(arg) {
     if (confirm('Would you like to add an blast to ' + arg.dateStr + ' ?')) {
-     
+
       if (arg.dateStr) {
-       
-        this.submitdata(arg.dateStr);
-         this.setState({  // add new event data
+
+        //    this.submitdata(arg.dateStr);
+        this.setState({  // add new event data
+          scheduledDate: arg.dateStr,
           calendarEvents: this.state.calendarEvents.concat({ // creates a new array
             title: 'New Event',
             start: arg.date,
             allDay: arg.allDay
           })
-        }) 
-      } 
+        })
+      }
     }
   }
-  submitdata(data){
-     const { dispatch } = this.props.dispatchval.dispatch;
-     console.log("this.props.blast_id=====",this.props)
-     console.log("blast_id=====",dispatch)
-     var blast_id='';
-     if(this.props.uploadBlast && this.props.uploadBlast.blastData){
-      blast_id=this.props.uploadBlast.blastData._id;
-      console.log("blast_id===",blast_id);
-      dispatch(userActions.saveCalenderData(data,blast_id));
-     }
-     
+  submitdata(data) {
+    const { dispatch } = this.props.dispatchval.dispatch;
+    console.log("this.props.blast_id=====", this.props)
+    console.log("blast_id=====", dispatch)
+    var blast_id = '';
+    const { scheduledDate } = this.state;
+    if (this.props.uploadBlast && this.props.uploadBlast.blastData) {
+      blast_id = this.props.uploadBlast.blastData._id;
+      console.log("blast_id===", blast_id);
+      dispatch(userActions.saveCalenderData(scheduledDate, blast_id));
+    }
+
   }
   render() {
-    const { calendarWeekends,calendarEvents} = this.state;
+    const { calendarWeekends, calendarEvents } = this.state;
     return (
       <div
         className="tab-pane fade mt-2"
@@ -99,27 +101,44 @@ class SetDateTab extends React.Component {
         <h4>Set Date</h4>
         <p>Choose date for emailing the Blast.</p>
         <div className='demo-app'>
-        <div className='demo-app-top'>
-          <button onClick={ this.toggleWeekends }>toggle weekends</button>&nbsp;
-          <button onClick={ this.gotoPast }>go to a date in the past</button>&nbsp;
+          <div className='demo-app-top'>
+            <button onClick={this.toggleWeekends}>toggle weekends</button>&nbsp;
+          <button onClick={this.gotoPast}>go to a date in the past</button>&nbsp;
           (also, click a date/time to add an event)
         </div>
-        <div className='demo-app-calendar'>
-          <FullCalendar
-            defaultView="dayGridMonth"
-            header={{
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-            }}
-            plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
-            ref={ this.calendarComponentRef }
-            weekends={ this.state.calendarWeekends }
-            events={ this.state.calendarEvents }
-            dateClick={ this.handleDateClick }
+          <div className='demo-app-calendar'>
+            <FullCalendar
+              defaultView="dayGridMonth"
+              timeZone="UTC"
+              header={{
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+              }}
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              ref={this.calendarComponentRef}
+              weekends={this.state.calendarWeekends}
+              events={this.state.calendarEvents}
+              dateClick={this.handleDateClick}
             />
+          </div>
+          <div className="col-md-12 mt-4">
+            <a
+              href="javascript:void(0)"
+              className="btn btn-primary"
+              onClick={this.submitdata}
+            >
+              Save
+            </a>
+            <a
+              href="javascript:void(0)"
+              className="btn btn-primary pull-right"
+              onClick={this.submitdata}
+            >
+              Next
+            </a>
+          </div>
         </div>
-      </div>
       </div>
     );
   }

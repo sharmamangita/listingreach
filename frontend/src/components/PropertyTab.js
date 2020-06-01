@@ -705,8 +705,8 @@ class PropertyTab extends React.Component {
         ].propertyDetails.generalPropertyInformation.pricePerSquareFoot = parseInt(
           value
         )
-          ? ""
-          : "Please enter valid number";
+            ? ""
+            : "Please enter valid number";
         break;
 
       case "buildingSize":
@@ -715,16 +715,16 @@ class PropertyTab extends React.Component {
         ].propertyDetails.generalPropertyInformation.buildingSize = parseInt(
           value
         )
-          ? ""
-          : "Please enter valid number";
+            ? ""
+            : "Please enter valid number";
         break;
 
       case "lotSize":
         errors[
           id
         ].propertyDetails.generalPropertyInformation.lotSize = parseInt(value)
-          ? ""
-          : "Please enter valid number";
+            ? ""
+            : "Please enter valid number";
         break;
 
       case "numberOfBedrooms":
@@ -733,8 +733,8 @@ class PropertyTab extends React.Component {
         ].propertyDetails.generalPropertyInformation.numberOfBedrooms = parseInt(
           value
         )
-          ? ""
-          : "Please enter valid number";
+            ? ""
+            : "Please enter valid number";
         break;
 
       case "full":
@@ -743,8 +743,8 @@ class PropertyTab extends React.Component {
         ].propertyDetails.generalPropertyInformation.numberOfBathrooms.full = parseInt(
           value
         )
-          ? ""
-          : "Please enter valid number";
+            ? ""
+            : "Please enter valid number";
         break;
 
       case "half":
@@ -753,8 +753,8 @@ class PropertyTab extends React.Component {
         ].propertyDetails.generalPropertyInformation.numberOfBathrooms.half = parseInt(
           value
         )
-          ? ""
-          : "Please enter valid number";
+            ? ""
+            : "Please enter valid number";
         break;
 
       case "propertyDetail":
@@ -766,8 +766,8 @@ class PropertyTab extends React.Component {
         errors[
           id
         ].propertyDetails.generalPropertyInformation.yearBuilt = parseInt(value)
-          ? ""
-          : "Please enter valid number";
+            ? ""
+            : "Please enter valid number";
         break;
     }
 
@@ -932,7 +932,7 @@ class PropertyTab extends React.Component {
 
       });
     }
-    
+
     this.setState(states);
   }
 
@@ -1019,7 +1019,7 @@ class PropertyTab extends React.Component {
         <p>Enter property details for sale.</p>
         <form
           className="form-a contactForm"
-          action={this.saveProperty}
+          // action={this.saveProperty}
           method="post"
           role="form"
         >
@@ -1228,8 +1228,7 @@ class PropertyTab extends React.Component {
                   cols="45"
                   rows="8"
                   onChange={(e) => this.handleChange("AgentContactInfo", e)}
-                  placeholder="Company Details"
-                ></textarea>
+                  placeholder="Company Details" />
                 <div className="validation">
                   {error.agentData.company_details}
                 </div>
@@ -1258,9 +1257,9 @@ class PropertyTab extends React.Component {
                   style={{
                     display:
                       propertyData &&
-                      propertyData.templateData &&
-                      propertyData.templateData.template_type &&
-                      propertyData.templateData.template_type ==
+                        propertyData.templateData &&
+                        propertyData.templateData.template_type &&
+                        propertyData.templateData.template_type ==
                         "MultipleProperties"
                         ? "inline"
                         : "none",
@@ -1277,11 +1276,11 @@ class PropertyTab extends React.Component {
                     style={{
                       display:
                         propertyData &&
-                        propertyData.templateData &&
-                        propertyData.templateData.template_type &&
-                        propertyData.templateData.template_type ==
+                          propertyData.templateData &&
+                          propertyData.templateData.template_type &&
+                          propertyData.templateData.template_type ==
                           "MultipleProperties" &&
-                        propertyCount < 4
+                          propertyCount < 4
                           ? "inline"
                           : "none",
                     }}
@@ -1340,9 +1339,9 @@ class PropertyTab extends React.Component {
                   style={{
                     display:
                       propertyDetails[i] &&
-                      propertyDetails[i].isOpenHouse &&
-                      propertyDetails[i].isOpenHouse.display != undefined &&
-                      propertyDetails[i].isOpenHouse.display
+                        propertyDetails[i].isOpenHouse &&
+                        propertyDetails[i].isOpenHouse.display != undefined &&
+                        propertyDetails[i].isOpenHouse.display
                         ? "inline"
                         : "none",
                   }}
@@ -1450,10 +1449,8 @@ class PropertyTab extends React.Component {
                     </thead>
                     <tbody>
                       {propertyDetails[i].isOpenHouse &&
-                        propertyDetails[i].isOpenHouse.openHouseData !=
-                          undefined &&
-                        propertyDetails[i].isOpenHouse.openHouseData.length >
-                          0 &&
+                        propertyDetails[i].isOpenHouse.openHouseData != undefined &&
+                        propertyDetails[i].isOpenHouse.openHouseData.length > 0 &&
                         propertyDetails[i].isOpenHouse.openHouseData.map(
                           function (openHouse, openHouseIndex) {
                             return (
@@ -1464,28 +1461,26 @@ class PropertyTab extends React.Component {
                                       type="text"
                                       value={openHouse.openHouseData.houseType}
                                       className="form-control form-control-lg form-control-a"
-                                      disabled={disabled}
-                                    />
+                                      disabled={disabled}                                    />
                                   ) : (
-                                    <select
-                                      className="form-control form-control-lg form-control-a"
-                                      id={i + "-" + openHouseIndex}
-                                      name="houseType"
-                                      disabled={disabled}
-                                      onChange={this.openHouseArrayChange}
-                                    >
-                                      <option value="">Select</option>
-                                      <option value="Open House">
-                                        Open House
+                                      <select
+                                        className="form-control form-control-lg form-control-a"
+                                        id={i + "-" + openHouseIndex}
+                                        name="houseType"
+                                        disabled={disabled}
+                                        onChange={this.openHouseArrayChange}                                      >
+                                        <option value="">Select</option>
+                                        <option value="Open House">
+                                          Open House
                                       </option>
-                                      <option value="Broker Open">
-                                        Broker Open
+                                        <option value="Broker Open">
+                                          Broker Open
                                       </option>
-                                      <option value="Agent Tour">
-                                        Agent Tour
+                                        <option value="Agent Tour">
+                                          Agent Tour
                                       </option>
-                                    </select>
-                                  )}
+                                      </select>
+                                    )}
                                 </td>
                                 <td>
                                   <input
@@ -1697,8 +1692,7 @@ class PropertyTab extends React.Component {
                         onChange={(e) =>
                           this.handleChange("propertyAddress", e)
                         }
-                        id={i}
-                      >
+                        id={i}                      >
                         <option>Alabama</option>
                         <option>Alaska</option>
                         <option>Arizona</option>
@@ -1770,9 +1764,9 @@ class PropertyTab extends React.Component {
                   style={{
                     display:
                       propertyDetails[i] &&
-                      propertyDetails[i].mlsNumber &&
-                      propertyDetails[i].mlsNumber.display != undefined &&
-                      propertyDetails[i].mlsNumber.display
+                        propertyDetails[i].mlsNumber &&
+                        propertyDetails[i].mlsNumber.display != undefined &&
+                        propertyDetails[i].mlsNumber.display
                         ? "flex"
                         : "none",
                   }}
@@ -1830,7 +1824,6 @@ class PropertyTab extends React.Component {
                             Amelia Island-Nassau County Real Estate Agent List
                           </option>
                           <option>Bartow Real Estate Agent List</option>
-
                           <option>
                             Bonita Springs-Estero Real Estate Agent List
                           </option>
@@ -1845,7 +1838,6 @@ class PropertyTab extends React.Component {
                           <option>
                             Daytona Beach Area Real Estate Agent List
                           </option>
-
                           <option>
                             Dixie Gilchrist Levy Counties Real Estate Agent List
                           </option>
@@ -1972,7 +1964,6 @@ class PropertyTab extends React.Component {
                               .pricePerSquareFoot
                           }
                         />
-
                         <div className="input-group-append">
                           <span className="input-group-text">/sqft</span>
                         </div>
@@ -2005,7 +1996,6 @@ class PropertyTab extends React.Component {
                               .buildingSize
                           }
                         />
-
                         <div className="input-group-append">
                           <span className="input-group-text">/sqft</span>
                         </div>
@@ -2125,7 +2115,6 @@ class PropertyTab extends React.Component {
                                 .full}
                           </div>
                         </div>
-
                         <div className="input-group mb-3 col-md-6">
                           <input
                             type="text"
@@ -2238,7 +2227,6 @@ class PropertyTab extends React.Component {
                       </div>
                     </div>
                   </div>
-
                   <div className="col-md-4 mb-3">
                     <div className="form-group">
                       <select
@@ -2249,14 +2237,13 @@ class PropertyTab extends React.Component {
                         style={{
                           display:
                             propertyDetails[i] &&
-                            propertyDetails[i].generalPropertyInformation &&
-                            propertyDetails[i].generalPropertyInformation.garage
+                              propertyDetails[i].generalPropertyInformation &&
+                              propertyDetails[i].generalPropertyInformation.garage
                               ? "inline"
                               : "none",
                         }}
                         id={i}
-                        className="form-control form-control-lg form-control-a"
-                      >
+                        className="form-control form-control-lg form-control-a" >
                         <option value="">-- Select Garage Size --</option>
                         <option label="1 Car">1 Car</option>
                         <option label="2 Car">2 Car</option>
@@ -2281,13 +2268,13 @@ class PropertyTab extends React.Component {
                       <textarea
                         name="propertyDetail"
                         className="form-control"
+                        value={propertyDetails && propertyDetails[i].propertyDetail}
                         cols="45"
                         rows="8"
                         placeholder="Property Details"
                         id={i}
                         onChange={(e) => this.handleChange("propertyDetail", e)}
                       >
-                        {propertyDetails && propertyDetails[i].propertyDetail}
                       </textarea>
                     </div>
                     <div className="validation">
@@ -2329,9 +2316,9 @@ class PropertyTab extends React.Component {
                   style={{
                     display:
                       propertyDetails &&
-                      propertyDetails[i].linksToWebsites &&
-                      propertyDetails[i].linksToWebsites.display != undefined &&
-                      propertyDetails[i].linksToWebsites.display
+                        propertyDetails[i].linksToWebsites &&
+                        propertyDetails[i].linksToWebsites.display != undefined &&
+                        propertyDetails[i].linksToWebsites.display
                         ? "inline"
                         : "none",
                   }}
@@ -2359,7 +2346,6 @@ class PropertyTab extends React.Component {
                           errors[i].propertyDetails.linksToWebsites.url}
                       </div>
                     </div>
-
                     <div className="col-md-5 mb-3">
                       <div className="form-group">
                         <label>Anchor Text</label>
@@ -2407,9 +2393,9 @@ class PropertyTab extends React.Component {
                     <tbody>
                       {propertyDetails[i].linksToWebsites &&
                         propertyDetails[i].linksToWebsites.linkData !=
-                          undefined &&
+                        undefined &&
                         propertyDetails[i].linksToWebsites.linkData.length >
-                          0 &&
+                        0 &&
                         propertyDetails[i].linksToWebsites.linkData.map(
                           function (linkData, linkIndex) {
                             return (
