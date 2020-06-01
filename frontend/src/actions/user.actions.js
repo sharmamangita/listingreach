@@ -209,7 +209,6 @@ function register(user) {
             },
             error => {
                 dispatch(failure(error.toString()));
-                dispatch(alertActions.error('This email address is already added, please try with another email.'));
             }
         );
     };

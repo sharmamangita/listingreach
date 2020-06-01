@@ -1553,11 +1553,9 @@ footer .credits {
 .form-a #sendmessage {
   color: #EE8C3A;
   border: 1px solid #000;
-<<<<<<< Updated upstream
+
   display: block;
-=======
-  display: none;
->>>>>>> Stashed changes
+
   text-align: center;
   padding: 15px;
   font-weight: 600;
@@ -1566,11 +1564,9 @@ footer .credits {
 
 .form-a #errormessage {
   color: red;
-<<<<<<< Updated upstream
+
   display: block;
-=======
-  display: none;
->>>>>>> Stashed changes
+
   border: 1px solid red;
   text-align: center;
   padding: 15px;

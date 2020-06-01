@@ -111,8 +111,8 @@ class PaymentTab extends React.Component {
           <tbody>
             
              {associations &&
-                associations.map(function (result, i) {
-                  return (
+                associations.map((result, i) =>(                 
+                  i == 0 ?
                     <tr key={i}>
                     <td>{i+1}</td>
                       <td>Blast Type {blast_type} -{result.association.name}</td>
@@ -120,9 +120,15 @@ class PaymentTab extends React.Component {
                         ${per_email_blast_price}
                       </td>
                     </tr>
-                   
-                  );
-                })}
+                    : <tr>
+                    <td></td>
+                      <td>Additional-{result.association.name}</td>
+                      <td>
+                        ${additional_email_blast_price}
+                      </td>
+                    </tr>
+                ))
+                }
             <tr>
               <td></td>
               <td class="text-right">Invoice Total</td>
