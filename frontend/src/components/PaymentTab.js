@@ -54,16 +54,23 @@ class PaymentTab extends React.Component {
     if(this.props.dataBaseData && this.props.blastsettingData){
       per_email_blast_price =this.props.blastsettingData[0].per_email_blast_price;
       additional_email_blast_price =this.props.blastsettingData[0].additional_email_blast_price;
-      invoiveTotal=per_email_blast_price+additional_email_blast_price;
+      
       blast_type=this.props.dataBaseData.blast_type;
-      console.log("createdOn====",this.props.dataBaseData.associations);
       associations=this.props.dataBaseData.associations;
+      console.log("associations====",associations.length);
+      associations.forEach(function(item){
+        if(associations.length>1){
+          invoiveTotal=per_email_blast_price+(additional_email_blast_price*associations.length);
+        }else{
+          invoiveTotal=per_email_blast_price;
+        }
+      });
        var downloadLink=
         (
         <CommonDownload
           dispatchval = {this.dispatchval}
           dataBaseData={this.props.dataBaseData}
-          total= {this.props.blastsettingData[0].per_email_blast_price}
+          total= {invoiveTotal}
         />
       );
     }
@@ -103,15 +110,25 @@ class PaymentTab extends React.Component {
           </thead>
           <tbody>
             
-            { associations && associations.map((result) => (
-                   <tr>
-                    <td>1</td>
-                    <td>Blast Type ${blast_type} - ${result.name}</td>
-                    <td>${per_email_blast_price}</td>
-                  </tr>
-                ))
-            }
-            
+             {associations &&
+                associations.map(function (result, i) {
+                  return (
+                    <tr key={i}>
+                    <td>{i+1}</td>
+                      <td>Blast Type {blast_type} -{result.association.name}</td>
+                      <td>
+                        ${per_email_blast_price}
+                      </td>
+                    </tr>
+                   
+                  );
+                })}
+            <tr>
+              <td></td>
+              <td class="text-right">Invoice Total</td>
+              <td>${invoiveTotal}</td>
+            </tr> 
+              
           </tbody>
         </table>
         <br />
