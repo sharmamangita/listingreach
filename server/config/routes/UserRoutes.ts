@@ -36,7 +36,7 @@ class UserRoutes {
         router.put("/userUpdate", controller.updateUser);
         router.post("/users/getReferences", controller.getReferences);
         router.post("/users/saveAgents",controller.saveAgents);
-        router.post("/users/savePayment",controller.savePayment);
+        router.post("/users/savePayment/:blastId",controller.savePayment);
         router.get("/users/getPayment/:_id", controller.getPayment);
         router.post("/saveBlastCalender/:blastId", controller.saveBlastCalender);
 
@@ -50,6 +50,9 @@ class UserRoutes {
         router.get("/users/getSavedBlast/:agentId",controller.getSavedBlast);
         router.get("/users/deleteSavedBlast/:id",controller.deleteSavedBlast);
         router.post("/users/saveImages",controller.saveImages);
+
+        router.post("/saveBlastCalender/:blastId",controller.saveBlastCalender);
+
         
 
         
