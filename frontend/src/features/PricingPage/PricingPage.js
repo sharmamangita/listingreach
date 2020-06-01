@@ -4,22 +4,44 @@ import { connect } from "react-redux";
 import Select from "react-select";
 import config from "config";
 import { Alert } from "reactstrap";
-import { adminActions } from '../../actions';
+
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
-import { userActions } from "../../actions";
+import { adminActions } from '../../actions';
 const Entities = require('html-entities').XmlEntities;
 const entities = new Entities();
 class PricingPage extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+	      blastsettings: Object.assign({
+	        _id: '',
+	        per_email_blast_price: '',
+	        additional_email_blast_price: ''
+	      }, this.props.blastsettings),
+	      submitted: false,
+	    };
 	}
-
+	componentWillReceiveProps(nextProps) {
+	    if ((nextProps.blastsettings != undefined && nextProps.blastsettings)) {
+	      this.propsDataupdate(nextProps.blastsettings);
+	    }
+	}
+	propsDataupdate(data) {
+	    let states = Object.assign({}, this.state);
+	    let propsData = data;
+	    if ((propsData != undefined && propsData)) {
+	      states.blastsettings = propsData;
+	      this.setState({ blastsettings: states.blastsettings });
+	    }
+	}
 	componentWillMount() {
+		this.props.dispatch(adminActions.getBlastSettings());
 		window.scrollTo(0,0);
 	}
 	
   	render() {
-    
+    const {blastsettings } = this.state;
+    console.log("blastsettings====",blastsettings);
     return (
 		<div>
 			<section className="intro-single">
@@ -54,7 +76,7 @@ class PricingPage extends React.Component {
 						 
 							<p className="color-text-a">
 							Databases at ListingReach.com are broken down by “board affiliation”.
-							Email a listing to the database of your choice for only $19.95. Add additional databases to your blast for only $15.00. Pricing is per blast.</p>
+							Email a listing to the database of your choice for only ${blastsettings.per_email_blast_price}. Add additional databases to your blast for only ${blastsettings.additional_email_blast_price}. Pricing is per blast.</p>
 
 							<p className="color-text-a">
 							It is always free to receive our listing alerts. Click “receive blasts” above to start receiving yours today.</p>
@@ -75,11 +97,11 @@ class PricingPage extends React.Component {
 
 function mapStateToProps(state) {
   const { alert,users,admins } = state;
-  const { plan } = admins;
+  const { blastsettings } = admins;
   return {
     alert,
     users,
-     plan
+    blastsettings
    
   };
 }

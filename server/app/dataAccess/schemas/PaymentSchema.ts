@@ -20,7 +20,7 @@ class PaymentSchema {
                 required: true
             },
             invoice_id : {
-                type: String
+                type: Number
                 
             },
             paymentID : {

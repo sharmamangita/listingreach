@@ -527,7 +527,7 @@ function savePayment(payment,blastId){
             user => { 
             dispatch(success());
             if(user.success){
-                dispatch(alertActions.success(user.success));
+                history.push('/BillingPage');
                 window.scrollTo(0,0);
             } else {
                   dispatch(alertActions.error(user.error));

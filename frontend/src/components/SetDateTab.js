@@ -63,11 +63,11 @@ class SetDateTab extends React.Component {
 
       if (arg.dateStr) {
 
-        //    this.submitdata(arg.dateStr);
+        this.submitdata(arg.dateStr);
         this.setState({  // add new event data
           scheduledDate: arg.dateStr,
           calendarEvents: this.state.calendarEvents.concat({ // creates a new array
-            title: 'New Event',
+           
             start: arg.date,
             allDay: arg.allDay
           })
@@ -77,16 +77,12 @@ class SetDateTab extends React.Component {
   }
   submitdata(data) {
     const { dispatch } = this.props.dispatchval.dispatch;
-    console.log("this.props.blast_id=====", this.props)
-    console.log("blast_id=====", dispatch)
     var blast_id = '';
     const { scheduledDate } = this.state;
     if (this.props.uploadBlast && this.props.uploadBlast.blastData) {
       blast_id = this.props.uploadBlast.blastData._id;
-      console.log("blast_id===", blast_id);
       dispatch(userActions.saveCalenderData(scheduledDate, blast_id));
     }
-
   }
   render() {
     const { calendarWeekends, calendarEvents } = this.state;
