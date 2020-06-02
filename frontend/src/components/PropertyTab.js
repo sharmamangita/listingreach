@@ -1,6 +1,7 @@
 import React from "react";
 import { userActions } from "../actions";
 import { Alert } from "reactstrap";
+import config from 'config';
 import { globalData } from '../constants/data.constants';
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
@@ -12,6 +13,7 @@ class PropertyTab extends React.Component {
     this.navId = "";
     this.openHouse = [];
     this.linksToWebsites = [];
+
     this.propertyError = [
       {
         properties: {
@@ -115,6 +117,7 @@ class PropertyTab extends React.Component {
       blast_id: "",
       templateId: "",
       disabled: true,
+      submitted: false,
       alert: {
         alertIsOpenHouse: false,
         alertlink: false,
@@ -487,6 +490,7 @@ class PropertyTab extends React.Component {
 
       case "propertyDetail":
         states.properties[id][name] = value;
+
         this.setState(states);
         break;
 
@@ -527,8 +531,8 @@ class PropertyTab extends React.Component {
 
   //propsDataupdate(data, agentData, profile, images) {
   propsDataupdate(data) {
+
     let states = Object.assign({}, this.state);
-    console.log("daaaaatataaaaa ", data)
     if (data && data.blastData) {
       states.blast_id = data.blastData._id;
     }
@@ -537,6 +541,9 @@ class PropertyTab extends React.Component {
     }
     if (data && data.blast_id) {
       states.blast_id = data.blast_id;
+    }
+    if (data && data.agentData) {
+      states.agentData= data.agentData;
     }
     if (data && data.saveBlastData) {
       let states = Object.assign({}, this.state);
@@ -609,13 +616,10 @@ class PropertyTab extends React.Component {
     }
 
     this.setState(states);
+    console.log("states====",states);
   }
 
-  componentDidMount() {
-    // var user = JSON.parse(localStorage.getItem("user"));
-    // console.log("user", this.props);
-    // this.props.dispatchval.dispatch.dispatch(userActions.getById(user.userId));
-  }
+  
 
   saveProperty(event) {
     event.preventDefault();
@@ -726,7 +730,7 @@ class PropertyTab extends React.Component {
           <div className="row">
             <div className="col-md-12 mb-3">
               <div className="form-group">
-                <label className="required">
+                <label>
                   Headline Text (Hint: Do NOT enter an address or date here):
                 </label>
                 <input
@@ -772,14 +776,15 @@ class PropertyTab extends React.Component {
     );
   }
   renderAgent() {
-    const { agentData, error, submitted } = this.state;
+    const { agentData, error ,submitted } = this.state;
+    console.log("agentData==11===",agentData);
     const { profile } = this.props;
     let profilepc = "";
-    if (profile && profile.firstName && agentData && !agentData.name) {
-      agentData.name = profile.firstName + " " + profile.lastName;
+    if (agentData && !agentData.name) {
+      agentData.name =agentData.name;
     }
     if (profile && agentData && !agentData.email) {
-      agentData.email = profile.email;
+      agentData.email = agentData.email;
     }
     if (agentData && agentData.image_url) {
       profilepc = `${config.uploadapiUrl}/uploads/${agentData.image_url}`;

@@ -30,7 +30,8 @@ export const userService = {
     deleteSavedBlast,
     selectDatabase,
     saveImages,
-	saveCalenderData
+	saveCalenderData,
+    getPreviewhtml
 };
 
 function login(email, password) {
@@ -374,4 +375,19 @@ function saveCalenderData(data,blastId){
     }).catch(this.handleError);
        
 }
+
+
+function getPreviewhtml(id){
+    const requestOptions = {
+            method: 'GET',
+            headers: authHeader()
+        };
+    return fetch(`${config.apiUrl}/users/getPreviewhtml/${id}`, requestOptions).then(handleResponse)
+    .then(user => {
+        return user;
+    }).catch(this.handleError);
+}
+
+
+
 

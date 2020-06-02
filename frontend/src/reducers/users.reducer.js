@@ -59,6 +59,7 @@ export function users(state = {}, action) {
         loading: true,
       });
       return newState;
+
     case userConstants.REVIEWUPDATE_SUCCESS:
       newState = objectAssign({}, state);
       return newState;
@@ -73,6 +74,7 @@ export function users(state = {}, action) {
         loading: true,
       });
       return newState;
+
     case userConstants.AGENT_DATABASE_SUCCESS:
       newState = objectAssign({}, state, {
         loading: true,
@@ -104,6 +106,7 @@ export function users(state = {}, action) {
         tab: "setDate",
       });
       return newState;
+
     case userConstants.SELECTSETDATE_SUCCESS:
       newState = objectAssign({}, state, {
         tab: "terms",
@@ -112,12 +115,12 @@ export function users(state = {}, action) {
         dataBaseData:action.users.dataBaseData
       });
       return newState;
+
     case userConstants.PREVIEW_REQUEST:
        newState = objectAssign({}, state, {
         tab: "selectdatabase",
     });
     return newState;
-      
 
     case userConstants.PROPERTY_SUCCESS:
       let tab = '';
@@ -128,8 +131,8 @@ export function users(state = {}, action) {
           action.users[0].templates.length && 
           action.users[0].templates[0] && 
           action.users[0].templates[0].template_type=="UploadYourOwnBlast"){
-          tab = "uploadblastpreview";
-        } else{
+         // tab = "preview";
+        } else {
           tab="photo";
         }
         newState = objectAssign({}, state, {
@@ -138,12 +141,22 @@ export function users(state = {}, action) {
         });
          return newState;
       }
+
+
       case userConstants.SAVEIMAGES_SUCCESS:
           newState = objectAssign({}, state, {
-          tab: "preview",
           propertyImages:action.users
       });
       return newState;
+
+      case userConstants.GETPREVIEW_SUCCESS:
+           newState = objectAssign({}, state, {
+            tab: "preview",
+            praviewHtml:action.users
+        });
+       return newState;
+
+
 
 
       case userConstants.TERMS_REQUEST:
