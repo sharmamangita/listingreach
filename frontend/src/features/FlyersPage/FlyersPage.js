@@ -1,22 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import Select from "react-select";
-import config from "config";
-import { Alert } from "reactstrap";
 import ListingSubmenu from "../../components/ListingSubmenu";
-import ReactHtmlParser, {
-  processNodes,
-  convertNodeToElement,
-  htmlparser2,
-} from "react-html-parser";
 import { userActions } from "../../actions";
+import moment from "moment";
 const Entities = require("html-entities").XmlEntities;
-const entities = new Entities();
 class FlyersPage extends React.Component {
   constructor(props) {
     super(props);
-    const { dispatch } = this.props;
     var user = JSON.parse(localStorage.getItem("user"));
     this.props.dispatch(userActions.getSavedBlast(user.userId));
     this.deleteSavedBlast = this.deleteSavedBlast.bind(this);
@@ -26,16 +17,19 @@ class FlyersPage extends React.Component {
     window.scrollTo(0, 0);
     //$('#example').DataTable();
   }
-
-  deleteSavedBlast(event){
-  	const {id} = event.target;
-  	if (window.confirm("Are you sure you wish to delete this record?")){
-  		const { dispatch } = this.props;
-  		this.props.dispatch(userActions.deleteSavedBlast(id));
-  	}
+  createdDate(createdOn) {
+		var expDate = new moment(createdOn, "YYYY-MM-DD");
+		var created = moment(expDate).format("DD-MM-YYYY");
+		return created;
+	}
+  deleteSavedBlast(event) {
+    const { id } = event.target;
+    if (window.confirm("Are you sure you wish to delete this record?")) {
+      this.props.dispatch(userActions.deleteSavedBlast(id));
+    }
   }
 
-  
+
 
   componentWillReceiveProps(nextProps) {
     console.log("nextProps==3535=====", nextProps);
@@ -66,8 +60,7 @@ class FlyersPage extends React.Component {
             <table
               id="example"
               className="table table-striped table-bordered"
-              style={{ width: "100%" }}
-            >
+              style={{ width: "100%" }}            >
               <thead>
                 <tr>
                   <th>Flyer ID</th>
@@ -82,24 +75,20 @@ class FlyersPage extends React.Component {
                 {savedBlast &&
                   savedBlast.map(function (data, i) {
                     return (
-                      <tr>
+                      <tr key={data.id}>
                         <td>
                           {data.status && data.status == "Draft" ? (
-                            <Link
-                              to={{
-                                pathname: "/CreateFlyerPage",
-                                savedProps: {
-                                  moveTab: "property",
-                                  blast_id:data.id
-                                },
-                              }}
-                            >
-                              {" "}
-                              LR00{i + 1}
+                            <Link to={{
+                              pathname: "/CreateFlyerPage",
+                              savedProps: {
+                                moveTab: "property",
+                                blast_id: data.id
+                              }
+                            }} >
+                              {data.id}
                             </Link>
-                          ) : (
-                            "LR00" + i + 1
-                          )}
+                          ) : data.id
+                          }
                         </td>
                         <td>
                           {data.subject.length && data.subject[0].headline
@@ -112,7 +101,7 @@ class FlyersPage extends React.Component {
                             ? "$" + data.payment[0].amount
                             : "---"}
                         </td>
-                        <td>{data.createdon}</td>
+                        <td>{this.createdDate(data.createdon)}</td>
                         <td> {data.status} </td>
                         <td>
                           {data.status && data.status == "Draft" ? (
@@ -122,7 +111,7 @@ class FlyersPage extends React.Component {
                                   pathname: "/CreateFlyerPage",
                                   savedProps: {
                                     moveTab: "property",
-                                    blast_id:data.id
+                                    blast_id: data.id
                                   },
                                 }}
                               >

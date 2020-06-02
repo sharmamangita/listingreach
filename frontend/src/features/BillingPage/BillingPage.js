@@ -13,6 +13,8 @@ const entities = new Entities();
 class BillingPage extends React.Component {
   constructor(props) {
 	    super(props);
+	    var user = JSON.parse(localStorage.getItem("user"));
+	    this.props.dispatch(userActions.getPayment(user.userId));
 	    this.state = {
 	    	payment: Object.assign({
 	        InvoiceId: '',
@@ -39,7 +41,7 @@ class BillingPage extends React.Component {
 	}
   	componentDidMount(){
 	  	const { dispatch } = this.props;
-		this.props.dispatch(userActions.getPayment('2')); 
+		 
 	}
 	createdDate(createdOn) {
    		var expDate = new moment(createdOn, "YYYY-MM-DD");

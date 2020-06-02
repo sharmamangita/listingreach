@@ -209,7 +209,6 @@ function register(user) {
             },
             error => {
                 dispatch(failure(error.toString()));
-                dispatch(alertActions.error('This email address is already added, please try with another email.'));
             }
         );
     };
@@ -528,7 +527,7 @@ function savePayment(payment,blastId){
             user => { 
             dispatch(success());
             if(user.success){
-                dispatch(alertActions.success(user.success));
+                history.push('/BillingPage');
                 window.scrollTo(0,0);
             } else {
                   dispatch(alertActions.error(user.error));

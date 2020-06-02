@@ -13,7 +13,7 @@ class Common {
 	static STUDYING_ID: string ='599a92797c086869cba64408';
 	static INTERCOM_ACCESS_TOKEN: string = process.env.INTERCOM_ACCESS_TOKEN || 'dG9rOmJmNGQ2ZWViX2I1ZmVfNDE2Zl9iZGFlXzY3ODNiY2UxZGYzMzoxOjA=';
 
-    static SEND_FROM_EMAIL: string ="ds771343@gmail.com";
+    static SEND_FROM_EMAIL: string ="info@76east.com";
     static ADMIN_EMAIL: string = "info@76east.com";
 
     static SITE_URL: string = "http://66.235.194.119:3006";
@@ -26,7 +26,7 @@ class Common {
         port: 587,
         auth: {
         user: 'info@76east.com',
-           pass: 'seventysix13!'
+           pass: '76#Phase7!@#'
         },
         tls: {
             rejectUnauthorized: false
