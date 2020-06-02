@@ -155,11 +155,11 @@ function contactForm(fullname,email,phone,message){
     }).catch(this.handleError);
 	}
 /* contact form */
-function emailPreviewTemplate(email,propertyDetails){
+function emailPreviewTemplate(email,blast_id){
 		const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({email,propertyDetails})
+        body: JSON.stringify({email,blast_id})
     };
     return fetch(`${config.apiUrl}/users/emailPreviewTemplate`, requestOptions).then(handleResponse)
     .then(user => {
@@ -243,7 +243,6 @@ var user = {"userid":uid};
 
 
 function getTemplateOrPropertydata(blast_id) {
-   console.log("test====",JSON.stringify(blast_id));
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -269,9 +268,6 @@ function designTemplate(template_type,userId){
     };
     return fetch(`${config.apiUrl}/users/saveDesignTemplate`, requestOptions).then(handleResponse);    
 } 
-
-
-
 
 
 function saveProperty(property,agentData,Email,blastHeadline,templateId,blast_id){

@@ -49,11 +49,11 @@ class PreviewTab extends React.Component {
 
   handleSubmitPreviw(e) {
     e.preventDefault();
-    const { previewData, propertyImages } = this.props;
+    const { previewData, propertyImages,blast_id} = this.props;
     const { email } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
-    if (email && previewData) {
-      dispatch(userActions.emailPreviewTemplate(email, propertyImages));
+    if (email && blast_id) {
+      dispatch(userActions.emailPreviewTemplate(email, blast_id));
       //window.scrollTo(0,0);
       this.setState({
         email: "",
@@ -77,7 +77,7 @@ class PreviewTab extends React.Component {
 
   render() {
     console.log("this.props4545======",this.props);
-    const { previewData, propertyImages,praviewHtml } = this.props;
+    const { previewData, blast_id,praviewHtml } = this.props;
     let agentData = "";
     if (previewData && previewData.length) {
       agentData = previewData[0].agentData[0].agentData;

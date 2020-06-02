@@ -115,6 +115,7 @@ class CreateFlyerPage extends React.Component {
 
 
   stateSettingsForTabs(nextProps) {
+    console.log("nextProps111====",nextProps);
     if (nextProps.blastData != undefined && nextProps.blastData) {
       let blast = {};
       blast.blastData = nextProps.blastData.data;
@@ -168,7 +169,7 @@ class CreateFlyerPage extends React.Component {
   }
 
   render() {
-    const { moveTab,praviewHtml, previewData, propertyData, uploadBlast,tabs,blast_id,propertyImages,scheduledDate, blastsettingData,dataBaseData } = this.state;
+    const { profile,moveTab,praviewHtml,agentData, previewData, propertyData, uploadBlast,tabs,blast_id,propertyImages,scheduledDate, blastsettingData,dataBaseData } = this.state;
    // disabled={tabs.selectdatabase?true:false}
    // disabled={tabs.preview?true:false}
    // disabled={tabs.photo?true:false}
@@ -260,6 +261,7 @@ class CreateFlyerPage extends React.Component {
                               previewData={previewData}
                               propertyImages={propertyImages}
                               praviewHtml={praviewHtml}
+                              blast_id={blast_id}
                             />
                         </Tab>
                  
