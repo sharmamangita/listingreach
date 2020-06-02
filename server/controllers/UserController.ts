@@ -476,10 +476,11 @@ class UserController implements IBaseController<UserBusiness> {
 
 			let agentData = property[0].agentData[0].agentData;
 
-			if (property && property.length > 1) {
-				var html = '';
-				property.forEach(function (proDta) {
-					html += `<div class="flyer-bg" style="background: #f1f1f1;">
+
+		if(property && property.length>1 ){
+			var html = '';
+			property.forEach(function(proDta){	
+						html += `<div class="flyer-bg" style="background: #f1f1f1;">
 			                     <div class="row" style="display: block;display: flex;flex-wrap: wrap;border-top: 2px solid #ccc;">
 			                        <div style="width:50%;display: block; background:#f1f1f1;height: 400px;">
 			                           <img src="http://66.235.194.119/listingreach/img/img4.jpg" alt="image" style="width:100%;height: 400px;">
@@ -1365,9 +1366,40 @@ class UserController implements IBaseController<UserBusiness> {
 
 	}
 
-	saveImages(req: express.Request, res: express.Response) {
+
+	getPreviewhtml(req: express.Request, res: express.Response) : void {
 		try {
-			var _property: IPropertyModel = <IPropertyModel>req.body;
+			const blastid = req.params.id;
+			//console.log("blastid====",blastid);
+			const blastBusiness = new BlastBusiness();
+			blastBusiness.findById(blastid, async (blastError, blast) => {
+				if (blastError) {
+					res.send(blastError);
+				} else {
+					//console.log("blast====",blast.id);
+					await blastBusiness.getEmailHTML(blast.id).then(function (HTML) {
+						if (HTML == null) {
+							res.send("Error generating email.");
+						} else {
+							//console.log("HTML======",HTML);
+							res.send({"html":HTML});
+						}
+					})
+
+				} 
+
+			})
+		
+		 } 	catch (e)  {
+            console.log(e);
+            res.send({"error": "error in your request"});
+		}
+	}
+
+	saveImages(req: express.Request, res: express.Response){
+		 try { 
+ 			var _property: IPropertyModel = <IPropertyModel>req.body;
+
 			var _propertyBusiness = new PropertyBusiness();
 			let array = [];
 			_property.property_ids.forEach(function (item) {

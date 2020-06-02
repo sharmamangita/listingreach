@@ -202,6 +202,7 @@ class UploadBlastTab extends React.Component {
     this.propsDataupdate = this.propsDataupdate.bind(this);
     this.openUpload = this.openUpload.bind(this);
     this.imageChange = this.imageChange.bind(this);
+    this.nextPage = this.nextPage.bind(this);
 
     let user = JSON.parse(localStorage.getItem("user"));
     if (user && user.userId && this.props && this.props.dispatchval) {
@@ -212,6 +213,13 @@ class UploadBlastTab extends React.Component {
 
   openUpload() {
     $("#imgupload").trigger("click");
+  }
+
+  nextPage(e){
+    const { dispatch } = this.props.dispatchval.dispatch;
+    let blast_id = this.state.blast_id;
+    dispatch(userActions.getPreviewhtml(blast_id));
+   //dispatch(userActions.getPreviewhtml('5ed5fad930de7c24bc9423d4'));
   }
 
   imageChange(e) {
@@ -1566,7 +1574,7 @@ class UploadBlastTab extends React.Component {
             <a
               href="javascript:void(0)"
               className="btn btn-primary pull-right"
-              onClick={this.saveProperty}
+              onClick={this.nextPage}
             >
               Next
             </a>

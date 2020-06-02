@@ -33,7 +33,8 @@ export const userActions = {
     saveImages,
     preview,
     termsNext,
-	saveCalenderData
+	saveCalenderData,
+    getPreviewhtml
 };
 /* Get References */
 function getReferences(userid){
@@ -613,6 +614,7 @@ function termsNext(){
     };
     function request() { return { type: userConstants.TERMS_REQUEST } }
 }
+
 function saveCalenderData(data,blastId){
    return dispatch => {
         dispatch(request());
@@ -625,6 +627,20 @@ function saveCalenderData(data,blastId){
     function request(users) { return { type: userConstants.SELECTSETDATE_REQUEST, users } }
     function success(users) { return { type: userConstants.SELECTSETDATE_SUCCESS, users } }
     function failure(error) { return { type: userConstants.SELECTSETDATE_FAILURE, error } } 
+}
+
+function getPreviewhtml(blastId){
+   return dispatch => {
+        dispatch(request());
+        userService.getPreviewhtml(blastId)
+            .then(
+                users => dispatch(success(users)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request(users) { return { type: userConstants.GETPREVIEW_REQUEST } }
+    function success(users) { return { type: userConstants.GETPREVIEW_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.GETPREVIEW_FAILURE, error } } 
 }
 
 

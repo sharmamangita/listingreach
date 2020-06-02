@@ -24,6 +24,7 @@ class PhotoTab extends React.Component {
       userId: "",
       updateimage: [],
       email: "",
+      blast_id:'',
       property_ids: [],
       template: "",
       propertyImages: [{}, {}, {}, {}],
@@ -43,21 +44,25 @@ class PhotoTab extends React.Component {
     this.showModal = this.showModal.bind(this);
     this.modelClose = this.modelClose.bind(this);
     this.updateImages = this.updateImages.bind(this);
+    this.nextPage = this.nextPage.bind(this);
+    
   }
 
   updateImages(e) {
     e.preventDefault();
-      var { property_ids, propertyImages } = this.state;
-
-      var newArray = propertyImages.filter(value => JSON.stringify(value) !== '{}');
-  
-    console.log(
-      property_ids,
-      newArray
-    );
+    var { property_ids, propertyImages } = this.state;
+    var newArray = propertyImages.filter(value => JSON.stringify(value) !== '{}');
     const { dispatch } = this.props.dispatchval.dispatch;
     dispatch(userActions.saveImages(property_ids, newArray));
-    //window.scrollTo(0,0);
+  }
+
+
+  nextPage(e){
+    const { dispatch } = this.props.dispatchval.dispatch;
+    let blast_id = this.state.blast_id;
+    dispatch(userActions.getPreviewhtml(blast_id));
+
+   //dispatch(userActions.getPreviewhtml('5ed5fad930de7c24bc9423d4'));
   }
 
   openUpload(e) {
@@ -71,7 +76,6 @@ class PhotoTab extends React.Component {
     for (var i = 1; i <= id; i++) {
       data.push(id);
     }
-
     this.setState({ visible: true, divCount: data });
   }
 
@@ -88,14 +92,12 @@ class PhotoTab extends React.Component {
         "content-type": "multipart/form-data",
       },
     };
-
     const formData = new FormData();
     formData.append("userid", this.state.userid);
     formData.append("myImage", e.target.files[0]);
 
     axios
       .post(`${config.uploadapiUrl}/propertyupload`, formData, configs)
-
       .then((response) => {
         this.updateimage[id] = response.data.url;
         console.log("this.updateimage==", this.updateimage);
@@ -107,15 +109,8 @@ class PhotoTab extends React.Component {
         let setimagesData = Object.assign({}, this.state);
         setimagesData.propertyImages[id] = imageids;
         this.setState(setimagesData);
-        //} else {
-        /* let imageids = {};
-            imageids.imageId = response.data.imageId;
-            imageids.imageUrl = response.data.url;*/
-
-        //}
       })
       .catch((error) => {
-        //this.modelClose();
       });
   }
 
@@ -129,23 +124,26 @@ class PhotoTab extends React.Component {
   getPropertyIds(propertyArray) {
     let array = [];
     let template = "";
+    let blast_id = '';
     propertyArray.length &&
       propertyArray.forEach(function (item) {
         array.push({ id: item.id });
         template = item.templates[0].template_type;
+        blast_id = item.blast_id;
       });
 
     let property = Object.assign({}, this.state);
     property.property_ids = array;
     property.template = template;
+    property.blast_id=  blast_id;
     this.setState(property);
   }
 
   render() {
     const { imageData, visible, divCount, updateimage, template } = this.state;
-   // console.log("this.state=====", this.state);
+    console.log("this.state=4545====", this.state);
     const { previewData } = this.props;
-    console.log("previewData====",previewData);
+    //console.log("previewData2323232====",this.props.previewData);
     let images = ["", "", "", ""];
     if (updateimage && updateimage.length) {
       updateimage.forEach(function (item, i) {
@@ -293,15 +291,22 @@ class PhotoTab extends React.Component {
                       </div>
                     );
                   }, this)}
-                  <div className="col-md-12 mt-4">
-                    <button
-                      className="btn btn-primary"
-                      onClick={this.updateImages}
-                    >
-                      {" "}
-                      Save{" "}
-                    </button>
-                  </div>
+            <div className="col-md-12 mt-4">
+              <a
+                href="javascript:void(0)"
+                className="btn btn-primary"
+                onClick={this.updateImages}
+              >
+                Save
+              </a>
+              <a
+                href="javascript:void(0)"
+                className="btn btn-primary pull-right"
+                onClick={this.nextPage}
+              >
+                Next 
+              </a>
+            </div>
                 </div>
               </div>
             </div>
@@ -416,7 +421,7 @@ class PhotoTab extends React.Component {
               <a
                 href="javascript:void(0)"
                 className="btn btn-primary pull-right"
-                onClick={this.updateImages}
+                onClick={this.nextPage}
               >
                 Next
               </a>

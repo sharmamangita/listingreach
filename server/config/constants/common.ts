@@ -1295,13 +1295,10 @@ static EMAIL_FOR_LOGIN_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
 
 
 
-static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`<!DOCTYPE html>
+static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
 <html>
    <head>
       <meta charset='UTF-8'>
-      <style>
-	
-      </style>
    </head>
    <body>
       <div class="blast-box" style=" max-width: 100%;
@@ -1313,10 +1310,10 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`<!DOCTYPE html>
          font-weight: 400;
          line-height: 1.5;
          padding: 30px;display: block;">
-         <div class="row" style="display: block;display: flex;flex-wrap: wrap;">
+         <div style="display: block;display: flex;flex-wrap: wrap;margin-right:0;margin-left:0">
             <div style="display: block;width:66%;margin: auto;">
                <div class="border2" style="display: block;border: 3px solid #eee;">
-                  <div class="row" style="display: block;display: flex;flex-wrap: wrap;">
+                  <div style="display: block;display: flex;flex-wrap: wrap;">
                      <div class="mb-3 mt-3 text-right" style="display: block;width:30%;text-align: right !important; margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">					 
                         <label style="display: inline-block;
          margin-bottom: 0.5rem;">From:	</label>
@@ -1335,28 +1332,22 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`<!DOCTYPE html>
                </div>
                <div class="border3" style=" border: 3px solid #eee;
          border-top: 0;">
-                  <div class="row" style="display: flex;flex-wrap: wrap;">
+                  <div  style="display: flex;flex-wrap: wrap;">
                      <div class="mb-3 mt-3 ml-3" style="width:41%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
                         <i>Powered by</i>	<br>
                         <img src="http://66.235.194.119/listingreach/img/listing-reach-logo.png" alt="" class="img-a img-fluid">
                      </div>
                      <div class="mb-3 mt-3 text-right" style="width:25%;text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
                         <button class="btn btn-primary" style="background-color: #EE8C3A;
-         border: #EE8C3A;
-         color:#fff;display: inline-block;
-         font-weight: 400;
-         text-align: center;
-         white-space: nowrap;
-         vertical-align: middle;
-         -webkit-user-select: none;
-         -moz-user-select: none;
-         -ms-user-select: none;
-         user-select: none;
-         padding: 0.375rem 0.75rem;
-         font-size: 1rem;
-         line-height: 1.5;
-         border-radius: 0.25rem;
-         box-shadow 0.15s ease-in-out;">Reply to Sender</button>
+												         border: #EE8C3A;
+												         color:#fff;display: inline-block;
+												         font-weight: 400;
+												         text-align: center;
+												         user-select: none;
+												         padding: 0.375rem 0.75rem;
+												         line-height: 1.5;
+												         border-radius: 0.25rem;
+												         box-shadow 0.15s ease-in-out;">Reply to Sender</button>
                      </div>
                      <div class="mb-3 mt-3 text-right ml-3" style="width:25%;text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
                         <button class="btn btn-primary" style="background-color: #EE8C3A;
@@ -1366,19 +1357,14 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`<!DOCTYPE html>
          text-align: center;
          white-space: nowrap;
          vertical-align: middle;
-         -webkit-user-select: none;
-         -moz-user-select: none;
-         -ms-user-select: none;
-         user-select: none;
          padding: 0.375rem 0.75rem;
-         font-size: 1rem;
          line-height: 1.5;
          border-radius: 0.25rem;
          box-shadow 0.15s ease-in-out;">Forward to Associate</button>
                      </div>
                   </div>`;
 static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
-                     <div class="row mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
+                     <div class="mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
                         <div class="text-center" style="width:16%;text-align: center !important;">
                            <img alt="Photo" class="img-square" style="width:100px;" src="#companyLogo#">
                         </div>
@@ -1400,30 +1386,161 @@ static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
          font-size: 0.8rem;
          color: #fff;
          margin-top: 10px;">
-                     <div class="row" style="display: flex;flex-wrap: wrap;">
+                     <div style="display: flex;flex-wrap: wrap;">
                         <div style="width:100%">
                            This e-blast was delivered by ListingReach.com, a real estate email marketing service. The ListingReach.com service and information provided therein, while believed to be accurate, are provided "as is". ListingReach.com disclaims any and all representations, warranties, or guarantees of any kind. ListingReach.com assumes no liability for errors or omissions.
                         </div>
                      </div>
                   </div>
+
                </div>
             </div>
          </div>
       </div>
    </body>
-</html> `;						
+</html> `;	
+
+static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER:string =`
+<html>
+   <head>
+      <meta charset='UTF-8'>
+   </head>
+   <body>
+      <div class="blast-box" style=" max-width: 100%;
+         background: #fff;
+         font-family: 'Poppins', sans-serif;
+         margin: auto;
+         color: #555555;
+         font-size: 1rem;
+         font-weight: 400;
+         line-height: 1.5;
+         padding: 30px;display: block;">
+         <div style="display: block;display: flex;flex-wrap: wrap;margin-right:0;margin-left:0">
+            <div style="display: block;width:66%;margin: auto;">
+               <div class="border2" style="display: block;border: 3px solid #eee;">
+                  <div style="display: block;display: flex;flex-wrap: wrap;">
+                     <div class="mb-3 text-right" style="display: block;width:30%;text-align: right !important;margin-bottom: 1rem !important;text-align: right !important;">					 
+                        <label style="display: inline-block;
+         margin-bottom: 0.5rem;">Email Subject Line: #subject#</label>
+                     </div>
+                     <div class="mb-3 ml-3" style="width:66%; margin-left: 1rem !important;">
+                        #formLine#
+                     </div>
+                  </div>
+               </div>
+               <div class="border3" style=" border: 3px solid #eee;
+         border-top: 0;">
+                  <div  style="display: flex;flex-wrap: wrap;">
+                     <div class="mb-3 mt-3 ml-3" style="width:41%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
+                        <i>Powered by</i>	<br>
+                        <img src="http://66.235.194.119/listingreach/img/listing-reach-logo.png" alt="" class="img-a img-fluid">
+                     </div>
+                     <div class="mb-3 mt-3 text-right" style="width:25%;text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+                        <button class="btn btn-primary" style="background-color: #EE8C3A;
+												         border: #EE8C3A;
+												         color:#fff;display: inline-block;
+												         font-weight: 400;
+												         text-align: center;
+												         user-select: none;
+												         padding: 0.375rem 0.75rem;
+												         line-height: 1.5;
+												         border-radius: 0.25rem;
+												         box-shadow 0.15s ease-in-out;">Reply to Sender</button>
+                     </div>
+                     <div class="mb-3 mt-3 text-right ml-3" style="width:25%;text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+                        <button class="btn btn-primary" style="background-color: #EE8C3A;
+         border: #EE8C3A;
+         color:#fff;display: inline-block;
+         font-weight: 400;
+         text-align: center;
+         white-space: nowrap;
+         vertical-align: middle;
+         padding: 0.375rem 0.75rem;
+         line-height: 1.5;
+         border-radius: 0.25rem;
+         box-shadow 0.15s ease-in-out;">Forward to Associate</button>
+                     </div>
+                  </div>`;
+
+static PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER:string =`<div class="flyer-btm" style="background: #8c8c8c;padding: 10px;font-size: 0.8rem; color: #fff; margin-top: 10px;">
+                     <div style="display: flex;flex-wrap: wrap;">
+                        <div style="width:100%">
+                           This e-blast was delivered by ListingReach.com, a real estate email marketing service. The ListingReach.com service and information provided therein, while believed to be accurate, are provided "as is". ListingReach.com disclaims any and all representations, warranties, or guarantees of any kind. ListingReach.com assumes no liability for errors or omissions.
+                        </div>
+                     </div>
+                  </div>`;				
 
 
+static PREVIEW_EMAIL_UPLOAD_BLAST:string= Common.PREVIEW_EMAIL_UPLOAD_BLAST_HEADER+` 
+                  <div class="row" style="display: flex;flex-wrap: wrap;">
+                     <div style="width:100%;padding-right: 15px;padding-left: 15px;">
+                        <div class="flyer-header" style="display: block;overflow: hidden;
+				         background-color: #EE8C3A;
+				         color: #fff;
+				         box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(20, 19, 18, 0.1);
+				         border-top: 4px solid #EE8C3A;
+				         height: 80px;
+				         text-align: center;
+				         font-size: 28px;
+				         font-weight: bold;
+				         padding: 17px 0 10px 0;">					 
+                        </div>
+                     </div>
+                  </div>
+                  #propertyImage#
+                  <div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc;">
+                     <div class="row" style="display: flex;flex-wrap: wrap;">
+                        <div class="mt-3 mb-3 ml-3" style="position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
+                           <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $#pricePerSquareFoot# per Square Foot</h4>
+                        </div>
+                     </div>
+                     <div class="" style="">
+                        <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
+                           <label class="flyer-label" style="color: #EE8C3A;
+         font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
+                           <p>#streetAddress#, #city#, #zipCode#</p>
+                        </div>
+                        <div class="text-center" style="width:100%;text-align: center !important;">
+                           #openData#
+                        </div>
+                        <hr>
+                        <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+                           <label class="flyer-label" style="color: #EE8C3A;
+         font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">MLS#:</label>
+                           <span>#mlsNumber#</span>
+                        </div>
+                     </div>
+                  </div>
+
+`+ Common.PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER;
 
 
+static PREVIEW_EMAIL_REAL_ESTATE_BROKERAGE:string=Common.PREVIEW_EMAIL_TEMPLATE_HEADER+`
+                  <div class="row" style="display: flex;flex-wrap: wrap;">
+                     <div style="width:100%;padding-right: 15px;padding-left: 15px;">
+                        <div class="flyer-header" style="display: block;overflow: hidden;
+				         background-color: #EE8C3A;
+				         color: #fff;
+				         box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(20, 19, 18, 0.1);
+				         border-top: 4px solid #EE8C3A;
+				         height: 80px;
+				         text-align: center;
+				         font-size: 28px;
+				         font-weight: bold;
+				         padding: 17px 0 10px 0;">					 
+                        </div>
+                     </div>
+                  </div>
+                  #propertyImage#
+`+Common.PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER;
 
 static PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE:string= Common.PREVIEW_EMAIL_TEMPLATE_HEADER+`
 #multiproperty#
 `+ Common.PREVIEW_EMAIL_TEMPLATE_FOOTER;
 
-static PREVIEW_EMAIL_TEMPLATE:string =  ` 
+static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ ` 
                   <div class="row" style="display: flex;flex-wrap: wrap;">
-                     <div style="width:100%">
+                     <div style="width:100%;padding-right: 15px;padding-left: 15px;">
                         <div class="flyer-header" style="display: block;overflow: hidden;
          background-color: #EE8C3A;
          color: #fff;
@@ -1438,18 +1555,14 @@ static PREVIEW_EMAIL_TEMPLATE:string =  `
                         </div>
                      </div>
                   </div>
-                  <div class="row" style="display: block;display: flex;flex-wrap: wrap;">
-                     <div style="width:100%;display: block;">
-                        <img src="http://66.235.194.119/listingreach/img/img1.jpg" alt="image" style="width:100%;height: 400px;">
-                     </div>
-                  </div>
+                  #propertyImage#
                   <div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc;">
                      <div class="row" style="display: flex;flex-wrap: wrap;">
-                        <div class="mt-3 mb-3 ml-3" style="width:100%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">
-                           <h4 style=" background: #f1f1f1;border-bottom: 2px solid #ccc;font-size: 1.5rem;">Price: $#pricePerSquareFoot# per Square Foot</h4>
+                        <div class="mt-3 mb-3 ml-3" style="position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
+                           <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $#pricePerSquareFoot# per Square Foot</h4>
                         </div>
                      </div>
-                     <div class="row" style="">
+                     <div class="" style="">
                         <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
                            <label class="flyer-label" style="color: #EE8C3A;
          font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
@@ -1466,8 +1579,8 @@ static PREVIEW_EMAIL_TEMPLATE:string =  `
                         </div>
                         <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
                            <label class="flyer-label" style="color: #EE8C3A;
-         font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Description:</label>
-                           <span>Property details will come here...</span>				  
+         font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Detail:</label>
+                           <span>#propertDetails#</span>				  
                         </div>
                         <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
                            <label class="flyer-label" style="color: #EE8C3A;
@@ -1487,14 +1600,14 @@ static PREVIEW_EMAIL_TEMPLATE:string =  `
                            </ul>
                         </div>
                         <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+                        <label class="flyer-label" style="color: #EE8C3A;font-size: 1rem;">Links:</label>
                           #links#
                         </div>
-                        <div class="text-center" style="width:100%;text-align: center !important;">
-                           <h4 style=" background: #f1f1f1;
-         border-bottom: 2px solid #ccc;"><a href="http://66.235.194.119/listingreach" style="color: #000000;transition: all .5s ease;"><u>Click Here to Email Agent for More Information</u></a></h4>
+                        <div class="text-center" style="text-align: center!important;flex: 0 0 100%; max-width: 100%;position: relative; min-height: 1px;padding-right: 15px;padding-left: 15px;">
+                           <h4 style="background: #f1f1f1;font-size: 1.5rem;"><a href="http://66.235.194.119/listingreach" style="color: #000000;transition: all .5s ease;"><u>Click Here to Email Agent for More Information</u></a></h4>
                         </div>
                      </div>
-                  </div>`;
+                  </div>`+ Common.PREVIEW_EMAIL_TEMPLATE_FOOTER;
 
 
 
