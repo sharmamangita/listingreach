@@ -131,7 +131,7 @@ class PaymentTab extends React.Component {
                 }
             <tr>
               <td></td>
-              <td class="text-right">Invoice Total</td>
+              <td className="text-right">Invoice Total</td>
               <td>${invoiveTotal}</td>
             </tr> 
               
