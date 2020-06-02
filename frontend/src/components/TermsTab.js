@@ -40,7 +40,7 @@ class TermsTab extends React.Component {
       >
         <h4>Terms & Condition</h4>
         <p>Please read and accept Terms & Conditions.</p>
-		   <p>TERMS & CONDITIONS OF USE
+		   <div>TERMS & CONDITIONS OF USE
 
 Thank you for choosing ListingReach.com, an email marketing service designed for real estate brokers, owners, investors, tenants, managers, allied professionals and related services.  The terms ListingReach, ListingReach.com, ListingReach and ListingReach.com are to be considered the same.
 
@@ -183,7 +183,7 @@ If any provision of this Terms of Use Agreement shall be unlawful, void or unenf
 You agree that no joint venture, partnership, employment, or agency relationship exists between you and ListingReach.com as a result of this Terms of User Agreement or your use of the ListingReach.com website.<br />
 
 Prior to placing an order or using any ListingReach.com product and/or service, you agree to ListingReach.com's stated Privacy Policy (found at www.ListingReach.com) and this Terms of Use Agreement.</li>
-</ol></p>
+</ol></div>
         <label className="check">
           I Accept the Terms & Conditions
           <input type="checkbox" />

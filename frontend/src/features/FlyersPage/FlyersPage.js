@@ -113,8 +113,7 @@ class FlyersPage extends React.Component {
                                     moveTab: "property",
                                     blast_id: data.id
                                   },
-                                }}
-                              >
+                                }} >
                                 <i className="fa fa-edit"></i>
                               </Link>{" "}
                               &nbsp; &nbsp;

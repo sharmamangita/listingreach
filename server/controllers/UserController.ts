@@ -44,93 +44,93 @@ var moment = require('moment');
 var mammoth = require("mammoth");
 const fs = require('fs');
 
-var _          = require('underscore');
-var  mongoose = require('mongoose'); 
+var _ = require('underscore');
+var mongoose = require('mongoose');
 var async = require('async');
 var base64Img = require('base64-img');
 var stripe = require("stripe")(Common.STRIPESECRETKEY);
 class UserController implements IBaseController<UserBusiness> {
 	update: express.RequestHandler;
- 	//being called by client getEmailExists
+	//being called by client getEmailExists
 	getEmailExists(req: express.Request, res: express.Response): void {
 		try {
 			var query: string = req.params.query;
 			var _userBusiness = new UserBusiness();
-			_userBusiness.count({'email':{$regex : "^" + (query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')) + "$", $options: "i"}}, (error, result) => {
-				if(error){
+			_userBusiness.count({ 'email': { $regex: "^" + (query.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')) + "$", $options: "i" } }, (error, result) => {
+				if (error) {
 					console.log(error);
-					
-					res.send({"error": "error"});
+
+					res.send({ "error": "error" });
 				}
 				else {
 					res.send(JSON.stringify(result))
 				};
 			});
 		}
-		catch (e)  {
+		catch (e) {
 			console.log(e);
-			res.send({"error": "error in your request"});
+			res.send({ "error": "error in your request" });
 
 		}
 	}
 	register(req: express.Request, res: express.Response): void {
-		 try {
-            var user: IUserModel = < IUserModel > req.body.user;
-            user.createdOn = new Date();
-           
+		try {
+			var user: IUserModel = <IUserModel>req.body.user;
+			user.createdOn = new Date();
+
 			user.password = req.body.user.password;
-            user.firstName=req.body.user.firstName.toLowerCase();
-            user.roles='agents';
-            user.lastName=req.body.user.lastName.toLowerCase();
-            user.paidOn= false;
-			user.isDeleted= false;
-            var userBusiness = new UserBusiness();
-            var token = userBusiness.createToken(user);
+			user.firstName = req.body.user.firstName.toLowerCase();
+			user.roles = 'agents';
+			user.lastName = req.body.user.lastName.toLowerCase();
+			user.paidOn = false;
+			user.isDeleted = false;
+			var userBusiness = new UserBusiness();
+			var token = userBusiness.createToken(user);
 
-            userBusiness.create(user, (error, userdata) => {
-                if (error) {
-                    console.log("error==sss==", error);
-                    res.send({
-                        "error": error
-                    });
-                } else {
-                   
-                    var signupemailtemplatetouser = Common.SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER;
-                    var emailtemplate = signupemailtemplatetouser.replace(/#email#/g, userdata.email).replace(/#password#/g, userdata.password);
-                     Common.sendMail(userdata.email, Common.ADMIN_EMAIL, 'Welcome to ListingReach!', null, emailtemplate, function(error: any, response: any) {
-                        if (error) {
-                            res.send("error");
-                        }else{
-                        	res.send({ "success": "success"});
-                        }
-                    }); 
-                    res.send({ "success": "success"});
-                }
-            });
-        } catch (e) {
-             res.send({
-                "error": "error in your request"
-            });
+			userBusiness.create(user, (error, userdata) => {
+				if (error) {
+					console.log("error==sss==", error);
+					res.send({
+						"error": error
+					});
+				} else {
 
-        }
-
-    }
-	authenticate(req: express.Request, res: express.Response): void {
-        try {
-            var _user: IUserModel = <IUserModel>req.body;
-			//set the createdon to now
-            var _userBusiness = new UserBusiness();
-            _userBusiness.findOne({email: _user.email}, (error, result) => {
-                if(error) res.send({"error": "error"});
-                else {
-                	
-					if(result && result.password && result.password==_user.password ) {
-						if(result.isDeleted && result.isDeleted ===true) {
-							return res.status(401).send({"error": "Your account is no longer available. Please contact admin."});
+					var signupemailtemplatetouser = Common.SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER;
+					var emailtemplate = signupemailtemplatetouser.replace(/#email#/g, userdata.email).replace(/#password#/g, userdata.password);
+					Common.sendMail(userdata.email, Common.ADMIN_EMAIL, 'Welcome to ListingReach!', null, emailtemplate, function (error: any, response: any) {
+						if (error) {
+							res.send("error");
+						} else {
+							res.send({ "success": "success" });
 						}
-						else{
-							if(result.status=='unverified') {
-									return res.status(401).send({"error": "Your account is not active. Please contact admin."});
+					});
+					res.send({ "success": "success" });
+				}
+			});
+		} catch (e) {
+			res.send({
+				"error": "error in your request"
+			});
+
+		}
+
+	}
+	authenticate(req: express.Request, res: express.Response): void {
+		try {
+			var _user: IUserModel = <IUserModel>req.body;
+			//set the createdon to now
+			var _userBusiness = new UserBusiness();
+			_userBusiness.findOne({ email: _user.email }, (error, result) => {
+				if (error) res.send({ "error": "error" });
+				else {
+
+					if (result && result.password && result.password == _user.password) {
+						if (result.isDeleted && result.isDeleted === true) {
+							return res.status(401).send({ "error": "Your account is no longer available. Please contact admin." });
+						}
+						else {
+							if (result.status == 'unverified') {
+								return res.status(401).send({ "error": "Your account is not active. Please contact admin." });
 							} else {
 								var token = _userBusiness.createToken(result);
 								var _updateData: IUserModel = <IUserModel>req.body;
@@ -139,7 +139,7 @@ class UserController implements IBaseController<UserBusiness> {
 								var _id: string = result._id.toString();
 								var _userBusinessUpdate = new UserBusiness();
 								_userBusinessUpdate.update(_id, _updateData, (error, resultUpdate) => {
-									if(error) res.send({"error": "error", "message": "Authentication error"});//res.status(401).send({"error": "Authentication error"});
+									if (error) res.send({ "error": "error", "message": "Authentication error" });//res.status(401).send({"error": "Authentication error"});
 									else {
 										res.send({
 											userId: result._id,
@@ -147,344 +147,344 @@ class UserController implements IBaseController<UserBusiness> {
 											firstName: result.firstName,
 											lastName: result.lastName,
 											token: token,
-											roles:result.roles
+											roles: result.roles
 										});
 									}
 								});
 							}
 						}
 					} else {
-						return res.status(401).send({"error": "The username or password don't match"});
+						return res.status(401).send({ "error": "The username or password don't match" });
 					}
 				}
-            });
-        }
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
-
-        }
-    }
-    create(req: express.Request, res: express.Response): void {
-        try {
-        	var _userBusiness = new UserBusiness();
-        	_userBusiness.verifyToken(req, res,  (userData) => { 
-				var _user: IUserModel = <IUserModel>req.body;
-				
-				_user.createdOn = new Date();
-	            var _userBusiness = new UserBusiness();
-	            _userBusiness.create(_user, (error, result) => {
-	                if(error) {
-						res.send({"error": error});
-					}
-	                else res.send({"success": "success"});
-	        	}); 
-	        });
-        }
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+			});
 		}
-    }
-   
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
 
-
-updateStatus(req: express.Request, res: express.Response): void {
-	try {
-		
-       
-	} catch (e)  {
-	    console.log(e);
-	    res.send({"error": "error in your request"});
-	}
-
-}
-
-
-updateUser(req: express.Request, res: express.Response): void {
-	try {
-		var _userBusiness = new UserBusiness();
-		_userBusiness.verifyToken(req, res,  (UserData:any) => {
-			var _user: IUserModel = <IUserModel>req.body.user;
-			var _id:string = _user.id.toString();
-			_userBusiness.update(mongoose.Types.ObjectId(_id), _user, (error:any, userdata:any) => {
-				 if(error) {
-					console.log(error);
-					res.send({"error": error});
-				}
-	            else{
-	            	var _agentBusiness = new AgentBusiness()
-		        		async.parallel({
-							agentData: function(callback:any) {
-								
-								_agentBusiness.findOne({'userId':_id},(error,agentdata) => {    
-							        if(error){
-							         }
-							        else{
-							        	callback(null,agentdata);
-							        }
-							    })
-							},
-							userData: function(callback:any) {
-					        	_userBusiness.retrieve({_id:_id}, (error, result) => {
-					        		var returnObj = result.map(function(obj: any): any {
-						      		
-						            return {
-								        id: obj._id,
-								        userName:obj.userName,
-								        firstName:obj.firstName,
-								        lastName:obj.lastName,
-								        status:obj.status,
-								        email:obj.email,
-								        companyName:obj.companyName,
-								        phone:obj.phone,
-								        city:obj.city,
-								        zipcode:obj.zipcode,
-								        roles:obj.roles
-								       
-								    }
-					   			});
-					   			callback(null,returnObj);
-					        	});
-							}
-						}, function(err:any, results:any) {
-							if(err){
-								res.send({"error": "error"});
-							}
-							res.json({"status":"success","data":results});
-						});
-					
-	            	
-	        	}
-	       	}); 
-		    
-	    });
-	}
-	catch (e)  {
-	    console.log(e);
-	    res.send({"error": "error in your request"});
-	}
-}
- 
-
-    updateprofilepic(data:any,id:any, res: express.Response,flag:any): void {
-    	var _agentBusiness= new AgentBusiness();
-    	var _agent: IAgentModel = <IAgentModel >data;
-    	_agent.createdOn = new Date();
-    	var type= data.mimetype.split("/");
- 	 	var userid:string = id.toString();
-		var _id=userid;
-		_agent.userId=userid;
-		if(flag == 'logo'){
-			_agent.logo_url=data.filename;
 		}
-		else{
-			_agent.image_url=data.filename;
-		}
-		_agentBusiness.findOne({'userId':userid}, (error:any, agentresult:any) => {
-			if(agentresult!=null){
-				var _id:string = agentresult._id.toString();
-				_agentBusiness.update(_id, _agent, (error:any, resultUpdate:any) => {
-					if(error){
-					}else {
-						return res.json({profileimg:agentresult.profilePic});
-					}
-				});
-			}else{
-				_agentBusiness.create(_agent, (error, agentresultData) => {
-					if(error){
-					}else {
-					   return res.json({profileimg:agentresultData.image_url});
-					}
-				});
-			}
-			
-		});
-			
-    }
-
-
-
-   
-  
-    
-    
-	
-	
-    delete(req: express.Request, res: express.Response): void {
-    	try {
-		
-        }
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
-        }
-
-    }
-    retrieve(req: express.Request, res: express.Response): void {
-    	 try {
+	}
+	create(req: express.Request, res: express.Response): void {
+		try {
 			var _userBusiness = new UserBusiness();
-            _userBusiness.verifyToken(req, res, (userData) => {
-				_userBusiness.retrieve(req.body, (error, result) => {
-					if(error) res.send({"error": "error"});
-					else res.send(result);
-				});
-            });
-        }
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
-		}
-    }
+			_userBusiness.verifyToken(req, res, (userData) => {
+				var _user: IUserModel = <IUserModel>req.body;
 
-   
-
-    findById(req: express.Request, res: express.Response): void {
-        try {
-        	var _userBusiness = new UserBusiness();
-        	var _agentBusiness = new AgentBusiness()
-        	var _balstimageBusiness = new BlastImageBusiness()
-        	_userBusiness.verifyToken(req, res, (userdata) => {
-        		async.parallel({
-					agentData: function(callback:any) {
-						
-						_agentBusiness.retrieve({'userId':userdata.id},(error,agentdata) => {    
-					        if(error){
-					         }
-					        else{
-					        	var returnObjagent = agentdata.map(function(obj: any): any {
-				      			    return {
-								        id: obj._id,
-								        name:obj.name,
-								        email:obj.website_url,
-								        designation:obj.designation,
-								        website_url:obj.website_url,
-								        phone_number:obj.phone_number,
-								        company_details:obj.company_details,
-								        other_information:obj.other_information,
-								        image_url:obj.image_url,
-								        logo_url:obj.logo_url
-								   }
-			   					});
-					        	callback(null,returnObjagent);
-					        }
-					    })
-					},
-					imageData: function(callback:any) {
-						
-						_balstimageBusiness.retrieve({'user_id':userdata.id},(error,imagedata) => {    
-					        if(error){
-					         }
-					        else{
-					        	var returnObjimage = imagedata.map(function(obj: any): any {
-				      			    return {
-								        id: obj._id,
-								        url:obj.url,
-								        
-								   }
-			   					});
-					        	callback(null,returnObjimage);
-					        }
-					    })
-					},
-					userData: function(callback:any) {
-			        	_userBusiness.retrieve({_id:userdata.id}, (error, result) => {
-			        		var returnObj = result.map(function(obj: any): any {
-				      		
-					            return {
-							        id: obj._id,
-							        userName:obj.userName,
-							        firstName:obj.firstName,
-							        lastName:obj.lastName,
-							        status:obj.status,
-							        email:obj.email,
-							        companyName:obj.companyName,
-							        phone:obj.phone,
-							        city:obj.city,
-							        zipcode:obj.zipcode,
-							        roles:obj.roles,
-							       state:obj.state
-							    }
-			   				});
-			   			callback(null,returnObj);
-			        	});
+				_user.createdOn = new Date();
+				var _userBusiness = new UserBusiness();
+				_userBusiness.create(_user, (error, result) => {
+					if (error) {
+						res.send({ "error": error });
 					}
-				}, function(err:any, results:any) {
-					if(err){
-						res.send({"error": "error"});
-					}
-					res.json({"status":"success","data":results});
+					else res.send({ "success": "success" });
 				});
 			});
 		}
-        catch (e)  { 
-            console.log(e);
-            res.send({"error": "error in your request"});
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
 		}
-    }
-	
+	}
+
+
+
+	updateStatus(req: express.Request, res: express.Response): void {
+		try {
+
+
+		} catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+
+	}
+
+
+	updateUser(req: express.Request, res: express.Response): void {
+		try {
+			var _userBusiness = new UserBusiness();
+			_userBusiness.verifyToken(req, res, (UserData: any) => {
+				var _user: IUserModel = <IUserModel>req.body.user;
+				var _id: string = _user.id.toString();
+				_userBusiness.update(mongoose.Types.ObjectId(_id), _user, (error: any, userdata: any) => {
+					if (error) {
+						console.log(error);
+						res.send({ "error": error });
+					}
+					else {
+						var _agentBusiness = new AgentBusiness()
+						async.parallel({
+							agentData: function (callback: any) {
+
+								_agentBusiness.findOne({ 'userId': _id }, (error, agentdata) => {
+									if (error) {
+									}
+									else {
+										callback(null, agentdata);
+									}
+								})
+							},
+							userData: function (callback: any) {
+								_userBusiness.retrieve({ _id: _id }, (error, result) => {
+									var returnObj = result.map(function (obj: any): any {
+
+										return {
+											id: obj._id,
+											userName: obj.userName,
+											firstName: obj.firstName,
+											lastName: obj.lastName,
+											status: obj.status,
+											email: obj.email,
+											companyName: obj.companyName,
+											phone: obj.phone,
+											city: obj.city,
+											zipcode: obj.zipcode,
+											roles: obj.roles
+
+										}
+									});
+									callback(null, returnObj);
+								});
+							}
+						}, function (err: any, results: any) {
+							if (err) {
+								res.send({ "error": "error" });
+							}
+							res.json({ "status": "success", "data": results });
+						});
+
+
+					}
+				});
+
+			});
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
+
+
+	updateprofilepic(data: any, id: any, res: express.Response, flag: any): void {
+		var _agentBusiness = new AgentBusiness();
+		var _agent: IAgentModel = <IAgentModel>data;
+		_agent.createdOn = new Date();
+		var type = data.mimetype.split("/");
+		var userid: string = id.toString();
+		var _id = userid;
+		_agent.userId = userid;
+		if (flag == 'logo') {
+			_agent.logo_url = data.filename;
+		}
+		else {
+			_agent.image_url = data.filename;
+		}
+		_agentBusiness.findOne({ 'userId': userid }, (error: any, agentresult: any) => {
+			if (agentresult != null) {
+				var _id: string = agentresult._id.toString();
+				_agentBusiness.update(_id, _agent, (error: any, resultUpdate: any) => {
+					if (error) {
+					} else {
+						return res.json({ profileimg: agentresult.profilePic });
+					}
+				});
+			} else {
+				_agentBusiness.create(_agent, (error, agentresultData) => {
+					if (error) {
+					} else {
+						return res.json({ profileimg: agentresultData.image_url });
+					}
+				});
+			}
+
+		});
+
+	}
+
+
+
+
+
+
+
+
+
+	delete(req: express.Request, res: express.Response): void {
+		try {
+
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+
+	}
+	retrieve(req: express.Request, res: express.Response): void {
+		try {
+			var _userBusiness = new UserBusiness();
+			_userBusiness.verifyToken(req, res, (userData) => {
+				_userBusiness.retrieve(req.body, (error, result) => {
+					if (error) res.send({ "error": "error" });
+					else res.send(result);
+				});
+			});
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
+
+
+
+	findById(req: express.Request, res: express.Response): void {
+		try {
+			var _userBusiness = new UserBusiness();
+			var _agentBusiness = new AgentBusiness()
+			var _balstimageBusiness = new BlastImageBusiness()
+			_userBusiness.verifyToken(req, res, (userdata) => {
+				async.parallel({
+					agentData: function (callback: any) {
+
+						_agentBusiness.retrieve({ 'userId': userdata.id }, (error, agentdata) => {
+							if (error) {
+							}
+							else {
+								var returnObjagent = agentdata.map(function (obj: any): any {
+									return {
+										id: obj._id,
+										name: obj.name,
+										email: obj.website_url,
+										designation: obj.designation,
+										website_url: obj.website_url,
+										phone_number: obj.phone_number,
+										company_details: obj.company_details,
+										other_information: obj.other_information,
+										image_url: obj.image_url,
+										logo_url: obj.logo_url
+									}
+								});
+								callback(null, returnObjagent);
+							}
+						})
+					},
+					imageData: function (callback: any) {
+
+						_balstimageBusiness.retrieve({ 'user_id': userdata.id }, (error, imagedata) => {
+							if (error) {
+							}
+							else {
+								var returnObjimage = imagedata.map(function (obj: any): any {
+									return {
+										id: obj._id,
+										url: obj.url,
+
+									}
+								});
+								callback(null, returnObjimage);
+							}
+						})
+					},
+					userData: function (callback: any) {
+						_userBusiness.retrieve({ _id: userdata.id }, (error, result) => {
+							var returnObj = result.map(function (obj: any): any {
+
+								return {
+									id: obj._id,
+									userName: obj.userName,
+									firstName: obj.firstName,
+									lastName: obj.lastName,
+									status: obj.status,
+									email: obj.email,
+									companyName: obj.companyName,
+									phone: obj.phone,
+									city: obj.city,
+									zipcode: obj.zipcode,
+									roles: obj.roles,
+									state: obj.state
+								}
+							});
+							callback(null, returnObj);
+						});
+					}
+				}, function (err: any, results: any) {
+					if (err) {
+						res.send({ "error": "error" });
+					}
+					res.json({ "status": "success", "data": results });
+				});
+			});
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
+
 	findByToken(req: express.Request, res: express.Response): void {
 		var _userBusiness = new UserBusiness();
 		_userBusiness.verifyToken(req, res, (UserData) => {
 			res.send(UserData);
 		});
-    }
-	
-	
-    
-    contactForm(req: express.Request, res: express.Response): void { 
+	}
+
+
+
+	contactForm(req: express.Request, res: express.Response): void {
 		try {
 			var _contactform: IContactformModel = <IContactformModel>req.body;
 			var _contactformBusiness = new ContactformBusiness();
-			_contactform.fullname =req.body.fullname;
+			_contactform.fullname = req.body.fullname;
 			_contactform.email = req.body.email;
 			_contactform.phone = req.body.phone;
 			_contactform.message = req.body.message;
 			_contactform.createdOn = new Date();
 			_contactformBusiness.create(_contactform, (error, result) => {
-				if(error) {
-					res.send({"error=========": error});
+				if (error) {
+					res.send({ "error=========": error });
 				} else {
-					var contactFormemail =Common.CONTACT_FORM;	
-					var emailtemplate = contactFormemail.replace(/#fullname#/g,_contactform.fullname).replace(/#email#/g,_contactform.email).replace(/#phone#/g,_contactform.phone).replace(/#message#/g,_contactform.message) .replace(/#date#/g,_contactform.createdOn);
-					Common.sendMail(_contactform.email,'support@ListingReach.com','Contact Form', null,emailtemplate, function(error: any, response: any){ 
-					if(error){ 
-					res.end("error");
-					}
+					var contactFormemail = Common.CONTACT_FORM;
+					var emailtemplate = contactFormemail.replace(/#fullname#/g, _contactform.fullname).replace(/#email#/g, _contactform.email).replace(/#phone#/g, _contactform.phone).replace(/#message#/g, _contactform.message).replace(/#date#/g, _contactform.createdOn);
+					Common.sendMail(_contactform.email, 'support@ListingReach.com', 'Contact Form', null, emailtemplate, function (error: any, response: any) {
+						if (error) {
+							res.end("error");
+						}
 					});
-					res.status(201).send({ "success":"done" }); 
+					res.status(201).send({ "success": "done" });
 				}
 			});
-		}  catch (e)  {
+		} catch (e) {
 			console.log(e);
-			res.send({"error": "error in your request"});
+			res.send({ "error": "error in your request" });
 		}
-	}    
-	
-emailPreviewTemplate(req: express.Request, res: express.Response): void { 
-		try { 
+	}
+
+	emailPreviewTemplate(req: express.Request, res: express.Response): void {
+		try {
 			var _propertyData: IPropertyModel = <IPropertyModel>req.body;
-			let property =  _propertyData.property_details;
+			let property = _propertyData.property_details;
 			var _contactformBusiness = new ContactformBusiness();
 			property.email = req.body.email;
 			var _propertyformsEmail = {};
 
-			let subject =  property[0].templates[0].email_subject;
+			let subject = property[0].templates[0].email_subject;
 			let formLine = property[0].templates[0].from_line;
 			let formReply = property[0].templates[0].address;
-			let headline  = property[0].templates[0].headline;
+			let headline = property[0].templates[0].headline;
 
-			let agentData = property[0].agentData[0].agentData; 
+			let agentData = property[0].agentData[0].agentData;
 
-		if(property && property.length>1){
-			var html = '';
-			property.forEach(function(proDta){	
-						html += `<div class="flyer-bg" style="background: #f1f1f1;">
+			if (property && property.length > 1) {
+				var html = '';
+				property.forEach(function (proDta) {
+					html += `<div class="flyer-bg" style="background: #f1f1f1;">
 			                     <div class="row" style="display: block;display: flex;flex-wrap: wrap;border-top: 2px solid #ccc;">
 			                        <div style="width:50%;display: block; background:#f1f1f1;height: 400px;">
 			                           <img src="http://66.235.194.119/listingreach/img/img4.jpg" alt="image" style="width:100%;height: 400px;">
 			                        </div>`;
-						html += `<div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
+					html += `<div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
 			                           <div class="row" style="display: flex;flex-wrap: wrap;">
 			                              <div style="width:100%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">
 			                                 <h4 style=" background: #f1f1f1;font-size: 1.5rem;margin-top: 0;
@@ -510,22 +510,22 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			                           </div>
 			                        </div>
 			                     </div>`;
-						html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
+					html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
 			                        <div class="row">
 			                           <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
 			                              <label class="flyer-label" style="color: #EE8C3A;
 			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
 			                              <p>${proDta.street_address}, ${proDta.city}, ${proDta.zipcode}</p>
 			                           </div>`;
-						proDta.isOpenHouse.forEach(function (resut) {
-							html += `<div class="text-center" style="width:100%;text-align: center !important;">
+					proDta.isOpenHouse.forEach(function (resut) {
+						html += `<div class="text-center" style="width:100%;text-align: center !important;">
 			                              <label class="flyer-label" style="color: #EE8C3A;
 			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.openHouseData.houseType}:</label>
 			                              <span>${resut.openHouseData.date} ${resut.openHouseData.startTime}  - ${resut.openHouseData.endTime} </span><br>
 			                           </div>`;
-						});
+					});
 
-						html += `<div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+					html += `<div class="ml-3" style="width:100%; margin-left: 1rem !important;">
 			                              <label class="flyer-label" style="color: #EE8C3A;
 			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">MLS#:</label>
 			                              <span>${proDta.mls_number}</span>
@@ -538,221 +538,221 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			                           <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
 			                              <label class="flyer-label" style="color: #EE8C3A;
 			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Links:</label>`;
-						proDta.isOpenHouse.forEach(function (resut) {
-							html += `<br><a href="http://66.235.194.119/listingreach" style="color: #000000;transition: all .5s ease;"><u> Websitename with hyperlink</a></u>`;
-			             });
+					proDta.isOpenHouse.forEach(function (resut) {
+						html += `<br><a href="http://66.235.194.119/listingreach" style="color: #000000;transition: all .5s ease;"><u> Websitename with hyperlink</a></u>`;
+					});
 
-			             html +=  ` </div>
+					html += ` </div>
 			                        </div>
 			                     </div>
-							</div>`;								
-		});
+							</div>`;
+				});
 
-			var previewTemplatememail =Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;	
-					var emailtemplate = previewTemplatememail
-					.replace(/#multiproperty#/g,html)
-					.replace(/#agentName#/g,agentData.name)
-					.replace(/#agentEmail#/g,agentData.Email)
-					.replace(/#agentImage#/g,agentData.image_url || "http://66.235.194.119/listingreach/img/dummy-profile.png")
-					.replace(/#companyLogo#/g,agentData.logo_url || "http://66.235.194.119/listingreach/img/dummy-logo.png")
-					.replace(/#WebsiteUrl#/g,agentData.website_url)
-					.replace(/#phone_number#/g,agentData.phone_number)
-					.replace(/#companyDetail#/g,agentData.company_details)
-					.replace(/#subject#/g,subject)
-					.replace(/#formLine#/g,formLine)
-					.replace(/#formReply#/g,formReply)
-					.replace(/#blastHeadline#/g,headline);
-
-
-		Common.sendMail(property.email,'support@employeemirror.com','Property Details', null,emailtemplate, function(error: any, response: any){ 
-			if(error){ 
-				console.log(error);
-				res.end("error");
-				}
-			});
-		res.status(201).send({ "success":"done" }); 
-
-	} else {
-		
-			var html = '';
-			property.forEach(function(proDta){	
-						html += `<div class="flyer-bg" style="background: #f1f1f1;">
-			                     <div class="row" style="display: block;display: flex;flex-wrap: wrap;border-top: 2px solid #ccc;">
-			                        <div style="width:50%;display: block; background:#f1f1f1;height: 400px;">
-			                           <img src="http://66.235.194.119/listingreach/img/img4.jpg" alt="image" style="width:100%;height: 400px;">
-			                        </div>`;
-						html += `<div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
-			                           <div class="row" style="display: flex;flex-wrap: wrap;">
-			                              <div style="width:100%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">
-			                                 <h4 style=" background: #f1f1f1;font-size: 1.5rem;margin-top: 0;
-			                                    margin-bottom: 1rem;">Price: ${proDta.price} per Square Foot</h4>
-			                              </div>
-			                              <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
-			                                 <label class="flyer-label" style="color: #EE8C3A;
-			                                    font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Key Features:</label>
-			                                 <ul>
-			                                    <li>Property Type: ${proDta.property_type}  </li>
-			                                    <li>Property Style: ${proDta.property_style}  </li>
-			                                    <li> ${proDta.number_bedrooms} Bedrooms</li>
-			                                    <li>${proDta.number_bathrooms[0].full} Full ${proDta.number_bathrooms[0].half} Half Bathrooms</li>
-			                                    <li>1 Full +2 Half Bathrooms</li>
-			                                    <li>${proDta.building_size} square feet</li>
-			                                    <li>${proDta.price}  /sqft</li>
-			                                    <li>Lot Size: ${proDta.lot_size} sqft</li>
-			                                    <li>  Built ${proDta.year_built} </li>
-			                                    <li>${proDta.garageSize} Garage</li>
-			                                    <li> ${proDta.number_stories} </li>
-			                                 </ul>
-			                              </div>
-			                           </div>
-			                        </div>
-			                     </div>`;
-						html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
-			                        <div class="row">
-			                           <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
-			                              <label class="flyer-label" style="color: #EE8C3A;
-			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
-			                              <p>${proDta.street_address}, ${proDta.city}, ${proDta.zipcode}</p>
-			                           </div>`;
-						proDta.isOpenHouse.forEach(function (resut) {
-							html += `<div class="text-center" style="width:100%;text-align: center !important;">
-			                              <label class="flyer-label" style="color: #EE8C3A;
-			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.openHouseData.houseType}:</label>
-			                              <span>${resut.openHouseData.date} ${resut.openHouseData.startTime}  - ${resut.openHouseData.endTime} </span><br>
-			                           </div>`;
-						});
-
-						html += `<div class="ml-3" style="width:100%; margin-left: 1rem !important;">
-			                              <label class="flyer-label" style="color: #EE8C3A;
-			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">MLS#:</label>
-			                              <span>${proDta.mls_number}</span>
-			                           </div>
-			                           <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
-			                              <label class="flyer-label" style="color: #EE8C3A;
-			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Description:</label>
-			                              <span>${proDta.property_details}</span>         
-			                           </div>
-			                           <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
-			                              <label class="flyer-label" style="color: #EE8C3A;
-			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Links:</label>`;
-						proDta.isOpenHouse.forEach(function (resut) {
-							html += `<br><a href="http://66.235.194.119/listingreach" style="color: #000000;transition: all .5s ease;"><u> Websitename with hyperlink</a></u>`;
-			             });
-
-			             html +=  ` </div>
-			                        </div>
-			                     </div>
-							</div>`;								
-		});
-
-			var previewTemplatememail =Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;	
-					var emailtemplate = previewTemplatememail
-					.replace(/#multiproperty#/g,html)
-					.replace(/#agentName#/g,agentData.name)
-					.replace(/#agentEmail#/g,agentData.Email)
-					.replace(/#agentImage#/g,agentData.image_url || "http://66.235.194.119/listingreach/img/dummy-profile.png")
-					.replace(/#companyLogo#/g,agentData.logo_url)
-					.replace(/#WebsiteUrl#/g,agentData.website_url)
-					.replace(/#subject#/g,subject)
-					.replace(/#formLine#/g,formLine)
-					.replace(/#formReply#/g,formReply)
-					.replace(/#blastHeadline#/g,headline);
+				var previewTemplatememail = Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;
+				var emailtemplate = previewTemplatememail
+					.replace(/#multiproperty#/g, html)
+					.replace(/#agentName#/g, agentData.name)
+					.replace(/#agentEmail#/g, agentData.Email)
+					.replace(/#agentImage#/g, agentData.image_url || "http://66.235.194.119/listingreach/img/dummy-profile.png")
+					.replace(/#companyLogo#/g, agentData.logo_url || "http://66.235.194.119/listingreach/img/dummy-logo.png")
+					.replace(/#WebsiteUrl#/g, agentData.website_url)
+					.replace(/#phone_number#/g, agentData.phone_number)
+					.replace(/#companyDetail#/g, agentData.company_details)
+					.replace(/#subject#/g, subject)
+					.replace(/#formLine#/g, formLine)
+					.replace(/#formReply#/g, formReply)
+					.replace(/#blastHeadline#/g, headline);
 
 
-		Common.sendMail(property.email,'support@employeemirror.com','Property Details', null,emailtemplate, function(error: any, response: any){ 
-			if(error){ 
-				console.log(error);
-				res.end("error");
-				}
-			});
-			res.status(201).send({ "success":"done" }); 
+				Common.sendMail(property.email, 'support@employeemirror.com', 'Property Details', null, emailtemplate, function (error: any, response: any) {
+					if (error) {
+						console.log(error);
+						res.end("error");
+					}
+				});
+				res.status(201).send({ "success": "done" });
 
 			} else {
 
-			let openData = '';
-			if(property[0].isOpenHouse.openHouseData !=undefined && property[0].isOpenHouse.openHouseData.length){
-				let houseArray = property[0].isOpenHouse.openHouseData;
-				//console.log("houseArray===",houseArray);
-				houseArray.forEach(function(item){
-				 openData +=`<div>
+				var html = '';
+				property.forEach(function (proDta) {
+					html += `<div class="flyer-bg" style="background: #f1f1f1;">
+			                     <div class="row" style="display: block;display: flex;flex-wrap: wrap;border-top: 2px solid #ccc;">
+			                        <div style="width:50%;display: block; background:#f1f1f1;height: 400px;">
+			                           <img src="http://66.235.194.119/listingreach/img/img4.jpg" alt="image" style="width:100%;height: 400px;">
+			                        </div>`;
+					html += `<div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
+			                           <div class="row" style="display: flex;flex-wrap: wrap;">
+			                              <div style="width:100%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">
+			                                 <h4 style=" background: #f1f1f1;font-size: 1.5rem;margin-top: 0;
+			                                    margin-bottom: 1rem;">Price: ${proDta.price} per Square Foot</h4>
+			                              </div>
+			                              <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+			                                 <label class="flyer-label" style="color: #EE8C3A;
+			                                    font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Key Features:</label>
+			                                 <ul>
+			                                    <li>Property Type: ${proDta.property_type}  </li>
+			                                    <li>Property Style: ${proDta.property_style}  </li>
+			                                    <li> ${proDta.number_bedrooms} Bedrooms</li>
+			                                    <li>${proDta.number_bathrooms[0].full} Full ${proDta.number_bathrooms[0].half} Half Bathrooms</li>
+			                                    <li>1 Full +2 Half Bathrooms</li>
+			                                    <li>${proDta.building_size} square feet</li>
+			                                    <li>${proDta.price}  /sqft</li>
+			                                    <li>Lot Size: ${proDta.lot_size} sqft</li>
+			                                    <li>  Built ${proDta.year_built} </li>
+			                                    <li>${proDta.garageSize} Garage</li>
+			                                    <li> ${proDta.number_stories} </li>
+			                                 </ul>
+			                              </div>
+			                           </div>
+			                        </div>
+			                     </div>`;
+					html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
+			                        <div class="row">
+			                           <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
+			                              <label class="flyer-label" style="color: #EE8C3A;
+			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
+			                              <p>${proDta.street_address}, ${proDta.city}, ${proDta.zipcode}</p>
+			                           </div>`;
+					proDta.isOpenHouse.forEach(function (resut) {
+						html += `<div class="text-center" style="width:100%;text-align: center !important;">
+			                              <label class="flyer-label" style="color: #EE8C3A;
+			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.openHouseData.houseType}:</label>
+			                              <span>${resut.openHouseData.date} ${resut.openHouseData.startTime}  - ${resut.openHouseData.endTime} </span><br>
+			                           </div>`;
+					});
+
+					html += `<div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+			                              <label class="flyer-label" style="color: #EE8C3A;
+			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">MLS#:</label>
+			                              <span>${proDta.mls_number}</span>
+			                           </div>
+			                           <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+			                              <label class="flyer-label" style="color: #EE8C3A;
+			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Description:</label>
+			                              <span>${proDta.property_details}</span>         
+			                           </div>
+			                           <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+			                              <label class="flyer-label" style="color: #EE8C3A;
+			                                 font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Links:</label>`;
+					proDta.isOpenHouse.forEach(function (resut) {
+						html += `<br><a href="http://66.235.194.119/listingreach" style="color: #000000;transition: all .5s ease;"><u> Websitename with hyperlink</a></u>`;
+					});
+
+					html += ` </div>
+			                        </div>
+			                     </div>
+							</div>`;
+				});
+
+				var previewTemplatememail = Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;
+				var emailtemplate = previewTemplatememail
+					.replace(/#multiproperty#/g, html)
+					.replace(/#agentName#/g, agentData.name)
+					.replace(/#agentEmail#/g, agentData.Email)
+					.replace(/#agentImage#/g, agentData.image_url || "http://66.235.194.119/listingreach/img/dummy-profile.png")
+					.replace(/#companyLogo#/g, agentData.logo_url)
+					.replace(/#WebsiteUrl#/g, agentData.website_url)
+					.replace(/#subject#/g, subject)
+					.replace(/#formLine#/g, formLine)
+					.replace(/#formReply#/g, formReply)
+					.replace(/#blastHeadline#/g, headline);
+
+
+				Common.sendMail(property.email, 'support@employeemirror.com', 'Property Details', null, emailtemplate, function (error: any, response: any) {
+					if (error) {
+						console.log(error);
+						res.end("error");
+					}
+				});
+				res.status(201).send({ "success": "done" });
+
+			} else {
+
+				let openData = '';
+				if (property[0].isOpenHouse.openHouseData != undefined && property[0].isOpenHouse.openHouseData.length) {
+					let houseArray = property[0].isOpenHouse.openHouseData;
+					//console.log("houseArray===",houseArray);
+					houseArray.forEach(function (item) {
+						openData += `<div>
 				 <label class="flyer-label">${item.openHouseData.houseType}:</label>
 				 <span>${item.openHouseData.date} ${item.openHouseData.startTime}  - ${item.openHouseData.endTime}</span><br>
 				 </div>`;
-				})
-			}
+					})
+				}
 
-			let links = '';
-			if(property[0].linksToWebsites.linkData !=undefined && property[0].linksToWebsites.linkData.length){
-				let linkArray = property[0].linksToWebsites.linkData;
-				linkArray.forEach(function(item){
-				 links +=`<div>
+				let links = '';
+				if (property[0].linksToWebsites.linkData != undefined && property[0].linksToWebsites.linkData.length) {
+					let linkArray = property[0].linksToWebsites.linkData;
+					linkArray.forEach(function (item) {
+						links += `<div>
 				  <label class="flyer-label">Links:</label>
  					<p><a href="#"><u> ${item.linksToWebsiteData.buildingSize}</a></u></p><br>
 				 </div>`;
-				})
+					})
+				}
+
+				var previewTemplatememail = Common.PREVIEW_EMAIL_TEMPLATE;
+				var emailtemplate = previewTemplatememail
+					.replace(/#subject#/g, subject)
+					.replace(/#formLine#/g, formLine)
+					.replace(/#formReply#/g, formReply)
+					.replace(/#blastHeadline#/g, headline)
+					.replace(/#numberOfBedrooms#/g, property[0].numberOfBedrooms)
+					.replace(/#propertyDetail#/g, property[0].propertyDetail)
+					.replace(/#mlsNumber#/g, property[0].mlsNumber)
+					.replace(/#streetAddress#/g, property[0].streetAddress)
+					.replace(/#zipCode#/g, property[0].zipCode)
+					.replace(/#city#/g, property[0].city)
+					.replace(/#pricePerSquareFoot#/g, property[0].pricePerSquareFoot)
+					.replace(/#yearBuilt#/g, property[0].yearBuilt)
+					.replace(/#lotSize#/g, property[0].lotSize)
+					.replace(/#openData#/g, openData)
+					.replace(/#links#/g, links)
+					.replace(/#propertyType#/g, property[0].propertyType)
+					.replace(/#full#/g, property[0].number_bathrooms[0].full)
+					.replace(/#half#/g, property[0].number_bathrooms[0].half)
+					.replace(/#garageSize#/g, property[0].garageSize)
+					.replace(/#propertyStyle#/g, property[0].propertyStyle)
+					.replace(/#numberOfStories#/g, property[0].numberOfStories)
+					.replace(/#agentName#/g, agentData.name)
+					.replace(/#agentEmail#/g, agentData.Email)
+					.replace(/#agentImage#/g, agentData.image_url || "http://66.235.194.119/listingreach/img/dummy-profile.png")
+					.replace(/#companyLogo#/g, agentData.logo_url || "http://66.235.194.119/listingreach/img/dummy-logo.png")
+					.replace(/#WebsiteUrl#/g, agentData.website_url)
+					.replace(/#phone_number#/g, agentData.phone_number)
+					.replace(/#companyDetail#/g, agentData.company_details);
+
+				Common.sendMail(property.email, 'support@employeemirror.com', 'Property Details', null, emailtemplate, function (error: any, response: any) {
+					if (error) {
+						console.log(error);
+						res.end("error");
+					}
+				});
+				res.status(201).send({ "success": "done" });
 			}
 
-			var previewTemplatememail =Common.PREVIEW_EMAIL_TEMPLATE;	
-					var emailtemplate = previewTemplatememail
-					.replace(/#subject#/g,subject)
-					.replace(/#formLine#/g,formLine)
-					.replace(/#formReply#/g,formReply)
-					.replace(/#blastHeadline#/g,headline)
-					.replace(/#numberOfBedrooms#/g,property[0].numberOfBedrooms)
-					.replace(/#propertyDetail#/g,property[0].propertyDetail)
-					.replace(/#mlsNumber#/g,property[0].mlsNumber)
-					.replace(/#streetAddress#/g,property[0].streetAddress)
-					.replace(/#zipCode#/g,property[0].zipCode)
-					.replace(/#city#/g,property[0].city)
-					.replace(/#pricePerSquareFoot#/g,property[0].pricePerSquareFoot)
-					.replace(/#yearBuilt#/g,property[0].yearBuilt)
-					.replace(/#lotSize#/g,property[0].lotSize)
-					.replace(/#openData#/g,openData)
-					.replace(/#links#/g,links)
-					.replace(/#propertyType#/g,property[0].propertyType)
-					.replace(/#full#/g,property[0].number_bathrooms[0].full)
-					.replace(/#half#/g,property[0].number_bathrooms[0].half)
-					.replace(/#garageSize#/g,property[0].garageSize)
-					.replace(/#propertyStyle#/g,property[0].propertyStyle)
-					.replace(/#numberOfStories#/g,property[0].numberOfStories)
-					.replace(/#agentName#/g,agentData.name)
-					.replace(/#agentEmail#/g,agentData.Email)
-					.replace(/#agentImage#/g,agentData.image_url || "http://66.235.194.119/listingreach/img/dummy-profile.png")
-					.replace(/#companyLogo#/g,agentData.logo_url || "http://66.235.194.119/listingreach/img/dummy-logo.png")
-					.replace(/#WebsiteUrl#/g,agentData.website_url)
-					.replace(/#phone_number#/g,agentData.phone_number)
-					.replace(/#companyDetail#/g,agentData.company_details);
-					
-					Common.sendMail(property.email,'support@employeemirror.com','Property Details', null,emailtemplate, function(error: any, response: any){ 
-					if(error){ 
-					console.log(error);
-					res.end("error");
-					}
-					});
-					res.status(201).send({ "success":"done" }); 
-		}
-	
 
-			
-		}  catch (e)  {
+
+		} catch (e) {
 			console.log(e);
-			res.send({"error": "error in your request"});
+			res.send({ "error": "error in your request" });
 		}
 	}
-    
-    forgetUserPassword(req: express.Request, res: express.Response): void {
-        try {
-        	
-            var _user: IUserModel = <IUserModel>req.body;
-            var _userBusiness = new UserBusiness();
-            _userBusiness.findOne({email: _user.email}, (error, result) => {
-                if(error){
-                	res.send({"error": "error"});
-                } 
-                else {
-                	if(result && result.email==_user.email) {
-						if(result.status=='unverified') {
-							return res.status(401).send({"error": "Your account is not verified. Please contact admin."});
+
+	forgetUserPassword(req: express.Request, res: express.Response): void {
+		try {
+
+			var _user: IUserModel = <IUserModel>req.body;
+			var _userBusiness = new UserBusiness();
+			_userBusiness.findOne({ email: _user.email }, (error, result) => {
+				if (error) {
+					res.send({ "error": "error" });
+				}
+				else {
+					if (result && result.email == _user.email) {
+						if (result.status == 'unverified') {
+							return res.status(401).send({ "error": "Your account is not verified. Please contact admin." });
 						} else {
 							var token = _userBusiness.createToken(result);
 							var _updateData: IUserModel = <IUserModel>req.body;
@@ -762,117 +762,117 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 							var _userBusinessUpdate = new UserBusiness();
 							// Generate new password ...
 							var autoGeneratedPassword = Math.random().toString(36).slice(-8);
-        					_user.password = 'P'+autoGeneratedPassword;
+							_user.password = 'P' + autoGeneratedPassword;
 							_userBusinessUpdate.update(_id, _updateData, (error, resultUpdate) => {
-								if(error) res.send({"error": "error", "message": "Authentication error"});//res.status(401).send({"error": "Authentication error"});
+								if (error) res.send({ "error": "error", "message": "Authentication error" });//res.status(401).send({"error": "Authentication error"});
 								else {
-									
+
 									var _userBusiness = new UserBusiness();
 									_userBusiness.findById(_id, (error, resultuser) => {
-										if(error) res.send({"error": "error", "message": "Authentication error"});
+										if (error) res.send({ "error": "error", "message": "Authentication error" });
 										else {
-											var emailresetpassword=Common.EMAIL_TEMPLATE_RESET_USER_PASSWORD;
-											var emailtemplate =emailresetpassword.replace(/#password#/g,_user.password);
-											Common.sendMail(result.email,'support@ListingReach.com','Forgot Password', null,emailtemplate, function(error: any, response: any){
-												if(error){
+											var emailresetpassword = Common.EMAIL_TEMPLATE_RESET_USER_PASSWORD;
+											var emailtemplate = emailresetpassword.replace(/#password#/g, _user.password);
+											Common.sendMail(result.email, 'support@ListingReach.com', 'Forgot Password', null, emailtemplate, function (error: any, response: any) {
+												if (error) {
 													console.log(error);
 													res.end("error");
 												}
 											});
-											res.status(201).send({ "success":"done" });
+											res.status(201).send({ "success": "done" });
 										}
 									});
 								}
 							});
 						}
 					} else {
-						return res.status(401).send({"error": "You have entered invalid email."});
+						return res.status(401).send({ "error": "You have entered invalid email." });
 					}
 				}
-            });
-        }
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+			});
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
 
-        }
-    }
-    
-    
-    
-    UpdateUserPassword(req: express.Request, res: express.Response): void {
-     	try {
-			var _user: IUserModel = <IUserModel>req.body; 
+		}
+	}
+
+
+
+	UpdateUserPassword(req: express.Request, res: express.Response): void {
+		try {
+			var _user: IUserModel = <IUserModel>req.body;
 			var _userBusiness = new UserBusiness();
 			var _idc = req.body.user;
-			_user.password  = req.body.newpassword;    
-			_userBusiness.findOne({_id:_idc,password:req.body.currentpassword}, (error, result) => {
-				if(error){
-				res.send({"error": "Please enter current vaild password."});
-				} 
-				else if(result == null) { 
-				res.send({"error": "Please enter current vaild password."});
+			_user.password = req.body.newpassword;
+			_userBusiness.findOne({ _id: _idc, password: req.body.currentpassword }, (error, result) => {
+				if (error) {
+					res.send({ "error": "Please enter current vaild password." });
+				}
+				else if (result == null) {
+					res.send({ "error": "Please enter current vaild password." });
 
 				} else {
-					_user.password=req.body.newpassword;
-					_userBusiness.update(_idc,_user, (error, resultUpdate) => {
-					if(error) res.send({"error": "error", "message": "Your password is not updated."});
-					else {
-						res.status(201).send({ "success":"Your password is successfully updated." });
-					} 
+					_user.password = req.body.newpassword;
+					_userBusiness.update(_idc, _user, (error, resultUpdate) => {
+						if (error) res.send({ "error": "error", "message": "Your password is not updated." });
+						else {
+							res.status(201).send({ "success": "Your password is successfully updated." });
+						}
 					});
 				}
-			});	
+			});
 		}
-		catch (e)  {
-		console.log(e);
-		res.send({"error": "error in your request"});
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
 
 		}
-    }
+	}
 
-    selectDatabase(req: express.Request, res: express.Response): void {
-    	try { 
-    	   	var _blastform: IBlastModel = <IBlastModel>req.body;
-    	   	let _id:string =_blastform.blast_id;
+	selectDatabase(req: express.Request, res: express.Response): void {
+		try {
+			var _blastform: IBlastModel = <IBlastModel>req.body;
+			let _id: string = _blastform.blast_id;
 			var _blastBusiness = new BlastBusiness();
 			//console.log("_blastform=====",_blastform);
-/*					if(property.isOpenHouse){
-						var opneHouseData=[];
-						let data = property.isOpenHouse.openHouseData;
-									data.forEach(function(house:any) {
-									if(house){
-										opneHouseData.push({openHouseData:house.openHouseData});
-									}
-								});
-					   _propertyform.isOpenHouse=opneHouseData;
-				}*/
-			_blastBusiness.update(_id, _blastform, (error, resultUpdate) => { 
-				if(error){
-					res.send({"error": "error"});
+			/*					if(property.isOpenHouse){
+									var opneHouseData=[];
+									let data = property.isOpenHouse.openHouseData;
+												data.forEach(function(house:any) {
+												if(house){
+													opneHouseData.push({openHouseData:house.openHouseData});
+												}
+											});
+								   _propertyform.isOpenHouse=opneHouseData;
+							}*/
+			_blastBusiness.update(_id, _blastform, (error, resultUpdate) => {
+				if (error) {
+					res.send({ "error": "error" });
 				} else {
-					res.send({"success": "success"});
+					res.send({ "success": "success" });
 				}
 			})
 		}
-		 catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
-        }
-    }
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
 
-    forgetSAdminPassword(req: express.Request, res: express.Response): void {
-        try {
-            var _user: IAdminUserModel = <IAdminUserModel>req.body;
-            var _adminUserBusiness = new AdminUserBusiness();
-            var _userBusiness = new UserBusiness();
-            _adminUserBusiness.findOne({email: _user.email}, (error, result) => {
-                if(error) res.send({"error": "error"});
-                else {
-					if(result && result.email==_user.email) {
-						if(!result.isActive) {
-							return res.status(401).send({"error": "Your account is not active. Please contact admin."});
-						} 
+	forgetSAdminPassword(req: express.Request, res: express.Response): void {
+		try {
+			var _user: IAdminUserModel = <IAdminUserModel>req.body;
+			var _adminUserBusiness = new AdminUserBusiness();
+			var _userBusiness = new UserBusiness();
+			_adminUserBusiness.findOne({ email: _user.email }, (error, result) => {
+				if (error) res.send({ "error": "error" });
+				else {
+					if (result && result.email == _user.email) {
+						if (!result.isActive) {
+							return res.status(401).send({ "error": "Your account is not active. Please contact admin." });
+						}
 						else {
 							var token = _userBusiness.createToken(result);
 							var _updateAdminData: IAdminUserModel = <IAdminUserModel>req.body;
@@ -882,42 +882,42 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 							var _adminUserBusiness = new AdminUserBusiness();
 							// Generate new password ...
 							var autoGeneratedPassword = Math.random().toString(36).slice(-8);
-        					_user.password = 'P'+autoGeneratedPassword;
+							_user.password = 'P' + autoGeneratedPassword;
 							_adminUserBusiness.update(_id, _updateAdminData, (error, resultUpdate) => {
-								if(error) res.send({"error": "error", "message": "Authentication error"});//res.status(401).send({"error": "Authentication error"});
+								if (error) res.send({ "error": "error", "message": "Authentication error" });//res.status(401).send({"error": "Authentication error"});
 								else {
 									var companyId = result._id;
 									_adminUserBusiness.retrieve(companyId, (error, resultCompany) => {
-										if(error) res.send({"error": "error", "message": "Authentication error"});
+										if (error) res.send({ "error": "error", "message": "Authentication error" });
 										else {
-											var emailresetpassword=Common.EMAIL_TEMPLATE_RESET_ADMIN_PASSWORD;
-											var emailtemplate =emailresetpassword.replace(/#password#/g,_user.password);
-											Common.sendMail(result.email,'support@inteleagent.com','Forgot Password', null,emailtemplate, function(error: any, response: any){
-												if(error){
+											var emailresetpassword = Common.EMAIL_TEMPLATE_RESET_ADMIN_PASSWORD;
+											var emailtemplate = emailresetpassword.replace(/#password#/g, _user.password);
+											Common.sendMail(result.email, 'support@inteleagent.com', 'Forgot Password', null, emailtemplate, function (error: any, response: any) {
+												if (error) {
 													console.log(error);
 													res.end("error");
 												}
 											});
-											res.status(201).send({ "success":"done" });
+											res.status(201).send({ "success": "done" });
 										}
 									});
 								}
 							});
 						}
 					} else {
-						return res.status(401).send({"error": "Invalid email."});
+						return res.status(401).send({ "error": "Invalid email." });
 					}
 				}
-            });
-        }
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+			});
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
 
-        }
-    }
+		}
+	}
 
-   
+
 	verifytoken(req: express.Request, res: express.Response): void {
 		var _userBusiness = new UserBusiness();
 		_userBusiness.verifyToken(req, res, (userData) => {
@@ -925,7 +925,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 				token: "valid"
 			});
 		});
-    }
+	}
 
 	//tbd split the incoming query to be {a:b} instead of a=b
 	count(req: express.Request, res: express.Response): void {
@@ -933,784 +933,771 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 			var query: string = req.params.query;
 			var _userBusiness = new UserBusiness();
 			_userBusiness.count(query, (error, result) => {
-				if(error){
+				if (error) {
 					console.log(error);
-					
-					res.send({"error": "error"});
+
+					res.send({ "error": "error" });
 				}
 				else {
 					res.send(result)
 				};
 			});
 		}
-		catch (e)  {
+		catch (e) {
 			console.log(e);
-			res.send({"error": "error in your request"});
+			res.send({ "error": "error in your request" });
 
 		}
 	}
-	
-	
+
+
 
 	getReferences(req: express.Request, res: express.Response): void {
- 		try {
-			
+		try {
 
-        } catch (e){
-            console.log(e);
-            res.send({"error": "error in your request"});
+
+		} catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
 		}
 	}
-    
-    saveBlast(req: express.Request, res: express.Response): void {
-        try {
-           var _blastform: IBlastModel = <IBlastModel>req.body;
+
+	saveBlast(req: express.Request, res: express.Response): void {
+		try {
+			var _blastform: IBlastModel = <IBlastModel>req.body;
 			var _blastBusiness = new BlastBusiness();
 			_blastform.status = ' ';
 			_blastform.selected_template_date = new Date();
-           _blastBusiness.create(_blastform, (error, result) => {
-	                if(error) {
-						console.log(error);
-						res.send({"error": error});
-					}
-	                else res.send({"success": "success",data:result});
-	        	}); 
-        }
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+			_blastBusiness.create(_blastform, (error, result) => {
+				if (error) {
+					console.log(error);
+					res.send({ "error": error });
+				}
+				else res.send({ "success": "success", data: result });
+			});
 		}
-    }
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
 
-    saveDesignTemplate(req: express.Request, res: express.Response): void {
-        try {
-           	let _IagentTemplateModel: IAgentTemplateModel = <IAgentTemplateModel>req.body;
+	saveDesignTemplate(req: express.Request, res: express.Response): void {
+		try {
+			let _IagentTemplateModel: IAgentTemplateModel = <IAgentTemplateModel>req.body;
 			let _agentTemplateBusiness = new AgentTemplateBusiness();
 
 			let _blastform: IBlastModel = <IBlastModel>req.body;
 			let _blastBusiness = new BlastBusiness();
 			_blastform.selected_template_date = new Date();
-           _agentTemplateBusiness.create(_IagentTemplateModel, (error, result) => {
-	                if(error) {
-						console.log(error);
-						res.send({"error": error});
-					} else {
-						if(result && result._id){
-							_blastform.selected_template_id = result._id;
-							_blastform.status = 'Draft';
-							_blastBusiness.findOne({"user_id":_IagentTemplateModel.userId}, (error, user) => {	
-								let _id: string = user._id.toString();
-								_blastBusiness.update(_id, _blastform, (error:any, resultUpdate:any) => {
-									if(error){
-									} else {
-									 return res.json({"sucess":"sucess","data":result});
-									}
-								});
+			_agentTemplateBusiness.create(_IagentTemplateModel, (error, result) => {
+				if (error) {
+					console.log(error);
+					res.send({ "error": error });
+				} else {
+					if (result && result._id) {
+						_blastform.selected_template_id = result._id;
+						_blastform.status = 'Draft';
+						_blastBusiness.findOne({ "user_id": _IagentTemplateModel.userId }, (error, user) => {
+							let _id: string = user._id.toString();
+							_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
+								if (error) {
+								} else {
+									return res.json({ "sucess": "sucess", "data": result });
+								}
 							});
-						}
+						});
 					}
-	        	}); 
-        }
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+				}
+			});
 		}
-    }
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
 
-    
-    
-    saveAgents(req: express.Request, res: express.Response): void {
-    	 try {
-    	 	var _userBusiness = new UserBusiness();
-        	_userBusiness.verifyToken(req, res,  (userData) => { 
-	    	 	var _agent: IAgentModel = <IAgentModel>req.body;
-	    	 	_agent.createdOn = new Date();
 
-	    	 	_agent.user_id=companyUserData._id;
+
+	saveAgents(req: express.Request, res: express.Response): void {
+		try {
+			var _userBusiness = new UserBusiness();
+			_userBusiness.verifyToken(req, res, (userData) => {
+				var _agent: IAgentModel = <IAgentModel>req.body;
+				_agent.createdOn = new Date();
+
+				_agent.user_id = companyUserData._id;
 
 				var _agentBusiness = new AgentBusiness();
-				_agentBusiness.findOne({'userId':userData._id}, (error:any, agentresult:any) => {
-		    	 	
-					if(agentresult){
-						var _id:string = agentresult._id.toString();
-						_agentBusiness.update(_id, _agent, (error:any, resultUpdate:any) => {
-							if(error){
-							}else {
-								res.status(201).send({ "success":"Your agent info successfully updated." });
-								return res.json({data:resultUpdate});
+				_agentBusiness.findOne({ 'userId': userData._id }, (error: any, agentresult: any) => {
+
+					if (agentresult) {
+						var _id: string = agentresult._id.toString();
+						_agentBusiness.update(_id, _agent, (error: any, resultUpdate: any) => {
+							if (error) {
+							} else {
+								res.status(201).send({ "success": "Your agent info successfully updated." });
+								return res.json({ data: resultUpdate });
 							}
 						});
-					}else{
+					} else {
 						_agentBusiness.create(_agent, (error, agentresultData) => {
-							if(error){
-								console.log("error====",error)
-							}else {
-							  res.status(201).send({ "success":"Your agent info successfully updated." });
+							if (error) {
+								console.log("error====", error)
+							} else {
+								res.status(201).send({ "success": "Your agent info successfully updated." });
 							}
 						});
 					}
-		    	 	
+
 				});
 			});
-    	 }
-    	  catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
 		}
-    }
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
 
-     saveProperty(req: express.Request, res: express.Response): void {
-        try {
-           	var _propertyforms: IPropertyModel = <IPropertyModel>req.body;
-           	var _propertyBusiness = new PropertyBusiness();
-			if(_propertyforms && _propertyforms.property && _propertyforms.property.length){
-           		var _templateforms: IAgentTemplateModel = <IAgentTemplateModel>req.body;
-           		var _templateBusiness = new AgentTemplateBusiness();
-           		var _blastform: IBlastModel = <IBlastModel>req.body;
+	saveProperty(req: express.Request, res: express.Response): void {
+		try {
+			var _propertyforms = req.body;
+			var _propertyBusiness = new PropertyBusiness();
+			if (_propertyforms && _propertyforms.property && _propertyforms.property.length) {
+				var { Email, blastHeadline } = req.body;
+				var _templateBusiness = new AgentTemplateBusiness();
+				var _blastform = req.body;
 				var _blastBusiness = new BlastBusiness();
+				_propertyforms.property.forEach(function (prop: any) {
+					let _templateform: IAgentTemplateModel = <IAgentTemplateModel>req.body;
+					_templateform.email_subject = Email.formSubject;
+					_templateform.from_line = Email.formLine;
+					_templateform.address = Email.formReply;
+					_templateform.headline = blastHeadline;
+					_templateform.userId = prop.userId;
 
-           		let _templateform = {};
+					let _propertyform: IPropertyModel = <IPropertyModel>req.body;
+					_propertyform.display_method = prop.propertyAddress.displayMethod;
+					_propertyform.blast_id = _propertyforms.blast_id;
+					_propertyform.street_address = prop.propertyAddress.streetAddress;
+					_propertyform.city = prop.propertyAddress.city;
+					_propertyform.state = prop.propertyAddress.state;
+					_propertyform.zipcode = prop.propertyAddress.zipCode;
+					_propertyform.userId = prop.userId;
 
-           		_propertyforms.property.forEach(function(property){
-           			let _propertyform = {};
-					_templateform.email_subject = _templateforms.Email.formSubject;
-					_templateform.from_line = _templateforms.Email.formLine;
-					_templateform.address = _templateforms.Email.formReply;
-					_templateform.headline = _templateforms.blastHeadline;
-					
+					_propertyform.mls_number = prop.mlsNumber.numberProperty;
+					_propertyform.board = prop.mlsNumber.boardAssociation;
+
+					_propertyform.pricingInfo = prop.pricingInfo;
+
+					if (prop.linksToWebsites) {
+						var linksData: any = [];
+						let data = prop.linksToWebsites.linkData;
+						data.forEach(function (links: any) {
+							if (links) {
+								linksData.push({ linksToWebsiteData: links.linksToWebsiteData });
+							}
+						});
+						_propertyform.linksToWebsites = linksData;
+					}
+
+					if (prop.isOpenHouse) {
+						var opneHouseData: any = [];
+						let data = prop.isOpenHouse.openHouseData;
+						data.forEach(function (house: any) {
+							if (house) {
+								opneHouseData.push({ openHouseData: house.openHouseData });
+							}
+						});
+						_propertyform.isOpenHouse = opneHouseData;
+					}
+
+					if (prop.propertyImages) {
+						var propertyImages: any = [];
+						let data = prop.propertyImages.img;
+						data.forEach(function (images: any) {
+							if (images) {
+								propertyImages.push({ imageId: images.id, imageUrl: images.imgUrl });
+							}
+						});
+						_propertyform.propertyImages = propertyImages;
+					}
+					_propertyform.property_type = prop.generalPropertyInformation.propertyType;
+					_propertyform.property_style = prop.generalPropertyInformation.propertyStyle;
+					_propertyform.lot_size = prop.generalPropertyInformation.lotSize;
+					_propertyform.number_bedrooms = prop.generalPropertyInformation.numberOfBedrooms;
+					_propertyform.building_size = prop.generalPropertyInformation.buildingSize;
+					_propertyform.number_stories = prop.generalPropertyInformation.numberOfStories;
+					_propertyform.number_bathrooms = prop.generalPropertyInformation.numberOfBathrooms;
+					_propertyform.year_built = prop.generalPropertyInformation.yearBuilt;
+					_propertyform.garage = prop.generalPropertyInformation.garage;
+					_propertyform.garageSize = prop.generalPropertyInformation.garageSize;
+					_propertyform.price = prop.generalPropertyInformation.pricePerSquareFoot;
+					_propertyform.property_details = prop.propertyDetail;
 
 
-	           		_propertyform.display_method=property.propertyAddress.displayMethod;
-	           		_propertyform.blast_id = _propertyforms.blast_id;
-					_propertyform.street_address=property.propertyAddress.streetAddress;
-					_propertyform.city=property.propertyAddress.city;
-					_propertyform.state=property.propertyAddress.state;
-					_propertyform.zipcode=property.propertyAddress.zipCode;
-					_propertyform.userId = property.userId;
+					_propertyBusiness.create(_propertyform, (error, result) => {
+						if (error) {
+							console.log(error);
+							res.send({ "error": error });
+						}
+						_templateform.Property_id = result._id.toString();
+						//console.log("3434343====",result._id.toString());
 
-					_propertyform.mls_number=property.mlsNumber.numberProperty;
-					_propertyform.board=property.mlsNumber.boardAssociation;
+						let _id: string = req.body.templateId;
+						_templateBusiness.update(_id, _templateform, (error, resultUpdate) => {
+							if (error) {
+								console.log(error);
+								res.send({ "error": error });
+							} else {
 
-					_propertyform.pricingInfo=property.pricingInfo;  
+								let _blastforms: IBlastModel = <IBlastModel>req.body;
+								let _id: string = _blastform.blast_id;
 
-						if(property.linksToWebsites){
-								var linksData=[];
-								let data = property.linksToWebsites.linkData;
-											data.forEach(function(links:any) {
-											if(links){
-												linksData.push({linksToWebsiteData:links.linksToWebsiteData});
+								if (_blastform && _blastform.agentData != undefined) {
+									_blastforms.agentData = _blastform.agentData;
+									_blastBusiness.update(_id, _blastforms, (error, blastUpadte) => {
+										if (error) {
+											res.send({ "error": error });
+										}
+
+										var propertyAggregate = [
+											{
+												$lookup:
+												{
+													from: "users",
+													localField: "userId",
+													foreignField: "_id",
+													as: "users"
+												}
+											},
+											{
+												$unwind: "$users"
+
+											},
+											{
+												$lookup:
+												{
+													from: "templates",
+													localField: "_id",
+													foreignField: "Property_id",
+													as: "templates"
+												}
+											},
+											{
+												$lookup:
+												{
+													from: "blasts",
+													localField: "blast_id",
+													foreignField: "_id",
+													as: "blasts"
+												}
+											},
+											{
+												$project:
+												{
+													"_id": 1,
+													"userId": 1,
+													"display_method": 1,
+													"street_address": 1,
+													"city": 1,
+													"state": 1,
+													"zipcode": 1,
+													"blast_id": 1,
+													"mls_number": 1,
+													"board": 1,
+													"property_type": 1,
+													"property_style": 1,
+													"lot_size": 1,
+													"number_bedrooms": 1,
+													"building_size": 1,
+													"number_stories": 1,
+													"number_bathrooms": 1,
+													"year_built": 1,
+													"garage": 1,
+													"garageSize": 1,
+													"price": 1,
+													"pricingInfo": 1,
+													"property_details": 1,
+													"isOpenHouse": 1,
+													"propertyImages": 1,
+													"linksToWebsites": 1,
+													"templates.email_subject": 1,
+													"templates.from_line": 1,
+													"templates.address": 1,
+													"templates.Property_id": 1,
+													"templates.headline": 1,
+													"templates.template_type": 1,
+													"templates.userId": 1,
+													"users.userName": 1,
+													"users.firstName": 1,
+													"users.lastName": 1,
+													"users.roles": 1,
+													"blasts": 1,
+
+												}
+											},
+											{
+												$match:
+												{
+													blast_id: mongoose.Types.ObjectId(_propertyforms.blast_id.toString())
+												}
+											}
+										];
+
+										_propertyBusiness.aggregate(propertyAggregate, (error: any, result: any) => {
+											if (error) {
+												res.send({ "error": error });
+											} else {
+												var returnObj = result.map(function (obj: any): any {
+													return {
+														id: obj._id,
+														firstName: obj.users.firstName,
+														lastName: obj.users.lastName,
+														middleName: obj.users.middleName,
+														building_size: obj.building_size,
+														number_bathrooms: obj.number_bathrooms,
+														isOpenHouse: obj.isOpenHouse,
+														property_type: obj.property_type,
+														property_style: obj.property_style,
+														mls_number: obj.mls_number,
+														linksToWebsites: obj.linksToWebsites,
+														property_detail: obj.property_details,
+														pricingInfo: obj.pricingInfo,
+														board: obj.board,
+														zipcode: obj.zipcode,
+														city: obj.city,
+														display_method: obj.display_method,
+														street_address: obj.street_address,
+														number_bedrooms: obj.number_bedrooms,
+														year_built: obj.year_built,
+														number_stories: obj.number_stories,
+														lot_size: obj.lot_size,
+														templates: obj.templates,
+														price: obj.price,
+														garageSize: obj.garageSize,
+														blast_id: obj.blast_id,
+														agentData: obj.blasts,
+														propertyImages: obj.propertyImages
+													};
+
+												});
+												//console.log("returnObj=====",returnObj);
+												return res.json(returnObj);
 											}
 										});
-							   _propertyform.linksToWebsites=linksData; 
-						}
 
-						if(property.isOpenHouse){
-								var opneHouseData=[];
-								let data = property.isOpenHouse.openHouseData;
-											data.forEach(function(house:any) {
-											if(house){
-												opneHouseData.push({openHouseData:house.openHouseData});
-											}
-										});
-							   _propertyform.isOpenHouse=opneHouseData;
-						}
+									});
+								}
 
-						if(property.propertyImages){
-								var propertyImages=[];
-								let data = property.propertyImages.img;
-											data.forEach(function(images:any) {
-											if(images){
-												propertyImages.push({imageId:images.id,imageUrl:images.imgUrl});
-											}
-										});
-							   _propertyform.propertyImages=propertyImages;
-						}
+							}
+						});
+					});
 
+				});
 
+			}
 
-				_propertyform.property_type = property.generalPropertyInformation.propertyType;
-				_propertyform.property_style = property.generalPropertyInformation.propertyStyle;
-				_propertyform.lot_size = property.generalPropertyInformation.lotSize;
-				_propertyform.number_bedrooms = property.generalPropertyInformation.numberOfBedrooms;
-				_propertyform.building_size = property.generalPropertyInformation.buildingSize;
-				_propertyform.number_stories = property.generalPropertyInformation.numberOfStories;
-				_propertyform.number_bathrooms = property.generalPropertyInformation.numberOfBathrooms;
-				_propertyform.year_built = property.generalPropertyInformation.yearBuilt;
-				_propertyform.garage = property.generalPropertyInformation.garage;
-				_propertyform.garageSize = property.generalPropertyInformation.garageSize;
-				_propertyform.price = property.generalPropertyInformation.pricePerSquareFoot;
-				_propertyform.property_details=property.propertyDetail;
-					
-
-											_propertyBusiness.create(_propertyform, (error, result) => {
-									                if(error) {
-														console.log(error);
-														res.send({"error": error});
-													}
-													_templateform.Property_id = result._id.toString();
-													//console.log("3434343====",result._id.toString());
-
-													let _id: string = _templateforms.templateId;
-													_templateBusiness.update(_id, _templateform, (error, resultUpdate) => {
-										                if(error) {
-															console.log(error);
-															res.send({"error": error});
-														} else {
-
-														   let _blastforms ={};
-														   let _id: string = _blastform.blast_id;
-														   
-														   if(_blastform && _blastform.agentData!=undefined){
-														   		_blastforms.agentData=_blastform.agentData;
-															   _blastBusiness.update(_id, _blastforms, (error, blastUpadte) => { 
-															   		if(error){
-															   			res.send({"error": error});
-															   		}
-															   																	
-														 		var propertyAggregate = [
-														            	{
-															                $lookup:                       
-															                {
-															                    from: "users",
-															                    localField: "userId",   
-															                    foreignField: "_id",        
-															                    as: "users"               
-															                }
-															            },   
-															            {
-																      	  	$unwind:"$users"
-																        
-																      	},
-															            {
-															                $lookup:                       
-															                {
-															                    from: "templates",
-															                    localField: "_id",   
-															                    foreignField: "Property_id",        
-															                    as: "templates"               
-															                }
-															            },
-															            {
-															                $lookup:                       
-															                {
-															                    from: "blasts",
-															                    localField: "blast_id",   
-															                    foreignField: "_id",        
-															                    as: "blasts"               
-															                }
-															            },
-															            {
-															                $project:                       
-															                {    
-															                    "_id":1,
-															                    "userId":1,
-												         		                "display_method":1,
-															                    "street_address":1,
-															                    "city":1,
-															                    "state":1,
-															                    "zipcode":1,
-															                    "blast_id":1,
-															                    "mls_number":1,
-																				"board":1,
-															                    "property_type":1,
-															                    "property_style":1,
-															                    "lot_size":1,
-															                    "number_bedrooms":1,
-															                    "building_size":1,
-															                    "number_stories":1,
-																				"number_bathrooms":1,
-																				"year_built":1,
-																				"garage":1,
-																				"garageSize":1,
-																				"price":1,
-																				"pricingInfo":1,
-																				"property_details":1,
-																				"isOpenHouse":1,
-																				"propertyImages":1,
-																				"linksToWebsites":1,
-																				"templates.email_subject":1,
-																				"templates.from_line":1,
-																				"templates.address":1,
-																				"templates.Property_id":1,
-																				"templates.headline":1,
-																				"templates.template_type":1,
-																				"templates.userId":1,
-																				"users.userName":1,
-																				"users.firstName":1,
-																				"users.lastName":1,
-																				"users.roles":1,
-																				"blasts":1,
-
-																		    }
-															            },
-															            {
-															                $match:
-														                    {
-																					blast_id: mongoose.Types.ObjectId(_propertyforms.blast_id.toString())      
-																			}
-															            }
-															        ];
-
-															         _propertyBusiness.aggregate( propertyAggregate, (error:any, result:any) => { 
-															        	if(error) {
-																			res.send({"error": error});
-																		} else {
-																			var returnObj = result.map(function(obj: any): any {
-																            return {
-																		        id: obj._id,
-																		        firstName:obj.users.firstName,
-																		        lastName:obj.users.lastName,
-																		        middleName:obj.users.middleName,
-																		        building_size:obj.building_size,
-																		        number_bathrooms:obj.number_bathrooms,
-																		        isOpenHouse:obj.isOpenHouse,
-																		        property_type:obj.property_type,
-																		        property_style:obj.property_style,
-																		        mls_number:obj.mls_number,
-																		        linksToWebsites:obj.linksToWebsites,
-																		        property_detail:obj.property_details,
-																		        pricingInfo:obj.pricingInfo,
-																		        board:obj.board,
-																		        zipcode:obj.zipcode,
-																		        city:obj.city,
-																		        display_method:obj.display_method,
-																		        street_address:obj.street_address,
-																		        number_bedrooms:obj.number_bedrooms,
-																		        year_built:obj.year_built,
-																		        number_stories:obj.number_stories,
-																		        lot_size:obj.lot_size,
-																		        templates:obj.templates,
-																		        price:obj.price,
-																		        garageSize:obj.garageSize,
-																		        blast_id:obj.blast_id,
-																		        agentData:obj.blasts,
-																		        propertyImages:obj.propertyImages
-																		    };
-
-																	});
-																			//console.log("returnObj=====",returnObj);
-																			return res.json(returnObj);
-																}
-															});	
-
-															   	});   	
-														    }
-
-														}
-									                }); 
-									        }); 
-
-           		});
-
-           }
-
-    	}
-        catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
 		}
-    }
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
 
 
- savePropertyImages(data:any,id:any, res: express.Response): void { 
- 	var _blastimageBusiness= new BlastImageBusiness();
-	var _blastimage: IBlastImageModel = <IBlastImageModel >data;
-		
-	var type= data.mimetype.split("/");
-	 	var userid:string = id.toString();
-	
-	_blastimage.user_id=userid;
-	_blastimage.url=data.filename;
-	_blastimageBusiness.create(_blastimage, (error, resultData) => {
-			if(error){
-				console.log("error===",error);
-			}else {
-				 return res.json({url:resultData.url,imageId:resultData._id}); 
+	savePropertyImages(data: any, id: any, res: express.Response): void {
+		var _blastimageBusiness = new BlastImageBusiness();
+		var _blastimage: IBlastImageModel = <IBlastImageModel>data;
+
+		var type = data.mimetype.split("/");
+		var userid: string = id.toString();
+
+		_blastimage.user_id = userid;
+		_blastimage.url = data.filename;
+		_blastimageBusiness.create(_blastimage, (error, resultData) => {
+			if (error) {
+				console.log("error===", error);
+			} else {
+				return res.json({ url: resultData.url, imageId: resultData._id });
 			}
 		});
 	}
 
- deleteSavedBlast(req: express.Request, res: express.Response): void { 
-	try {
+	deleteSavedBlast(req: express.Request, res: express.Response): void {
+		try {
 
 			var _blastBusiness = new BlastBusiness();
 			let _agentTemplateBusiness = new AgentTemplateBusiness();
 			var _propertyBusiness = new PropertyBusiness();
 
 			var _id: string = req.params.id;
-		 _blastBusiness.findById(_id, (error, result) => {
-		 	let _id: string = result._id.toString();
-		 	let selected_template_id:string = result.selected_template_id;
-			_blastBusiness.delete(_id, (error, deleted) => {
-				if (error) {
-					res.send({ "error": "error" });
-				} else {
-					let _id = selected_template_id;
-					_agentTemplateBusiness.findById(_id, (error, result) => {
-						let propertyid:string = result.Property_id.toString();
-						_agentTemplateBusiness.delete(_id, (error, template) => {
-							if(error){
-								res.send({ "error": "error" });
-							}
-							let _id = propertyid;
-							_propertyBusiness.findById(_id, (error, result) => {
-								_propertyBusiness.delete(_id, (error, template) => {
-									res.send({ "sucess": "sucess" });
+			_blastBusiness.findById(_id, (error, result) => {
+				let _id: string = result._id.toString();
+				let selected_template_id: string = result.selected_template_id;
+				_blastBusiness.delete(_id, (error, deleted) => {
+					if (error) {
+						res.send({ "error": "error" });
+					} else {
+						let _id = selected_template_id;
+						_agentTemplateBusiness.findById(_id, (error, result) => {
+							let propertyid: string = result.Property_id.toString();
+							_agentTemplateBusiness.delete(_id, (error, template) => {
+								if (error) {
+									res.send({ "error": "error" });
+								}
+								let _id = propertyid;
+								_propertyBusiness.findById(_id, (error, result) => {
+									_propertyBusiness.delete(_id, (error, template) => {
+										res.send({ "sucess": "sucess" });
+									});
 								});
 							});
 						});
-					});
-				}
+					}
+				});
 			});
-		});
 		}
-	catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+
 	}
 
-}
-
-	saveImages(req: express.Request, res: express.Response){
-		 try { 
- 			var _property: IPropertyModel = <IPropertyModel>req.body;
+	saveImages(req: express.Request, res: express.Response) {
+		try {
+			var _property: IPropertyModel = <IPropertyModel>req.body;
 			var _propertyBusiness = new PropertyBusiness();
 			let array = [];
-			_property.property_ids.forEach(function(item){
-				let _id:string = item.id;
-				_propertyBusiness.update(_id,_property, (error, resultUpdate) => { 
-					if(error){
-						res.send({"error": "error in your request"});
+			_property.property_ids.forEach(function (item) {
+				let _id: string = item.id;
+				_propertyBusiness.update(_id, _property, (error, resultUpdate) => {
+					if (error) {
+						res.send({ "error": "error in your request" });
 					} else {
-						_propertyBusiness.findById(_id, (error, result) => { 
-							if(error){
-								res.send({"error": "error in your request"});
+						_propertyBusiness.findById(_id, (error, result) => {
+							if (error) {
+								res.send({ "error": "error in your request" });
 							} else {
 								array.push(result);
-								res.send({"success": "success",data:array});
+								res.send({ "success": "success", data: array });
 							}
 						})
 					}
 				})
 			});
-		 } 	catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+		} catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
 		}
 	}
 
-	savePayment(req: express.Request, res: express.Response){
-		 try {
-    	 	var _userBusiness = new UserBusiness();
-        	_userBusiness.verifyToken(req, res,  (userData) => { 
-	    	 	var _payment: IPaymentModel = <IPaymentModel>req.body;
-	    	 	_payment.createdOn = new Date();
-	    	 	_payment.user_id=userData._id;
+	savePayment(req: express.Request, res: express.Response) {
+		try {
+			var _userBusiness = new UserBusiness();
+			_userBusiness.verifyToken(req, res, (userData) => {
+				var _payment: IPaymentModel = <IPaymentModel>req.body;
+				_payment.createdOn = new Date();
+				_payment.user_id = userData._id;
 				var _paymentBusiness = new PaymentBusiness();
-				_payment.blast_id=req.params.blastId;
-				_payment.amount=_payment.total;
-				_payment.paymentID=_payment.paymentID;
+				_payment.blast_id = req.params.blastId;
+				_payment.amount = _payment.total;
+				_payment.paymentID = _payment.paymentID;
 				var blastId: string = req.params.blastId;
-			_paymentBusiness.retrieve({"blast_id":blastId}, (error, result) => {
-				
-				if(result && result.length > 0) {
-					console.log("lastInvoiceId====",result.length);
-                    var lastInvoiceId = +result.length + +1;
-                    console.log("lastInvoiceId====",lastInvoiceId);
-                    _payment.invoice_id = lastInvoiceId;
-                }
-                else {
-                   var invoice_number = 1;
-                    _payment.invoice_id = invoice_number;
-                }
-				_paymentBusiness.create(_payment, (error, paymentresultData) => {
-					if(error){
-						console.log("error====",error)
-					}else {
-						res.status(201).send({ "success":"Your payment successfully done." });
+				_paymentBusiness.retrieve({ "blast_id": blastId }, (error, result) => {
+
+					if (result && result.length > 0) {
+						console.log("lastInvoiceId====", result.length);
+						var lastInvoiceId = +result.length + +1;
+						console.log("lastInvoiceId====", lastInvoiceId);
+						_payment.invoice_id = lastInvoiceId;
 					}
+					else {
+						var invoice_number = 1;
+						_payment.invoice_id = invoice_number;
+					}
+					_paymentBusiness.create(_payment, (error, paymentresultData) => {
+						if (error) {
+							console.log("error====", error)
+						} else {
+							res.status(201).send({ "success": "Your payment successfully done." });
+						}
+					});
 				});
+
+
 			});
-		    	 	
-				
-			});
-    	 }
-    	  catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
 		}
 	}
 
-	getSavedBlast(req: express.Request, res: express.Response){
-		try { 
-
-			var _blastform: IBlastModel = <IBlastModel>req.body;
+	getSavedBlast(req: express.Request, res: express.Response) {
+		try {
 			var _blastBusiness = new BlastBusiness();
-
 			var userId: string = req.params.agentId;
-				var savedBlastAggregate = [
-	
-			            {
-			                $lookup:                       
-			                {
-			                    from: "templates",
-			                    localField: "user_id",   
-			                    foreignField: "userId",        
-			                    as: "templates"               
-			                }
-			            },
-			            {
-			                $lookup:                       
-			                {
-			                    from: "payment",
-			                    localField: "user_id",   
-			                    foreignField: "user_id",        
-			                    as: "payment"               
-			                }
-			            },
-			            {
-			                $project:                       
-			                {    
-			                    "_id":1,
-			                    "user_id":1,
-         		                "status":1,
-         		                "selected_template_date":1,
-         		                "scheduledDate":1,
-			                    "templates.headline":1,
-			                    "payment.amount":1
-						    }
-			            },
-			            {
-			                $match:
-		                    {
-									user_id: mongoose.Types.ObjectId(userId)      
-							}
-			            }
-			        ];
+			var savedBlastAggregate = [
+				{
+					$lookup:
+					{
+						from: "templates",
+						localField: "user_id",
+						foreignField: "userId",
+						as: "templates"
+					}
+				},
+				{
+					$lookup:
+					{
+						from: "payment",
+						localField: "user_id",
+						foreignField: "user_id",
+						as: "payment"
+					}
+				},
+				{
+					$project:
+					{
+						"_id": 1,
+						"user_id": 1,
+						"status": 1,
+						"selected_template_date": 1,
+						"scheduledDate": 1,
+						"templates.headline": 1,
+						"payment.amount": 1
+					}
+				},
+				{
+					$match:
+					{
+						user_id: mongoose.Types.ObjectId(userId)
+					}
+				}
+			];
 
-			         _blastBusiness.aggregate(savedBlastAggregate, (error:any, result:any) => { 
-			        	if(error) {
-							res.send({"error": error});
-						} else {
-							var returnObj = result.map(function(obj: any): any {
-				            return {
-						        id: obj._id,
-						        status:obj.status,
-						        payment:obj.payment,
-						        subject:obj.templates,
-						        createdon:obj.selected_template_date,
-						        scheduledDate:obj.scheduledDate
-						    };
+			_blastBusiness.aggregate(savedBlastAggregate, (error: any, result: any) => {
+				if (error) {
+					res.send({ "error": error });
+				} else {
+					var returnObj = result.map(function (obj: any): any {
+						return {
+							id: obj._id,
+							status: obj.status,
+							payment: obj.payment,
+							subject: obj.templates,
+							createdon: obj.selected_template_date,
+							scheduledDate: obj.scheduledDate
+						};
 
 					});
 					return res.json(returnObj);
 				}
-			});			
-
-
-		} catch (e)  {
-            res.send({"error": "error in your request"});
-		}
-	}		
-
-	getPayment(req: express.Request, res: express.Response){
-		 try {
-    	 	var _userBusiness = new UserBusiness();
-        	_userBusiness.verifyToken(req, res,  (userData) => { 
-	    	 	var _payment: IPaymentModel = <IPaymentModel>req.body;
-	    	 	var _paymentBusiness = new PaymentBusiness();
-	    	 	var userId: string = req.params._id;
-				_paymentBusiness.retrieve({"user_id":userId}, (error, result) => {
-					if(error){
-						console.log("error====",error)
-					}else {
-						return res.json({payment:result});
-					}
-				});
-			
-		    	 	
-				
 			});
-    	 }
-    	  catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
-		}
-	}	
-	saveBlastCalender(req: express.Request, res: express.Response){
-		 try {
-    	    var _blastBusiness = new BlastBusiness();
-			
-			var _id: string = req.params.blastId;
-		 	_blastBusiness.findById(_id, (error, result) => {
-		 	let _id: string = result._id.toString();
-		 	var _blastform: IBlastModel = <IBlastModel>req.body;
-		 	_blastform.scheduledDate=_blastform.data;
-		 	_blastBusiness.findOne({"_id":_id}, (error, dataBaseData) => {	
-				_blastBusiness.update(_id, _blastform, (error:any, resultUpdate:any) => {
-					if(error){
-					} else {
-						 var _blastSettingsBusiness = new BlastSettingsBusiness();
-			            _blastSettingsBusiness.retrieve("", function (error, result) {
-			                if (error) {
-			                    res.send({ "error": error });
-			                }
-			                else {
-			                    console.log("get settings dataBaseData", dataBaseData);
-			                    res.send({"success": "success",data:_blastform.scheduledDate,dataBaseData:dataBaseData,blastsettingData:result});
-			                }
-			            });
-						
-						
-					}
-				});
-			});
-		 }
-	 	}
-    	  catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+
+
+		} catch (e) {
+			res.send({ "error": "error in your request" });
 		}
 	}
- 	getTemplateOrPropertydata(req: express.Request, res: express.Response): void { 
- 		try {
- 			var _property: IPropertyModel = <IPropertyModel>req.body;
+
+	getPayment(req: express.Request, res: express.Response) {
+		try {
+			var _userBusiness = new UserBusiness();
+			_userBusiness.verifyToken(req, res, (userData) => {
+				var _payment: IPaymentModel = <IPaymentModel>req.body;
+				var _paymentBusiness = new PaymentBusiness();
+				var userId: string = req.params._id;
+				_paymentBusiness.retrieve({ "user_id": userId }, (error, result) => {
+					if (error) {
+						console.log("error====", error)
+					} else {
+						return res.json({ payment: result });
+					}
+				});
+			});
+		}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
+	saveBlastCalender(req: express.Request, res: express.Response) {
+		try {
+			var _blastBusiness = new BlastBusiness();
+
+			var _id: string = req.params.blastId;
+			_blastBusiness.findById(_id, (error, result) => {
+				let _id: string = result._id.toString();
+				var _blastform: IBlastModel = <IBlastModel>req.body;
+				_blastform.scheduledDate = _blastform.data;
+				_blastBusiness.findOne({ "_id": _id }, (error, dataBaseData) => {
+					_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
+						if (error) {
+						} else {
+							var _blastSettingsBusiness = new BlastSettingsBusiness();
+							_blastSettingsBusiness.retrieve("", function (error, result) {
+								if (error) {
+									res.send({ "error": error });
+								}
+								else {
+									console.log("get settings dataBaseData", dataBaseData);
+									res.send({ "success": "success", data: _blastform.scheduledDate, dataBaseData: dataBaseData, blastsettingData: result });
+								}
+							});
+
+
+						}
+					});
+				});
+			}
+	 	}
+		catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
+	}
+	getTemplateOrPropertydata(req: express.Request, res: express.Response): void {
+		try {
+			var _property: IPropertyModel = <IPropertyModel>req.body;
 			var _propertyBusiness = new PropertyBusiness();
 			var _blastform: IBlastModel = <IBlastModel>req.body;
 			//console.log("_blastform===",_blastform);
 
-	 		var propertyAggregate = [
-	            	{
-		                $lookup:                       
-		                {
-		                    from: "users",
-		                    localField: "userId",   
-		                    foreignField: "_id",        
-		                    as: "users"               
-		                }
-		            },   
-		            {
-			      	  	$unwind:"$users"
-			        
-			      	},
-		            {
-		                $lookup:                       
-		                {
-		                    from: "templates",
-		                    localField: "_id",   
-		                    foreignField: "Property_id",        
-		                    as: "templates"               
-		                }
-		            },
-		            {
-		                $lookup:                       
-		                {
-		                    from: "blasts",
-		                    localField: "blast_id",   
-		                    foreignField: "_id",        
-		                    as: "blasts"               
-		                }
-		            },
-		            {
-		                $project:                       
-		                {    
-		                    "_id":1,
-		                    "userId":1,
-     		                "display_method":1,
-		                    "street_address":1,
-		                    "city":1,
-		                    "state":1,
-		                    "zipcode":1,
-		                    "blast_id":1,
-		                    "mls_number":1,
-							"board":1,
-		                    "property_type":1,
-		                    "property_style":1,
-		                    "lot_size":1,
-		                    "number_bedrooms":1,
-		                    "building_size":1,
-		                    "number_stories":1,
-							"number_bathrooms":1,
-							"year_built":1,
-							"garage":1,
-							"garageSize":1,
-							"price":1,
-							"pricingInfo":1,
-							"property_details":1,
-							"isOpenHouse":1,
-							"propertyImages":1,
-							"linksToWebsites":1,
-							"templates.email_subject":1,
-							"templates.from_line":1,
-							"templates.address":1,
-							"templates.Property_id":1,
-							"templates.headline":1,
-							"templates.template_type":1,
-							"templates.userId":1,
-							"users.userName":1,
-							"users.firstName":1,
-							"users.lastName":1,
-							"users.roles":1,
-							"blasts":1,
+			var propertyAggregate = [
+				{
+					$lookup:
+					{
+						from: "users",
+						localField: "userId",
+						foreignField: "_id",
+						as: "users"
+					}
+				},
+				{
+					$unwind: "$users"
 
-					    }
-		            },
-		            {
-		                $match:
-	                    {
-								blast_id: mongoose.Types.ObjectId(_blastform.blast_id)      
-						}
-		            }
-		        ];
+				},
+				{
+					$lookup:
+					{
+						from: "templates",
+						localField: "_id",
+						foreignField: "Property_id",
+						as: "templates"
+					}
+				},
+				{
+					$lookup:
+					{
+						from: "blasts",
+						localField: "blast_id",
+						foreignField: "_id",
+						as: "blasts"
+					}
+				},
+				{
+					$project:
+					{
+						"_id": 1,
+						"userId": 1,
+						"display_method": 1,
+						"street_address": 1,
+						"city": 1,
+						"state": 1,
+						"zipcode": 1,
+						"blast_id": 1,
+						"mls_number": 1,
+						"board": 1,
+						"property_type": 1,
+						"property_style": 1,
+						"lot_size": 1,
+						"number_bedrooms": 1,
+						"building_size": 1,
+						"number_stories": 1,
+						"number_bathrooms": 1,
+						"year_built": 1,
+						"garage": 1,
+						"garageSize": 1,
+						"price": 1,
+						"pricingInfo": 1,
+						"property_details": 1,
+						"isOpenHouse": 1,
+						"propertyImages": 1,
+						"linksToWebsites": 1,
+						"templates.email_subject": 1,
+						"templates.from_line": 1,
+						"templates.address": 1,
+						"templates.Property_id": 1,
+						"templates.headline": 1,
+						"templates.template_type": 1,
+						"templates.userId": 1,
+						"users.userName": 1,
+						"users.firstName": 1,
+						"users.lastName": 1,
+						"users.roles": 1,
+						"blasts": 1,
+
+					}
+				},
+				{
+					$match:
+					{
+						blast_id: mongoose.Types.ObjectId(_blastform.blast_id)
+					}
+				}
+			];
 
 
-		         _propertyBusiness.aggregate( propertyAggregate, (error:any, result:any) => { 
-		        	if(error) {
-						res.send({"error": error});
-					} else {
-						var returnObj = result.map(function(obj: any): any {
-			            return {
-					        id: obj._id,
-					        firstName:obj.users.firstName,
-					        lastName:obj.users.lastName,
-					        middleName:obj.users.middleName,
-					        building_size:obj.building_size,
-					        number_bathrooms:obj.number_bathrooms,
-					        isOpenHouse:obj.isOpenHouse,
-					        property_type:obj.property_type,
-					        property_style:obj.property_style,
-					        mls_number:obj.mls_number,
-					        linksToWebsites:obj.linksToWebsites,
-					        property_detail:obj.property_details,
-					        pricingInfo:obj.pricingInfo,
-					        board:obj.board,
-					        zipcode:obj.zipcode,
-					        city:obj.city,
-					        display_method:obj.display_method,
-					        street_address:obj.street_address,
-					        number_bedrooms:obj.number_bedrooms,
-					        year_built:obj.year_built,
-					        number_stories:obj.number_stories,
-					        lot_size:obj.lot_size,
-					        templates:obj.templates,
-					        price:obj.price,
-					        garageSize:obj.garageSize,
-					        blast_id:obj.blast_id,
-					        agentData:obj.blasts,
-					        propertyImages:obj.propertyImages
-					    };
+			_propertyBusiness.aggregate(propertyAggregate, (error: any, result: any) => {
+				if (error) {
+					res.send({ "error": error });
+				} else {
+					var returnObj = result.map(function (obj: any): any {
+						return {
+							id: obj._id,
+							firstName: obj.users.firstName,
+							lastName: obj.users.lastName,
+							middleName: obj.users.middleName,
+							building_size: obj.building_size,
+							number_bathrooms: obj.number_bathrooms,
+							isOpenHouse: obj.isOpenHouse,
+							property_type: obj.property_type,
+							property_style: obj.property_style,
+							mls_number: obj.mls_number,
+							linksToWebsites: obj.linksToWebsites,
+							property_detail: obj.property_details,
+							pricingInfo: obj.pricingInfo,
+							board: obj.board,
+							zipcode: obj.zipcode,
+							city: obj.city,
+							display_method: obj.display_method,
+							street_address: obj.street_address,
+							number_bedrooms: obj.number_bedrooms,
+							year_built: obj.year_built,
+							number_stories: obj.number_stories,
+							lot_size: obj.lot_size,
+							templates: obj.templates,
+							price: obj.price,
+							garageSize: obj.garageSize,
+							blast_id: obj.blast_id,
+							agentData: obj.blasts,
+							propertyImages: obj.propertyImages
+						};
 
-				});
-						
-						return res.json(returnObj);
-			}
-		});				
-	  
- }  catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+					});
+
+					return res.json(returnObj);
+				}
+			});
+
+		} catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
+		}
 	}
-}
 
 
 }

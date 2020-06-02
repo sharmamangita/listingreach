@@ -20,4 +20,4 @@ interface IAgentTemplateModel extends mongoose.Document {
     created_on: string
 }
 
-export = IAgentTemplate;
+export = IAgentTemplateModel;

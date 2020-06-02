@@ -2314,4 +2314,7 @@ footer .credits {
   margin: 0 auto;
   max-width: 900px;
 }
-    
+.required:after {
+  content:" *";
+  color: red;
+}

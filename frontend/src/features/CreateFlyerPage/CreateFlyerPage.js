@@ -90,7 +90,6 @@ class CreateFlyerPage extends React.Component {
     if (nextProps && nextProps.users && nextProps.users.tab) {
       let tab = nextProps.users.tab;
       this.moveTab(tab);
-
     }
     if(profile){
       this.setState({profile});
