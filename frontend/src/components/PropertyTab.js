@@ -517,16 +517,12 @@ class PropertyTab extends React.Component {
       this.propsDataupdate(nextProps);
     }
 
-    if (nextProps) { }
-    /*    if(nextProps && nextProps.propertyData && nextProps.propertyData.data ||  nextProps.propertyData.data){
+    console.log("PROPS ", nextProps);
+    if (nextProps && nextProps.propertyData && nextProps.propertyData.data) {
       let templateId = nextProps.propertyData.data._id;
       let blast_id = nextProps.propertyData.data.blast_id;
-      this.setState({templateId:templateId,blast_id:blast_id});
-    }*/
-    //if((nextProps.propertyData!=undefined && nextProps.propertyData) || (nextProps.users!=undefined && nextProps.users.items )|| (nextProps.agentData!=undefined && nextProps.agentData) || (nextProps.profile!=undefined && nextProps.profile) || nextProps.imageData!=undefined &&  nextProps.imageData){
-    //this.propsDataupdate(nextProps.users,nextProps.agentData, nextProps.profile,nextProps.imageData);
-    //this.propsDataupdate(nextProps.propertyData);
-    // }
+      this.setState({ templateId: templateId, blast_id: blast_id });
+    }
   }
 
   //propsDataupdate(data, agentData, profile, images) {
@@ -552,62 +548,62 @@ class PropertyTab extends React.Component {
           states.Email.formReply = templates.address;
           states.blastHeadline = templates.headline;
         }
-        states.properties[i].propertyAddress.zipCode = saveData.zipcode;
-        states.properties[i].propertyAddress.city = saveData.city;
-        states.properties[i].propertyAddress.streetAddress =
-          saveData.street_address;
-        states.properties[i].propertyAddress.displayMethod =
-          saveData.display_method;
+        // states.properties[i].propertyAddress.zipCode = saveData.zipcode;
+        // states.properties[i].propertyAddress.city = saveData.city;
+        // states.properties[i].propertyAddress.streetAddress =
+        //   saveData.street_address;
+        // states.properties[i].propertyAddress.displayMethod =
+        //   saveData.display_method;
 
-        states.properties[i].mlsNumber.numberProperty =
-          saveData.mls_number;
-        states.properties[i].mlsNumber.boardAssociation = saveData.board;
+        // states.properties[i].mlsNumber.numberProperty =
+        //   saveData.mls_number;
+        // states.properties[i].mlsNumber.boardAssociation = saveData.board;
 
-        if (saveData.pricingInfo.length) {
-          states.properties[i].pricingInfo.price =
-            saveData.pricingInfo[0].price;
-          states.properties[i].pricingInfo.priceType =
-            saveData.pricingInfo[0].priceType;
-        }
+        // if (saveData.pricingInfo.length) {
+        //   states.properties[i].pricingInfo.price =
+        //     saveData.pricingInfo[0].price;
+        //   states.properties[i].pricingInfo.priceType =
+        //     saveData.pricingInfo[0].priceType;
+        // }
 
-        states.properties[i].propertyDetail = saveData.property_detail;
-        states.properties[i].generalPropertyInformation.yearBuilt =
-          saveData.year_built;
-        states.properties[i].propertyId = saveData.id;
+        // states.properties[i].propertyDetail = saveData.property_detail;
+        // states.properties[i].generalPropertyInformation.yearBuilt =
+        //   saveData.year_built;
+        // states.properties[i].propertyId = saveData.id;
 
-        states.properties[i].linksToWebsites.linkData =
-          saveData.linksToWebsites;
-        states.properties[i].isOpenHouse.openHouseData =
-          saveData.isOpenHouse;
+        // states.properties[i].linksToWebsites.linkData =
+        //   saveData.linksToWebsites;
+        // states.properties[i].isOpenHouse.openHouseData =
+        //   saveData.isOpenHouse;
 
-        states.properties[i].generalPropertyInformation.yearBuilt =
-          saveData.year_built;
-        states.properties[i].generalPropertyInformation.lotSize =
-          saveData.lot_size;
-        states.properties[i].generalPropertyInformation.buildingSize =
-          saveData.building_size;
-        states.properties[i].generalPropertyInformation.numberOfBedrooms =
-          saveData.number_bedrooms;
-        states.properties[i].generalPropertyInformation.numberOfStories =
-          saveData.number_stories;
-        states.properties[
-          i
-        ].generalPropertyInformation.pricePerSquareFoot = saveData.price;
-        states.properties[i].generalPropertyInformation.propertyType =
-          saveData.property_type;
-        states.properties[i].generalPropertyInformation.propertyStyle =
-          saveData.property_style;
+        // states.properties[i].generalPropertyInformation.yearBuilt =
+        //   saveData.year_built;
+        // states.properties[i].generalPropertyInformation.lotSize =
+        //   saveData.lot_size;
+        // states.properties[i].generalPropertyInformation.buildingSize =
+        //   saveData.building_size;
+        // states.properties[i].generalPropertyInformation.numberOfBedrooms =
+        //   saveData.number_bedrooms;
+        // states.properties[i].generalPropertyInformation.numberOfStories =
+        //   saveData.number_stories;
+        // states.properties[
+        //   i
+        // ].generalPropertyInformation.pricePerSquareFoot = saveData.price;
+        // states.properties[i].generalPropertyInformation.propertyType =
+        //   saveData.property_type;
+        // states.properties[i].generalPropertyInformation.propertyStyle =
+        //   saveData.property_style;
 
-        if (saveData.number_bathrooms.length) {
-          states.properties[
-            i
-          ].generalPropertyInformation.numberOfBathrooms.full =
-            saveData.number_bathrooms[0].full;
-          states.properties[
-            i
-          ].generalPropertyInformation.numberOfBathrooms.half =
-            saveData.number_bathrooms[0].half;
-        }
+        // if (saveData.number_bathrooms.length) {
+        //   states.properties[
+        //     i
+        //   ].generalPropertyInformation.numberOfBathrooms.full =
+        //     saveData.number_bathrooms[0].full;
+        //   states.properties[
+        //     i
+        //   ].generalPropertyInformation.numberOfBathrooms.half =
+        //     saveData.number_bathrooms[0].half;
+        // }
 
       });
     }
@@ -638,7 +634,7 @@ class PropertyTab extends React.Component {
       Email.formReply &&
       blastHeadline &&
       properties[0].propertyDetail &&
-      properties[0].pricingInfo.price
+      properties[0].pricingInfo.price && templateId
     ) {
       dispatch(
         userActions.saveProperty(

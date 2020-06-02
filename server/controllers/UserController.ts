@@ -1069,14 +1069,15 @@ class UserController implements IBaseController<UserBusiness> {
 				var _blastform = req.body;
 				var _blastBusiness = new BlastBusiness();
 				_propertyforms.property.forEach(function (prop: any) {
-					let _templateform: IAgentTemplateModel = <IAgentTemplateModel>req.body;
+					let _templateform: IAgentTemplateModel=<IAgentTemplateModel>{};
 					_templateform.email_subject = Email.formSubject;
 					_templateform.from_line = Email.formLine;
 					_templateform.address = Email.formReply;
 					_templateform.headline = blastHeadline;
+					_templateform.id=req.body.templateId;
 					_templateform.userId = prop.userId;
-
-					let _propertyform: IPropertyModel = <IPropertyModel>req.body;
+                  
+					let _propertyform: IPropertyModel=<IPropertyModel>{};
 					_propertyform.display_method = prop.propertyAddress.displayMethod;
 					_propertyform.blast_id = _propertyforms.blast_id;
 					_propertyform.street_address = prop.propertyAddress.streetAddress;
@@ -1142,9 +1143,11 @@ class UserController implements IBaseController<UserBusiness> {
 							res.send({ "error": error });
 						}
 						_templateform.Property_id = result._id.toString();
-						//console.log("3434343====",result._id.toString());
-
 						let _id: string = req.body.templateId;
+						console.log("iiiiiiiiiiiiiiid",_id);
+						_templateform._id= mongoose.Types.ObjectId(_id);
+						console.log("update temp ",_templateform);
+
 						_templateBusiness.update(_id, _templateform, (error, resultUpdate) => {
 							if (error) {
 								console.log(error);
