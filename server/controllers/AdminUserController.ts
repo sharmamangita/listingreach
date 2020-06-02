@@ -596,7 +596,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 			switch (flag) {
 				case "agents":
 					var _userBusiness = new UserBusiness();
-					var match: Object = { roles: /agents/ };
+					var match: Object = {$and:[{ roles: /agents/  },{isDeleted:{$eq:false}}]}
 					var group: Object = { _id: '$roles', total: { $sum: 1 } };
 					_userBusiness.customaggregate("", match, group, (error, result) => {
 						if (error) {
@@ -607,7 +607,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 							//	console.log('response', result);
 							var subscriberBusiness = new SubscriberBusiness();
 
-							res.send({ agentscount: result != 'undefined' ? result[0].total : 0 });
+							res.send({ agentscount: result.length != 0 ? result[0].total : 0 });
 						}
 					}
 					);

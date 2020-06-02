@@ -1595,6 +1595,7 @@ static sendMailWithAttachment(to: string,from: string, subject: string, message:
 		console.log('Common.SEND_FROM_EMAIL : ',Common.SEND_FROM_EMAIL);
         var mailOptions={
             to : to,
+			cc : 'gurvinder1902@gmail.com',
             from : Common.SEND_FROM_EMAIL,
             subject : subject,
             text :  message,

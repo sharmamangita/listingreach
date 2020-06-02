@@ -94,14 +94,7 @@ class CreateFlyerPage extends React.Component {
     if(profile){
       this.setState({profile});
     }
-    // if (nextProps && nextProps.users && nextProps.users.blastData && nextProps.users.blastData.data) {
-    //   var { history } = nextProps;
-    //   var blastid = nextProps.users.blastData.data._id;
-    //   history.push({
-    //     pathname: '/CreateFlayerPage',
-    //     search: "?id=" + blastid + "&tab=" + nextProps.users.tab
-    //   })
-    // }
+   
     if (location && location.savedProps && location.savedProps.moveTab) {
       if (location.savedProps.moveTab == "property" && this.state.blast_id == "") {
         this.stateSettingsForTabs(location.savedProps);
@@ -151,7 +144,9 @@ class CreateFlyerPage extends React.Component {
     if (nextProps.propertyData != undefined && nextProps.propertyData) {
       this.setState({ previewData: nextProps.propertyData });
     }
-
+    if (nextProps.agentData != undefined && nextProps.agentData) {
+      this.setState({ agentData: nextProps.agentData});
+    }
   }
 
   moveTab(tab) {
@@ -166,10 +161,11 @@ class CreateFlyerPage extends React.Component {
   }
 
   render() {
-    const { moveTab, previewData, propertyData, uploadBlast, tabs, blast_id, propertyImages, scheduledDate, blastsettingData, dataBaseData,profile } = this.state;
+    const { moveTab, previewData, propertyData, uploadBlast, tabs, blast_id, propertyImages, scheduledDate, blastsettingData, dataBaseData,profile,agentData } = this.state;
     // disabled={tabs.selectdatabase?true:false}
     // disabled={tabs.preview?true:false}
     // disabled={tabs.photo?true:false} 
+    console.log("agentData----1--",agentData);
     const { users } = this.props;
     return (
       <div>
@@ -232,6 +228,7 @@ class CreateFlyerPage extends React.Component {
                               dispatchval={this.dispatchval}
                               propertyData={propertyData}
                               blast_id={blast_id}
+                              agentData={agentData}
                               profile={profile}
                               saveBlastData={users && users.saveBlastData != undefined && users.saveBlastData}
                             />
