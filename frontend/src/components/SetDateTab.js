@@ -67,7 +67,6 @@ class SetDateTab extends React.Component {
         this.setState({  // add new event data
           scheduledDate: arg.dateStr,
           calendarEvents: this.state.calendarEvents.concat({ // creates a new array
-           
             start: arg.date,
             allDay: arg.allDay
           })
