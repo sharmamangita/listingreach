@@ -192,6 +192,7 @@ class ProfilePage extends React.Component {
   render() {
 
     const { submitted, submittedagent, profile, user, agentData } = this.state;
+    console.log("agentData====",agentData);
     let modalproimageOpen = (event) => {
       var id = event.currentTarget.dataset.id;
       this.setState({ showprofileimage: true, agentData: agentData, modalid: id });
@@ -326,15 +327,7 @@ class ProfilePage extends React.Component {
                             }
                           </div>
                         </div>
-                        <div className="col-md-6 mb-3">
-                          <div className="form-group">
-                            <div className="form-group">
-                              <select className="form-control form-control-lg form-control-a" id="city">
-                                <option>Select Country</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
+                        
                         <div className="col-md-12">
                           <input type="submit" value="Save" className="btn btn-a" />
                         </div>

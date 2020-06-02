@@ -527,11 +527,15 @@ class PropertyTab extends React.Component {
       let blast_id = nextProps.propertyData.data.blast_id;
       this.setState({ templateId: templateId, blast_id: blast_id });
     }
+    if (nextProps && nextProps.agentData ) {
+     
+      this.setState({ agentData: nextProps.agentData });
+    }
   }
 
   //propsDataupdate(data, agentData, profile, images) {
   propsDataupdate(data) {
-
+    console.log("data===",data);
     let states = Object.assign({}, this.state);
     if (data && data.blastData) {
       states.blast_id = data.blastData._id;
