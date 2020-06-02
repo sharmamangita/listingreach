@@ -29,7 +29,6 @@ class ProfilePage extends React.Component {
       id = this.props.user.userId;
     }
     const { dispatch } = this.props;
-    console.log("this.props====", this.props);
     this.props.dispatch(userActions.getById(this.props.user.userId));
     this.alermsg = '';
     this.state = {
@@ -134,9 +133,9 @@ class ProfilePage extends React.Component {
     const { profile } = this.state;
     const { dispatch } = this.props;
     if (profile.email) {
-       console.log("srt=====",profile);
       dispatch(userActions.update(profile));
       window.scrollTo(0, 0);
+      this.setState({ submitted: false });
       this.setState({ visible: true }, () => {
         window.setTimeout(() => {
           this.setState({ visible: false })
@@ -158,6 +157,7 @@ class ProfilePage extends React.Component {
     if (agentData.name && agentData.email) {
       dispatch(userActions.saveAgents(agentData));
       window.scrollTo(0, 0);
+      this.setState({ submittedagent: false });
       this.setState({ visible: true }, () => {
         window.setTimeout(() => {
           this.setState({ visible: false })
@@ -180,25 +180,25 @@ class ProfilePage extends React.Component {
     let states = Object.assign({}, this.state);
     let propsData = data;
     let profileData = profile;
-    if ((propsData != undefined && propsData) || (profileData != undefined && profileData)) {
-      states.agentData = propsData;
+    if ( (profileData != undefined && profileData)) {
       states.profile = profileData;
-      this.setState({ agentData: states.agentData });
       this.setState({ profile: states.profile });
+    }
+    if((propsData != undefined && propsData) ){
+      states.agentData = propsData;
+      this.setState({ agentData: states.agentData });
     }
   }
   render() {
 
     const { submitted, submittedagent, profile, user, agentData } = this.state;
-    console.log("this.props.agentData===", agentData);
-    console.log("this.props.profile===", profile);
     let modalproimageOpen = (event) => {
       var id = event.currentTarget.dataset.id;
-      this.setState({ showprofileimage: true, agentData: this.props.agentData, modalid: id });
+      this.setState({ showprofileimage: true, agentData: agentData, modalid: id });
     }
     let modallogoimageOpen = (event) => {
       var id = event.currentTarget.dataset.id;
-      this.setState({ showprofilelogo: true, agentData: this.props.agentData, modalid: id });
+      this.setState({ showprofilelogo: true, agentData: agentData, modalid: id });
     }
     const { alert } = this.props;
     if (alert && alert.message) {
@@ -235,7 +235,7 @@ class ProfilePage extends React.Component {
         </section>
         <section className="news-grid grid">
           <div className="container">
-		  { alert.message &&
+		       { alert.message &&
 						<Alert className={`alert ${alert.type}`} style={{textAlign:"center"}} isOpen={this.state.visible} > <button type="button" onClick={this.closebtn} className="close" >
 								<span aria-hidden="true">&times;</span>
 								</button>{alert.message}</Alert>

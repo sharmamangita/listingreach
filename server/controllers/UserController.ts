@@ -436,33 +436,33 @@ updateUser(req: express.Request, res: express.Response): void {
 		try {
 			var _contactform: IContactformModel = <IContactformModel>req.body;
 			var _contactformBusiness = new ContactformBusiness();
-			_contactform.fullname =req.body.fullname;
+			_contactform.fullname = req.body.fullname;
 			_contactform.email = req.body.email;
 			_contactform.phone = req.body.phone;
 			_contactform.message = req.body.message;
 			_contactform.createdOn = new Date();
 			_contactformBusiness.create(_contactform, (error, result) => {
-				if(error) {
-					res.send({"error=========": error});
+				if (error) {
+					res.send({ "error=========": error });
 				} else {
-					var contactFormemail =Common.CONTACT_FORM;	
-					var emailtemplate = contactFormemail.replace(/#fullname#/g,_contactform.fullname).replace(/#email#/g,_contactform.email).replace(/#phone#/g,_contactform.phone).replace(/#message#/g,_contactform.message) .replace(/#date#/g,_contactform.createdOn);
-					Common.sendMail(_contactform.email,'support@ListingReach.com','Contact Form', null,emailtemplate, function(error: any, response: any){ 
-					if(error){ 
-					res.end("error");
-					}
+					var contactFormemail = Common.CONTACT_FORM;
+					var emailtemplate = contactFormemail.replace(/#fullname#/g, _contactform.fullname).replace(/#email#/g, _contactform.email).replace(/#phone#/g, _contactform.phone).replace(/#message#/g, _contactform.message).replace(/#date#/g, _contactform.createdOn);
+					Common.sendMail('salvep@salvesoft.com',_contactform.email, 'Contact Form', null, emailtemplate, function (error: any, response: any) {
+						if (error) {
+							res.end("error");
+						}
 					});
-					res.status(201).send({ "success":"done" }); 
+					res.status(201).send({ "success": "done" });
 				}
 			});
-		}  catch (e)  {
+		} catch (e) {
 			console.log(e);
-			res.send({"error": "error in your request"});
+			res.send({ "error": "error in your request" });
 		}
-	}    
-	
-emailPreviewTemplate(req: express.Request, res: express.Response): void { 
-		try { 
+	}
+
+	emailPreviewTemplate(req: express.Request, res: express.Response): void {
+		try {
 			var _propertyData: IPropertyModel = <IPropertyModel>req.body;
 			let property =  _propertyData.property_details;
 			var _contactformBusiness = new ContactformBusiness();
@@ -1026,7 +1026,7 @@ emailPreviewTemplate(req: express.Request, res: express.Response): void {
 	    	 	var _agent: IAgentModel = <IAgentModel>req.body;
 	    	 	_agent.createdOn = new Date();
 
-	    	 	_agent.user_id=companyUserData._id;
+	    	 	_agent.user_id=userData._id;
 
 				var _agentBusiness = new AgentBusiness();
 				_agentBusiness.findOne({'userId':userData._id}, (error:any, agentresult:any) => {
