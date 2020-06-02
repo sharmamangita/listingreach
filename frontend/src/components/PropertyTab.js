@@ -623,6 +623,7 @@ class PropertyTab extends React.Component {
 
   saveProperty(event) {
     event.preventDefault();
+    console.log("state on submit ",this.state)
     const {
       properties,
       agentData,
@@ -638,7 +639,7 @@ class PropertyTab extends React.Component {
       Email.formReply &&
       blastHeadline &&
       properties[0].propertyDetail &&
-      properties[0].pricingInfo.price && templateId
+      properties[0].pricingInfo.price 
     ) {
       dispatch(
         userActions.saveProperty(

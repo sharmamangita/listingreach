@@ -472,8 +472,8 @@ class UserController implements IBaseController<UserBusiness> {
 						res.send("Error generating email.");
 						return
 					}
-					if(_IagentTemplateModel.email){
-						Common.sendMail(_IagentTemplateModel.email, 'support@ListingReach.com', 'Property Email', null,HTML, function (error: any, response: any) {
+					if (_IagentTemplateModel.email) {
+						Common.sendMail(_IagentTemplateModel.email, 'support@ListingReach.com', 'Property Email', null, HTML, function (error: any, response: any) {
 							if (error) {
 								console.log(error);
 								res.end("error");
@@ -482,7 +482,7 @@ class UserController implements IBaseController<UserBusiness> {
 						res.send({ "success": "Done" });
 					}
 				});
-			});						
+			});
 		} catch (e) {
 			console.log(e);
 			res.send({ "error": "error in your request" });
@@ -723,7 +723,7 @@ class UserController implements IBaseController<UserBusiness> {
 					console.log(error);
 					res.send({ "error": error });
 				}
-				else res.send({ "success": "success", data: result }); 
+				else res.send({ "success": "success", data: result });
 			});
 		}
 		catch (e) {
@@ -819,28 +819,28 @@ class UserController implements IBaseController<UserBusiness> {
 				var _blastform = req.body;
 				var _blastBusiness = new BlastBusiness();
 				_propertyforms.property.forEach(function (prop: any) {
-					let _templateform: IAgentTemplateModel=<IAgentTemplateModel>{};
-					_templateform.email_subject = Email.formSubject;
-					_templateform.from_line = Email.formLine;
-					_templateform.address = Email.formReply;
-					_templateform.headline = blastHeadline;
-					_templateform.id=req.body.templateId;
-					_templateform.userId = prop.userId;
-                  
-					let _propertyform: IPropertyModel=<IPropertyModel>{};
-					_propertyform.display_method = prop.propertyAddress.displayMethod;
-					_propertyform.blast_id = _propertyforms.blast_id;
-					_propertyform.street_address = prop.propertyAddress.streetAddress;
-					_propertyform.city = prop.propertyAddress.city;
-					_propertyform.state = prop.propertyAddress.state;
-					_propertyform.zipcode = prop.propertyAddress.zipCode;
-					_propertyform.userId = prop.userId;
+					let _templateform: IAgentTemplateModel = <IAgentTemplateModel>{
+						email_subject: Email.formSubject,
+						from_line: Email.formLine,
+						address: Email.formReply,
+						headline: blastHeadline,
+						_id: req.body.templateId,
+						userId: prop.userId,
+					}
+					console.log("template===== ", _templateform)
 
-					_propertyform.mls_number = prop.mlsNumber.numberProperty;
-					_propertyform.board = prop.mlsNumber.boardAssociation;
-
-					_propertyform.pricingInfo = prop.pricingInfo;
-
+					let _propertyform: IPropertyModel = <IPropertyModel>{
+						display_method: prop.propertyAddress.displayMethod,
+						blast_id: _propertyforms.blast_id,
+						street_address: prop.propertyAddress.streetAddress,
+						city: prop.propertyAddress.city,
+						state: prop.propertyAddress.state,
+						zipcode: prop.propertyAddress.zipCode,
+						userId: prop.userId,
+						mls_number: prop.mlsNumber.numberProperty,
+						board: prop.mlsNumber.boardAssociation,
+						pricingInfo: prop.pricingInfo
+					}
 					if (prop.linksToWebsites) {
 						var linksData: any = [];
 						let data = prop.linksToWebsites.linkData;
@@ -894,9 +894,9 @@ class UserController implements IBaseController<UserBusiness> {
 						}
 						_templateform.Property_id = result._id.toString();
 						let _id: string = req.body.templateId;
-						console.log("iiiiiiiiiiiiiiid",_id);
-						_templateform._id= mongoose.Types.ObjectId(_id);
-						console.log("update temp ",_templateform);
+						console.log("iiiiiiiiiiiiiiid", _id);
+						_templateform._id = mongoose.Types.ObjectId(_id);
+						console.log("update temp ", _templateform);
 
 						_templateBusiness.update(_id, _templateform, (error, resultUpdate) => {
 							if (error) {
@@ -1119,7 +1119,7 @@ class UserController implements IBaseController<UserBusiness> {
 	}
 
 
-	getPreviewhtml(req: express.Request, res: express.Response) : void {
+	getPreviewhtml(req: express.Request, res: express.Response): void {
 		try {
 			const blastid = req.params.id;
 			//console.log("blastid====",blastid);
@@ -1134,23 +1134,23 @@ class UserController implements IBaseController<UserBusiness> {
 							res.send("Error generating email.");
 						} else {
 							//console.log("HTML======",HTML);
-							res.send({"html":HTML});
+							res.send({ "html": HTML });
 						}
 					})
 
-				} 
+				}
 
 			})
-		
-		 } 	catch (e)  {
-            console.log(e);
-            res.send({"error": "error in your request"});
+
+		} catch (e) {
+			console.log(e);
+			res.send({ "error": "error in your request" });
 		}
 	}
 
-	saveImages(req: express.Request, res: express.Response){
-		 try { 
- 			var _property: IPropertyModel = <IPropertyModel>req.body;
+	saveImages(req: express.Request, res: express.Response) {
+		try {
+			var _property: IPropertyModel = <IPropertyModel>req.body;
 
 			var _propertyBusiness = new PropertyBusiness();
 			let array = [];
