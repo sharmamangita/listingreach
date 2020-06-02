@@ -748,7 +748,7 @@ class UserController implements IBaseController<UserBusiness> {
 					if (result && result._id) {
 						_blastform.selected_template_id = result._id;
 						_blastform.status = 'Draft';
-						_blastBusiness.findOne({ "user_id": _IagentTemplateModel.userId }, (error, user) => {
+						_blastBusiness.findOne({_id: _IagentTemplateModel.blast_id }, (error, user) => {
 							let _id: string = user._id.toString();
 							_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
 								if (error) {

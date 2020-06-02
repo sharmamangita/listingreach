@@ -260,11 +260,11 @@ function blast(blast_type,user_id){
     return fetch(`${config.apiUrl}/users/saveBlast`, requestOptions).then(handleResponse);    
 }
 
-function designTemplate(template_type,userId){
+function designTemplate(template_type,blast_id){
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({template_type,userId})
+        body: JSON.stringify({template_type,blast_id})
     };
     return fetch(`${config.apiUrl}/users/saveDesignTemplate`, requestOptions).then(handleResponse);    
 } 

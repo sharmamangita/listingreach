@@ -78,7 +78,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                             console.log("error geting template :", error);
                             reject(error);
                         }
-                         //console.log("template",template);
+                         console.log("template",template);
                         const propertyBusiness = new PropertyBusiness();
                         const query = { blast_id: blast.id }
                         propertyBusiness.retrieve(query, (error, properties) => {

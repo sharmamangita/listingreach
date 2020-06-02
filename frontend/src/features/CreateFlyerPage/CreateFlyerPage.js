@@ -211,6 +211,7 @@ class CreateFlyerPage extends React.Component {
                         <AgentTemplateTab
                           dispatchval={this.dispatchval}
                           blastType={uploadBlast}
+                          blast_id={blast_id}
                         />
                       </Tab>
 

@@ -454,10 +454,10 @@ function blast(blast_type,user){
 
 }
 
-function designTemplate(designTemplate,user){
+function designTemplate(designTemplate,blast_id){
     return dispatch => {
         dispatch(request());
-        userService.designTemplate(designTemplate,user)
+        userService.designTemplate(designTemplate,blast_id)
             .then(
                 users => dispatch(success(users)),
                 error => dispatch(failure(error.toString()))
