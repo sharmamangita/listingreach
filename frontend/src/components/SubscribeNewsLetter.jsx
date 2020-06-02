@@ -421,7 +421,6 @@ class SubscribeNewsLetter extends React.Component {
     }
 }
 function mapStateToProps(state) {
-    console.log("stae11====", state);
     const { admins, registration } = state;
     const { activeCampaign, loading } = admins;
     const { clearForm } = registration;

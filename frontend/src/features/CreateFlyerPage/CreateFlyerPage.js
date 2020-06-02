@@ -47,6 +47,7 @@ class CreateFlyerPage extends React.Component {
 
     this.state = {
       blast_id: '',
+      profile:{},
       moveTab: "blast",
       previewData: [],
       propertyImages: [],
@@ -85,11 +86,14 @@ class CreateFlyerPage extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     console.log("nextProps==232===", nextProps);
-    const { location } = nextProps;
+    const { location,profile } = nextProps;
     if (nextProps && nextProps.users && nextProps.users.tab) {
       let tab = nextProps.users.tab;
       this.moveTab(tab);
 
+    }
+    if(profile){
+      this.setState({profile});
     }
     // if (nextProps && nextProps.users && nextProps.users.blastData && nextProps.users.blastData.data) {
     //   var { history } = nextProps;
@@ -163,10 +167,10 @@ class CreateFlyerPage extends React.Component {
   }
 
   render() {
-    const { moveTab, previewData, propertyData, uploadBlast, tabs, blast_id, propertyImages, scheduledDate, blastsettingData, dataBaseData } = this.state;
+    const { moveTab, previewData, propertyData, uploadBlast, tabs, blast_id, propertyImages, scheduledDate, blastsettingData, dataBaseData,profile } = this.state;
     // disabled={tabs.selectdatabase?true:false}
     // disabled={tabs.preview?true:false}
-    // disabled={tabs.photo?true:false}
+    // disabled={tabs.photo?true:false} 
     const { users } = this.props;
     return (
       <div>
@@ -229,6 +233,7 @@ class CreateFlyerPage extends React.Component {
                               dispatchval={this.dispatchval}
                               propertyData={propertyData}
                               blast_id={blast_id}
+                              profile={profile}
                               saveBlastData={users && users.saveBlastData != undefined && users.saveBlastData}
                             />
                           )}
@@ -322,7 +327,7 @@ function mapStateToProps(state) {
   const { scheduledDate } = users;
   const { blastsettingData } = users;
   const { dataBaseData } = users;
-  console.log("imageData===scheduledDate=", users);
+  console.log("imageData===scheduledDate=", state);
   return {
     alert,
     users,
