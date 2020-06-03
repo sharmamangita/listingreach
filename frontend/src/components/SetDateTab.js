@@ -33,7 +33,7 @@ class SetDateTab extends React.Component {
     this.state = {
       calendarWeekends: false,
       calendarEvents: [ // initial event data
-        { title: 'Event Now', start: new Date() }
+        
       ]
     };
     let user = JSON.parse(localStorage.getItem("user"));
@@ -64,13 +64,7 @@ class SetDateTab extends React.Component {
       if (arg.dateStr) {
 
         this.submitdata(arg.dateStr);
-        this.setState({  // add new event data
-          scheduledDate: arg.dateStr,
-          calendarEvents: this.state.calendarEvents.concat({ // creates a new array
-            start: arg.date,
-            allDay: arg.allDay
-          })
-        })
+        
       }
     }
   }

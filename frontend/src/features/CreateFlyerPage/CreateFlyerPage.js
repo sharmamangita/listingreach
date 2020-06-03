@@ -1,3 +1,4 @@
+ 
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
@@ -211,6 +212,7 @@ class CreateFlyerPage extends React.Component {
                         <AgentTemplateTab
                           dispatchval={this.dispatchval}
                           blastType={uploadBlast}
+                          blast_id={blast_id}
                         />
                       </Tab>
 
@@ -313,3 +315,4 @@ function mapStateToProps(state) {
 
 const connectedCreateFlyerPage = connect(mapStateToProps)(CreateFlyerPage);
 export { connectedCreateFlyerPage as CreateFlyerPage };
+

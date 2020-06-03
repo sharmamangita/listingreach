@@ -200,20 +200,10 @@ class PaymentsPage extends React.Component {
 					paidOn: this.createdDate(payment.createdOn),
 					amount: "$" + payment.amount,
 					headline: payment.template && payment.template.length > 0 ? payment.template[0].headline : "",
-					agentName: payment.blast && payment.blast.length > 0 ? payment.blast[0].agentData.name : "",
-					email: payment.blast && payment.blast.length > 0 ? payment.blast[0].agentData.email : "",
-					company: payment.blast && payment.blast.length > 0 ? payment.blast[0].agentData.company_details : "",
+					agentName: payment.blast && payment.blast.length > 0 && payment.blast[0].agentData ? payment.blast[0].agentData.name : "",
+					email: payment.blast && payment.blast.length > 0 && payment.blast[0].agentData ? payment.blast[0].agentData.email : "",
+					company: payment.blast && payment.blast.length > 0 && payment.blast[0].agentData? payment.blast[0].agentData.company_details : "",
 					sentOn: payment.blast && payment.blast.length > 0 ? this.createdDate(payment.blast[0].selected_template_date) : "",
-
-					// prefrences: (
-					// 	<a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={subscriber._id} onClick={this.handleModalOpem()} data-target="#intro">
-					// 		<span className="fa fa-settings"></span>
-					// 	</a>						
-					// ),
-					// actions: (
-					// 	<span> {this.deletelink(subscriber._id)} </span>
-					// ),
-					// status: (this.status(subscriber.status, subscriber._id))
 				});
 			}
 		}

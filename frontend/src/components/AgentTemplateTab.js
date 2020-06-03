@@ -18,8 +18,16 @@ class AgentTemplateTab extends React.Component {
     super(props);
     this.state = {
       userId: "",
+      blast_id:'',
     };
     this.selectDesignTemplate = this.selectDesignTemplate.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log("nextProps====", nextProps);
+    if (nextProps && nextProps.previewData && nextProps.previewData.templates) {
+      console.log("nextProps====", nextProps);
+    }
   }
 
   componentDidMount() {
@@ -33,8 +41,12 @@ class AgentTemplateTab extends React.Component {
   selectDesignTemplate(e, designTemplate) {
     if (designTemplate) {
       const { dispatch } = this.props.dispatchval.dispatch;
+       const { blast_id } = this.props; 
       const { userId } = this.state;
-      dispatch(userActions.designTemplate(designTemplate, userId));
+      if(blast_id){
+        dispatch(userActions.designTemplate(designTemplate, blast_id));
+      }
+      
     }
   }
 
