@@ -54,62 +54,15 @@ class PropertyTab extends React.Component {
         },
       },
     ];
-    let user = JSON.parse(localStorage.getItem("user"));
+
     let isOpenHouse = {
       houseType: "",
       date: "",
       startTime: "",
       endTime: ""
     };
-    this.property =
-    {
-      blast_id: "",
-      userId: user.userId,
-      propertyId: "",
-      Email: {
-        formSubject: "",
-        formLine: "",
-        formReply: "",
-      },
-      blastHeadline: "",
-      isOpenHouse: [],
-      pricingInfo: {
-        price: "",
-        priceType: "",
-      },
-      propertyAddress: {
-        displayMethod: "",
-        streetAddress: "",
-        city: "",
-        State: "",
-        zipCode: "",
-      },
-      mlsNumber: {
-        display: true,
-        numberProperty: "",
-        boardAssociation: "",
-      },
-      generalPropertyInformation: {
-        propertyType: "",
-        propertyStyle: "",
-        pricePerSquareFoot: "",
-        buildingSize: "",
-        lotSize: "",
-        lotType: "",
-        numberOfBedrooms: "",
-        numberOfBathrooms: {
-          full: "",
-          half: "",
-        },
-        yearBuilt: "",
-        numberOfStories: "",
-        garage: false,
-      },
-      propertyDetail: "",
-      linksToWebsites: []
-    };
     var properties = [];
-    properties.push(this.property);
+    properties.push( this.newProperty());
     var blast = {
       _id: null,
       blast_type: null,
@@ -168,7 +121,7 @@ class PropertyTab extends React.Component {
         },
         this.props.agentData
       ),
-     
+
       isOpenHouse,
       linksToWebsites,
       properties
@@ -191,9 +144,61 @@ class PropertyTab extends React.Component {
 
   }
 
+  newProperty() {
+    let user = JSON.parse(localStorage.getItem("user"));
+    let  property =
+    {
+      blast_id: "",
+      userId: user.userId,
+      propertyId: "",
+      Email: {
+        formSubject: "",
+        formLine: "",
+        formReply: "",
+      },
+      blastHeadline: "",
+      isOpenHouse: [],
+      pricingInfo: {
+        price: "",
+        priceType: "",
+      },
+      propertyAddress: {
+        displayMethod: "",
+        streetAddress: "",
+        city: "",
+        State: "",
+        zipCode: "",
+      },
+      mlsNumber: {
+        display: true,
+        numberProperty: "",
+        boardAssociation: "",
+      },
+      generalPropertyInformation: {
+        propertyType: "",
+        propertyStyle: "",
+        pricePerSquareFoot: "",
+        buildingSize: "",
+        lotSize: "",
+        lotType: "",
+        numberOfBedrooms: "",
+        numberOfBathrooms: {
+          full: "",
+          half: "",
+        },
+        yearBuilt: "",
+        numberOfStories: "",
+        garage: false,
+      },
+      propertyDetail: "",
+      linksToWebsites: []
+    };
+    return property;
+  }
+
   addProperty() {
     var { properties } = this.state;
-    properties.push(this.property);
+    properties.push(this.newProperty());
     this.setState({
       properties
     });
@@ -291,6 +296,17 @@ class PropertyTab extends React.Component {
     }
   }
 
+  to12hourTime(time) {
+    // Check correct time format and split into components
+    time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+
+    if (time.length > 1) { // If time format correct
+      time = time.slice(1);  // Remove full string match value
+      time[5] = +time[0] < 12 ? 'AM' : 'PM'; // Set AM/PM
+      time[0] = +time[0] % 12 || 12; // Adjust hours
+    }
+    return time.join(''); // return adjusted time or original string
+  }
   linksToWebsitesChange(event) {
     event.preventDefault();
     const { name, value } = event.target;
@@ -1079,8 +1095,8 @@ class PropertyTab extends React.Component {
                                 {openHouse.date}
                               </td>
                               <td>
-                                {openHouse.startTime}
-                                {openHouse.endTime}
+                                {this.to12hourTime(openHouse.startTime) + " to "}
+                                {this.to12hourTime(openHouse.endTime)}
                               </td>
                               <td>
                                 <i className="fa fa-trash" aria-hidden="true"

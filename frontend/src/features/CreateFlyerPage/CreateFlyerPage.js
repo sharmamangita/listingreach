@@ -147,7 +147,9 @@ class CreateFlyerPage extends React.Component {
       template.templateData = nextProps.templateName.data;
       this.setState({ propertyData: template });
     }
-
+    if (nextProps.agentData != undefined && nextProps.agentData) {
+      this.setState({ agentData: nextProps.agentData});
+    }
     if (nextProps.propertyData != undefined && nextProps.propertyData) {
       this.setState({ previewData: nextProps.propertyData });
     }
@@ -166,7 +168,7 @@ class CreateFlyerPage extends React.Component {
   }
 
   render() {
-    const { moveTab, previewData, propertyData, uploadBlast, tabs, blast_id, propertyImages, scheduledDate, blastsettingData, dataBaseData, profile } = this.state;
+    const { moveTab, previewData, propertyData, uploadBlast, tabs, blast_id, propertyImages, scheduledDate, blastsettingData, dataBaseData, profile ,agentData} = this.state;
     // disabled={tabs.selectdatabase?true:false}
     // disabled={tabs.preview?true:false}
     // disabled={tabs.photo?true:false} 
@@ -232,6 +234,7 @@ class CreateFlyerPage extends React.Component {
                               propertyData={propertyData}
                               blast_id={blast_id}
                               profile={profile}
+                              agentData={agentData}
                               saveBlastData={users && users.saveBlastData != undefined && users.saveBlastData}
                             />
                           )}
