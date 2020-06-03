@@ -3,6 +3,8 @@ import { userActions } from "../actions";
 import { Alert } from "reactstrap";
 import config from 'config';
 import { globalData } from '../constants/data.constants';
+import ProfileimageModal from '../components/ProfileimageModal';
+import ProfilelogoModal from '../components/ProfilelogoModal';
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 );
@@ -117,6 +119,8 @@ class PropertyTab extends React.Component {
       scheduledDate: null
     }
     this.state = {
+      showprofilelogo: false,
+      showprofileimage: false,
       blast,
       userId: "",
       blast_id: "",
@@ -164,43 +168,7 @@ class PropertyTab extends React.Component {
         },
         this.props.agentData
       ),
-
-      errors: [
-        {
-          properties: {
-            linksToWebsites: {
-              buildingSize: "",
-              url: "",
-            },
-            isOpenHouse: {
-              houseType: "",
-              date: "",
-              startTime: "",
-              endTime: "",
-            },
-            mlsNumber: {
-              numberProperty: "",
-            },
-            generalPropertyInformation: {
-              propertyType: "",
-              propertyStyle: "",
-              pricePerSquareFoot: "",
-              buildingSize: "",
-              lotSize: "",
-              lotType: "",
-              numberOfBedrooms: "",
-              numberOfBathrooms: {
-                full: "",
-                half: "",
-              },
-              yearBuilt: "",
-              numberOfStories: "",
-              garage: false,
-              garageSize: "",
-            },
-          },
-        },
-      ],
+     
       isOpenHouse,
       linksToWebsites,
       properties
@@ -587,27 +555,27 @@ class PropertyTab extends React.Component {
     if (properties && Email.formSubject && Email.formReply && blastHeadline && agentData) {
       if (!agentData.name || !agentData.email) {
         isvalid = false;
-        console.log("validation failed for agent ",agentData);
+        console.log("validation failed for agent ", agentData);
       }
 
       properties.forEach(function (prop) {
-      //  console.log(prop);
-        if (prop.isOpenHouse && prop.isOpenHouse.length>0) {
-            prop.isOpenHouse.forEach(function(ho){
-             if(ho.houseType.length==0 || ho.date.length==0)
-            //  isvalid = false;              
-              console.log("validation failed property openHouse",ho);
-            })
+        //  console.log(prop);
+        if (prop.isOpenHouse && prop.isOpenHouse.length > 0) {
+          prop.isOpenHouse.forEach(function (ho) {
+            if (ho.houseType.length == 0 || ho.date.length == 0)
+              //  isvalid = false;              
+              console.log("validation failed property openHouse", ho);
+          })
         }
         if (!prop.pricingInfo || !prop.pricingInfo.price || !prop.pricingInfo.priceType) {
           isvalid = false;
-          console.log("validation failed property pricing",prop.pricingInfo);
+          console.log("validation failed property pricing", prop.pricingInfo);
         }
         if (!prop.propertyAddress || !prop.propertyAddress.displayMethod
           || !prop.propertyAddress.streetAddress || !prop.propertyAddress.state
           || !prop.propertyAddress.city) {
           isvalid = false;
-          console.log("validation failed property address",prop.propertyAddress);
+          console.log("validation failed property address", prop.propertyAddress);
         }
         if (!prop.generalPropertyInformation ||
           !prop.generalPropertyInformation.propertyType ||
@@ -617,14 +585,14 @@ class PropertyTab extends React.Component {
           !prop.generalPropertyInformation.lotSize ||
           !prop.generalPropertyInformation.yearBuilt) {
           isvalid = false;
-          console.log("validation failed general property info",prop.generalPropertyInformation);
+          console.log("validation failed general property info", prop.generalPropertyInformation);
         }
       })
       if (isvalid) {
-        alert("submitting...")
+        //  alert("submitting...")
         dispatch(userActions.saveProperty(properties, agentData, Email, blastHeadline, templateId, blast_id));
         this.setState({ submitted: false });
-      }else{
+      } else {
         alert("some required fields were not filled");
       }
 
@@ -738,173 +706,200 @@ class PropertyTab extends React.Component {
       </div>
     );
   }
+  renderProfileimageModal() {
+    let modalClose = () => this.setState({ showprofileimage: false });
+    return (
+      <ProfileimageModal modalid={this.state.modalid} dispatchval={this.props.dispatchval} profile={this.state.agentData} users={this.state.user} visible={this.state.showprofileimage} onClickBackdrop={modalClose} dialogClassName="modal-lg" />
+    );
+  }
+  renderProfilelogoModal() {
+    let modalClose = () => this.setState({ showprofilelogo: false });
+    return (
+      <ProfilelogoModal modalid={this.state.modalid} dispatchval={this.props.dispatchval} profile={this.state.agentData} users={this.state.user} visible={this.state.showprofilelogo} onClickBackdrop={modalClose} dialogClassName="modal-lg" />
+    );
+  }
   renderAgent() {
     const { agentData, error, submitted } = this.state;
     //  console.log("agentData==11===",agentData);
     const { profile } = this.props;
-    let profilepc = "";
-    if (agentData && !agentData.name) {
-      agentData.name = agentData.name;
+    let modalproimageOpen = (event) => {
+      var id = event.currentTarget.dataset.id;
+      this.setState({ showprofileimage: true, agentData: agentData, modalid: id });
     }
-    if (profile && agentData && !agentData.email) {
-      agentData.email = agentData.email;
+    let modallogoimageOpen = (event) => {
+      var id = event.currentTarget.dataset.id;
+      this.setState({ showprofilelogo: true, agentData: agentData, modalid: id });
     }
+    const { alert } = this.props;
+    if (alert && alert.message) {
+
+      this.alermsg = alert;
+    }
+    let profilepc = '';
     if (agentData && agentData.image_url) {
       profilepc = `${config.uploadapiUrl}/uploads/${agentData.image_url}`;
     } else {
-      profilepc = "/public/assets/images/dummy-profile.png";
+      profilepc = '/public/assets/images/dummy-profile.png';
     }
-    let profilelogo = "";
+    var profileimagemodal = this.state.agentData ? this.renderProfileimageModal() : (<span></span>);
+
+    let profilelogo = '';
     if (agentData && agentData.logo_url) {
       profilelogo = `${config.uploadapiUrl}/uploads/${agentData.logo_url}`;
     } else {
-      profilelogo = "/public/assets/images/dummy-logo.png";
+      profilelogo = '/public/assets/images/dummy-logo.png';
     }
 
+    var profilelogomodal = this.state.agentData ? this.renderProfilelogoModal() : (<span></span>);
+
+
     return (
-      <React.Fragment>
-        <h5> Agent Contact Info</h5>
-        <div className="row">
-          <div className="col-md-6 mb-3">
-            <div className="form-group">
-              <input type="text" name="name" value={agentData && agentData.name}
-                className="form-control form-control-lg form-control-a required" placeholder="Agent Name"
-                onChange={(e) => this.handleChange("AgentContactInfo", e)} />
-              <div className="validation">
-                {submitted && !agentData.name && "This field is required"}
+      <div>
+        <div>
+          {profileimagemodal}
+        </div>
+        <div>
+          {profilelogomodal}
+        </div>
+        <div>
+          <h5> Agent Contact Info</h5>
+
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <div className="form-group">
+                <input type="text" name="name" value={agentData && agentData.name}
+                  className="form-control form-control-lg form-control-a required" placeholder="Agent Name"
+                  onChange={(e) => this.handleChange("AgentContactInfo", e)} />
+                <div className="validation">
+                  {submitted && !agentData.name && "This field is required"}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-6 mb-3">
-            <div className="form-group">
-              <input
-                type="text"
-                name="designation"
-                value={agentData && agentData.designation}
-                className="form-control form-control-lg form-control-a "
-                placeholder="Designation"
-                onChange={(e) => this.handleChange("AgentContactInfo", e)}
-              />
-            </div>
-            <div className="validation"></div>
-          </div>
-          <div className="col-md-6 mb-3">
-            <div className="form-group">
-              <input
-                name="email"
-                type="email"
-                value={agentData && agentData.email}
-                className="form-control form-control-lg form-control-a required"
-                placeholder="Email"
-                onChange={(e) => this.handleChange("AgentContactInfo", e)}
-              />
-              <div className="validation">
-                {submitted && !agentData.email && "This field is required"}
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6 mb-3">
-            <div className="form-group">
-              <input
-                type="text"
-                name="website_url"
-                placeholder="Website URL"
-                value={agentData && agentData.website_url}
-                className="form-control form-control-lg form-control-a"
-                onChange={(e) => this.handleChange("AgentContactInfo", e)}
-              />
-            </div>
-          </div>
-          <div className="col-md-6 mb-3">
-            <div className="form-group">
-              <input
-                name="phone_number"
-                type="phone"
-                pattern="[0-9]{0,5}"
-                value={agentData && agentData.phone_number}
-                className="form-control form-control-lg form-control-a"
-                placeholder="Phone Number"
-                onChange={(e) => this.handleChange("AgentContactInfo", e)}
-              />
-              <div className="validation">{error.agentData.phone_number}</div>
-            </div>
-          </div>
-          <div className="col-md-3 mb-3">
-            <div className="form-group">
-              <label className="check">
-                Use Agent Photo
-              <input
-                  type="checkbox"
-                  name="useAgentPhoto"
+            <div className="col-md-6 mb-3">
+              <div className="form-group">
+                <input
+                  type="text"
+                  name="designation"
+                  value={agentData && agentData.designation}
+                  className="form-control form-control-lg form-control-a "
+                  placeholder="Designation"
                   onChange={(e) => this.handleChange("AgentContactInfo", e)}
                 />
-                <span className="checkmark"></span>
-              </label>
-              <img
-                alt="Photo"
-                className="img-circle logo"
-                style={{ width: "120px" }}
-                src={profilepc}
-              />
-              <br />
-              <span>
-                <a href="">Upload Agent Photo</a>
-              </span>
+              </div>
+              <div className="validation"></div>
             </div>
-          </div>
-          <div className="col-md-3 mb-3">
-            <div className="form-group">
-              <label className="check">
-                Use Logo
-              <input
-                  type="checkbox"
-                  name="useLogo"
+            <div className="col-md-6 mb-3">
+              <div className="form-group">
+                <input
+                  name="email"
+                  type="email"
+                  value={agentData && agentData.email}
+                  className="form-control form-control-lg form-control-a required"
+                  placeholder="Email"
                   onChange={(e) => this.handleChange("AgentContactInfo", e)}
                 />
-                <span className="checkmark"></span>
-              </label>
-              <img
-                alt="Logo"
-                className="img-circle logo"
-                style={{ width: "120px" }}
-                src={profilelogo}
-              />
-              <br />
-              <span>
-                <a href="">Upload Agent Logo</a>
-              </span>
-            </div>
-          </div>
-          <div className="col-md-6 mb-3">
-            <div className="form-group">
-              <textarea
-                name="company_details"
-                value={agentData && agentData.company_details}
-                className="form-control"
-                cols="45"
-                rows="8"
-                onChange={(e) => this.handleChange("AgentContactInfo", e)}
-                placeholder="Company Details" />
-              <div className="validation">
-                {error.agentData.company_details}
+                <div className="validation">
+                  {submitted && !agentData.email && "This field is required"}
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-6 mb-3">
-            <div className="form-group">
-              <textarea
-                name="other_information"
-                value={agentData && agentData.other_information}
-                className="form-control"
-                cols="45"
-                rows="8"
-                onChange={(e) => this.handleChange("AgentContactInfo", e)}
-                placeholder="Other Information"
-              ></textarea>
+            <div className="col-md-6 mb-3">
+              <div className="form-group">
+                <input
+                  type="text"
+                  name="website_url"
+                  placeholder="Website URL"
+                  value={agentData && agentData.website_url}
+                  className="form-control form-control-lg form-control-a"
+                  onChange={(e) => this.handleChange("AgentContactInfo", e)}
+                />
+              </div>
+            </div>
+            <div className="col-md-6 mb-3">
+              <div className="form-group">
+                <input
+                  name="phone_number"
+                  type="phone"
+                  pattern="[0-9]{0,5}"
+                  value={agentData && agentData.phone_number}
+                  className="form-control form-control-lg form-control-a"
+                  placeholder="Phone Number"
+                  onChange={(e) => this.handleChange("AgentContactInfo", e)}
+                />
+                <div className="validation">{error.agentData.phone_number}</div>
+              </div>
+            </div>
+            <div className="col-md-3 mb-3">
+              <div className="form-group">
+                <div className="form-group">
+                  <label className="check">Use Agent Photo
+                          <input type="checkbox" />
+                    <span className="checkmark"></span>
+                  </label>
+                  <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id="profileimg" data-target="#profileimg" onClick={modalproimageOpen}>
+                    <img src={profilepc} alt="Image" className="profile-img img-fluid" />
+                  </a>
+                  <br></br>
+                  <span>
+                    <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id="profileimg" data-target="#profileimg" onClick={modalproimageOpen}>Upload Agent Photo</a>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-3 mb-3">
+              <div className="form-group">
+                <label className="check">
+                  Use Logo
+              <input
+                    type="checkbox"
+                    name="useLogo"
+                    onChange={(e) => this.handleChange("AgentContactInfo", e)}
+                  />
+                  <span className="checkmark"></span>
+                </label>
+                <img
+                  alt="Logo"
+                  className="img-circle logo"
+                  style={{ width: "120px" }}
+                  src={profilelogo}
+                />
+                <br />
+                <span>
+                  <a href="javascript:void(0)">Upload Agent Logo</a>
+                </span>
+              </div>
+            </div>
+            <div className="col-md-6 mb-3">
+              <div className="form-group">
+                <textarea
+                  name="company_details"
+                  value={agentData && agentData.company_details}
+                  className="form-control"
+                  cols="45"
+                  rows="8"
+                  onChange={(e) => this.handleChange("AgentContactInfo", e)}
+                  placeholder="Company Details" />
+                <div className="validation">
+                  {error.agentData.company_details}
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 mb-3">
+              <div className="form-group">
+                <textarea
+                  name="other_information"
+                  value={agentData && agentData.other_information}
+                  className="form-control"
+                  cols="45"
+                  rows="8"
+                  onChange={(e) => this.handleChange("AgentContactInfo", e)}
+                  placeholder="Other Information"
+                ></textarea>
+              </div>
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </div>
     )
   }
   renderProperties() {
