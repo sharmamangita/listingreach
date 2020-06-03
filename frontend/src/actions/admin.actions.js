@@ -63,7 +63,7 @@ function getActiveCampaignAssociations() {
             .then(
                 activeCampaign => {
                     dispatch(success(activeCampaign));
-                    dispatch(alertActions.success('Sent successfully.'));
+                    dispatch(alertActions.success('')); 
                 },
                 error => {
                     dispatch(failure(error.toString()));
