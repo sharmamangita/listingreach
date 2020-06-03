@@ -264,16 +264,21 @@ class DatabaseTab extends React.Component {
                 associations.map(function (result, i) {
                   return (
                     <tr key={i}>
-                      <td>{result.association.name}</td>
-                      <td>
-                        <i
+                      
+                      {result.segments.map(function (seg, k) {
+                        return( <td>
+                        {result.association.name} ---  {seg.name}
+                        <span>                        <i
                           className="fa fa-trash"
                           aria-hidden="true"
                           title="Delete"
                           id={i}
                           onClick={this.deleteAssociation}
-                        ></i>
-                      </td>
+                        ></i></span>
+                         </td>
+                        );
+                     }, this)}
+                     
                     </tr>
                   );
                 }, this)}
