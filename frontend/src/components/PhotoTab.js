@@ -37,6 +37,7 @@ class PhotoTab extends React.Component {
       ),
       visible: false,
       divCount: [],
+      submited:false,
     };
 
     this.openUpload = this.openUpload.bind(this);
@@ -53,7 +54,11 @@ class PhotoTab extends React.Component {
     var { property_ids, propertyImages } = this.state;
     var newArray = propertyImages.filter(value => JSON.stringify(value) !== '{}');
     const { dispatch } = this.props.dispatchval.dispatch;
-    dispatch(userActions.saveImages(property_ids, newArray));
+    if(newArray && property_ids){
+      dispatch(userActions.saveImages(property_ids, newArray));
+      this.setState({submited:true})
+    }
+    
   }
 
 
@@ -140,7 +145,7 @@ class PhotoTab extends React.Component {
   }
 
   render() {
-    const { imageData, visible, divCount, updateimage, template } = this.state;
+    const { imageData, visible, divCount, updateimage, template,submited } = this.state;
     console.log("this.state=4545====", this.state);
     const { previewData } = this.props;
     //console.log("previewData2323232====",this.props.previewData);
@@ -292,20 +297,24 @@ class PhotoTab extends React.Component {
                     );
                   }, this)}
             <div className="col-md-12 mt-4">
-              <a
-                href="javascript:void(0)"
+            <div className="col-md-12 mt-4">
+              <button
+                type="button"
                 className="btn btn-primary"
                 onClick={this.updateImages}
+                disabled={submited?true:false}
               >
                 Save
-              </a>
-              <a
-                href="javascript:void(0)"
+              </button>
+              <button
+                type="button"
                 className="btn btn-primary pull-right"
                 onClick={this.nextPage}
+                disabled={submited?false:true}
               >
-                Next 
-              </a>
+                Next
+              </button>
+            </div>
             </div>
                 </div>
               </div>
@@ -411,20 +420,22 @@ class PhotoTab extends React.Component {
                 );
               }, this)}
             <div className="col-md-12 mt-4">
-              <a
-                href="javascript:void(0)"
+              <button
+                type="button"
                 className="btn btn-primary"
                 onClick={this.updateImages}
+                disabled={submited?true:false}
               >
                 Save
-              </a>
-              <a
-                href="javascript:void(0)"
+              </button>
+              <button
+                type="button"
                 className="btn btn-primary pull-right"
                 onClick={this.nextPage}
+                disabled={submited?false:true}
               >
                 Next
-              </a>
+              </button>
             </div>
           </div>
         )}
