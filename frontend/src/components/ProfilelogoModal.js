@@ -32,7 +32,7 @@ class ProfilelogoModal extends React.Component {
        
         
         this.onClickHandler = this.onClickHandler.bind(this);
-        this.onClickDelete = this.onClickDelete.bind(this);
+        //this.onClickDelete = this.onClickDelete.bind(this);
         this.onfileChange = this.onfileChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);  
     }
@@ -54,26 +54,30 @@ class ProfilelogoModal extends React.Component {
 		const data = new FormData() 
 		data.append('myImage', this.state.image)
 		this.setState({loader:true})
-		console.log("data===",data);
+		
 		axios.post(`${config.uploadapiUrl}/logoupload/`,data,configs)
 			.then((response) => {
 			localStorage.setItem('profileimage', JSON.stringify(response.data.profileimg));
 			this.setState({ updateprofile:response.profileimg});	
 			this.setState({loader:false})
-			window.location.reload();
+			this.props.onClickBackdrop();
+          	this.handleClose();
+			
 			}).catch((error) => {
 			console.log("The file is error uploaded====");
+			this.props.onClickBackdrop();
+          	this.handleClose();
 			this.setState({loader:false})
 			});
 		
 		}
-			onClickDelete(){
-			var userid = this.props.profile;
-			const { dispatch } = this.props.dispatchval.dispatch;
-				dispatch(userActions.deleteprofilepic(userid.id));
-					window.location.reload();
-			}
-		
+		/*onClickDelete(){
+		var userid = this.props.profile;
+		const { dispatch } = this.props.dispatchval.dispatch;
+			dispatch(userActions.deleteprofilepic(userid.id));
+				window.location.reload();
+		}
+		*/
 		handleClose() {
 		this.setState({ show: false });
 		}
@@ -125,7 +129,6 @@ class ProfilelogoModal extends React.Component {
             </div>
         </div>
             <div className="modal-footer">
-            <button type ="button" className="btn btn-secondary float-left" onClick={this.onClickDelete}> Delete </button>
           <button type="button" className="btn btn-primary" onClick={this.onClickHandler}>
             Upload
           </button>

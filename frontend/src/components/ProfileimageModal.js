@@ -18,21 +18,21 @@ class ProfileimageModal extends React.Component {
         this.handleClose = this.handleClose.bind(this);
         let user  = JSON.parse(localStorage.getItem('user'));
         this.state = {
-        user:  Object.assign({
+    	user:  Object.assign({
             profileimage: '',
-          },this.props.profile),
-          loader:false, 
-          dispatchval:this.props.dispatchval.dispatch,
-          show: this.props.show,
-          image:null,
-          restoreFocus:true,
-          submitted: false,
-          proimg:'/public/assets/images/dummy-profile.png' 
+      	},this.props.profile),
+	      loader:false, 
+	      dispatchval:this.props.dispatchval.dispatch,
+	      show: this.props.show,
+	      image:null,
+	      restoreFocus:true,
+	      submitted: false,
+	      proimg:'/public/assets/images/dummy-profile.png' 
         };
        
         
         this.onClickHandler = this.onClickHandler.bind(this);
-        this.onClickDelete = this.onClickDelete.bind(this);
+        //this.onClickDelete = this.onClickDelete.bind(this);
         this.onfileChange = this.onfileChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);  
     }
@@ -50,7 +50,7 @@ class ProfileimageModal extends React.Component {
 			headers: {
 			 ...authHeader(), 'content-type': 'multipart/form-data'
 			}
-		}
+			}
 		const data = new FormData() 
 		data.append('myImage', this.state.image)
 		this.setState({loader:true})
@@ -59,9 +59,13 @@ class ProfileimageModal extends React.Component {
 			localStorage.setItem('profileimage', JSON.stringify(response.data.profileimg));
 			this.setState({ updateprofile:response.profileimg});	
 			this.setState({loader:false})
-			window.location.reload();
+			/*window.location.reload();*/
+			handleClose();
+			this.props.onClickBackdrop();
+          	this.handleClose();
 			}).catch((error) => {
-			console.log("The file is error uploaded====");
+			this.props.onClickBackdrop();
+          	this.handleClose(); 
 			this.setState({loader:false})
 			});
 		
@@ -74,7 +78,10 @@ class ProfileimageModal extends React.Component {
 			}
 		
 		handleClose() {
-		this.setState({ show: false });
+			this.setState({ show: false ,agentData: Object.assign({
+				image_url: ''
+			}) 
+			});
 		}
 		
 		handleShow() {
@@ -124,7 +131,6 @@ class ProfileimageModal extends React.Component {
             </div>
         </div>
             <div className="modal-footer">
-            <button type ="button" className="btn btn-secondary float-left" onClick={this.onClickDelete}> Delete </button>
           <button type="button" className="btn btn-primary" onClick={this.onClickHandler}>
             Upload
           </button>

@@ -9,7 +9,6 @@
 # dependencies
 /frontend/node_modules
 /server/node_modules
-/server/public/upload
 # IDEs and editors
 /.idea
 .project
