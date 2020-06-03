@@ -27,6 +27,7 @@ export const userService = {
     savePayment,
     getPayment,
     getSavedBlast,
+    getBlast,
     deleteSavedBlast,
     selectDatabase,
     saveImages,
@@ -275,7 +276,7 @@ function saveProperty(property,agentData,Email,blastHeadline,templateId,blast_id
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({property,agentData,Email,blastHeadline,templateId,blast_id})
+        body: JSON.stringify({properties: property,agentData,Email,blastHeadline,templateId,blast_id})
     };
     return fetch(`${config.apiUrl}/users/saveProperty`, requestOptions).then(handleResponse);    
 }
@@ -334,7 +335,16 @@ function getSavedBlast(agentId) {
         return user;
     }).catch(this.handleError);
 }
-
+function getBlast(id) {
+    const requestOptions = {
+            method: 'GET',
+            headers: authHeader()
+        };
+    return fetch(`${config.apiUrl}/users/getBlast/${id}`, requestOptions).then(handleResponse)
+    .then(user => {
+        return user;
+    }).catch(this.handleError);
+}
 function deleteSavedBlast(id){
     const requestOptions = {
             method: 'GET',

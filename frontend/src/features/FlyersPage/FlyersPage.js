@@ -8,14 +8,14 @@ const Entities = require("html-entities").XmlEntities;
 class FlyersPage extends React.Component {
   constructor(props) {
     super(props);
-    var user = JSON.parse(localStorage.getItem("user"));
-    this.props.dispatch(userActions.getSavedBlast(user.userId));
+   
     this.deleteSavedBlast = this.deleteSavedBlast.bind(this);
   }
 
   componentDidMount() {
-    window.scrollTo(0, 0);
-    //$('#example').DataTable();
+    
+    var user = JSON.parse(localStorage.getItem("user"));
+    this.props.dispatch(userActions.getSavedBlast(user.userId));
   }
   createdDate(createdOn) {
 		var expDate = new moment(createdOn, "YYYY-MM-DD");
@@ -82,7 +82,8 @@ class FlyersPage extends React.Component {
                               pathname: "/CreateFlyerPage",
                               savedProps: {
                                 moveTab: "property",
-                                blast_id: data.id
+                                blast_id: data.id,
+                                templateId:data.templateId
                               }
                             }} >
                               {data.id}
@@ -111,7 +112,8 @@ class FlyersPage extends React.Component {
                                   pathname: "/CreateFlyerPage",
                                   savedProps: {
                                     moveTab: "property",
-                                    blast_id: data.id
+                                    blast_id: data.id,
+                                    templateId:data.templateId
                                   },
                                 }} >
                                 <i className="fa fa-edit"></i>

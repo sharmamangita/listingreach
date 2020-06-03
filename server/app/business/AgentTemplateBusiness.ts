@@ -13,55 +13,55 @@ import AgentTemplateModel = require("./../model/AgentTemplateModel");
 class AgentTemplateBusiness implements BaseBusiness<IAgentTemplateModel> {
     private _agentTemplateRepository: agentTemplateRepository;
 
-    constructor () {
+    constructor() {
         this._agentTemplateRepository = new AgentTemplateRepository();
     }
-    create (item: IAgentTemplateModel, callback: (error: any, result: any) => void) {
-	   item._id=mongoose.Types.ObjectId();
-       this._agentTemplateRepository.create(item, callback);
+    create(item: IAgentTemplateModel, callback: (error: any, result: any) => void) {
+        item._id = mongoose.Types.ObjectId();
+        this._agentTemplateRepository.create(item, callback);
     }
 
-    retrieve (query: any, callback: (error: any, result: any) => void) {
+    retrieve(query: any, callback: (error: any, result: any) => void) {
         this._agentTemplateRepository.retrieve(query, callback);
     }
-    aggregate (query: any, callback: (error: any, result: any) => void) {
+    aggregate(query: any, callback: (error: any, result: any) => void) {
         this._agentTemplateRepository.aggregate(query, callback);
     }
-	retrieveFields (query: any, fields: any, callback: (error: any, result: any) => void) {
-        this._agentTemplateRepository.retrieveFields(query, fields,callback);
+    retrieveFields(query: any, fields: any, callback: (error: any, result: any) => void) {
+        this._agentTemplateRepository.retrieveFields(query, fields, callback);
     }
 
-    update (_id: string, item: IAgentTemplateModel, callback: (error: any, result: any) => void) {
+    update(_id: string, item: IAgentTemplateModel, callback: (error: any, result: any) => void) {
 
-        this._agentTemplateRepository.findById(_id, (err, res) => {
-            if(err) callback(err, res);
-
-            else
-                this._agentTemplateRepository.update(res._id, item, callback);
-
+        this._agentTemplateRepository.findById(_id, (err: any, res: any) => {
+            if (err) callback(err, res);
+            else {
+                console.log("template by id :",res);
+                this._agentTemplateRepository.update(_id, item, callback);
+            }
         });
     }
 
-    delete (_id: string, callback:(error: any, result: any) => void) {
-        this._agentTemplateRepository.delete(_id , callback);
+    delete(_id: string, callback: (error: any, result: any) => void) {
+        this._agentTemplateRepository.delete(_id, callback);
     }
 
-    deleteMany (query: any, callback:(error: any, result: any) => void) {
-        this._agentTemplateRepository.deleteMany(query , callback);
+    deleteMany(query: any, callback: (error: any, result: any) => void) {
+        this._agentTemplateRepository.deleteMany(query, callback);
     }
 
-    findById (_id: string, callback: (error: any, result: IAgentTemplateModel) => void) {
+    findById(_id: string, callback: (error: any, result: IAgentTemplateModel) => void) {
         this._agentTemplateRepository.findById(_id, callback);
     }
 
-    count (query: any, callback: (error: any, result: Number) => void) {
+    count(query: any, callback: (error: any, result: Number) => void) {
         this._agentTemplateRepository.count(query, callback);
     }
-	
-    findOne (query: any, callback: (error: any, result: IAgentTemplateModel) => void) {
+
+    findOne(query: any, callback: (error: any, result: IAgentTemplateModel) => void) {
         this._agentTemplateRepository.findOne(query, callback);
     }
-		
+
 }
 
 

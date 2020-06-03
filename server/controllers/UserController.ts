@@ -302,14 +302,6 @@ class UserController implements IBaseController<UserBusiness> {
 
 	}
 
-
-
-
-
-
-
-
-
 	delete(req: express.Request, res: express.Response): void {
 		try {
 
@@ -335,8 +327,6 @@ class UserController implements IBaseController<UserBusiness> {
 			res.send({ "error": "error in your request" });
 		}
 	}
-
-
 
 	findById(req: express.Request, res: express.Response): void {
 		try {
@@ -429,8 +419,6 @@ class UserController implements IBaseController<UserBusiness> {
 		});
 	}
 
-
-
 	contactForm(req: express.Request, res: express.Response): void {
 		try {
 			var _contactform: IContactformModel = <IContactformModel>req.body;
@@ -446,7 +434,7 @@ class UserController implements IBaseController<UserBusiness> {
 				} else {
 					var contactFormemail = Common.CONTACT_FORM;
 					var emailtemplate = contactFormemail.replace(/#fullname#/g, _contactform.fullname).replace(/#email#/g, _contactform.email).replace(/#phone#/g, _contactform.phone).replace(/#message#/g, _contactform.message).replace(/#date#/g, _contactform.createdOn);
-					Common.sendMail('salvep@salvesoft.com',_contactform.email, 'Contact Form', null, emailtemplate, function (error: any, response: any) {
+					Common.sendMail('salvep@salvesoft.com', _contactform.email, 'Contact Form', null, emailtemplate, function (error: any, response: any) {
 						if (error) {
 							res.end("error");
 						}
@@ -748,9 +736,8 @@ class UserController implements IBaseController<UserBusiness> {
 					if (result && result._id) {
 						_blastform.selected_template_id = result._id;
 						_blastform.status = 'Draft';
-						_blastBusiness.findOne({_id: _IagentTemplateModel.blast_id }, (error, user) => {
+						_blastBusiness.findOne({ _id: _IagentTemplateModel.blast_id }, (error, user) => {
 							let _id: string = user._id.toString();
-							console.log("blast ",user)
 							_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
 								if (error) {
 									console.log(error);
@@ -814,14 +801,15 @@ class UserController implements IBaseController<UserBusiness> {
 
 	saveProperty(req: express.Request, res: express.Response): void {
 		try {
+console.log("Properties Body : ",req.body)
 			var _propertyforms = req.body;
 			var _propertyBusiness = new PropertyBusiness();
-			if (_propertyforms && _propertyforms.property && _propertyforms.property.length) {
+			if (_propertyforms && _propertyforms.properties && _propertyforms.properties.length) {
 				var { Email, blastHeadline } = req.body;
 				var _templateBusiness = new AgentTemplateBusiness();
 				var _blastform = req.body;
 				var _blastBusiness = new BlastBusiness();
-				_propertyforms.property.forEach(function (prop: any) {
+				_propertyforms.properties.forEach(function (prop: any) {
 					let _templateform: IAgentTemplateModel = <IAgentTemplateModel>{
 						email_subject: Email.formSubject,
 						from_line: Email.formLine,
@@ -842,18 +830,17 @@ class UserController implements IBaseController<UserBusiness> {
 						board: prop.mlsNumber.boardAssociation,
 						pricingInfo: prop.pricingInfo
 					}
-					if (prop.linksToWebsites) {
+					if (prop.linksToWebsites && prop.linksToWebsites.length>0) {
 						var linksData: any = [];
-						let data = prop.linksToWebsites.linkData;
-						data.forEach(function (links: any) {
+						prop.linksToWebsites.forEach(function (links: any) {
 							if (links) {
-								linksData.push({ linksToWebsiteData: links.linksToWebsiteData });
+								linksData.push({ linksToWebsiteData: links });
 							}
 						});
 						_propertyform.linksToWebsites = linksData;
 					}
 
-					if (prop.isOpenHouse) {
+					if (prop.isOpenHouse && prop.isOpenHouse.length>0) {
 						var opneHouseData: any = [];
 						let data = prop.isOpenHouse.openHouseData;
 						data.forEach(function (house: any) {
@@ -887,11 +874,11 @@ class UserController implements IBaseController<UserBusiness> {
 					_propertyform.price = prop.generalPropertyInformation.pricePerSquareFoot;
 					_propertyform.property_details = prop.propertyDetail;
 
-
 					_propertyBusiness.create(_propertyform, (error, result) => {
 						if (error) {
-							console.log(error);
+							console.log("Property create error :", error);
 							res.send({ "error": error });
+							return;
 						}
 						_templateform.Property_id = result._id.toString();
 						let _id: string = req.body.templateId;
@@ -1216,7 +1203,27 @@ class UserController implements IBaseController<UserBusiness> {
 			res.send({ "error": "error in your request" });
 		}
 	}
-
+	getBlast(req: express.Request, res: express.Response): void {
+		try {
+			const blastId = req.params.id;
+			console.log("id: ",req.params)
+			var blastBusiness = new BlastBusiness();
+			blastBusiness.findById(blastId,(error:any,result:any)=>
+			{
+				if(error){
+					console.log("error in getBlast :",error);
+					res.send(error);
+				}else{
+					console.log("blast response",result)
+					res.send(result);
+				}
+			}
+			);
+		} catch (e) {
+			console.log("Exception in getBlast", e);
+			res.send(e);
+		}
+	}
 	getSavedBlast(req: express.Request, res: express.Response) {
 		try {
 			var _blastBusiness = new BlastBusiness();
@@ -1247,6 +1254,7 @@ class UserController implements IBaseController<UserBusiness> {
 						"user_id": 1,
 						"status": 1,
 						"selected_template_date": 1,
+						"selected_template_id": 1,
 						"scheduledDate": 1,
 						"templates.headline": 1,
 						"payment.amount": 1
@@ -1271,7 +1279,8 @@ class UserController implements IBaseController<UserBusiness> {
 							payment: obj.payment,
 							subject: obj.templates,
 							createdon: obj.selected_template_date,
-							scheduledDate: obj.scheduledDate
+							scheduledDate: obj.scheduledDate,
+							templateId:obj.selected_template_id
 						};
 
 					});

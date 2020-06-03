@@ -48,6 +48,7 @@ class UserRoutes {
         router.post("/users/saveProperty",controller.saveProperty);
         router.post("/users/propertyDetail",controller.getTemplateOrPropertydata);
         router.get("/users/getSavedBlast/:agentId",controller.getSavedBlast);
+        router.get("/users/getBlast/:id",controller.getBlast);
         router.get("/users/deleteSavedBlast/:id",controller.deleteSavedBlast);
         router.get("/users/getPreviewhtml/:id",controller.getPreviewhtml);
         router.post("/users/saveImages",controller.saveImages);

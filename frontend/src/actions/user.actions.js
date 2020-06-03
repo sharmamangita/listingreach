@@ -28,6 +28,7 @@ export const userActions = {
     savePayment,
     getPayment,
     getSavedBlast,
+    getBlast,
     deleteSavedBlast,
     selectDatabase,
     saveImages,
@@ -138,6 +139,26 @@ function getSavedBlast(agentId){
  function request(user) { return { type: userConstants.SAVEDBLAST_REQUEST, user } }
  function success(user) { return { type: userConstants.SAVEDBLAST_SUCCESS, user } }
  function failure(error) { return { type: userConstants.SAVEDBLAST_FAILURE, error } }    
+}
+
+function getBlast(Id) {
+    return dispatch => {
+        dispatch(request({ Id }));
+        userService.getBlast(Id)
+            .then(
+                blast => {
+                    dispatch(success(blast));
+                    //dispatch(alertActions.success('Email has been sent successfully'));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error(error.toString()));
+                }
+            );
+    };
+    function request(blast) { return { type: userConstants.GET_BLAST_REQUEST, blast } }
+    function success(blast) { return { type: userConstants.GET_BLAST_SUCCESS, blast } }
+    function failure(error) { return { type: userConstants.GET_BLAST_FAILURE, error } }
 }
 
 

@@ -41,12 +41,11 @@ class AgentTemplateTab extends React.Component {
   selectDesignTemplate(e, designTemplate) {
     if (designTemplate) {
       const { dispatch } = this.props.dispatchval.dispatch;
-       const { blast_id } = this.props; 
+       const  blast_id  = this.props.blastType.blastData._id; 
       const { userId } = this.state;
       if(blast_id){
         dispatch(userActions.designTemplate(designTemplate, blast_id));
       }
-      
     }
   }
 

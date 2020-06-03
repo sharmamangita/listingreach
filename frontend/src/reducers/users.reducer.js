@@ -87,6 +87,24 @@ export function users(state = {}, action) {
         error: action.error,
       };
 
+      case userConstants.GET_BLAST_REQUEST:
+        newState = objectAssign({}, state, {
+          loading: true,
+        });
+        return newState;
+  
+      case userConstants.GET_BLAST_SUCCESS:
+        newState = objectAssign({}, state, {
+          loading: true,
+          blast: action.blast,
+        });
+        return newState;
+  
+      case userConstants.GET_BLAST_FAILURE:
+        return {
+          error: action.error,
+        };
+
     case userConstants.BLAST_SUCCESS:
       newState = objectAssign({}, state, {
         tab: "designTemplateTab",
