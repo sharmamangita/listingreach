@@ -13,6 +13,7 @@ const entities = new Entities();
 class AgentDashboardPage extends React.Component {
   constructor(props) {
     super(props);
+    this.closebtn = this.closebtn.bind(this);
   }
 
   componentDidMount() {
@@ -22,6 +23,7 @@ class AgentDashboardPage extends React.Component {
   }
 
   render() {
+     const { alert } = this.props;
     if (this.props.users && this.props.users.items) {
       if (this.props.users.items[0]) {
         var abouttitle = entities.decode(this.props.users.items[0].page);
@@ -36,6 +38,10 @@ class AgentDashboardPage extends React.Component {
           <div className="container">
             <div className="row mb-4">
               <div className="col-md-12 section-t2">
+                { alert.message &&
+                      <Alert className={`alert ${alert.type}`} > <button type="button"  className="close">
+                        </button>{alert.message}</Alert>
+                }
                 <div className="card-deck">
                   <div className="card bg-light">
                     <div className="card-body text-center">

@@ -27,6 +27,7 @@ class TestimonialsPage extends React.Component {
 		  var privacypage = entities.decode(this.props.users.items[0].content);
 		  }
     }
+    const { alert } = this.props;
     return (
 		<div>
 			<section className="intro-single">
@@ -57,12 +58,17 @@ class TestimonialsPage extends React.Component {
 				<div className="container">
 				  <div className="row">       
 					<div className="col-sm-12 section-t2">
+						{ alert.message &&
+                          <Alert className={`alert ${alert.type}`} > <button type="button" className="close">
+                            </button>{alert.message}</Alert>
+                        }  
 					  <div className="row">
 						<div className="col-md-12">
 						 
 						 <div className="testimonials-box">
-						<div className="row">           
-						  <div className="col-sm-12 col-md-6">         
+						<div className="row">          
+						  <div className="col-sm-12 col-md-6">   
+     
 							<div className="testimonials-content">
 							  <p className="testimonial-text">
 							   “Listing Reach allowed me to market my luxury listing to top markets like Miami, LA, and NY. I was able to connect with another agent and close the deal. This tool is invaluable.”

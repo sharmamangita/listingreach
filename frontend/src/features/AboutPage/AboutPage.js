@@ -20,6 +20,7 @@ class AboutPage extends React.Component {
   }
 
   render() {
+  	  const { alert } = this.props;
 	  if(this.props.users && this.props.users.items){
 		  console.log("test",this.props.users);
       if(this.props.users.items[0]){
@@ -59,6 +60,11 @@ class AboutPage extends React.Component {
 					<div className="col-sm-12 section-t2">
 					  <div className="row">
 						<div className="col-md-12">
+
+						{ alert.message &&
+                          <Alert className={`alert ${alert.type}`} > <button type="button" className="close">
+                            </button>{alert.message}</Alert>
+                        }
 						  <p className="color-text-a">
 						  Listing Reach was created to provide an affordable solution for real estate professionals to “e” market properties to their target market… “other” real estate professionals.
 							</p>

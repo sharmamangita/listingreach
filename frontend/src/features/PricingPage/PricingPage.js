@@ -40,8 +40,10 @@ class PricingPage extends React.Component {
 	}
 	
   	render() {
-    const {blastsettings } = this.state;
-    console.log("blastsettings====",blastsettings);
+    const { blastsettings } = this.state;
+    
+    const { alert } = this.props;
+   // console.log("blastsettings====",blastsettings);
     return (
 		<div>
 			<section className="intro-single">
@@ -73,7 +75,11 @@ class PricingPage extends React.Component {
 					<div className="col-sm-12 section-t2">
 					  <div className="row">
 						<div className="col-md-12">
-						 
+						
+						{ alert.message &&
+                          <Alert className={`alert ${alert.type}`} > <button type="button" className="close">
+                            </button>{alert.message}</Alert>
+                        }
 							<p className="color-text-a">
 							Databases at ListingReach.com are broken down by “board affiliation”.
 							Email a listing to the database of your choice for only ${blastsettings.per_email_blast_price}. Add additional databases to your blast for only ${blastsettings.additional_email_blast_price}. Pricing is per blast.</p>
