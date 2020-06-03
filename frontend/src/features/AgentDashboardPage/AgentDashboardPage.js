@@ -13,7 +13,6 @@ const entities = new Entities();
 class AgentDashboardPage extends React.Component {
   constructor(props) {
     super(props);
-    this.closebtn = this.closebtn.bind(this);
   }
 
   componentDidMount() {
