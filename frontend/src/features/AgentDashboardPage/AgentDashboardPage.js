@@ -5,6 +5,7 @@ import Select from "react-select";
 import config from "config";
 import { Alert } from "reactstrap";
 import ListingSubmenu from '../../components/ListingSubmenu';
+import SubscribeNewsLetter from '../../components/SubscribeNewsLetter.jsx';
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 import { userActions } from "../../actions";
 const Entities = require('html-entities').XmlEntities;
@@ -21,8 +22,8 @@ class AgentDashboardPage extends React.Component {
   }
 
   render() {
+     const { alert } = this.props;
     if (this.props.users && this.props.users.items) {
-      console.log("test", this.props.users);
       if (this.props.users.items[0]) {
         var abouttitle = entities.decode(this.props.users.items[0].page);
         var AgentDashboardPage = entities.decode(this.props.users.items[0].content);
@@ -31,10 +32,15 @@ class AgentDashboardPage extends React.Component {
     return (
       <div>
         <ListingSubmenu />
+       
         <section className="news-grid grid">
           <div className="container">
             <div className="row mb-4">
               <div className="col-md-12 section-t2">
+                { alert.message &&
+                      <Alert className={`alert ${alert.type}`} > <button type="button"  className="close">
+                        </button>{alert.message}</Alert>
+                }
                 <div className="card-deck">
                   <div className="card bg-light">
                     <div className="card-body text-center">
@@ -81,7 +87,9 @@ class AgentDashboardPage extends React.Component {
                   <div className="card bg-light">
                     <div className="card-body text-center">
                       <i className="fa fa-envelope mb-2" style={{ fontSize: "38px" }}></i>
-                      <p className="card-text"><a href="billing.html">Subscriber Preferences</a></p>
+                      <p className="card-text"><a href="javascript:void(0)" id="sub-button" className="btn-b-n navbar-toggle-box-collapse d-none d-md-block" data-toggle="collapse"
+                data-target="#newsLetterSlider" aria-expanded="false" >Subscriber Preferences</a>
+                                   </p>
                       <span className="card-text-sm">Update preferences on blasts you receive from others</span>
                     </div>
                   </div>

@@ -105,7 +105,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                            if(property.propertyImages && property.propertyImages.length == 1){
                                                 html += `
                                                       <img
-                                                        src=${config.uploadapiUrl +
+                                                        src=${Common.SITE_URL +
                                                                           "/uploads/" +
                                                                           property.propertyImages[0].imageUrl
                                                                         }
@@ -203,7 +203,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                   image += `<div class="row">
                                       <div class="col-md-12">
                                         <img
-                                          src=${config.uploadapiUrl +
+                                          src=${Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[0].imageUrl
                                                           }
@@ -247,7 +247,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                         image += `<div class="row">
                                             <div class="col-md-12">
                                               <img
-                                                src=${config.uploadapiUrl +
+                                                src=${Common.SITE_URL +
                                                                   "/uploads/" +
                                                                   property.propertyImages[0].imageUrl
                                                                 }
@@ -275,7 +275,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                   image += `<div class="row">
                                       <div class="col-md-12">
                                         <img
-                                          src=${config.uploadapiUrl +
+                                          src=${Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[0].imageUrl
                                                           }
@@ -291,7 +291,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                       <div class="col-md-6 pr-1" style="padding-right: 0.25rem !important;flex: 0 0 50%;max-width: 50%;">
                                                         <img
                                                           src=${
-                                                            config.uploadapiUrl +
+                                                            Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[0].imageUrl
                                                           }
@@ -301,7 +301,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                       <div class="col-md-6 pl-1" style="padding-right: 0.25rem !important;flex: 0 0 50%;max-width: 50%;">
                                                         <img
                                                           src=${
-                                                            config.uploadapiUrl +
+                                                            Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[1].imageUrl
                                                           }
@@ -316,20 +316,20 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                   if(property.propertyImages && property.propertyImages.length == 3){ 
                                     image += `<div class="row" style="display: flex; -ms-flex-wrap: wrap;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;">
                                          <div class="col-md-8 pr-0" style="padding-right: 0 !important">
-                                         <img src=${config.uploadapiUrl +
+                                         <img src=${Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[0].imageUrl
                                                   } alt="image" style="width:100%;height: 100%;vertical-align: middle;border-style: none;">
                                             </div> 
                                             <div class="col-md-4 pl-0 pr-0" style="padding-left: 0 !important;">
                                          <div class="col-md-12 pl-0">
-                                         <img src=${config.uploadapiUrl +
+                                         <img src=${Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[1].imageUrl
                                                   } alt="image" style=" vertical-align: middle;border-style: none;">
                                             </div>
                                             <div class="col-md-12 pl-0">
-                                         <img src=${config.uploadapiUrl +
+                                         <img src=${Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[2].imageUrl
                                                   } alt="image" style="vertical-align: middle;border-style: none;">
@@ -342,25 +342,25 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                    if(property.propertyImages && property.propertyImages.length == 4){ 
                                     image += `<div class="row">
                                              <div class="col-md-6 pr-1 mb-1">
-                                             <img src=${config.uploadapiUrl +
+                                             <img src=${Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[0].imageUrl
                                                   } alt="image" style="width:100%;height: 250px;">
                                                 </div> 
                                                 <div class="col-md-6 pl-0 mb-1">
-                                             <img src=${config.uploadapiUrl +
+                                             <img src=${Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[1].imageUrl
                                                   } alt="image" style="width:100%;height: 250px;">
                                                 </div>
                                                  <div class="col-md-6 pr-1">
-                                             <img src=${config.uploadapiUrl +
+                                             <img src=${Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[2].imageUrl
                                                   } alt="image" style="width:100%;height: 250px;">
                                                 </div> 
                                                 <div class="col-md-6 pl-0">
-                                             <img src=${config.uploadapiUrl +
+                                             <img src=${Common.SITE_URL +
                                                             "/uploads/" +
                                                             property.propertyImages[3].imageUrl
                                                   } alt="image" style="width:100%;height: 250px;">
@@ -391,8 +391,8 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                     var emailtemplate = previewTemplatememail
                                         .replace(/#agentName#/g, agent.name)
                                         .replace(/#agentEmail#/g, agent.email)
-                                        .replace(/#agentImage#/g, agent.image_url || "http://66.235.194.119/listingreach/img/dummy-profile.png")
-                                        .replace(/#companyLogo#/g, agent.logo_url ||  "http://66.235.194.119/listingreach/img/dummy-logo.png") 
+                                        .replace(/#agentImage#/g, agent.image_url || Common.SITE_URL+"/public/assets/images/dummy-profile.png")
+                                        .replace(/#companyLogo#/g, agent.logo_url || Common.SITE_URL+"/public/assets/images/dummy-logo.png")
                                         .replace(/#WebsiteUrl#/g, agent.website_url)
                                         .replace(/#phone_number#/g, agent.phone_number)
                                         .replace(/#companyDetail#/g, agent.company_details)

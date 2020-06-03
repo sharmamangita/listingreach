@@ -1,6 +1,6 @@
 import { userConstants, adminConstants } from '../constants';
 import { subscriberService } from '../services'
-import { alertActions } from '.';
+import { alertActions } from './';
 import { history } from '../helpers';
 export const subscriberActions = {
     register,
@@ -50,14 +50,17 @@ function register(subscriber) {
                     console.log("user====", subscriber);
                     if (subscriber.error) {
                         dispatch(alertActions.error('This email address is already used, please try with another email.'));
+                        window.scrollTo(0,0);
                     } else {
                         //   history.push('/login');
-                        dispatch(alertActions.success('Thank you for registration.Please check your inbox for password and login link.'));
+                        dispatch(alertActions.success('Thank You! You are subscribed successfully.'));
+                        window.scrollTo(0,0);
                     }
                 },
                 error => {
                     dispatch(failure(error.toString()));
                     dispatch(alertActions.error('This email address is already added, please try with another email.'));
+                    window.scrollTo(0,0);
                 }
             );
     };

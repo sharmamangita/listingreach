@@ -27,6 +27,7 @@ class HomePage extends React.Component {
     // });
   }
   render() {
+    const { alert } = this.props;
     return (
       <div>
 
@@ -65,7 +66,10 @@ class HomePage extends React.Component {
                     <div className="row">
                       <div className="col-lg-10">
                         <div className="intro-body">
-
+                            { alert.message &&
+                                  <Alert className={`alert ${alert.type}`} > <button type="button" className="close">
+                                    </button>{alert.message}</Alert>
+                            }
                           <h1 className="intro-title mb-4">
                             Market Your Listings Locally & Nationwide</h1>
                           <h2 className="intro-title mb-4">Reach More Brokers | Sell Faster</h2>

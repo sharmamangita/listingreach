@@ -23,6 +23,7 @@ class PreviewTab extends React.Component {
     this.navId = "";
     this.state = {
       email: "",
+      submitted:'',
     };
     let user = JSON.parse(localStorage.getItem("user"));
     if (user && user.userId && this.props && this.props.dispatchval) {
@@ -65,7 +66,10 @@ class PreviewTab extends React.Component {
         }, 5000);
       });
     } else {
-      alert("Please fill all required fields.");
+      this.setState({
+        submitted: true,
+      });
+      //alert("Please fill all required fields.");
     }
   }
 
@@ -78,6 +82,7 @@ class PreviewTab extends React.Component {
   render() {
     console.log("this.props4545======",this.props);
     const { previewData, blast_id,praviewHtml } = this.props;
+    const {submitted,email} = this.state;
     let agentData = "";
     if (previewData && previewData.length) {
       agentData = previewData[0].agentData[0].agentData;
@@ -122,7 +127,7 @@ class PreviewTab extends React.Component {
                 className="form-control form-control-lg form-control-a"
                 placeholder="Email Address"
               />
-              {!this.state.email && (
+              { !email && submitted &&(
                 <div className="help-block red">Email is required</div>
               )}
             </div>

@@ -186,6 +186,10 @@ class SubscribeNewsLetter extends React.Component {
         ) {
             this.props.dispatch(subscriberActions.register(this.state.subscriber));
         }
+
+        $(".close-box-collapse.right-boxed.fa.fa-close.fa-2x").trigger( "click" );
+
+        
     }
     renderdataBaseModal() {
         const { show, activeCampaign, filteredSegments, loading } = this.state;
