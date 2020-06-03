@@ -392,7 +392,7 @@ class PhotoTab extends React.Component {
                             width: "24rem",
                             border: "dashed",
                             padding: "5px",
-                            "border-color": "#ccc",
+                            borderColor: "#ccc",
                           }}
                         >
                           <img

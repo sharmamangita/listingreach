@@ -750,8 +750,11 @@ class UserController implements IBaseController<UserBusiness> {
 						_blastform.status = 'Draft';
 						_blastBusiness.findOne({ "user_id": _IagentTemplateModel.userId }, (error, user) => {
 							let _id: string = user._id.toString();
+							console.log("blast ",user)
 							_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
 								if (error) {
+									console.log(error);
+									res.send(error);
 								} else {
 									return res.json({ "sucess": "sucess", "data": result });
 								}
@@ -824,10 +827,8 @@ class UserController implements IBaseController<UserBusiness> {
 						from_line: Email.formLine,
 						address: Email.formReply,
 						headline: blastHeadline,
-						_id: req.body.templateId,
 						userId: prop.userId,
 					}
-					console.log("template===== ", _templateform)
 
 					let _propertyform: IPropertyModel = <IPropertyModel>{
 						display_method: prop.propertyAddress.displayMethod,
@@ -894,7 +895,6 @@ class UserController implements IBaseController<UserBusiness> {
 						}
 						_templateform.Property_id = result._id.toString();
 						let _id: string = req.body.templateId;
-						console.log("iiiiiiiiiiiiiiid", _id);
 						_templateform._id = mongoose.Types.ObjectId(_id);
 						console.log("update temp ", _templateform);
 
@@ -1345,11 +1345,7 @@ class UserController implements IBaseController<UserBusiness> {
 	}
 	getTemplateOrPropertydata(req: express.Request, res: express.Response): void {
 		try {
-			var _property: IPropertyModel = <IPropertyModel>req.body;
 			var _propertyBusiness = new PropertyBusiness();
-			var _blastform: IBlastModel = <IBlastModel>req.body;
-			//console.log("_blastform===",_blastform);
-
 			var propertyAggregate = [
 				{
 					$lookup:
@@ -1429,7 +1425,7 @@ class UserController implements IBaseController<UserBusiness> {
 				{
 					$match:
 					{
-						blast_id: mongoose.Types.ObjectId(_blastform.blast_id)
+						blast_id: mongoose.Types.ObjectId(req.body.blast_id)
 					}
 				}
 			];
