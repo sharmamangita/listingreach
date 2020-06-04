@@ -319,6 +319,9 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 										var message = JSON.parse(mesg);
 										console.log("message ", message);
 										console.log("message ", message.id);
+										const moment = require('moment');
+										let testDate = moment(new Date()).add(30, 'm').toDate();
+										testDate = testDate.toUTCString();
 										if (message.id) {
 											console.log("associations:" + blast.associations)
 											blast.associations.forEach(function (association) {
@@ -330,7 +333,8 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 													type: "single",
 													name: template.email_subject,
 													//sdate: "2020-05-23 1:25:00 AM",
-													sdate: blast.scheduledDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+													sdate: testDate.scheduledDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+													//sdate: blast.scheduledDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
 													status: "1", //Active
 													public: "1", //Visible
 													priority: 3, //Medium
