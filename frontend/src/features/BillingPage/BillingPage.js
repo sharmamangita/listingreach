@@ -84,7 +84,7 @@ class BillingPage extends React.Component {
 										<td>{payments.invoice_id}</td>
 										<td>{this.createdDate(payments.createdOn)}</td>
 										<td>{payments.amount}</td>
-										<td>Email Sent</td>
+										<td>Email Not Sent</td>
 									</tr> 
 								))
                           	}  

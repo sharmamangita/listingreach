@@ -145,6 +145,7 @@ class UserController implements IBaseController<UserBusiness> {
 											email: result.email,
 											firstName: result.firstName,
 											lastName: result.lastName,
+											phone:result.phone,
 											token: token,
 											roles: result.roles
 										});
