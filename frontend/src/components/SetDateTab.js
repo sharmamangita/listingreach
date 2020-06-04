@@ -60,18 +60,18 @@ class SetDateTab extends React.Component {
 
   handleDateClick(arg) {
     if (confirm('Would you like to add an blast to ' + arg.dateStr + ' ?')) {
-
       if (arg.dateStr) {
-
-        this.submitdata(arg.dateStr);
-        
+       //this.submitdata(arg.dateStr);
+       this.setState({scheduledDate:arg.dateStr})
       }
     }
   }
   submitdata(data) {
+
     const { dispatch } = this.props.dispatchval.dispatch;
     var blast_id = '';
     const { scheduledDate } = this.state;
+    console.log("scheduledDate====",scheduledDate);
     if (this.props.uploadBlast && this.props.uploadBlast.blastData) {
       blast_id = this.props.uploadBlast.blastData._id;
       dispatch(userActions.saveCalenderData(scheduledDate, blast_id));

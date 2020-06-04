@@ -26,6 +26,7 @@ class UploadBlastTab extends React.Component {
     super(props);
     this.navId = "";
     this.openHouse = [];
+
     this.linksToWebsites = [];
     this.propertyError = [
       {
@@ -98,6 +99,7 @@ class UploadBlastTab extends React.Component {
     this.state = {
       userId: "",
       blast_id: "",
+      submitForm:false,
       blastImageUrl: "",
       propertyCount: 1,
       templateId: "",
@@ -615,6 +617,7 @@ class UploadBlastTab extends React.Component {
       blastHeadline,
       templateId,
       blast_id,
+      submitForm
     } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
     if (
@@ -632,6 +635,8 @@ class UploadBlastTab extends React.Component {
           blast_id
         )
       );
+    
+     this.setState({ submitForm: true });
     } else {
       this.setState({ submitted: true });
     }
@@ -647,8 +652,8 @@ class UploadBlastTab extends React.Component {
       submitted,
       error,
       Email,
-      blastImageUrl
-
+      blastImageUrl,
+      submitForm
     } = this.state;
 
     let propertyImg = "";
@@ -666,8 +671,8 @@ class UploadBlastTab extends React.Component {
         aria-labelledby="group-dropdown2-tab"
         aria-expanded="false"
       >
-        <h4>Single Property Details</h4>
-        <p>Enter property details for sale.</p>
+        <h4>Blast Details</h4>
+        
         <form
           className="form-a contactForm"
           action={this.saveProperty}
@@ -1563,22 +1568,24 @@ class UploadBlastTab extends React.Component {
               </div>
             );
           }, this)}
-          <div className="col-md-12 mt-4">
-            <a
-              href="javascript:void(0)"
-              className="btn btn-primary"
-              onClick={this.saveProperty}
-            >
-              Save
-            </a>
-            <a
-              href="javascript:void(0)"
-              className="btn btn-primary pull-right"
-              onClick={this.nextPage}
-            >
-              Next
-            </a>
-          </div>
+            <div className="col-md-12 mt-4">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={this.saveProperty}
+                disabled={submitForm?true:false}
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary pull-right"
+                onClick={this.nextPage}
+                disabled={submitForm?false:true}
+              >
+                Next
+              </button>
+            </div>
         </form>
       </div>
     );
