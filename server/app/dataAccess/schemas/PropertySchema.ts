@@ -8,96 +8,100 @@ var mongoose = DataAccess.mongooseInstance;
 var mongooseConnection = DataAccess.mongooseConnection;
 
 class PropertySchema {
-    static get schema () {
-        var schema =  mongoose.Schema({
-           _id: mongoose.Schema.Types.ObjectId,
-           blast_id:{
-               type:mongoose.Schema.Types.ObjectId
-           },
-            display_method : {
+    static get schema() {
+        var schema = mongoose.Schema({
+            _id: mongoose.Schema.Types.ObjectId,
+            blast_id: {
+                type: mongoose.Schema.Types.ObjectId
+            },
+            display_method: {
                 type: String
             },
-            street_address : {
+            street_address: {
                 type: String
             },
             city: {
                 type: String
             },
-            state : {
+            state: {
                 type: String
             },
-            zipcode : {
+            zipcode: {
                 type: String
             },
             mls_number: {
                 type: String
             },
-             board : {
+            board: {
                 type: String
             },
-            property_type : {
+            property_type: {
                 type: String
             },
             property_style: {
                 type: String
             },
-            building_size:{
-                type: String  
-            },
-            lot_size:{
-                type: String 
-            },
-            number_bedrooms:{
+            building_size: {
                 type: String
             },
-            year_built:{
-                type: String 
+            lot_size: {
+                type: String
             },
-            number_stories:{
-                type: String    
+            number_bedrooms: {
+                type: String
             },
-            garage:{
-                type: String  
+            year_built: {
+                type: String
             },
-            property_details:{
-                type: String                  
+            number_stories: {
+                type: String
             },
-            price:{
-                type: String                  
+            garage: {
+                type: String
             },
-            garageSize:{
-                type: String 
+            property_details: {
+                type: String
             },
-            pricingInfo:[{
-                price:{
-                 type:String
+            price: {
+                type: String
+            },
+            garageSize: {
+                type: String
+            },
+            pricingInfo: [{
+                price: {
+                    type: String
                 },
-                priceType:{
-                 type:String
+                priceType: {
+                    type: String
                 }
             }],
-            number_bathrooms:[{
-                full:{
-                 type:String
+            number_bathrooms: [{
+                full: {
+                    type: String
                 },
-                half:{
-                 type:String
+                half: {
+                    type: String
                 }
             }],
 
-            linksToWebsites:[{
-                linksToWebsiteData:Object
+            linksToWebsites: [{
+                text: { type: String },
+                url: { type: String }
             }],
 
-            isOpenHouse:[{
-                openHouseData:Object
+            isOpenHouse: [{
+                houseType: { type: String },
+                date: { type: Date },
+                startTime: { type: String },
+                endTime: { type: String }
             }],
-            userId:{
-                type:mongoose.Schema.Types.ObjectId
+            userId: {
+                type: mongoose.Schema.Types.ObjectId
             },
-            propertyImages:[{
-               imageId:String,
-               imageUrl:String
+            propertyImages: [{
+                imageId: { type: String },
+                imageUrl: { type: String }
             }],
 
         });

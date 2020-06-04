@@ -13,119 +13,7 @@ class PropertyTab extends React.Component {
   constructor(props) {
     super(props);
     this.navId = "";
-    let linksToWebsites = {
-      url: "",
-      text: ""
-    };
-
-    this.propertyError = [
-      {
-        properties: {
-          linksToWebsites: {
-            buildingSize: "",
-            url: "",
-          },
-          isOpenHouse: {
-            houseType: "",
-            date: "",
-            startTime: "",
-            endTime: "",
-          },
-          mlsNumber: {
-            numberProperty: "",
-          },
-          generalPropertyInformation: {
-            propertyType: "",
-            propertyStyle: "",
-            pricePerSquareFoot: "",
-            buildingSize: "",
-            lotSize: "",
-            lotType: "",
-            numberOfBedrooms: "",
-            numberOfBathrooms: {
-              full: "",
-              half: "",
-            },
-            yearBuilt: "",
-            numberOfStories: "",
-            garage: false,
-            garageSize: "",
-          },
-        },
-      },
-    ];
-
-    let isOpenHouse = {
-      houseType: "",
-      date: "",
-      startTime: "",
-      endTime: ""
-    };
-    var properties = [];
-    properties.push( this.newProperty());
-    var blast = {
-      _id: null,
-      blast_type: null,
-      user_id: null,
-      status: null,
-      selected_template_id: null,
-      scheduledDate: null
-    }
-    this.state = {
-      showprofilelogo: false,
-      showprofileimage: false,
-      blast,
-      userId: "",
-      blast_id: "",
-      templateId: "",
-      disabled: true,
-      submitted: false,
-      alert: {
-        alertIsOpenHouse: false,
-        alertlink: false,
-        type: "",
-        message: "",
-      },
-      error: {
-        Email: {
-          formSubject: "",
-          formLine: "",
-          formReply: "",
-        },
-        blastHeadline: "",
-        agentData: {
-          name: "",
-          phone_number: "",
-          company_details: "",
-        },
-      },
-
-      Email: {
-        formSubject: "",
-        formLine: "",
-        formReply: "",
-      },
-      blastHeadline: "",
-      profile: this.props.profile,
-      agentData: Object.assign(
-        {
-          name: "",
-          designation: "",
-          email: "",
-          website_url: "",
-          phone_number: "",
-          company_details: "",
-          other_information: "",
-          image_url: "",
-          logo_url: "",
-        },
-        this.props.agentData
-      ),
-
-      isOpenHouse,
-      linksToWebsites,
-      properties
-    };
+    this.initializeState();
 
     this.handleChange = this.handleChange.bind(this);
     this.show = this.show.bind(this);
@@ -141,12 +29,73 @@ class PropertyTab extends React.Component {
     this.addProperty = this.addProperty.bind(this);
     this.deleteProperty = this.deleteProperty.bind(this);
 
+  }
 
+  initializeState() {
+    let linksToWebsites = {
+      url: "",
+      text: ""
+    };
+    let isOpenHouse = {
+      display: false,
+      houseType: "",
+      date: "",
+      startTime: "",
+      endTime: ""
+    };
+    var properties = [];
+    properties.push(this.newProperty());
+    var blast = {
+      _id: null,
+      blast_type: null,
+      user_id: null,
+      status: null,
+      selected_template_id: null,
+      scheduledDate: null
+    };
+    this.state = {
+      showprofilelogo: false,
+      showprofileimage: false,
+      blast,
+      userId: "",
+      blast_id: "",
+      templateId: "",
+      disabled: true,
+      submitted: false,
+      alert: {
+        alertIsOpenHouse: false,
+        alertlink: false,
+        type: "",
+        message: "",
+      },
+      Email: {
+        formSubject: "",
+        formLine: "",
+        formReply: "",
+      },
+      blastHeadline: "",
+      profile: this.props.profile,
+      agentData: Object.assign({
+        name: "",
+        designation: "",
+        email: "",
+        website_url: "",
+        phone_number: "",
+        company_details: "",
+        other_information: "",
+        image_url: "",
+        logo_url: "",
+      }, this.props.agentData),
+      isOpenHouse,
+      openHouseAdd: false,
+      linksToWebsites,
+      properties
+    };
   }
 
   newProperty() {
     let user = JSON.parse(localStorage.getItem("user"));
-    let  property =
+    let property =
     {
       blast_id: "",
       userId: user.userId,
@@ -229,7 +178,9 @@ class PropertyTab extends React.Component {
         startTime: "",
         endTime: ""
       }
-      this.setState({ properties, isOpenHouse });
+      this.setState({ properties, isOpenHouse, openHouseAdd: false });
+    } else {
+      this.setState({ openHouseAdd: true });
     }
   }
 
@@ -575,14 +526,7 @@ class PropertyTab extends React.Component {
       }
 
       properties.forEach(function (prop) {
-        //  console.log(prop);
-        if (prop.isOpenHouse && prop.isOpenHouse.length > 0) {
-          prop.isOpenHouse.forEach(function (ho) {
-            if (ho.houseType.length == 0 || ho.date.length == 0)
-              //  isvalid = false;              
-              console.log("validation failed property openHouse", ho);
-          })
-        }
+        //  console.log(prop);       
         if (!prop.pricingInfo || !prop.pricingInfo.price || !prop.pricingInfo.priceType) {
           isvalid = false;
           console.log("validation failed property pricing", prop.pricingInfo);
@@ -593,11 +537,15 @@ class PropertyTab extends React.Component {
           isvalid = false;
           console.log("validation failed property address", prop.propertyAddress);
         }
+        if (prop.mlsNumber && prop.mlsNumber.display
+          && (!prop.mlsNumber.boardAssociation || !prop.mlsNumber.numberProperty)) {
+          isvalid = false;
+          console.log("validation failed property MLS Number", prop.mlsNumber);
+        }
         if (!prop.generalPropertyInformation ||
           !prop.generalPropertyInformation.propertyType ||
           !prop.generalPropertyInformation.propertyStyle ||
           !prop.generalPropertyInformation.buildingSize ||
-          !prop.mlsNumber || !prop.mlsNumber.boardAssociation ||
           !prop.generalPropertyInformation.lotSize ||
           !prop.generalPropertyInformation.yearBuilt) {
           isvalid = false;
@@ -833,16 +781,11 @@ class PropertyTab extends React.Component {
             </div>
             <div className="col-md-6 mb-3">
               <div className="form-group">
-                <input
-                  name="phone_number"
-                  type="phone"
-                  pattern="[0-9]{0,5}"
+                <input name="phone_number" type="phone" pattern="[0-9]{0,5}"
                   value={agentData && agentData.phone_number}
-                  className="form-control form-control-lg form-control-a"
-                  placeholder="Phone Number"
+                  className="form-control form-control-lg form-control-a" placeholder="Phone Number"
                   onChange={(e) => this.handleChange("AgentContactInfo", e)}
                 />
-                <div className="validation">{error.agentData.phone_number}</div>
               </div>
             </div>
             <div className="col-md-3 mb-3">
@@ -887,17 +830,10 @@ class PropertyTab extends React.Component {
             </div>
             <div className="col-md-6 mb-3">
               <div className="form-group">
-                <textarea
-                  name="company_details"
+                <textarea name="company_details" placeholder="Company Details"
+                  className="form-control" cols="45" rows="8"
                   value={agentData && agentData.company_details}
-                  className="form-control"
-                  cols="45"
-                  rows="8"
-                  onChange={(e) => this.handleChange("AgentContactInfo", e)}
-                  placeholder="Company Details" />
-                <div className="validation">
-                  {error.agentData.company_details}
-                </div>
+                  onChange={(e) => this.handleChange("AgentContactInfo", e)} />
               </div>
             </div>
             <div className="col-md-6 mb-3">
@@ -919,7 +855,7 @@ class PropertyTab extends React.Component {
     )
   }
   renderProperties() {
-    const { properties, errors, submitted, alert, isOpenHouse, linksToWebsites } = this.state;
+    const { properties, errors, submitted, alert, isOpenHouse, openHouseAdd, linksToWebsites } = this.state;
     const { propertyData } = this.props;
     //   console.log("propertyDtaa", propertyData)
     return (
@@ -999,8 +935,7 @@ class PropertyTab extends React.Component {
               <div
                 style={{
                   display:
-                    property &&
-                      property.isOpenHouse &&
+                    property.isOpenHouse &&
                       property.isOpenHouse.display
                       ? "inline"
                       : "none",
@@ -1021,7 +956,7 @@ class PropertyTab extends React.Component {
                         </select>
                       </div>
                       <div className="validation">
-                        {submitted &&
+                        {openHouseAdd &&
                           (!property.isOpenHouse ||
                             !property.isOpenHouse.houseType) && "This field is required"}
                       </div>
@@ -1036,7 +971,7 @@ class PropertyTab extends React.Component {
                       />
                     </div>
                     <div className="validation">
-                      {submitted &&
+                      {openHouseAdd &&
                         (!property.isOpenHouse ||
                           !property.isOpenHouse.date) && "This field is required."}
                     </div>
@@ -1084,30 +1019,24 @@ class PropertyTab extends React.Component {
                   <tbody>
                     {property.isOpenHouse &&
                       property.isOpenHouse.length > 0 &&
-                      property.isOpenHouse.map(
-                        function (openHouse, openHouseIndex) {
-                          return (
-                            <tr key={openHouseIndex}>
-                              <td>
-                                {openHouse.houseType}
-                              </td>
-                              <td>
-                                {openHouse.date}
-                              </td>
-                              <td>
-                                {this.to12hourTime(openHouse.startTime) + " to "}
-                                {this.to12hourTime(openHouse.endTime)}
-                              </td>
-                              <td>
-                                <i className="fa fa-trash" aria-hidden="true"
-                                  title="openHoueDelete"
-                                  onClick={(e) => this.editOrDelete(e, "delete", property, openHouse)
-                                  }
-                                ></i>
-                              </td>
-                            </tr>
-                          );
-                        },
+                      property.isOpenHouse.map(function (openHouse, openHouseIndex) {
+                        return (
+                          <tr key={openHouseIndex}>
+                            <td>  {openHouse.houseType}   </td>
+                            <td>  {openHouse.date}  </td>
+                            <td>
+                              {openHouse.startTime && this.to12hourTime(openHouse.startTime) + " to " + this.to12hourTime(openHouse.endTime)}
+                            </td>
+                            <td>
+                              <i className="fa fa-trash" aria-hidden="true"
+                                title="openHoueDelete"
+                                onClick={(e) => this.editOrDelete(e, "delete", property, openHouse)
+                                }
+                              ></i>
+                            </td>
+                          </tr>
+                        );
+                      },
                         this
                       )}
                   </tbody>
@@ -1223,6 +1152,7 @@ class PropertyTab extends React.Component {
                     <select className="form-control form-control-lg form-control-a" name="state"
                       value={property.propertyAddress && property.propertyAddress.state}
                       onChange={(e) => this.handleChange("propertyAddress", e, property)}>
+                      <option value="">Select State</option>
                       {globalData.USstates.map((st) =>
                         <option key={st}>{st}</option>
                       )}
@@ -1265,17 +1195,16 @@ class PropertyTab extends React.Component {
                   </div>
                 </div>
               </div>
-              <div
-                className="row" style={{
-                  display:
-                    property.mlsNumber &&
-                      property.mlsNumber.display
-                      ? "flex"
-                      : "none",
-                }}            >
+              <div className="row" style={{
+                display:
+                  property.mlsNumber &&
+                    property.mlsNumber.display
+                    ? "flex"
+                    : "none"
+              }}  >
                 <div className="col-md-6 mb-3">
                   <div className="form-group">
-                    <label>MLS Number</label>
+                    <label className="required">MLS Number</label>
                     <input type="text" name="numberProperty" className="form-control form-control-lg form-control-a"
                       placeholder="Enter the MLS Number for Property" onChange={(e) => this.handleChange("mlsNumber", e, property)}
                       value={property.mlsNumber && property.mlsNumber.numberProperty
@@ -1283,7 +1212,7 @@ class PropertyTab extends React.Component {
                     />
                   </div>
                   <div className="validation">
-                    {submitted && (!property.mlsNumber || !property.mlsNumber.numberProperty)}
+                    {submitted && (!property.mlsNumber || !property.mlsNumber.numberProperty) && "This field is required."}
                   </div>
                 </div>
                 <div className="col-md-12 mb-3">
@@ -1468,7 +1397,7 @@ class PropertyTab extends React.Component {
                 </div>
                 <div className="col-md-4 mb-3">
                   <div className="form-group">
-                    <label>Lot Size</label>
+                    <label className="required">Lot Size</label>
                     <div className="input-group mb-3">
                       <input type="text" className="form-control form-control-lg form-control-a"
                         placeholder="0" name="lotSize"
@@ -1480,14 +1409,13 @@ class PropertyTab extends React.Component {
                       <div className="input-group-append">
                         <select className="form-control form-control-lg form-control-a" name="lotType"
                           onChange={(e) => this.handleChange("propertyInformation", e, property)} >
-                          <option>Select</option>
-                          <option>acres</option>
                           <option>sqft</option>
+                          <option>acres</option>
                         </select>
                       </div>
                     </div>
                     <div className="validation">
-                      {submitted && (!property.generalPropertyInformation || !property.generalPropertyInformation.lotSize)}
+                      {submitted && (!property.generalPropertyInformation || !property.generalPropertyInformation.lotSize) && "This field is required."}
                     </div>
                   </div>
                 </div>
@@ -1549,7 +1477,7 @@ class PropertyTab extends React.Component {
                       onChange={(e) => this.handleChange("propertyInformation", e, property)} />
                   </div>
                   <div className="validation">
-                    {submitted && (!property.generalPropertyInformation || !property.generalPropertyInformation.yearBuilt)}
+                    {submitted && (!property.generalPropertyInformation || !property.generalPropertyInformation.yearBuilt) && "This field is required."}
                   </div>
                 </div>
                 <div className="col-md-4 mb-3">
@@ -1616,7 +1544,7 @@ class PropertyTab extends React.Component {
               </div>
               <hr />
               <br />
-              <h5>Property Details</h5>
+              <h5 className="required">Property Details</h5>
               <div className="row">
                 <div className="col-md-12 mb-3">
                   <div className="form-group">

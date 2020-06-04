@@ -842,8 +842,7 @@ console.log("Properties Body : ",req.body)
 
 					if (prop.isOpenHouse && prop.isOpenHouse.length>0) {
 						var opneHouseData: any = [];
-						let data = prop.isOpenHouse.openHouseData;
-						data.forEach(function (house: any) {
+						prop.isOpenHouse.forEach(function (house: any) {
 							if (house) {
 								opneHouseData.push({ openHouseData: house.openHouseData });
 							}
@@ -1437,7 +1436,7 @@ console.log("Properties Body : ",req.body)
 				}
 			];
 
-
+            let _blastBusiness
 			_propertyBusiness.aggregate(propertyAggregate, (error: any, result: any) => {
 				if (error) {
 					res.send({ "error": error });
