@@ -11,6 +11,7 @@ interface IBlastModel extends mongoose.Document {
     scheduledDate: Date,
     selected_template_id: string,
     selected_template_date: Date,
+    sentDate: Date,
     agentData: {
         name: string,
         designation: string,

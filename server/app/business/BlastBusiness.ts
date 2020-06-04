@@ -42,6 +42,10 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
     });
   }
+  findOneAndUpdate(_id: mongoose.Types.ObjectId, item: any, callback: (error: any, result: any) => void) {
+
+    this._blastRepository.findByIdAndUpdate(_id, item, callback);
+  }
 
   delete(_id: string, callback: (error: any, result: any) => void) {
     this._blastRepository.delete(_id, callback);
@@ -152,7 +156,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     html += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
-                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment(resut. startTime).format('HH:mm A')}  - ${resut.endTime && moment(resut.endTime).format('HH:mm A')}  </span><br>
+                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment(resut.startTime).format('HH:mm A')}  - ${resut.endTime && moment(resut.endTime).format('HH:mm A')}  </span><br>
                                                     </div>`;
                   });
 
@@ -376,7 +380,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     openhousehtml += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
-                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment( resut.startTime).format('HH:mm A')}  - ${resut.endTime && moment(resut.endTime).format('HH:mm A')}  </span><br>
+                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment(resut.startTime).format('HH:mm A')}  - ${resut.endTime && moment(resut.endTime).format('HH:mm A')}  </span><br>
                                                     </div>`;
                   });
 

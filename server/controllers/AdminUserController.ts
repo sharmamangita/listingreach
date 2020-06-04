@@ -322,42 +322,59 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 										if (message.id) {
 											console.log("associations:" + blast.associations)
 											blast.associations.forEach(function (association) {
-												association.segments.forEach(function (segment) {
-													//console.log("template",template);
-													var data = {
-														api_action: "campaign_create",
-														api_key: Common.ActiveCampaignLey,
-														api_output: 'json',
-														type: "single",
-														name: template.email_subject,
-														//sdate: "2020-05-23 1:25:00 AM",
-														sdate: blast.scheduledDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
-														status: "1", //Active
-														public: "1", //Visible
-														priority: 3, //Medium
-														segmentid: segment.id
-													};
-													console.log("messageid  ", message.id)
-													data["p[" + association.association.id + "]"] = association.association.id;
-													data["m[" + message.id + "]"] = 100;//to send to 100%
-													console.log("data to post", data)
-													var dataString = querystring.stringify(data);
-													var headers = {
-														'Content-Length': dataString.length,
-														"Api-Token": Common.ActiveCampaignLey,
-														'Content-Type': 'application/x-www-form-urlencoded'
-													};
-													request.post(Common.ActiveCampaignUrl, {
-														headers: headers,
-														body: dataString
-													}, function (er: any, response: { statusCode: number; }, body: any) {
-														if (!er) {
-															console.log("campaign body  : ", body)
-														} else {
-															console.log("Error   : ", er)
+												//console.log("template",template);
+												var data = {
+													api_action: "campaign_create",
+													api_key: Common.ActiveCampaignLey,
+													api_output: 'json',
+													type: "single",
+													name: template.email_subject,
+													//sdate: "2020-05-23 1:25:00 AM",
+													sdate: blast.scheduledDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+													status: "1", //Active
+													public: "1", //Visible
+													priority: 3, //Medium
+													segmentid: association.segment.id
+												};
+												console.log("messageid  ", message.id)
+												data["p[" + association.association.id + "]"] = association.association.id;
+												data["m[" + message.id + "]"] = 100;//to send to 100%
+												console.log("data to post", data)
+												var dataString = querystring.stringify(data);
+												var headers = {
+													'Content-Length': dataString.length,
+													"Api-Token": Common.ActiveCampaignLey,
+													'Content-Type': 'application/x-www-form-urlencoded'
+												};
+												request.post(Common.ActiveCampaignUrl, {
+													headers: headers,
+													body: dataString
+												}, function (er: any, response: { statusCode: number; }, body: any) {
+													if (!er) {
+
+														//UPDATE BLAST//
+														let update = {
+															$set: {
+																status: "Sent",
+																sentDate: new Date()
+															}
 														}
-													});
-												})
+
+														blastBusiness.findOneAndUpdate(blast._id, update, (updateBlastError, updatedBlast) => {
+															if (updateBlastError) {
+																console.log("updateBlastError", updateBlastError);
+																res.send(updateBlastError)
+															} else {
+																res.send("Campaign Created Successfuly");
+															}
+														})
+														console.log("campaign body  : ", body)
+													} else {
+														console.log("Error   : ", er)
+														res.send(er);
+													}
+												});
+
 											})
 										}
 									} else {
@@ -596,7 +613,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 			switch (flag) {
 				case "agents":
 					var _userBusiness = new UserBusiness();
-					var match: Object = {$and:[{ roles: /agents/  },{isDeleted:{$eq:false}}]}
+					var match: Object = { $and: [{ roles: /agents/ }, { isDeleted: { $eq: false } }] }
 					var group: Object = { _id: '$roles', total: { $sum: 1 } };
 					_userBusiness.customaggregate("", match, group, (error, result) => {
 						if (error) {

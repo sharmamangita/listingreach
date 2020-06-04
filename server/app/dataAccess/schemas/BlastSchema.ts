@@ -29,6 +29,9 @@ class BlastSchema {
                 type: Date,
                 required: true
             },
+            sentOn: {
+                type: Date
+            },
             agentData: {
                 name: {
                     type: String
