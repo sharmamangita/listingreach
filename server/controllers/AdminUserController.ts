@@ -320,7 +320,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 										console.log("message ", message);
 										console.log("message ", message.id);
 										const moment = require('moment');
-										let testDate = moment(new Date()).add(30, 'm').toDate();
+										let testDate = moment(new Date()).add(1, 'm').toDate();
 										testDate = testDate.toUTCString();
 										if (message.id) {
 											console.log("associations:" + blast.associations)
