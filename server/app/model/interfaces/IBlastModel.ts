@@ -23,17 +23,17 @@ interface IBlastModel extends mongoose.Document {
         logo_url: string
 
     },
-    associations: [{
+    associations: {
         association: {
             id: string,
             name: string,
         },
-        segments: [{
+        segment: {
             id: String,
-            lists: [String]
+            name: String,
+            lists: []
         }
-        ]
-    }],
+    }[],
     status: string
 }
 

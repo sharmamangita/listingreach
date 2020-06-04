@@ -108,8 +108,7 @@ class PaymentTab extends React.Component {
               <th>Amount</th>
             </tr>
           </thead>
-          <tbody>
-            
+          <tbody>            
           {associations &&
                 associations.map((result, i) =>(                 
                   i == 0 ?
@@ -134,7 +133,6 @@ class PaymentTab extends React.Component {
               <td className="text-right">Invoice Total</td>
               <td>${invoiveTotal}</td>
             </tr> 
-              
           </tbody>
         </table>
         <br />

@@ -571,9 +571,9 @@ class UserController implements IBaseController<UserBusiness> {
 	selectDatabase(req: express.Request, res: express.Response): void {
 		try {
 			var _blastform: IBlastModel = <IBlastModel>req.body;
-			let _id: string = _blastform.blast_id;
+			let _id: string = req.body.blast_id;
 			var _blastBusiness = new BlastBusiness();
-			//console.log("_blastform=====",_blastform);
+			console.log("_blastform=====", _blastform);
 			/*					if(property.isOpenHouse){
 									var opneHouseData=[];
 									let data = property.isOpenHouse.openHouseData;
@@ -586,7 +586,8 @@ class UserController implements IBaseController<UserBusiness> {
 							}*/
 			_blastBusiness.update(_id, _blastform, (error, resultUpdate) => {
 				if (error) {
-					res.send({ "error": "error" });
+					console.log("save asscoiations error :", error);
+					res.send({ "error": error });
 				} else {
 					res.send({ "success": "success" });
 				}
@@ -801,7 +802,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 	saveProperty(req: express.Request, res: express.Response): void {
 		try {
-console.log("Properties Body : ",req.body)
+			console.log("Properties Body : ", req.body)
 			var _propertyforms = req.body;
 			var _propertyBusiness = new PropertyBusiness();
 			if (_propertyforms && _propertyforms.properties && _propertyforms.properties.length) {
@@ -830,7 +831,7 @@ console.log("Properties Body : ",req.body)
 						board: prop.mlsNumber.boardAssociation,
 						pricingInfo: prop.pricingInfo
 					}
-					if (prop.linksToWebsites && prop.linksToWebsites.length>0) {
+					if (prop.linksToWebsites && prop.linksToWebsites.length > 0) {
 						var linksData: any = [];
 						prop.linksToWebsites.forEach(function (links: any) {
 							if (links) {
@@ -840,7 +841,7 @@ console.log("Properties Body : ",req.body)
 						_propertyform.linksToWebsites = linksData;
 					}
 
-					if (prop.isOpenHouse && prop.isOpenHouse.length>0) {
+					if (prop.isOpenHouse && prop.isOpenHouse.length > 0) {
 						var opneHouseData: any = [];
 						prop.isOpenHouse.forEach(function (house: any) {
 							if (house) {
@@ -1205,15 +1206,14 @@ console.log("Properties Body : ",req.body)
 	getBlast(req: express.Request, res: express.Response): void {
 		try {
 			const blastId = req.params.id;
-			console.log("id: ",req.params)
+			console.log("id: ", req.params)
 			var blastBusiness = new BlastBusiness();
-			blastBusiness.findById(blastId,(error:any,result:any)=>
-			{
-				if(error){
-					console.log("error in getBlast :",error);
+			blastBusiness.findById(blastId, (error: any, result: any) => {
+				if (error) {
+					console.log("error in getBlast :", error);
 					res.send(error);
-				}else{
-					console.log("blast response",result)
+				} else {
+					console.log("blast response", result)
 					res.send(result);
 				}
 			}
@@ -1279,7 +1279,7 @@ console.log("Properties Body : ",req.body)
 							subject: obj.templates,
 							createdon: obj.selected_template_date,
 							scheduledDate: obj.scheduledDate,
-							templateId:obj.selected_template_id
+							templateId: obj.selected_template_id
 						};
 
 					});
@@ -1436,7 +1436,7 @@ console.log("Properties Body : ",req.body)
 				}
 			];
 
-            let _blastBusiness
+			let _blastBusiness
 			_propertyBusiness.aggregate(propertyAggregate, (error: any, result: any) => {
 				if (error) {
 					res.send({ "error": error });

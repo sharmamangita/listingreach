@@ -11,9 +11,7 @@ class DatabaseTab extends React.Component {
     super(props);
     this.associations = [];
     this.state = this.resetState();
-    this.state = {
-      associations: [],
-    };
+
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -47,7 +45,10 @@ class DatabaseTab extends React.Component {
       "Photography / Videography",
       "Other, N/A",
     ];
+    this.segment = { id: '', lists: [] };
+    this.association = { id: '', name: '' }
     const state = {
+      associations: [],
       show: false,
       clearForm: false,
       isFormValid: false,
@@ -73,28 +74,33 @@ class DatabaseTab extends React.Component {
   }
   handleStateChange(e) {
     const associationid = e.target.value;
+    console.log("assoid:",associationid);
     var index = e.nativeEvent.target.selectedIndex;
     const { activeCampaign } = this.state;
     const filteredSegments = activeCampaign.segments.filter(
       (segment) => segment.lists[associationid]
     );
-    console.log("filteredSegments=====", filteredSegments);
+    const selectedAssocaition = activeCampaign.associations.filter(
+      (asso) => asso.id == associationid
+    )[0];
+    console.log("selectedAssocaition",selectedAssocaition)
     activeCampaign.segment = [];
     this.setState({
+      selectedAssocaition,
       activeCampaign,
       filteredSegments,
     });
 
-    let states = Object.assign({}, this.state);
-    this.associations.push({
-      association: {
-        id: associationid,
-        name: e.nativeEvent.target[index].text,
-      },
-      segments:[],
-    });
-    states.associations = this.associations;
-    this.setState(states);
+    // let states = Object.assign({}, this.state);
+    // this.associations.push({
+    //   association: {
+    //     id: associationid,
+    //     name: e.nativeEvent.target[index].text,
+    //   },
+    //   segments: [],
+    // });
+    // states.associations = this.associations;
+    // this.setState(states);
   }
   componentDidMount() {
     var subscribeButton = document.querySelector("#sub-button");
@@ -114,36 +120,40 @@ class DatabaseTab extends React.Component {
     }
   }
 
-  handleChange(e, selectedItem) {
+  handleChange(e, _segment) {
     const { name, value, checked } = e.target;
-    console.log("this.associations=====",e.target);
-    if(this.associations){
+    let { selectedAssocaition, associations } = this.state;
 
-             let i = this.associations.length-1;
-              console.log("this.associations=====",this.associations);
-      if (checked) {
-           this.associations[i].segments.push(selectedItem);
-      } else {
-          var index = this.associations[i].segments.indexOf(selectedItem);
-          if (index > -1) {
-            this.associations[i].segments.splice(index, 1)
-          }
+    if (checked) {
+      let asso = {
+        association: { id: selectedAssocaition.id, name: selectedAssocaition.name },
+        segment: { id: _segment.id, lists: _segment.lists,name:_segment.name }
       }
-
-
+      associations.push(asso);
+      console.log("this.associations=====", associations);
+    } else {
+      var indexToRemove;
+      associations.forEach(function (item, index) {
+        if (item.segment.id == _segment.id) {
+          indexToRemove = index;
+        }
+      });
+      if (indexToRemove > -1) {
+        associations.splice(indexToRemove, 1);
+      }
     }
-
+    this.setState({ associations });
   }
-  deleteAssociation(e) {
-    const { id } = e.target;
-    let associationArray = Object.assign({}, this.state);
-    associationArray.associations.splice(id, 1);
-    this.setState(associationArray);
+  deleteAssociation(e, item) {
+    const { associations } = this.state;
+    let index = associations.indexOf(item);
+    associations.splice(index, 1);
+    this.setState(associations);
   }
   handleSubmit(e) {
     e.preventDefault();
     const { associations } = this.state;
-    const {blast_id} = this.props;
+    const { blast_id } = this.props;
     const { dispatch } = this.props.dispatchval.dispatch;
     dispatch(userActions.selectDatabase(blast_id, associations));
   }
@@ -152,7 +162,6 @@ class DatabaseTab extends React.Component {
     console.log("state in model ", this.state);
     return (
       <Modal show={show} onHide={this.handleClose} size="lg">
-        ;
         <Modal.Header>
           <h4 className="modal-title">Select Databases</h4>
         </Modal.Header>
@@ -161,8 +170,7 @@ class DatabaseTab extends React.Component {
             <React.Fragment>
               <form className="form">
                 <div className="form-group col-md-6">
-                  <select
-                    className="form-control form-control-a"
+                  <select className="form-control form-control-a"
                     onChange={(event) => this.handleStateChange(event)}
                   >
                     <option>Select State</option>
@@ -205,8 +213,8 @@ class DatabaseTab extends React.Component {
               </form>
             </React.Fragment>
           ) : (
-            <h4>Loading....</h4>
-          )}
+              <h4>Loading....</h4>
+            )}
         </Modal.Body>
         <Modal.Footer>
           <button
@@ -221,7 +229,7 @@ class DatabaseTab extends React.Component {
     );
   }
   render() {
-    console.log("database====",this.props);
+    console.log("database====", this.props);
     var { submitted, associations } = this.state;
     return (
       <React.Fragment>
@@ -261,35 +269,23 @@ class DatabaseTab extends React.Component {
           >
             <tbody>
               {associations &&
-                associations.map(function (result, i) {
+                associations.map(function (asso, i) {
                   return (
                     <tr key={i}>
-                      
-                      {result.segments.map(function (seg, k) {
-                        return( <td>
-                        {result.association.name} ---  {seg.name}
-                        <span>                        <i
-                          className="fa fa-trash"
-                          aria-hidden="true"
-                          title="Delete"
-                          id={i}
-                          onClick={this.deleteAssociation}
-                        ></i></span>
-                         </td>
-                        );
-                     }, this)}
-                     
+                      <td>
+                        {asso.association.name} --  {asso.segment.name}
+                        <span>
+                          <i className="fa fa-trash pull-right" aria-hidden="true" title="Delete"
+                            onClick={(e) => this.deleteAssociation(e, asso)}
+                          ></i></span>
+                      </td>
                     </tr>
                   );
-                }, this)}
+                })}
             </tbody>
           </table>
           {associations && associations.length ? (
-            <button
-              type="button"
-              onClick={this.handleSubmit}
-              className="btn btn_primary"
-            >
+            <button type="button" onClick={this.handleSubmit} className="btn btn_primary"            >
               save{" "}
             </button>
           ) : null}

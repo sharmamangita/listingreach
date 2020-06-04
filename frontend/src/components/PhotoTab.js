@@ -24,7 +24,7 @@ class PhotoTab extends React.Component {
       userId: "",
       updateimage: [],
       email: "",
-      blast_id:'',
+      blast_id: '',
       property_ids: [],
       template: "",
       propertyImages: [{}, {}, {}, {}],
@@ -37,7 +37,7 @@ class PhotoTab extends React.Component {
       ),
       visible: false,
       divCount: [],
-      submited:false,
+      submited: false,
     };
 
     this.openUpload = this.openUpload.bind(this);
@@ -46,7 +46,7 @@ class PhotoTab extends React.Component {
     this.modelClose = this.modelClose.bind(this);
     this.updateImages = this.updateImages.bind(this);
     this.nextPage = this.nextPage.bind(this);
-    
+
   }
 
   updateImages(e) {
@@ -54,20 +54,20 @@ class PhotoTab extends React.Component {
     var { property_ids, propertyImages } = this.state;
     var newArray = propertyImages.filter(value => JSON.stringify(value) !== '{}');
     const { dispatch } = this.props.dispatchval.dispatch;
-    if(newArray && property_ids){
+    if (newArray && property_ids) {
       dispatch(userActions.saveImages(property_ids, newArray));
-      this.setState({submited:true})
+      this.setState({ submited: true })
     }
-    
+
   }
 
 
-  nextPage(e){
+  nextPage(e) {
     const { dispatch } = this.props.dispatchval.dispatch;
     let blast_id = this.state.blast_id;
     dispatch(userActions.getPreviewhtml(blast_id));
 
-   //dispatch(userActions.getPreviewhtml('5ed5fad930de7c24bc9423d4'));
+    //dispatch(userActions.getPreviewhtml('5ed5fad930de7c24bc9423d4'));
   }
 
   openUpload(e) {
@@ -133,19 +133,19 @@ class PhotoTab extends React.Component {
     propertyArray.length &&
       propertyArray.forEach(function (item) {
         array.push({ id: item.id });
-        template = item.templates[0].template_type;
+        template = item.template && item.template.length > 0 && item.templates[0].template_type;
         blast_id = item.blast_id;
       });
 
     let property = Object.assign({}, this.state);
     property.property_ids = array;
     property.template = template;
-    property.blast_id=  blast_id;
+    property.blast_id = blast_id;
     this.setState(property);
   }
 
   render() {
-    const { imageData, visible, divCount, updateimage, template,submited } = this.state;
+    const { imageData, visible, divCount, updateimage, template, submited } = this.state;
     console.log("this.state=4545====", this.state);
     const { previewData } = this.props;
     //console.log("previewData2323232====",this.props.previewData);
@@ -296,26 +296,26 @@ class PhotoTab extends React.Component {
                       </div>
                     );
                   }, this)}
-            <div className="col-md-12 mt-4">
-            <div className="col-md-12 mt-4">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={this.updateImages}
-                disabled={submited?true:false}
-              >
-                Save
+                  <div className="col-md-12 mt-4">
+                    <div className="col-md-12 mt-4">
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={this.updateImages}
+                        disabled={submited ? true : false}
+                      >
+                        Save
               </button>
-              <button
-                type="button"
-                className="btn btn-primary pull-right"
-                onClick={this.nextPage}
-                disabled={submited?false:true}
-              >
-                Next
+                      <button
+                        type="button"
+                        className="btn btn-primary pull-right"
+                        onClick={this.nextPage}
+                        disabled={submited ? false : true}
+                      >
+                        Next
               </button>
-            </div>
-            </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -355,90 +355,90 @@ class PhotoTab extends React.Component {
             </div>
           </div>
         ) : (
-          <div>
-            {previewData &&
-              previewData.length &&
-              previewData.map(function (data, index) {
-                return (
-                  <div key={index}>
-                    <h4>Property Photos</h4>
-                    <br />
-                    <h4>
-                      <u>Upload Photo for Property {index + 1}</u>
-                    </h4>
-                    <div className="row">
-                      <div className="col-md-4 mb-3">
-                        <div className="form-group">
-                          <img
-                            alt="Photo"
-                            className="img-square"
-                            style={{ width: "200px" }}
-                            src="../../../public/assets/images/1photo.png"
-                          />{" "}
-                        </div>
-                        <input
-                          type="file"
-                          id={index}
-                          className={"imgupload" + index}
-                          style={{ display: "none" }}
-                          onChange={this.imageChange}
-                        />
-                        <div className="text-left">
-                          <a
-                            href="javascript:void(0)"
-                            className="btn btn-primary"
+            <div>
+              {previewData &&
+                previewData.length &&
+                previewData.map(function (data, index) {
+                  return (
+                    <div key={index}>
+                      <h4>Property Photos</h4>
+                      <br />
+                      <h4>
+                        <u>Upload Photo for Property {index + 1}</u>
+                      </h4>
+                      <div className="row">
+                        <div className="col-md-4 mb-3">
+                          <div className="form-group">
+                            <img
+                              alt="Photo"
+                              className="img-square"
+                              style={{ width: "200px" }}
+                              src="../../../public/assets/images/1photo.png"
+                            />{" "}
+                          </div>
+                          <input
+                            type="file"
                             id={index}
-                            onClick={this.openUpload}
-                          >
-                            Upload Photo
-                          </a>
-                        </div>
-                      </div>
-                      <div className="col-md-8 mb-3">
-                        <div
-                          className="card"
-                          style={{
-                            width: "24rem",
-                            border: "dashed",
-                            padding: "5px",
-                            borderColor: "#ccc",
-                          }}
-                        >
-                          <img
-                            className="card-img-bottom"
-                            src={
-                              images[index] ||
-                              "../../../public/assets/images/1photo.png"
-                            }
-                            alt="image"
-                            style={{ width: "100%" }}
+                            className={"imgupload" + index}
+                            style={{ display: "none" }}
+                            onChange={this.imageChange}
                           />
+                          <div className="text-left">
+                            <a
+                              href="javascript:void(0)"
+                              className="btn btn-primary"
+                              id={index}
+                              onClick={this.openUpload}
+                            >
+                              Upload Photo
+                          </a>
+                          </div>
+                        </div>
+                        <div className="col-md-8 mb-3">
+                          <div
+                            className="card"
+                            style={{
+                              width: "24rem",
+                              border: "dashed",
+                              padding: "5px",
+                              borderColor: "#ccc",
+                            }}
+                          >
+                            <img
+                              className="card-img-bottom"
+                              src={
+                                images[index] ||
+                                "../../../public/assets/images/1photo.png"
+                              }
+                              alt="image"
+                              style={{ width: "100%" }}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              }, this)}
-            <div className="col-md-12 mt-4">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={this.updateImages}
-                disabled={submited?true:false}
-              >
-                Save
+                  );
+                }, this)}
+              <div className="col-md-12 mt-4">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={this.updateImages}
+                  disabled={submited ? true : false}
+                >
+                  Save
               </button>
-              <button
-                type="button"
-                className="btn btn-primary pull-right"
-                onClick={this.nextPage}
-                disabled={submited?false:true}
-              >
-                Next
+                <button
+                  type="button"
+                  className="btn btn-primary pull-right"
+                  onClick={this.nextPage}
+                  disabled={submited ? false : true}
+                >
+                  Next
               </button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </div>
     );
   }

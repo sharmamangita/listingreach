@@ -70,10 +70,11 @@ class BlastSchema {
                         type: String
                     }
                 },
-                segments: [{
+                segment: {
                     id: { type: String },
-                    lists: { type: [String] }
-                }]
+                    name: { type: String },
+                    lists: { type: [] }
+                }
             }]
 
         });

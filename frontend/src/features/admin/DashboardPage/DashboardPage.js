@@ -81,7 +81,6 @@ class DashboardPage extends React.Component {
 }
 
 function mapStateToProps(state) {
-  console.log("stae11====", state);
   const { authentication, admins } = state;
   const { user } = authentication;
   const { agentscount, subscriberscount, payments } = admins;
