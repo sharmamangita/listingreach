@@ -43,7 +43,7 @@ class ProfilePage extends React.Component {
         country: '',
         state: '',
         zipcode: '',
-
+        
         firstName: '',
         lastName: '',
         email: '',

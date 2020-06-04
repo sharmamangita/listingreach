@@ -48,9 +48,18 @@ class BillingPage extends React.Component {
    		var created = moment(expDate).format("DD-MM-YYYY");
     		return created;
  	}
+ 	status(status){
+ 		if(status=='sent'){
+ 			return "Email Sent"
+
+ 		}else{
+ 			return "Email Not Sent";
+ 		}
+ 	}
   	render() {
   	const { submitted, submittedagent, user, payment } = this.state;
 	console.log("paymentData====",payment);	
+	console.log("length====",payment.length);	
   	if(this.props.users && this.props.users.items){
 	  	if(this.props.users.items[0]){
 		  var abouttitle = entities.decode(this.props.users.items[0].page);
@@ -84,7 +93,7 @@ class BillingPage extends React.Component {
 										<td>{payments.invoice_id}</td>
 										<td>{this.createdDate(payments.createdOn)}</td>
 										<td>{payments.amount}</td>
-										<td>Email Not Sent</td>
+										<td>{this.status(payments.status)}</td>
 									</tr> 
 								))
                           	}  
