@@ -128,7 +128,7 @@ class PreviewTab extends React.Component {
                 placeholder="Email Address"
               />
               { !email && submitted &&(
-                <div className="help-block red">Email is required</div>
+                <div className="help-block red" style={{"color":"red"}}>Email is required</div>
               )}
             </div>
           </div>

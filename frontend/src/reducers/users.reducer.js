@@ -149,7 +149,7 @@ export function users(state = {}, action) {
           action.users[0].templates.length && 
           action.users[0].templates[0] && 
           action.users[0].templates[0].template_type=="UploadYourOwnBlast"){
-         // tab = "preview";
+          //tab = "preview";
         } else {
           tab="photo";
         }
