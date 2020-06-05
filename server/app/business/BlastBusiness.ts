@@ -175,13 +175,18 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                          font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
                                                       <p>${property.street_address}, ${property.city}, ${property.zipcode}</p>
                                                    </div>`;
+                  let openhousehtml = '';
                   property.isOpenHouse && property.isOpenHouse.forEach(function (resut) {
-                    let startTime = resut.date + " " + resut.startTime;
-                    let endTime = resut.date + " " + resut.endTime;
-                    html += `<div class="text-center" style="width:100%;text-align: center !important;">
+                    //console.log("startTime=====",startTime);
+                    let startTime = resut.startTime || "";
+                    let endTime = resut.endTime || "";
+                    let date =moment(resut.date).format('DD-MMM-YYYY');
+                    let newStartdateval= new Date(date+" "+startTime);
+                    let newEnddateval= new Date(date+" "+endTime);
+                    openhousehtml += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
-                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment(resut.startTime).format('HH:mm A')}  - ${resut.endTime && moment(resut.endTime).format('HH:mm A')}  </span><br>
+                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${startTime && moment(newStartdateval).format('HH:mm A')}  - ${endTime && moment(newEnddateval).format('HH:mm A')}  </span><br>
                                                     </div>`;
                   });
 
@@ -255,12 +260,16 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
                   let openhousehtml = '';
                   property.isOpenHouse && property.isOpenHouse.forEach(function (resut) {
-                    let startTime = resut.date + " " + resut.startTime;
-                    let endTime = resut.date + " " + resut.endTime;
+                    //console.log("startTime=====",startTime);
+                    let startTime = resut.startTime || "";
+                    let endTime = resut.endTime || "";
+                    let date =moment(resut.date).format('DD-MMM-YYYY');
+                    let newStartdateval= new Date(date+" "+startTime);
+                    let newEnddateval= new Date(date+" "+endTime);
                     openhousehtml += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
-                                                      <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment(startTime).format('HH:mm A')}  - ${resut.endTime && moment(endTime).format('HH:mm A')}  </span><br>
+                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${startTime && moment(newStartdateval).format('HH:mm A')}  - ${endTime && moment(newEnddateval).format('HH:mm A')}  </span><br>
                                                     </div>`;
                   });
 
@@ -424,19 +433,18 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   }
 
 
-
-
-
-
-
                   let openhousehtml = '';
                   property.isOpenHouse && property.isOpenHouse.forEach(function (resut) {
-                    let startTime = resut.date + " " + resut.startTime;
-                    let endTime = resut.date + " " + resut.endTime;
+                    //console.log("startTime=====",startTime);
+                    let startTime = resut.startTime || "";
+                    let endTime = resut.endTime || "";
+                    let date =moment(resut.date).format('DD-MMM-YYYY');
+                    let newStartdateval= new Date(date+" "+startTime);
+                    let newEnddateval= new Date(date+" "+endTime);
                     openhousehtml += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
-                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment(startTime).format('HH:mm A')}  - ${resut.endTime && moment(endTime).format('HH:mm A')}  </span><br>
+                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${startTime && moment(newStartdateval).format('HH:mm A')}  - ${endTime && moment(newEnddateval).format('HH:mm A')}  </span><br>
                                                     </div>`;
                   });
 
@@ -528,7 +536,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#companyLogo#/g, agentlogourl || Common.SITE_URL+"/uploads/previewimages/dummy-logo.png")
                     .replace(/#WebsiteUrl#/g, agent.website_url || " ")
                     .replace(/#phone_number#/g, agent.phone_number || " ")
-                    .replace(/#companyDetail#/g, agent.company_details ||" ")
+                    .replace(/#companyDetail#/g, agent.company_details ||" ") 
                     .replace(/#subject#/g, subject || ' ')
                     .replace(/#formLine#/g, formLine || ' ')
                     .replace(/#formReply#/g, formReply || ' ')
