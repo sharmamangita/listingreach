@@ -90,11 +90,7 @@ class SetDateTab extends React.Component {
         <h4>Set Date</h4>
         <p>Choose date for emailing the Blast.</p>
         <div className='demo-app'>
-          <div className='demo-app-top'>
-            <button onClick={this.toggleWeekends}>toggle weekends</button>&nbsp;
-          <button onClick={this.gotoPast}>go to a date in the past</button>&nbsp;
-          (also, click a date/time to add an event)
-        </div>
+          
           <div className='demo-app-calendar'>
             <FullCalendar
               defaultView="dayGridMonth"

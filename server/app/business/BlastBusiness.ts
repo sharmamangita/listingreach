@@ -97,25 +97,17 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
               let formReply = template.address;
               let headline = template.headline;
               let agent = blast.agentData;
-              let config = { uploadapiUrl: 'http://localhost:3000', };
               if (template && template.template_type == 'MultipleProperties') {
                 console.log("multiple properties....");
                 var html = '';
                 properties.forEach(function (property: IPropertyModel) {
-
                   html += `<div class="flyer-bg" style="background: #f1f1f1;">
                                              <div class="" style="display: block;display: flex;flex-wrap: wrap;border-top: 2px solid #ccc;">
                                                 <div style="width:50%;display: block; background:#f1f1f1;height: 400px;">`;
                   if (property.propertyImages && property.propertyImages.length == 1) {
-                    html += `
-                                                      <img
-                                                        src=${Common.SITE_URL +
-                      "/uploads/" +
-                      property.propertyImages[0].imageUrl
-                      }
-                                                        alt="image"
-                                                        style="width: 100%; height:400px"
-                                                      />`;
+                    html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl || "/public/assets/images/img1.jpg"} />`;
+                  } else {
+                    html += `<img src="/public/assets/images/img2.jpg" />`;
                   }
 
                   html += `</div><div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
@@ -127,17 +119,50 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                       <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
                                                          <label class="flyer-label" style="color: #EE8C3A;
                                                             font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Key Features:</label>
-                                                         <ul>
-                                                            <li>Property Type: ${property.property_type}  </li>
-                                                            <li>Property Style: ${property.property_style}  </li>
-                                                            <li> ${property.number_bedrooms} Bedrooms</li>
-                                                            <li>${property.number_bathrooms[0].full} Full ${property.number_bathrooms[0].half} Half Bathrooms</li>
-                                                            <li>${property.building_size} square feet</li>
-                                                            <li>${property.price}  /sqft</li>
-                                                            <li>Lot Size: ${property.lot_size} sqft</li>
-                                                            <li>  Built ${property.year_built} </li>
-                                                            <li>${property.garageSize} Garage</li>
-                                                            <li> ${property.number_stories} </li>
+                                                         <ul>`;
+
+
+                                                    if(property.property_type!=undefined && property.property_type){
+                                                        html +=`<li>Property Type: ${property.property_type} </li>`;
+                                                    }
+
+                                                    if(property.property_style!=undefined && property.property_style){
+                                                        html +=`<li>Property Style: ${property.property_style} </li>`;
+                                                    }
+
+                                                    if(property.number_bedrooms!=undefined && property.number_bedrooms){
+                                                        html +=`<li>${property.number_bedrooms} Bedrooms</li>`;
+                                                    }
+
+                                                    if(property.number_bathrooms[0].full!=undefined && property.number_bathrooms[0].full || property.number_bathrooms[0].half!=undefined && property.number_bathrooms[0].half){
+                                                      html +=`<li>${property.number_bathrooms[0].full+' Full'}  ${property.number_bathrooms[0].half+' Half'} Bathrooms</li>`;
+                                                    }
+
+                                                    if(property.building_size!=undefined && property.building_size){
+                                                        html +=`<li>${property.building_size} square feet</li>`;
+                                                    }
+
+                                                    if(property.price!=undefined && property.price){
+                                                        html +=`<li>${property.price}  /sqft</li>`;
+                                                    }
+
+                                                    if(property.lot_size!=undefined && property.lot_size){
+                                                        html +=`Lot Size: ${property.lot_size} sqft</li>`;
+                                                    }
+
+                                                    if(property.year_built!=undefined && property.year_built){
+                                                        html +=`<li>  Built ${property.year_built} </li>`;
+                                                    }
+
+                                                    if(property.garageSize!=undefined && property.garageSize){
+                                                        html +=`<li>${property.garageSize} Garage</li>`;
+                                                    }
+
+                                                    if(property.number_stories!=undefined && property.number_stories){
+                                                        html +=`<li>${property.number_stories}</li>`;
+                                                    }
+
+                                                 html +=`
                                                          </ul>
                                                       </div>
                                                    </div>
@@ -180,21 +205,30 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                 </div>
                                              </div>
                                         </div>`;
+                  let agentimgurl = "";
+                  if(agent.image_url!=undefined && agent.image_url){
+                     agentimgurl = Common.SITE_URL+"/uploads/"+agent.image_url;
+                  }
+
+                   let agentlogourl = "";
+                  if(agent.logo_url!=undefined && agent.logo_url){
+                     agentlogourl = Common.SITE_URL+"/uploads/"+agent.logo_url;
+                  }
 
                   var previewTemplatememail = Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;
                   var emailtemplate = previewTemplatememail
                     .replace(/#multiproperty#/g, html)
                     .replace(/#agentName#/g, agent.name)
-                    .replace(/#agentEmail#/g, agent.email)
-                    .replace(/#agentImage#/g, agent.image_url || Common.SITE_URL + "/public/assets/images/dummy-profile.png")
-                    .replace(/#companyLogo#/g, agent.logo_url || Common.SITE_URL + "/public/assets/images/dummy-logo.png")
-                    .replace(/#WebsiteUrl#/g, agent.website_url)
-                    .replace(/#phone_number#/g, agent.phone_number)
-                    .replace(/#companyDetail#/g, agent.company_details)
-                    .replace(/#subject#/g, subject)
-                    .replace(/#formLine#/g, formLine)
-                    .replace(/#formReply#/g, formReply)
-                    .replace(/#blastHeadline#/g, headline);
+                    .replace(/#agentEmail#/g, agent.email ||" ")
+                    .replace(/#agentImage#/g, agentimgurl ||  "/public/assets/images/dummy-profile.png")
+                    .replace(/#companyLogo#/g, agentlogourl ||   "/public/assets/images/dummy-logo.png")
+                    .replace(/#WebsiteUrl#/g, agent.website_url || " ")
+                    .replace(/#phone_number#/g, agent.phone_number || " ")
+                    .replace(/#companyDetail#/g, agent.company_details || " ")
+                    .replace(/#subject#/g, subject || " ")
+                    .replace(/#formLine#/g, formLine || " ")
+                    .replace(/#formReply#/g, formReply || " ")
+                    .replace(/#blastHeadline#/g, headline || " ");
                   resolve(emailtemplate);
                 });
               } else if (template && template.template_type == 'UploadBlast') {
@@ -229,19 +263,35 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                     </div>`;
                   });
 
+
+                  let number_bedrooms = "";
+                  if(property.number_bedrooms!=undefined && property.number_bedrooms){
+                    number_bedrooms=`<li> ${property.number_bedrooms} Bedrooms</li>`;
+                  }
+
+                  let price = "";
+                    if(property.price!=undefined && property.price){
+                      price=`<div class="row" style="display: flex;flex-wrap: wrap;">
+                        <div class="mt-3 mb-3 ml-3" style="position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
+                           <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $ ${property.price} per Square Foot</h4>
+                        </div>
+                     </div>`;
+                   }
+
+
                   var previewTemplatememail = Common.PREVIEW_EMAIL_UPLOAD_BLAST;
                   var emailtemplate = previewTemplatememail
                     .replace(/#subject#/g, subject)
                     .replace(/#formLine#/g, formLine)
                     .replace(/#formReply#/g, formReply)
-                    .replace(/#streetAddress#/g, property.street_address)
-                    .replace(/#mlsNumber#/g, property.mls_number)
-                    .replace(/#numberOfBedrooms#/g, property.number_bedrooms)
-                    .replace(/#pricePerSquareFoot#/g, property.pricingInfo[0].price)
-                    .replace(/#city#/g, property.city)
-                    .replace(/#zipCode#/g, property.zipcode)
+                    .replace(/#streetAddress#/g, property.street_address || " ")
+                    .replace(/#mlsNumber#/g, property.mls_number || "--")
+                    .replace(/#numberOfBedrooms#/g, number_bedrooms)
+                    .replace(/#pricePerSquareFoot#/g, price)
+                    .replace(/#city#/g, property.city || " ")
+                    .replace(/#zipCode#/g, property.zipcode || " ")
                     .replace(/#openData#/g, openhousehtml)
-                    .replace(/#propertyImage#/g, image)
+                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="/public/assets/images/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
                   resolve(emailtemplate);
                 });
               } else if (blast && blast.blast_type == "RealEstateBrokerage") {
@@ -266,7 +316,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#subject#/g, subject)
                     .replace(/#formLine#/g, formLine)
                     .replace(/#formReply#/g, formReply)
-                    .replace(/#propertyImage#/g, image)
+                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="/public/assets/images/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
                   resolve(emailtemplate);
                 });
               } else {
@@ -274,7 +324,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                 let html: string = '';
                 properties.forEach(function (property: IPropertyModel) {
                   let image = "";
-
+                 // console.log("property.propertyImages===",property); 
                   if (property.propertyImages && property.propertyImages.length == 1) {
                     image += `<div class="row">
                                       <div class="col-md-12">
@@ -373,6 +423,11 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   }
 
 
+
+
+
+
+
                   let openhousehtml = '';
                   property.isOpenHouse && property.isOpenHouse.forEach(function (resut) {
                     let startTime = resut.date + " " + resut.startTime;
@@ -386,42 +441,116 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
                   let linkshtml = '';
                   property.linksToWebsites && property.linksToWebsites.forEach(function (resut) {
-                    linkshtml += `<br><a href=${resut.url} style="color: #000000;transition: all .5s ease;"><u> ${resut.text}</a></u>`;
+                    linkshtml += `<div class="ml-3" style="width:100%; margin-left: 1rem !important;"><label class="flyer-label" style="color: #EE8C3A;font-size: 1rem;">Links:</label><br><a href=${resut.url} style="color: #000000;transition: all .5s ease;"><u> ${resut.text}</a></u></div>`;
                   });
 
 
+                   let price = "";
+                    if(property.price!=undefined && property.price){
+                      price=`<div class="row" style="display: flex;flex-wrap: wrap;">
+                        <div class="mt-3 mb-3 ml-3" style="position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
+                           <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $ ${property.price} per Square Foot</h4>
+                        </div>
+                     </div>`;
+                   }
+
+                  let property_details = "";
+                  if(property.property_details!=undefined && property.property_details){
+                    property_details=`<div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+                           <label class="flyer-label" style="color: #EE8C3A;
+                               font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Detail:</label>
+                           <span>${property.property_details}</span>          
+                        </div>`;
+                  }
+
+                  let bathrooms = "";
+                  if(property.number_bathrooms[0].full!=undefined && property.number_bathrooms[0].full || property.number_bathrooms[0].half!=undefined && property.number_bathrooms[0].half){
+                    bathrooms=`<li>${property.number_bathrooms[0].full+' Full'}  ${property.number_bathrooms[0].half+' Half'} Bathrooms</li>`;
+                  }
+
+                  let year_built = "";
+                  if(property.year_built!=undefined && property.year_built){
+                    year_built=`<li>  Built ${property.year_built}</li>`;
+                  }
+
+                  let lot_size = "";
+                  if(property.lot_size!=undefined && property.lot_size){
+                    lot_size=`<li>Lot Size: #lotSize# sqft</li>`;
+                  }
+
+
+                  let number_bedrooms = "";
+                  if(property.number_bedrooms!=undefined && property.number_bedrooms){
+                    number_bedrooms=`<li> ${property.number_bedrooms} Bedrooms</li>`;
+                  }
+
+                  let property_type = "";
+                  if(property.property_type!=undefined && property.property_type){
+                    property_type=`<li>Property Type: ${property.property_type} </li>`;
+                  }
+      
+                  let property_style = "";
+                  if(property.property_style!=undefined && property.property_style){
+                    property_style=`<li>Property Style: ${property.property_style} </li>`;
+                  }
+
+                  let number_stories = "";
+                  if(property.number_stories!=undefined && property.number_stories){
+                    number_stories=`<li>${property.number_stories} </li>`;
+                  }
+
+                  let garageSize = "";
+                  if(property.garageSize!=undefined && property.garageSize){
+                    garageSize=`<li>Garage: ${property.garageSize} </li>`;
+                  }
+
+                  let building_size = "";
+                  if(property.building_size!=undefined && property.building_size){
+                    building_size=`<li>${property.building_size} square feet</li>`;
+                  }
+
+                  let agentimgurl = "";
+                  if(agent.image_url!=undefined && agent.image_url){
+                     agentimgurl = Common.SITE_URL+"/uploads/"+agent.image_url;
+                  }
+
+                   let agentlogourl = "";
+                  if(agent.logo_url!=undefined && agent.logo_url){
+                     agentlogourl = Common.SITE_URL+"/uploads/"+agent.logo_url;
+                  }
 
                   var previewTemplatememail = Common.PREVIEW_EMAIL_TEMPLATE;
                   var emailtemplate = previewTemplatememail
-                    .replace(/#agentName#/g, agent.name)
-                    .replace(/#agentEmail#/g, agent.email)
-                    .replace(/#agentImage#/g, agent.image_url || Common.SITE_URL + "/public/assets/images/dummy-profile.png")
-                    .replace(/#companyLogo#/g, agent.logo_url || Common.SITE_URL + "/public/assets/images/dummy-logo.png")
-                    .replace(/#WebsiteUrl#/g, agent.website_url)
-                    .replace(/#phone_number#/g, agent.phone_number)
-                    .replace(/#companyDetail#/g, agent.company_details)
-                    .replace(/#subject#/g, subject)
-                    .replace(/#formLine#/g, formLine)
-                    .replace(/#formReply#/g, formReply)
-                    .replace(/#streetAddress#/g, property.street_address)
-                    .replace(/#mlsNumber#/g, property.mls_number)
-                    .replace(/#numberOfBedrooms#/g, property.number_bedrooms)
-                    .replace(/#half#/g, property.number_bathrooms[0].half)
-                    .replace(/#lotSize#/g, property.lot_size)
-                    .replace(/#yearBuilt#/g, property.year_built)
-                    .replace(/#full#/g, property.number_bathrooms[0].full)
+                    .replace(/#agentName#/g, agent.name || " ")
+                    .replace(/#agentEmail#/g, agent.email || "")
+                    .replace(/#agentImage#/g, agentimgurl || "/public/assets/images/dummy-profile.png")
+                    .replace(/#companyLogo#/g, agentlogourl || "/public/assets/images/dummy-logo.png")
+                    .replace(/#WebsiteUrl#/g, agent.website_url || " ")
+                    .replace(/#phone_number#/g, agent.phone_number || " ")
+                    .replace(/#companyDetail#/g, agent.company_details ||" ")
+                    .replace(/#subject#/g, subject || ' ')
+                    .replace(/#formLine#/g, formLine || ' ')
+                    .replace(/#formReply#/g, formReply || ' ')
+                    .replace(/#streetAddress#/g, property.street_address || " ")
+                    .replace(/#mlsNumber#/g, property.mls_number || "--")
+                    .replace(/#numberOfBedrooms#/g,number_bedrooms)
+                    .replace(/#lotSize#/g, lot_size)
+                    .replace(/#yearBuilt#/g, year_built)
+                    .replace(/#bathrooms#/g, bathrooms)
                     .replace(/#openData#/g, openhousehtml)
                     .replace(/#links#/g, linkshtml)
-                    .replace(/#blastHeadline#/g, headline)
-                    .replace(/#pricePerSquareFoot#/g, property.price)
-                    .replace(/#propertDetails#/g, property.property_details)
-                    .replace(/#city#/g, property.city)
-                    .replace(/#zipCode#/g, property.zipcode)
-                    .replace(/#propertyType#/g, property.property_type)
-                    .replace(/#propertyImage#/g, image)
-                    .replace(/#propertyStyle#/g, property.property_style)
-                    .replace(/#numberOfStories#/g, property.number_stories)
-                    .replace(/#garageSize#/g, property.garageSize)
+                    .replace(/#blastHeadline#/g, headline || " ")
+                    .replace(/#pricePerSquareFoot#/g, price)
+                    .replace(/#propertDetails#/g, property_details)
+                    .replace(/#city#/g, property.city || " ")
+                    .replace(/#zipCode#/g, property.zipcode ||  " ")
+                    .replace(/#propertyType#/g, property_type)
+                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="/public/assets/images/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
+                    .replace(/#propertyStyle#/g, property_style)
+                    .replace(/#numberOfStories#/g, number_stories)
+                    .replace(/#garageSize#/g,garageSize)
+                    .replace(/#building_size#/g,building_size)
+                    
 
                   resolve(emailtemplate);
                 });

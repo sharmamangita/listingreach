@@ -691,6 +691,7 @@ class PropertyTab extends React.Component {
       this.setState({ showprofileimage: true, agentData: agentData, modalid: id });
     }
     let modallogoimageOpen = (event) => {
+      console.log("here===")
       var id = event.currentTarget.dataset.id;
       this.setState({ showprofilelogo: true, agentData: agentData, modalid: id });
     }
@@ -824,7 +825,8 @@ class PropertyTab extends React.Component {
                 />
                 <br />
                 <span>
-                  <a href="javascript:void(0)">Upload Agent Logo</a>
+                  <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id="logoimg" data-target="#logoimg" onClick={modallogoimageOpen}>
+                  Upload Agent Logo</a>
                 </span>
               </div>
             </div>
