@@ -16,8 +16,8 @@ class Common {
     static SEND_FROM_EMAIL: string ="info@76east.com";
     static ADMIN_EMAIL: string = "info@76east.com";
 
-    static SITE_URL: string = "http://66.235.194.119:3006";
-   // static SITE_URL: string = "http://localhost:3000"; 
+    //static SITE_URL: string = "http://66.235.194.119:3006";
+    static SITE_URL: string = "http://localhost:3000"; 
 	
 	//live details
 	static MAIL_CONFIG: any = {
@@ -1587,7 +1587,7 @@ static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ `
                         </div>
                           #links#
                         <div class="text-center" style="text-align: center!important;flex: 0 0 100%; max-width: 100%;position: relative; min-height: 1px;padding-right: 15px;padding-left: 15px;">
-                           <h4 style="background: #f1f1f1;font-size: 1.5rem;"><a href="`+Common.SITE_URL+`listingreach" style="color: #000000;transition: all .5s ease;"><u>Click Here to Email Agent for More Information</u></a></h4>
+                           <h4 style="background: #f1f1f1;font-size: 1.5rem;"><a href="mailto:#agentEmail#" style="color: #000000;transition: all .5s ease;"><u>Click Here to Email Agent for More Information</u></a></h4>
                         </div>
                      </div>
                   </div>`+ Common.PREVIEW_EMAIL_TEMPLATE_FOOTER;
