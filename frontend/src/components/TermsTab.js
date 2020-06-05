@@ -40,7 +40,7 @@ class TermsTab extends React.Component {
   render() {
     return (
       <div
-        className="tab-pane fade mt-2"
+        className="tab-pane fade mt-2 pl-3 pr-3"
         id="terms"
         role="tabpanel"
         aria-labelledby="group-dropdown2-tab"

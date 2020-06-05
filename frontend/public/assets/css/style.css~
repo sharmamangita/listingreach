@@ -2318,6 +2318,3 @@ footer .credits {
   content:" *";
   color: red;
 }
-.alert-success {
-font-color:black !important; 
-}
