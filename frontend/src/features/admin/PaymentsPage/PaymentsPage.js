@@ -199,10 +199,10 @@ class PaymentsPage extends React.Component {
 					payentId: payment.paymentID,
 					paidOn: this.createdDate(payment.createdOn),
 					amount: "$" + payment.amount,
-					headline: payment.template && payment.template.length > 0 ? payment.template[0].headline : "",
-					agentName: payment.blast && payment.blast.length > 0 && payment.blast[0].agentData ? payment.blast[0].agentData.name : "",
-					email: payment.blast && payment.blast.length > 0 && payment.blast[0].agentData ? payment.blast[0].agentData.email : "",
-					company: payment.blast && payment.blast.length > 0 && payment.blast[0].agentData? payment.blast[0].agentData.company_details : "",
+					headline: "<Link to=''>"+payment.template && payment.template.length > 0 ? payment.template[0].headline : ""+"</Link>",
+					agentName: payment.users && payment.users.length > 0 && payment.users[0] ? payment.users[0].firstName+' '+payment.users[0].lastName : "",
+					email: payment.users && payment.users.length > 0 && payment.users[0] ? payment.users[0].email : "",
+					company: payment.users && payment.users.length > 0 && payment.users[0] ? payment.users[0].companyName : "",
 					sentOn: payment.blast && payment.blast.length > 0 ? this.createdDate(payment.blast[0].selected_template_date) : "",
 				});
 			}

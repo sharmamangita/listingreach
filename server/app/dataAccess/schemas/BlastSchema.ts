@@ -23,7 +23,7 @@ class BlastSchema {
                 type: Date,
             },
             selected_template_id: {
-                type: String
+                type: mongoose.Schema.Types.ObjectId,
             },
             selected_template_date: {
                 type: Date,

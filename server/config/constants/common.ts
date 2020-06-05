@@ -16,7 +16,7 @@ class Common {
     static SEND_FROM_EMAIL: string ="info@76east.com";
     static ADMIN_EMAIL: string = "info@76east.com";
 
-    static SITE_URL: string = "http://66.235.194.119:3006";
+    static SITE_URL: string = "http://66.235.194.119:3006"; 
    // static SITE_URL: string = "http://localhost:3000"; 
 	
 	//live details
@@ -1338,29 +1338,11 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                         <img src="/public/assets/images/listing-reach-logo.png" alt="" class="img-a img-fluid">
                      </div>
                      <div class="mb-3 mt-3 text-right" style="width:25%;text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-                        <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background-color: #EE8C3A;
-												         border: #EE8C3A;
-												         color:#fff;display: inline-block;
-												         font-weight: 400;
-												         text-align: center;
-												         user-select: none;
-												         padding: 0.375rem 0.75rem;
-												         line-height: 1.5;
-												         border-radius: 0.25rem;
-												         box-shadow 0.15s ease-in-out;">Reply to Sender</a>
-                     </div>
-                     <div class="mb-3 mt-3 text-right ml-3" style="width:25%;text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-                        <a class="btn btn-primary" href="mailto:" style="background-color: #EE8C3A;
-         border: #EE8C3A;
-         color:#fff;display: inline-block;
-         font-weight: 400;
-         text-align: center;
-         white-space: nowrap;
-         vertical-align: middle;
-         padding: 0.375rem 0.75rem;
-         line-height: 1.5;
-         border-radius: 0.25rem;
-         box-shadow 0.15s ease-in-out;">Forward to Associate</a>
+                <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;font-weight: 400;text-align: center;
+						user-select: none;padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 0.25rem;box-shadow 0.15s ease-in-out;">Reply to Sender</a></div>
+	<div class="mb-3 mt-3 text-right ml-3" style="width:25%;text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+        <a class="btn btn-primary" href="mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;
+         			font-weight: 400;text-align: center;white-space: nowrap;vertical-align: middle;padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 0.25rem; box-shadow 0.15s ease-in-out;">Forward to Associate</a>
                      </div>
                   </div>`;
 static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
@@ -1587,7 +1569,7 @@ static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ `
                         </div>
                           #links#
                         <div class="text-center" style="text-align: center!important;flex: 0 0 100%; max-width: 100%;position: relative; min-height: 1px;padding-right: 15px;padding-left: 15px;">
-                           <h4 style="background: #f1f1f1;font-size: 1.5rem;"><a href="`+Common.SITE_URL+`listingreach" style="color: #000000;transition: all .5s ease;"><u>Click Here to Email Agent for More Information</u></a></h4>
+                           <h4 style="background: #f1f1f1;font-size: 1.5rem;"><a href="mailto:#agentEmail#" style="color: #000000;transition: all .5s ease;"><u>Click Here to Email Agent for More Information</u></a></h4>
                         </div>
                      </div>
                   </div>`+ Common.PREVIEW_EMAIL_TEMPLATE_FOOTER;

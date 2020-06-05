@@ -13,7 +13,7 @@ class PhotoTab extends React.Component {
       updateimage: [],
       email: "",
       blast_id: "",
-      property_ids: [],
+      property_ids: [], 
       template: {},
       propertyImages: [{}, {}, {}, {}],
 
@@ -126,11 +126,13 @@ class PhotoTab extends React.Component {
     let blast_id = '';
     propertyArray.length &&
       propertyArray.forEach(function (item) {
+        console.log("item2323===",item);
         array.push({ id: item.id });
         template = item.template && item.template.length > 0 && item.templates[0].template_type;
         blast_id = item.blast_id;
       });
 
+     this.setState({property_ids:array})
     let property = Object.assign({}, this.state);
     property.property_ids = array;
     property.template = template;

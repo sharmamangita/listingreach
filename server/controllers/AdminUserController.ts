@@ -57,6 +57,14 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					}
 				},
 				{
+					$lookup: {
+						from: "users",
+						localField: "user_id",
+						foreignField: "_id",
+						as: "users"
+					}
+				},
+				{
 
 					$lookup: {
 						from: "templates",
@@ -73,9 +81,10 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 						amount: 1,
 						"blast.blast_type": 1,
 						"template.headline": 1,
-						"blast.agentData.name": 1,
-						"blast.agentData.email": 1,
-						"blast.agentData.company_details": 1,
+						"users.firstName":1,
+						"users.lastName":1,
+						"users.email": 1,
+						"users.companyName": 1,
 						"blast.selected_template_date": 1,
 					}
 				}
@@ -86,7 +95,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					res.send({ "error": error });
 				}
 				else {
-					//console.log(result);
+					console.log(result);
 					res.send(result);
 				}
 			});
@@ -145,7 +154,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 						lastName: { $first: "$lastName" },
 						email: { $first: "$email" },
 						status: { $first: "$status" },
-						company: { $first: "$blasts.agentData.company_details" },
+						company: { $first: "$companyName" },
 						registeredOn: { $first: "$createdOn" }
 					}
 				}
@@ -214,6 +223,14 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					}
 				},
 				{
+					$lookup: {
+						from: "users",
+						localField: "user_id",
+						foreignField: "_id",
+						as: "users"
+					}
+				},
+				{
 					$unwind: {
 						path: "$payments",
 						preserveNullAndEmptyArrays: false
@@ -225,9 +242,11 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 						blast_type: 1,
 						selected_template_date: 1,
 						sentOn: 1,
-						"agentData.email": 1,
-						"agentData.name": 1,
-						"agentData.company_details": 1,
+						
+						"users.firstName":1,
+						"users.lastName":1,
+						"users.email": 1,
+						"users.companyName": 1,
 						"template.headline": 1,
 						"payments.amount": 1,
 						"payments.createdOn": 1
