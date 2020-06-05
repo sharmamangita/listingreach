@@ -831,27 +831,29 @@ class UserController implements IBaseController<UserBusiness> {
 						userId: prop.userId,
 						mls_number: prop.mlsNumber.numberProperty,
 						board: prop.mlsNumber.boardAssociation,
-						pricingInfo: prop.pricingInfo
+						pricingInfo: prop.pricingInfo,
+						isOpenHouse:prop.isOpenHouse,
+						linksToWebsites:prop.linksToWebsites
 					}
-					if (prop.linksToWebsites && prop.linksToWebsites.length > 0) {
-						var linksData: any = [];
-						prop.linksToWebsites.forEach(function (links: any) {
-							if (links) {
-								linksData.push({ linksToWebsiteData: links });
-							}
-						});
-						_propertyform.linksToWebsites = linksData;
-					}
+					// if (prop.linksToWebsites && prop.linksToWebsites.length > 0) {
+					// 	var linksData: any = [];
+					// 	prop.linksToWebsites.forEach(function (links: any) {
+					// 		if (links) {
+					// 			linksData.push({ linksToWebsiteData: links });
+					// 		}
+					// 	});
+					// 	_propertyform.linksToWebsites = linksData;
+					// }
 
-					if (prop.isOpenHouse && prop.isOpenHouse.length > 0) {
-						var opneHouseData: any = [];
-						prop.isOpenHouse.forEach(function (house: any) {
-							if (house) {
-								opneHouseData.push({ openHouseData: house.openHouseData });
-							}
-						});
-						_propertyform.isOpenHouse = opneHouseData;
-					}
+					// if (prop.isOpenHouse && prop.isOpenHouse.length > 0) {
+					// 	var opneHouseData: any = [];
+					// 	prop.isOpenHouse.forEach(function (house: any) {
+					// 		if (house) {
+					// 			opneHouseData.push({ openHouseData: house.openHouseData });
+					// 		}
+					// 	});
+					// 	_propertyform.isOpenHouse = opneHouseData;
+					// }
 
 					if (prop.propertyImages) {
 						var propertyImages: any = [];
