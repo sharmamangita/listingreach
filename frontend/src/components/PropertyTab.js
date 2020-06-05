@@ -23,7 +23,6 @@ class PropertyTab extends React.Component {
     this.addLinksToWebsites = this.addLinksToWebsites.bind(this);
     this.editOrDelete = this.editOrDelete.bind(this);
     this.saveProperty = this.saveProperty.bind(this);
-    this.linkArrayChange = this.linkArrayChange.bind(this);
     this.openHouseArrayChange = this.openHouseArrayChange.bind(this);
     this.propsDataupdate = this.propsDataupdate.bind(this);
     this.addProperty = this.addProperty.bind(this);
@@ -184,14 +183,6 @@ class PropertyTab extends React.Component {
     }
   }
 
-  linkArrayChange(event) {
-    const { id, name, value } = event.target;
-    let keys = id.split("-");
-    let linkArray = Object.assign({}, this.state);
-    linkArray.properties[keys[0]].linksToWebsites.linkData[
-      keys[1]
-    ].linksToWebsiteData[name] = value;
-  }
 
   openHouseArrayChange(event) {
     const { id, name, value } = event.target;
@@ -443,63 +434,6 @@ class PropertyTab extends React.Component {
           states.Email.formReply = templates.address;
           states.blastHeadline = templates.headline;
         }
-        // states.properties[i].propertyAddress.zipCode = saveData.zipcode;
-        // states.properties[i].propertyAddress.city = saveData.city;
-        // states.properties[i].propertyAddress.streetAddress =
-        //   saveData.street_address;
-        // states.properties[i].propertyAddress.displayMethod =
-        //   saveData.display_method;
-
-        // states.properties[i].mlsNumber.numberProperty =
-        //   saveData.mls_number;
-        // states.properties[i].mlsNumber.boardAssociation = saveData.board;
-
-        // if (saveData.pricingInfo.length) {
-        //   states.properties[i].pricingInfo.price =
-        //     saveData.pricingInfo[0].price;
-        //   states.properties[i].pricingInfo.priceType =
-        //     saveData.pricingInfo[0].priceType;
-        // }
-
-        // states.properties[i].propertyDetail = saveData.property_detail;
-        // states.properties[i].generalPropertyInformation.yearBuilt =
-        //   saveData.year_built;
-        // states.properties[i].propertyId = saveData.id;
-
-        // states.properties[i].linksToWebsites.linkData =
-        //   saveData.linksToWebsites;
-        // states.properties[i].isOpenHouse.openHouseData =
-        //   saveData.isOpenHouse;
-
-        // states.properties[i].generalPropertyInformation.yearBuilt =
-        //   saveData.year_built;
-        // states.properties[i].generalPropertyInformation.lotSize =
-        //   saveData.lot_size;
-        // states.properties[i].generalPropertyInformation.buildingSize =
-        //   saveData.building_size;
-        // states.properties[i].generalPropertyInformation.numberOfBedrooms =
-        //   saveData.number_bedrooms;
-        // states.properties[i].generalPropertyInformation.numberOfStories =
-        //   saveData.number_stories;
-        // states.properties[
-        //   i
-        // ].generalPropertyInformation.pricePerSquareFoot = saveData.price;
-        // states.properties[i].generalPropertyInformation.propertyType =
-        //   saveData.property_type;
-        // states.properties[i].generalPropertyInformation.propertyStyle =
-        //   saveData.property_style;
-
-        // if (saveData.number_bathrooms.length) {
-        //   states.properties[
-        //     i
-        //   ].generalPropertyInformation.numberOfBathrooms.full =
-        //     saveData.number_bathrooms[0].full;
-        //   states.properties[
-        //     i
-        //   ].generalPropertyInformation.numberOfBathrooms.half =
-        //     saveData.number_bathrooms[0].half;
-        // }
-
       });
     }
 
@@ -509,10 +443,10 @@ class PropertyTab extends React.Component {
 
   saveProperty(event) {
     event.preventDefault();
-    console.log("state on submit ", this.state)
-    console.log("props on submit", this.props)
+    //  console.log("state on submit ", this.state)
+    //console.log("props on submit", this.props)
     const { propertyData } = this.props;
-    console.log("ids on submit", propertyData);
+    // console.log("ids on submit", propertyData);
     const templateId = propertyData.templateData._id;
     const { blast_id } = this.props;
     const { properties, agentData, Email, blastHeadline } = this.state;
@@ -826,7 +760,7 @@ class PropertyTab extends React.Component {
                 <br />
                 <span>
                   <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id="logoimg" data-target="#logoimg" onClick={modallogoimageOpen}>
-                  Upload Agent Logo</a>
+                    Upload Agent Logo</a>
                 </span>
               </div>
             </div>
@@ -926,12 +860,6 @@ class PropertyTab extends React.Component {
                       No
                   </a>
                   </div>
-
-                  <Alert
-                    className={`alert ${alert.type}`}
-                    isOpen={alert && alert.alertIsOpenHouse}                  >
-                    {alert && alert.message}
-                  </Alert>
                 </div>
               </div>
               <div
@@ -1294,7 +1222,6 @@ class PropertyTab extends React.Component {
                         onChange={(e) => this.handleChange("propertyInformation", e, property)}
                         value={property.generalPropertyInformation &&
                           property.generalPropertyInformation.propertyType}  >
-                        <option>Select Property Type</option>
                         <option value="" className="">
                           -- Select Property Type --
                     </option>

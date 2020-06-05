@@ -168,8 +168,7 @@ export function users(state = {}, action) {
       return newState;
 
       case userConstants.GETPREVIEW_SUCCESS:
-           newState = objectAssign({}, state, {
-            tab: "preview",
+           newState = objectAssign({}, state, {          
             previewHtml:action.HTML.html
         });
        return newState;

@@ -10,15 +10,12 @@ class PreviewTab extends React.Component {
       email: "",
       submitted: '',
     };
-    let user = JSON.parse(localStorage.getItem("user"));
-    if (user && user.userId && this.props && this.props.dispatchval) {
-      const { dispatch } = this.props.dispatchval.dispatch;
-      dispatch(userActions.getById(user.userId));
-    }
+
 
     this.handleChangepreview = this.handleChangepreview.bind(this);
     this.handleSubmitPreviw = this.handleSubmitPreviw.bind(this);
     this.nexttab = this.nexttab.bind(this);
+
   }
   handleChangepreview(e) {
     const { name, value } = e.target;
@@ -54,6 +51,21 @@ class PreviewTab extends React.Component {
     dispatch(userActions.preview());
   }
 
+  componentWillReceiveProps(nextProprs) {
+    console.log("nextProps in Preview ", nextProprs)
+    if (nextProprs.blast_id != this.state.blast_id) {
+      this.setState({ blast_id: nextProprs.blast_id });
+    }
+    if (nextProprs.previewHtml != this.state.previewHtml) {
+      this.setState({ previewHtml: nextProprs.previewHtml });
+    }
+
+    if (nextProprs.blast_id && !nextProprs.previewHtml && !this.state.previewHtml) {
+      const { dispatch } = this.props.dispatchval.dispatch;
+      let blast_id = nextProprs.blast_id;
+      dispatch(userActions.getPreviewhtml(blast_id));
+    }
+  }
   render() {
     console.log("props in render in Preview Tab ", this.props);
     const { previewData, previewHtml } = this.props;

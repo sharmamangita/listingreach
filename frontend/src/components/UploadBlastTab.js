@@ -1,21 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { userActions } from "../actions";
-import {
-  Nav,
-  Navbar,
-  NavItem,
-  NavDropdown,
-  MenuItem,
-  NavLink,
-} from "react-bootstrap";
-import Modal from "react-bootstrap4-modal";
-import { connect } from "react-redux";
 import { authHeader } from "../helpers";
-import moment from "moment";
 import { Alert } from "reactstrap";
 const axios = require("axios");
 import config from "config";
+import { globalData } from '../constants/data.constants';
 
 const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
@@ -25,169 +14,83 @@ class UploadBlastTab extends React.Component {
   constructor(props) {
     super(props);
     this.navId = "";
-    this.openHouse = [];
-
-    this.linksToWebsites = [];
-    this.propertyError = [
-      {
-        propertyDetails: {
-          linksToWebsites: {
-            buildingSize: "",
-            url: "",
-          },
-          isOpenHouse: {
-            houseType: "",
-            date: "",
-            startTime: "",
-            endTime: "",
-          },
-          mlsNumber: {
-            numberProperty: "",
-          },
-          generalPropertyInformation: {
-            propertyType: "",
-          },
-        },
-      },
-    ];
-
-    this.property = [
-      {
-        blast_id: "",
-        userId: "",
-        propertyId: "",
-        Email: {
-          formSubject: "",
-          formLine: "",
-          formReply: "",
-        },
-        isOpenHouse: {
-          display: true,
-          houseType: "",
-          date: "",
-          startTime: "",
-          endTime: "",
-          openHouseData: [],
-        },
-        pricingInfo: {
-          price: "",
-          priceType: "",
-        },
-        propertyAddress: {
-          streetAddress: "",
-          city: "",
-          State: "",
-          zipCode: "",
-        },
-        mlsNumber: {
-          display: true,
-          numberProperty: "",
-          boardAssociation: "",
-        },
-        generalPropertyInformation: {
-          propertyType: "",
-        },
-        linksToWebsites: {
-          display: true,
-          buildingSize: "",
-          url: "",
-          linkData: [],
-        },
-      },
-    ];
-
-    this.state = {
-      userId: "",
+    let linksToWebsites = {
+      url: "",
+      text: ""
+    };
+    let isOpenHouse = {
+      display: false,
+      houseType: "",
+      date: "",
+      startTime: "",
+      endTime: ""
+    };
+    let user = JSON.parse(localStorage.getItem("user"));
+    let property =
+    {
       blast_id: "",
-      submitForm: false,
-      blastImageUrl: "",
-      propertyCount: 1,
-      templateId: "",
-      disabled: true,
-      alert: {
-        alertIsOpenHouse: false,
-        alertlink: false,
-        type: "",
-        message: "",
-      },
-      error: {
-        Email: {
-          formSubject: "",
-          formLine: "",
-          formReply: "",
-        },
-      },
-
+      userId: user.userId,
+      propertyId: "",
       Email: {
         formSubject: "",
         formLine: "",
         formReply: "",
       },
-
-      errors: [
-        {
-          propertyDetails: {
-            linksToWebsites: {
-              buildingSize: "",
-              url: "",
-            },
-            isOpenHouse: {
-              houseType: "",
-              date: "",
-              startTime: "",
-              endTime: "",
-            },
-            mlsNumber: {
-              numberProperty: "",
-            },
-            generalPropertyInformation: {
-              propertyType: "",
-            },
-          },
+      blastHeadline: "",
+      isOpenHouse: [],
+      pricingInfo: {
+        price: "",
+        priceType: "",
+      },
+      propertyAddress: {
+        displayMethod: "",
+        streetAddress: "",
+        city: "",
+        State: "",
+        zipCode: "",
+      },
+      mlsNumber: {
+        display: true,
+        numberProperty: "",
+        boardAssociation: "",
+      },
+      generalPropertyInformation: {
+        propertyType: "",
+        propertyStyle: "",
+        pricePerSquareFoot: "",
+        buildingSize: "",
+        lotSize: "",
+        lotType: "",
+        numberOfBedrooms: "",
+        numberOfBathrooms: {
+          full: "",
+          half: "",
         },
-      ],
-
-      propertyDetails: [
-        {
-          userId: "",
-          propertyId: "",
-          propertyImages: {
-            img: [],
-          },
-          isOpenHouse: {
-            display: true,
-            houseType: "",
-            date: "",
-            startTime: "",
-            endTime: "",
-            openHouseData: [],
-          },
-          pricingInfo: {
-            price: "",
-            priceType: "",
-          },
-          propertyAddress: {
-            streetAddress: "",
-            city: "",
-            State: "",
-            zipCode: "",
-          },
-          mlsNumber: {
-            display: true,
-            numberProperty: "",
-            boardAssociation: "",
-          },
-          generalPropertyInformation: {
-            propertyType: "",
-          },
-          linksToWebsites: {
-            display: true,
-            buildingSize: "",
-            url: "",
-            linkData: [],
-          },
-        },
-      ],
+        yearBuilt: "",
+        numberOfStories: "",
+        garage: false,
+      },
+      propertyDetail: "",
+      linksToWebsites: []
+    };
+    this.state = {
+      userId: "",
+      blast_id: "",
+      submitForm: false,
+      blastImageUrl: "",
+      propertyImages: [],
+      propertyCount: 1,
+      templateId: "",
+      disabled: true,
+      Email: {
+        formSubject: "",
+        formLine: "",
+        formReply: "",
+      },
+      property,
+      linksToWebsites,
+      isOpenHouse,
+      openHouseAdd: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -199,30 +102,27 @@ class UploadBlastTab extends React.Component {
     this.addLinksToWebsites = this.addLinksToWebsites.bind(this);
     this.editOrDelete = this.editOrDelete.bind(this);
     this.saveProperty = this.saveProperty.bind(this);
-    this.linkArrayChange = this.linkArrayChange.bind(this);
-    this.openHouseArrayChange = this.openHouseArrayChange.bind(this);
     this.propsDataupdate = this.propsDataupdate.bind(this);
     this.openUpload = this.openUpload.bind(this);
     this.imageChange = this.imageChange.bind(this);
     this.nextPage = this.nextPage.bind(this);
 
-    let user = JSON.parse(localStorage.getItem("user"));
-    if (user && user.userId && this.props && this.props.dispatchval) {
-      const { dispatch } = this.props.dispatchval.dispatch;
-      dispatch(userActions.getById(user.userId));
-    }
+    // let user = JSON.parse(localStorage.getItem("user"));
+    // if (user && user.userId && this.props && this.props.dispatchval) {
+    //   const { dispatch } = this.props.dispatchval.dispatch;
+    //   dispatch(userActions.getById(user.userId));
+    // }
   }
 
   openUpload() {
     $("#imgupload").trigger("click");
   }
 
-  nextPage(e) {
-    const { dispatch } = this.props.dispatchval.dispatch;
-    let blast_id = this.state.blast_id;
-    dispatch(userActions.getPreviewhtml(blast_id));
-    //dispatch(userActions.getPreviewhtml('5ed5fad930de7c24bc9423d4'));
-  }
+  // nextPage() {
+  //   const { dispatch } = this.props.dispatchval.dispatch;
+  //   let blast_id = this.state.blast_id;
+  //   dispatch(userActions.getPreviewhtml(blast_id));
+  // }
   to12hourTime(time) {
     // Check correct time format and split into components
     time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
@@ -241,7 +141,6 @@ class UploadBlastTab extends React.Component {
         "content-type": "multipart/form-data",
       },
     };
-
     const formData = new FormData();
     formData.append("userid", this.state.userid);
     formData.append("myImage", e.target.files[0]);
@@ -249,19 +148,24 @@ class UploadBlastTab extends React.Component {
     axios
       .post(`${config.uploadapiUrl}/propertyupload`, formData, configs)
       .then((response) => {
-        let imageids = {};
-        imageids.id = response.data.imageId;
-        imageids.imgUrl = response.data.url;
-        let setimagesData = Object.assign({}, this.state);
+        let image = {
+          id: response.data.imageId,
+          url: response.data.url,
+        }
+        let { blastImageUrl, propertyImages } = this.state;
 
-        setimagesData.blastImageUrl = response.data.url;
-        setimagesData.propertyDetails[0].propertyImages.img[0] = imageids;
-        this.setState(setimagesData);
+        blastImageUrl = response.data.url;
+        propertyImages[0] = image;
+        this.setState({ blastImageUrl, propertyImages });
+        this.render();
       })
-      .catch((error) => { });
+      .catch(() => { });
   }
 
-  selectBlast(e, blast_type) {
+  nextPage(){
+    this.props.moveTab("preview");
+  }
+  selectBlast(blast_type) {
     if (blast_type) {
       const { dispatch } = this.props.dispatchval.dispatch;
       const { userId } = this.state;
@@ -269,32 +173,19 @@ class UploadBlastTab extends React.Component {
     }
   }
 
-  addOpenHouse(e) {
-    const { id } = event.target;
-    const { propertyDetails } = this.state;
-    if (
-      propertyDetails[id].isOpenHouse.houseType &&
-      propertyDetails[id].isOpenHouse.date &&
-      propertyDetails[id].isOpenHouse.startTime &&
-      propertyDetails[id].isOpenHouse.endTime
-    ) {
-      let houseType = propertyDetails[id].isOpenHouse.houseType;
-      let date = propertyDetails[id].isOpenHouse.date;
-      let startTime = propertyDetails[id].isOpenHouse.startTime;
-      let endTime = propertyDetails[id].isOpenHouse.endTime;
-
-      this.openHouse.push({
-        openHouseData: {
-          houseType: houseType,
-          date: date,
-          startTime: startTime,
-          endTime: endTime,
-        },
-      });
-
-      let openHouse = Object.assign({}, this.state);
-      openHouse.propertyDetails[id].isOpenHouse.openHouseData = this.openHouse;
-      this.setState(openHouse);
+  addOpenHouse(event) {
+    let { property, isOpenHouse } = this.state;
+    if (isOpenHouse.houseType && isOpenHouse.date) {
+      property.isOpenHouse.push(isOpenHouse);
+      isOpenHouse = {
+        houseType: "",
+        date: "",
+        startTime: "",
+        endTime: ""
+      }
+      this.setState({ property, isOpenHouse, openHouseAdd: false });
+    } else {
+      this.setState({ openHouseAdd: true });
     }
   }
 
@@ -303,87 +194,15 @@ class UploadBlastTab extends React.Component {
     this.setState({ [name]: value });
   }
 
-  linkArrayChange(event) {
-    const { id, name, value } = event.target;
-    let keys = id.split("-");
-    let linkArray = Object.assign({}, this.state);
-    linkArray.propertyDetails[keys[0]].linksToWebsites.linkData[
-      keys[1]
-    ].linksToWebsiteData[name] = value;
-  }
-
-  openHouseArrayChange(event) {
-    const { id, name, value } = event.target;
-    let keys = id.split("-");
-    let openHouseArray = Object.assign({}, this.state);
-    openHouseArray.propertyDetails[keys[0]].isOpenHouse.openHouseData[
-      keys[1]
-    ].openHouseData[name] = value;
-    if (
-      openHouseArray.propertyDetails[keys[0]].isOpenHouse.openHouseData[keys[1]]
-        .openHouseData[name]
-    ) {
-      openHouseArray.alert.type = "success";
-      openHouseArray.alert.message = "Data is updated successfully";
-      openHouseArray.alert.alertIsOpenHouse = true;
-      this.setState({ disabled: false }, () => {
-        window.setTimeout(() => {
-          this.setState({
-            disabled: true,
-            ...this.state.alert,
-            alertIsOpenHouse: false,
-          });
-        }, 2000);
-      });
-    } else {
-      openHouseArray.alert.type = "danger";
-      openHouseArray.alert.message = "Data is not updated successfully";
-      openHouseArray.alert.alertIsOpenHouse = true;
-    }
-
-    let isState = this.setState(openHouseArray);
-  }
-
-  linkArrayDelete(event, linkIndex) {
-    const { id } = event.target;
-    let keys = linkIndex.split("-");
-    let linkArray = Object.assign({}, this.state);
-    linkArray.propertyDetails[keys[0]].linksToWebsites.linkData.splice(
-      [keys[1]],
-      1
-    );
-    this.setState(linkArray);
-  }
 
   openHouseChange(event) {
     event.preventDefault();
     const { name, value, id } = event.target;
-    let errors = this.state.errors;
-    console.log("errors=====", errors);
-    switch (name) {
-      case "houseType":
-        errors[id].propertyDetails.isOpenHouse.houseType =
-          value.length < 5 ? "Please select house type" : "";
-        break;
-      case "date":
-        errors[id].propertyDetails.isOpenHouse.date =
-          value.length < 3 ? "Date is required" : "";
-        break;
-      case "startTime":
-        errors[id].propertyDetails.isOpenHouse.startTime =
-          value.length < 3 ? "Start time is required" : "";
-        break;
-
-      case "endTime":
-        errors[id].propertyDetails.isOpenHouse.endTime =
-          value.length < 3 ? "End time is required" : "";
-        break;
-    }
 
     if (value != "" && name != "") {
-      let openHouse = Object.assign({}, this.state);
-      openHouse.propertyDetails[id].isOpenHouse[name] = value;
-      this.setState(openHouse);
+      let { isOpenHouse } = this.state;
+      isOpenHouse[name] = value;
+      this.setState({ isOpenHouse });
       this.AddButton = true;
     } else {
       this.AddButton = false;
@@ -392,71 +211,36 @@ class UploadBlastTab extends React.Component {
 
   linksToWebsitesChange(event) {
     event.preventDefault();
-    const { name, value, id } = event.target;
-    let errors = this.state.errors;
-    switch (name) {
-      case "url":
-        errors[id].propertyDetails.linksToWebsites.url =
-          value.length < 5 ? "URL is required" : "";
-        break;
-      case "buildingSize":
-        errors[id].propertyDetails.linksToWebsites.buildingSize =
-          value.length < 3 ? "Building Size is required" : "";
-        break;
-    }
+    const { name, value } = event.target;
+    let { linksToWebsites } = this.state
     if (value != "" && name != "") {
-      let linksToWebsites = Object.assign({}, this.state);
-      linksToWebsites.propertyDetails[id].linksToWebsites[name] = value;
-      this.setState(linksToWebsites);
+      linksToWebsites[name] = value;
+      this.setState({ linksToWebsites });
     }
   }
 
-  editOrDelete(event, flag, indexList) {
-    let keys = indexList.split("-");
-    const { id, title } = event.target;
-    console.log(event.target);
-    console.log(event.target.title);
-    if (flag == "edit") {
-      this.setState({
-        disabled: false,
-      });
-    } else {
-      if (title == "linkDelete") {
-        let linkArray = Object.assign({}, this.state);
-        linkArray.propertyDetails[keys[0]].linksToWebsites.linkData.splice(
-          keys[1],
-          1
-        );
-        this.setState(linkArray);
-      } else if (title == "openHoueDelete") {
-        let openHoueArray = Object.assign({}, this.state);
-        openHoueArray.propertyDetails[keys[0]].isOpenHouse.openHouseData.splice(
-          keys[1],
-          1
-        );
-        this.setState(openHoueArray);
-      }
+  editOrDelete(event, flag, p, item) {
+    const { title } = event.target;
+    let { property } = this.state;
+    if (title == "linkDelete") {
+      let linkIndex = property.linksToWebsites.indexOf(item);
+      property.linksToWebsites.splice(linkIndex, 1);
+    } else if (title == "openHoueDelete") {
+      let openHouseIndex = property.isOpenHouse.indexOf(item);
+      property.isOpenHouse.splice(openHouseIndex, 1);
     }
+    this.setState({ property });
   }
 
   addLinksToWebsites(e) {
-    let { id } = e.target;
-    const { propertyDetails } = this.state;
-    if (
-      propertyDetails[id].linksToWebsites.url &&
-      propertyDetails[id].linksToWebsites.buildingSize
-    ) {
-      let url = propertyDetails[id].linksToWebsites.url;
-      let buildingSize = propertyDetails[id].linksToWebsites.buildingSize;
+    let { linksToWebsites, property } = this.state;
+    if (linksToWebsites.url && linksToWebsites.text) {
+      property.linksToWebsites.push(linksToWebsites);
+      linksToWebsites = {
+        text: '', url: ""
+      }
+      this.setState({ linksToWebsites, property });
 
-      this.linksToWebsites.push({
-        linksToWebsiteData: { url: url, buildingSize: buildingSize },
-      });
-      let linksToWebsites = Object.assign({}, this.state);
-      linksToWebsites.propertyDetails[
-        id
-      ].linksToWebsites.linkData = this.linksToWebsites;
-      this.setState(linksToWebsites);
     }
   }
 
@@ -464,16 +248,16 @@ class UploadBlastTab extends React.Component {
     let states = Object.assign({}, this.state);
     switch (flag) {
       case "openHouse":
-        states.propertyDetails[id].isOpenHouse.display = true;
+        states.property.isOpenHouse.display = true;
         break;
       case "mlsNumber":
-        states.propertyDetails[id].mlsNumber.display = true;
+        states.property.mlsNumber.display = true;
         break;
       case "linksToWebsites":
-        states.propertyDetails[id].linksToWebsites.display = true;
+        states.property.linksToWebsites.display = true;
         break;
       case "garage":
-        states.propertyDetails[id].generalPropertyInformation.garage = true;
+        states.property.generalPropertyInformation.garage = true;
         break;
     }
     this.setState(states);
@@ -483,16 +267,16 @@ class UploadBlastTab extends React.Component {
     let states = Object.assign({}, this.state);
     switch (flag) {
       case "openHouse":
-        states.propertyDetails[id].isOpenHouse.display = false;
+        states.property.isOpenHouse.display = false;
         break;
       case "mlsNumber":
-        states.propertyDetails[id].mlsNumber.display = false;
+        states.property.mlsNumber.display = false;
         break;
       case "linksToWebsites":
-        states.propertyDetails[id].linksToWebsites.display = false;
+        states.property.linksToWebsites.display = false;
         break;
       case "garage":
-        states.propertyDetails[id].generalPropertyInformation.garage = false;
+        states.property.generalPropertyInformation.garage = false;
         break;
     }
     this.setState(states);
@@ -500,48 +284,7 @@ class UploadBlastTab extends React.Component {
 
   handleChange(flag, event) {
     event.preventDefault();
-    let { id } = event.target;
-    const { propertyDetails } = this.state;
     const { name, value } = event.target;
-    let errors = this.state.errors;
-    let error = this.state.error;
-    switch (name) {
-      case "formSubject":
-        error.Email.formSubject =
-          value.length < 3
-            ? "Email Subject must be at least 3 characters long!"
-            : "";
-        break;
-      case "formLine":
-        error.Email.formLine =
-          value.length < 3 ? "Name must be at least 3 characters long!" : "";
-        break;
-      case "formReply":
-        error.Email.formReply = validEmailRegex.test(value)
-          ? ""
-          : "Email is not valid!";
-        break;
-      case "pricePerSquareFoot":
-        errors[
-          id
-        ].propertyDetails.generalPropertyInformation.pricePerSquareFoot = parseInt(
-          value
-        )
-            ? ""
-            : "Please enter valid number";
-        break;
-
-      case "buildingSize":
-        errors[
-          id
-        ].propertyDetails.generalPropertyInformation.buildingSize = parseInt(
-          value
-        )
-            ? ""
-            : "Please enter valid number";
-        break;
-    }
-
     let states = Object.assign({}, this.state);
     this.setState(states);
     switch (flag) {
@@ -550,33 +293,31 @@ class UploadBlastTab extends React.Component {
         this.setState(states);
         break;
       case "propertyPricing":
-        states.propertyDetails[id].pricingInfo[name] = value;
+        states.property.pricingInfo[name] = value;
         this.setState(states);
         break;
       case "propertyAddress":
-        states.propertyDetails[id].propertyAddress[name] = value;
+        states.property.propertyAddress[name] = value;
         let user = JSON.parse(localStorage.getItem("user"));
-        states.propertyDetails[id].userId = user.userId;
+        states.property.userId = user.userId;
         this.setState(states);
         break;
       case "mlsNumber":
-        states.propertyDetails[id].mlsNumber[name] = value;
+        states.property.mlsNumber[name] = value;
         this.setState(states);
         break;
       case "propertyInformation":
-        states.propertyDetails[id].generalPropertyInformation[name] = value;
+        states.property.generalPropertyInformation[name] = value;
         this.setState(states);
         break;
 
       case "propertyInformationBathrooms":
-        states.propertyDetails[id].generalPropertyInformation.numberOfBathrooms[
+        states.property.generalPropertyInformation.numberOfBathrooms[
           name
         ] = value;
         this.setState(states);
         break;
     }
-
-    this.setState({ errors, [name]: value });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -609,9 +350,8 @@ class UploadBlastTab extends React.Component {
   componentDidMount() {
     let states = Object.assign({}, this.state);
     let user = JSON.parse(localStorage.getItem("user"));
-    const { dispatch } = this.props;
     if (user && user.userId) {
-      states.propertyDetails[0].userId = user.userId;
+      states.property.userId = user.userId;
       window.scrollTo(0, 0);
     }
     this.setState(states)
@@ -619,32 +359,20 @@ class UploadBlastTab extends React.Component {
 
   saveProperty(event) {
     event.preventDefault();
-    const {
-      propertyDetails,
-      submitted,
-      agentData,
-      Email,
-      blastHeadline,
-      templateId,
-      blast_id,
-      submitForm
-    } = this.state;
+    const { propertyData } = this.props;
+    // console.log("ids on submit", propertyData);
+    const templateId = propertyData.templateData._id;
+    const { blast_id } = this.props;
+    const { property, Email } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
     if (
-      propertyDetails &&
+      property &&
       Email.formSubject &&
       Email.formReply
     ) {
-      dispatch(
-        userActions.saveProperty(
-          propertyDetails,
-          "",
-          Email,
-          "",
-          templateId,
-          blast_id
-        )
-      );
+      let properties = [];
+      properties.push(property);
+      dispatch(userActions.saveProperty(properties, "", Email, "", templateId, blast_id));
 
       this.setState({ submitForm: true });
     } else {
@@ -653,26 +381,16 @@ class UploadBlastTab extends React.Component {
   }
 
   render() {
-    var that = this;
-    const {
-      errors,
-      propertyDetails,
-      disabled,
-      alert,
-      submitted,
-      error,
-      Email,
-      blastImageUrl,
-      submitForm
+    const { errors, property, disabled, alert,
+      submitted, Email, blastImageUrl, submitForm, linksToWebsites, isOpenHouse, openHouseAdd
     } = this.state;
-
+    console.log("state in Uplaod Blast ", this.state);
     let propertyImg = "";
     if (blastImageUrl) {
       propertyImg = config.uploadapiUrl + "/uploads/" + blastImageUrl;
     }
 
-    const { propertyData, uploadBlast } = this.props;
-    console.log("uploadBlast=====", uploadBlast);
+    const { uploadBlast } = this.props;
     return (
       <div
         className="tab-pane fade mt-2"
@@ -685,15 +403,14 @@ class UploadBlastTab extends React.Component {
 
         <form
           className="form-a contactForm"
-          action={this.saveProperty}
           method="post"
           role="form"
         >
-          <h5> Email Subject Line, From Line & Reply to Sender</h5>
+          <h5 className="required"> Email Subject Line, From Line & Reply to Sender</h5>
           <div className="row">
             <div className="col-md-4 mb-3">
               <div className="form-group">
-                <label>Email Subject</label>
+                <label className="required">Email Subject</label>
                 <input
                   name="formSubject"
                   type="text"
@@ -703,14 +420,14 @@ class UploadBlastTab extends React.Component {
                   value={Email && Email.formSubject}
                 />
                 <div className="validation">
-                  {error.Email.formSubject ||
+                  {
                     (submitted && !Email.formSubject && "Email is required")}
                 </div>
               </div>
             </div>
             <div className="col-md-4 mb-3">
               <div className="form-group">
-                <label>From Line</label>
+                <label className="required">From Line</label>
                 <input
                   name="formLine"
                   type="text"
@@ -720,14 +437,13 @@ class UploadBlastTab extends React.Component {
                   value={Email && Email.formLine}
                 />
                 <div className="validation">
-                  {error.Email.formLine ||
-                    (submitted && !Email.formLine && "Form Line is required")}
+                  {(submitted && !Email.formLine && "Form Line is required")}
                 </div>
               </div>
             </div>
             <div className="col-md-4 mb-3">
               <div className="form-group">
-                <label>Reply To Address</label>
+                <label className="required">Reply To Address</label>
                 <input
                   name="formReply"
                   type="email"
@@ -737,811 +453,575 @@ class UploadBlastTab extends React.Component {
                   value={Email && Email.formReply}
                 />
                 <div className="validation">
-                  {error.Email.formReply ||
-                    (submitted &&
-                      !Email.formReply &&
-                      "Form Reply Line is required")}
+                  {(submitted &&
+                    !Email.formReply &&
+                    "Form Reply Line is required")}
                 </div>
               </div>
             </div>
           </div>
           <hr />
           <br />
-          {propertyDetails.map(function (property, i) {
-            return (
-              <div key={i}>
-                <h5> Upload Your Own Flyer</h5>
-                <div className="row">
-                  <div className="col-md-12 mb-3">
-                    <div className="form-group">
-                      <a
-                        href="javascript:void(0)"
-                        className="btn btn-success"
-                        id={i}
-                        onClick={(e) => this.show("linksToWebsites", i)}
-                      >
-                        Yes
-                      </a>
-                      <a
-                        href="javascript:void(0)"
-                        className="btn btn-outline-danger"
-                        id={i}
-                        onClick={(e) => this.hide("linksToWebsites", i)}
-                      >
-                        No
-                      </a>
-                    </div>
+
+          <div >
+            <h5>Links to Websites, Virtual Tours or other Material</h5>
+            <div className="row">
+              <div className="col-md-12 mb-3">
+                <div className="form-group">
+                  <a href="javascript:void(0)" className="btn btn-success"
+                    onClick={() => this.show("linksToWebsites", property, true)}                    >
+                    Yes
+                </a>
+                  <a href="javascript:void(0)" className="btn btn-outline-danger"
+                    onClick={() => this.hide("linksToWebsites", i)}                    >
+                    No
+                </a>
+                </div>
+              </div>
+            </div>
+            <div style={{
+              display:
+                property.linksToWebsites &&
+                  property.linksToWebsites.display
+                  ? "inline"
+                  : "none",
+            }}  >
+              <p>
+                Add links to your property below. NOTE. Links will not be
+                saved to your blast until you Click Next
+            </p>
+              <div className="row">
+                <div className="col-md-5 mb-3">
+                  <div className="form-group">
+                    <label>URL</label>
+                    <input type="text" name="url" className="form-control form-control-lg form-control-a"
+                      placeholder="e.g. http://www.marketingpackage.com"
+                      onChange={this.linksToWebsitesChange}
+                      value={linksToWebsites.url}
+                    />
                   </div>
                 </div>
-                <div
-                  style={{
-                    display:
-                      propertyDetails &&
-                        propertyDetails[i].linksToWebsites &&
-                        propertyDetails[i].linksToWebsites.display != undefined &&
-                        propertyDetails[i].linksToWebsites.display
-                        ? "inline"
-                        : "none",
-                  }}
-                >
-                  <div className="row">
-                    <div className="col-md-5 mb-3">
-                      <div className="form-group">
-                        <label>URL</label>
-                        <input
-                          type="text"
-                          name="url"
-                          className="form-control form-control-lg form-control-a"
-                          placeholder="e.g. http://www.marketingpackage.com"
-                          onChange={this.linksToWebsitesChange}
-                          id={i}
-                        />
-                      </div>
-                      <div className="validation">
-                        {errors &&
-                          errors[i] &&
-                          errors[i].propertyDetails.linksToWebsites.url}
-                      </div>
-                    </div>
-
-                    <div className="col-md-5 mb-3">
-                      <div className="form-group">
-                        <label>Anchor Text</label>
-                        <input
-                          type="text"
-                          name="buildingSize"
-                          className="form-control form-control-lg form-control-a"
-                          placeholder="e.g. Download Our Marketing Package"
-                          onChange={this.linksToWebsitesChange}
-                          id={i}
-                        />
-                      </div>
-                      <div className="validation">
-                        {errors &&
-                          errors[i] &&
-                          errors[i].propertyDetails.linksToWebsites
-                            .buildingSize}
-                      </div>
-                    </div>
-                    <div className="col-md-2 mb-3">
-                      <div className="form-group pt-4">
-                        <a
-                          href="javascript:void(0)"
-                          className="btn btn-primary"
-                          onClick={this.addLinksToWebsites}
-                          id={i}
-                        >
-                          Add
-                        </a>
-                      </div>
-                    </div>
+                <div className="col-md-5 mb-3">
+                  <div className="form-group">
+                    <label>Anchor Text</label>
+                    <input type="text" name="text" className="form-control form-control-lg form-control-a"
+                      placeholder="e.g. Download Our Marketing Package" onChange={this.linksToWebsitesChange}
+                      value={linksToWebsites.text}
+                    />
                   </div>
-                  <table
-                    id="example"
-                    className="table table-bordered"
-                    style={{ width: "100%" }}
-                  >
-                    <thead>
-                      <tr>
-                        <th>URL</th>
-                        <th>Text</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {propertyDetails[i].linksToWebsites &&
-                        propertyDetails[i].linksToWebsites.linkData !=
-                        undefined &&
-                        propertyDetails[i].linksToWebsites.linkData.length >
-                        0 &&
-                        propertyDetails[i].linksToWebsites.linkData.map(
-                          function (linkData, linkIndex) {
-                            return (
-                              <tr key={linkIndex}>
-                                <td>
-                                  <input
-                                    type="text"
-                                    className="form-control form-control-lg form-control-a"
-                                    id={linkIndex}
-                                    value={linkData.linksToWebsiteData.url}
-                                    name="url"
-                                    disabled={disabled}
-                                    onChange={this.linkArrayChange}
-                                  />
-                                </td>
-                                <td>
-                                  <input
-                                    type="text"
-                                    className="form-control form-control-lg form-control-a"
-                                    id={i}
-                                    onChange={this.linkArrayChange}
-                                    name="buildingSize"
-                                    value={
-                                      linkData.linksToWebsiteData.buildingSize
-                                    }
-                                    disabled={disabled}
-                                  />
-                                </td>
-                                <td>
-                                  <a
-                                    href="javascript:void(0)"
-                                    title="Edit"
-                                    onClick={(e) =>
-                                      this.editOrDelete(
-                                        e,
-                                        "edit",
-                                        i + "-" + linkIndex
-                                      )
-                                    }
-                                  >
-                                    <i className="fa fa-edit"></i>
-                                  </a>{" "}
-                                  &nbsp; &nbsp;
-                                  <i
-                                    className="fa fa-trash"
-                                    aria-hidden="true"
-                                    id={i + "-" + linkIndex}
-                                    name="linkData"
-                                    onClick={(e) =>
-                                      this.editOrDelete(
-                                        e,
-                                        "delete",
-                                        i + "-" + linkIndex
-                                      )
-                                    }
-                                    title="linkDelete"
-                                  ></i>
-                                </td>
-                              </tr>
-                            );
-                          },
-                          this
-                        )}
-                    </tbody>
-                  </table>
-                  <h5> Upload Flyer</h5>
-                  <div className="col-md-12 mb-3">
-                    <span className="red">
-                      *The following file formats can be uploaded. jpg, png,
-                      gif, eps and pdf
+                </div>
+                <div className="col-md-2 mb-3">
+                  <div className="form-group pt-4">
+                    <a href="javascript:void(0)" className="btn btn-primary"
+                      onClick={(e) => this.addLinksToWebsites(e, property)}                      >
+                      Add
+                  </a>
+                  </div>
+                </div>
+              </div>
+              <table
+                className="table table-bordered"
+                style={{ width: "100%" }}  >
+                <thead>
+                  <tr>
+                    <th>URL</th>
+                    <th>Text</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {property.linksToWebsites &&
+                    property.linksToWebsites.length > 0 &&
+                    property.linksToWebsites.map(
+                      function (linkData, linkIndex) {
+                        return (
+                          <tr key={linkIndex}>
+                            <td>
+                              {linkData.url}
+                            </td>
+                            <td>
+                              {linkData.text}
+                            </td>
+                            <td>
+                              <i className="fa fa-trash" aria-hidden="true" name="linkData"
+                                onClick={(e) => this.editOrDelete(e, "delete", property, linkData)}
+                                title="linkDelete"
+                              ></i>
+                            </td>
+                          </tr>
+                        );
+                      },
+                      this
+                    )}
+                </tbody>
+              </table>
+            </div>
+
+
+            <div >
+              <h5> Upload Flyer</h5>
+              <div className="col-md-12 mb-3">
+                <span className="red">
+                  *The following file formats can be uploaded. jpg, png,
+                  gif, eps and pdf
                       <br />
                       *Image Required
                     </span>
-                  </div>
-                  <div className="row">
-                    <div className="col-md-12 mb-3">
-                      <div
-                        className="card"
-                        style={{ width: "650px", margin: "20px 0 24px 0" }}
-                      >
-                        <img
-                          className="card-img-top"
-                          src={
-                            propertyImg ||
-                            "../../../public/assets/images/img-4.png"
-                          }
-                          alt="image"
-                          style={{ width: "100%" }}
-                        />
-
-                        <div className="card-body">
-                          <h4 className="card-title">Upload Your Own Flyer</h4>
-                          <input
-                            type="file"
-                            id="imgupload"
-                            style={{ display: "none" }}
-                            onChange={this.imageChange}
-                          />
-                          <a
-                            href="javascript:void(0)"
-                            className="btn btn-primary"
-                            id="OpenImgUpload"
-                            onClick={this.openUpload}
-                          >
-                            Select
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <hr />
-                <br />
-
-                {uploadBlast &&
-                  uploadBlast.blastData &&
-                  uploadBlast.blastData.blast_type == "ResidentialListings" ? (
-                    <div>
-                      <h5>Is this an Open House?</h5>
-                      <div className="row">
-                        <div className="col-md-12 mb-3">
-                          <div className="form-group">
-                            <a
-                              href="javascript:void(0)"
-                              className="btn btn-success"
-                              id={i}
-                              onClick={(e) => this.show("openHouse", i)}
-                            >
-                              Yes
-                          </a>
-                            <a
-                              href="javascript:void(0)"
-                              className="btn btn-outline-danger"
-                              id={i}
-                              onClick={(e) => this.hide("openHouse", i)}
-                            >
-                              No
-                          </a>
-                          </div>
-
-                          <Alert
-                            className={`alert ${alert.type}`}
-                            isOpen={alert && alert.alertIsOpenHouse}
-                          >
-                            {alert && alert.message}
-                          </Alert>
-                        </div>
-                      </div>
-                      <div
-                        style={{
-                          display:
-                            propertyDetails[i] &&
-                              propertyDetails[i].isOpenHouse &&
-                              propertyDetails[i].isOpenHouse.display != undefined &&
-                              propertyDetails[i].isOpenHouse.display
-                              ? "inline"
-                              : "none",
-                        }}
-                      >
-                        <div className="row">
-                          <div className="col-md-3 mb-3">
-                            <div className="form-group">
-                              <label>Type</label>
-                              <div className="form-group">
-                                <select
-                                  className="form-control form-control-lg form-control-a"
-                                  name="houseType"
-                                  id={i}
-                                  onChange={this.openHouseChange}
-                                >
-                                  <option value="">Select</option>
-                                  <option value="Open House">Open House</option>
-                                  <option value="Broker Open">Broker Open</option>
-                                  <option value="Agent Tour">Agent Tour</option>
-                                </select>
-                              </div>
-                              <div className="validation">
-                                {errors &&
-                                  errors[i] &&
-                                  errors[i].propertyDetails.isOpenHouse.houseType}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="col-md-3 mb-3">
-                            <div className="form-group">
-                              <label>Date</label>
-                              <input
-                                className="form-control form-control-lg form-control-a"
-                                type="date"
-                                id={i}
-                                name="date"
-                                onChange={this.openHouseChange}
-                              />
-                            </div>
-                            <div className="validation">
-                              {errors &&
-                                errors[i] &&
-                                errors[i].propertyDetails.isOpenHouse.date}
-                            </div>
-                          </div>
-                          <div className="col-md-2 mb-3">
-                            <div className="form-group">
-                              <label>Start Time</label>
-                              <input
-                                className="form-control  form-control-lg form-control-a"
-                                type="time"
-                                name="startTime"
-                                id={i}
-                                onChange={this.openHouseChange}
-                              />
-                            </div>
-                            <div className="validation">
-                              {errors &&
-                                errors[i] &&
-                                errors[i].propertyDetails.isOpenHouse.startTime}
-                            </div>
-                          </div>
-                          <div className="col-md-2 mb-3">
-                            <div className="form-group">
-                              <label>End Time</label>
-                              <input
-                                className="form-control  form-control-lg form-control-a"
-                                type="time"
-                                onChange={this.openHouseChange}
-                                name="endTime"
-                                id={i}
-                              />
-                            </div>
-                            <div className="validation">
-                              {errors &&
-                                errors[i] &&
-                                errors[i].propertyDetails.isOpenHouse.endTime}
-                            </div>
-                          </div>
-                          <div className="col-md-2 mb-3">
-                            <div className="form-group pt-4">
-                              <a
-                                href="javascript:void(0)"
-                                className="btn btn-primary"
-                                id={i}
-                                onClick={(e) => this.addOpenHouse(e)}
-                              >
-                                Add
-                            </a>
-                            </div>
-                          </div>
-                        </div>
-                        <table
-                          id="example"
-                          className="table table-bordered"
-                          style={{ width: "100%" }}
-                        >
-                          <thead>
-                            <tr>
-                              <th>Type</th>
-                              <th>Date</th>
-                              <th>Time</th>
-                              <th>Action</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {propertyDetails[i].isOpenHouse &&
-                              propertyDetails[i].isOpenHouse.openHouseData !=
-                              undefined &&
-                              propertyDetails[i].isOpenHouse.openHouseData
-                                .length > 0 &&
-                              propertyDetails[i].isOpenHouse.openHouseData.map(
-                                function (openHouse, openHouseIndex) {
-                                  return (
-                                    <tr key={i}>
-                                      <td>
-                                        {openHouse.openHouseData.houseType}
-                                      </td>
-                                      <td>
-                                        {openHouse.openHouseData.date}
-                                      </td>
-                                      <td>
-                                        {
-                                          openHouse.openHouseData &&
-                                          openHouse.openHouseData.startTime &&
-                                          this.to12hourTime(openHouse.openHouseData.startTime) + " to " +
-                                          this.to12hourTime(openHouse.openHouseData.endTime)
-                                        }
-
-                                      </td>
-                                      <td>
-                                        <a
-                                          href="javascript:void(0)"
-                                          title="Edit"
-                                          onClick={(e) =>
-                                            this.editOrDelete(
-                                              e,
-                                              "edit",
-                                              i + "-" + openHouseIndex
-                                            )
-                                          }
-                                        >
-                                          <i className="fa fa-edit"></i>
-                                        </a>{" "}
-                                      &nbsp; &nbsp;
-                                      <i
-                                          className="fa fa-trash"
-                                          aria-hidden="true"
-                                          title="openHoueDelete"
-                                          id={i}
-                                          onClick={(e) =>
-                                            this.editOrDelete(
-                                              e,
-                                              "delete",
-                                              i + "-" + openHouseIndex
-                                            )
-                                          }
-                                        ></i>
-                                      </td>
-                                    </tr>
-                                  );
-                                },
-                                this
-                              )}
-                          </tbody>
-                        </table>
-                      </div>
-                      <hr />
-                      <br />
-                      <h5>Property Pricing Information</h5>
-                      <div className="row">
-                        <div className="col-md-4 mb-3">
-                          <div className="form-group">
-                            <label>Price</label>
-                            <div className="input-group mb-3">
-                              <div className="input-group-prepend">
-                                <span className="input-group-text">
-                                  <i className="fa fa-usd"></i>
-                                </span>
-                              </div>
-                              <input
-                                type="text"
-                                name="price"
-                                onChange={(e) =>
-                                  this.handleChange("propertyPricing", e)
-                                }
-                                id={i}
-                                value={
-                                  propertyDetails &&
-                                  propertyDetails[i].pricingInfo &&
-                                  propertyDetails[i].pricingInfo.price
-                                }
-                                className="form-control form-control-lg form-control-a"
-                              />
-                            </div>
-                            <div className="validation">
-                              {submitted &&
-                                !propertyDetails[i].pricingInfo.price &&
-                                "Price is required"}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-md-8 mb-3">
-                          <div className="form-group">
-                            <div className="form-group">
-                              <label>Price Display Type</label>
-                              <select
-                                className="form-control form-control-lg form-control-a"
-                                name="priceType"
-                                onChange={(e) =>
-                                  this.handleChange("propertyPricing", e)
-                                }
-                                id={i}
-                                vlaue={
-                                  propertyDetails[i] &&
-                                  propertyDetails[i].pricingInfo &&
-                                  propertyDetails[i].pricingInfo.priceType
-                                }
-                              >
-                                <option value="">
-                                  Select Price Display Type
-                              </option>
-                                <option>Display Price Specified</option>
-                                <option>Replace Price with 'AUCTION'</option>
-                                <option>
-                                  Replace Price with 'Call For Pricing'
-                              </option>
-                                <option>
-                                  Replace Price with 'Call For Offers'
-                              </option>
-                                <option>Display Price per Square Foot</option>
-                                <option>Display Price per Month</option>
-                                <option>Display as Value Price Range</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <hr />
-                      <br />
-                      <h5>Property Address</h5>
-                      <div className="row">
-                        <div className="col-md-6 mb-3">
-                          <div className="form-group">
-                            <label>Street Address</label>
-                            <input
-                              type="text"
-                              name="streetAddress"
-                              className="form-control form-control-lg form-control-a"
-                              placeholder="Street Address"
-                              onChange={(e) =>
-                                this.handleChange("propertyAddress", e)
-                              }
-                            />
-                          </div>
-                        </div>
-                        <div className="col-md-6 mb-3">
-                          <div className="form-group">
-                            <label>City</label>
-                            <input
-                              type="text"
-                              name="city"
-                              className="form-control form-control-lg form-control-a"
-                              placeholder="City"
-                              id={i}
-                              onChange={(e) =>
-                                this.handleChange("propertyAddress", e)
-                              }
-                              value={
-                                propertyDetails[i] &&
-                                propertyDetails[i].propertyAddress &&
-                                propertyDetails[i].propertyAddress.city
-                              }
-                            />
-                          </div>
-                        </div>
-                        <div className="col-md-6 mb-3">
-                          <div className="form-group">
-                            <label>State</label>
-                            <select
-                              className="form-control form-control-lg form-control-a"
-                              name="state"
-                              onChange={(e) =>
-                                this.handleChange("propertyAddress", e)
-                              }
-                              id={i}
-                            >
-                              <option>Alabama</option>
-                              <option>Alaska</option>
-                              <option>Arizona</option>
-                              <option>Arkansas</option>
-                              <option>California</option>
-                              <option>Colorado</option>
-                              <option>Connecticut</option>
-                              <option>Delaware</option>
-                              <option>District of Columbia</option>
-                              <option>Florida</option>
-                              <option>Georgia</option>
-                              <option>Hawaii</option>
-                              <option>Idaho</option>
-                              <option>Illinois</option>
-                              <option>Indiana</option>
-                              <option>Iowa</option>
-                              <option>Kansas</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-md-6 mb-3">
-                          <div className="form-group">
-                            <label>Zip Code</label>
-                            <input
-                              type="text"
-                              name="zipCode"
-                              className="form-control form-control-lg form-control-a"
-                              placeholder="Zip Code"
-                              onChange={(e) =>
-                                this.handleChange("propertyAddress", e)
-                              }
-                              id={i}
-                              value={
-                                propertyDetails[i] &&
-                                propertyDetails[i].propertyAddress &&
-                                propertyDetails[i].propertyAddress.zipCode
-                              }
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <hr />
-                      <br />
-                      <h5>Do you have a MLS Number?</h5>
-                      <div className="row">
-                        <div className="col-md-12 mb-3">
-                          <div className="form-group">
-                            <a
-                              href="javascript:void(0)"
-                              className="btn btn-success"
-                              id={i}
-                              onClick={(e) => this.show("mlsNumber", i)}
-                            >
-                              Yes
-                          </a>
-                            <a
-                              href="javascript:void(0)"
-                              className="btn btn-outline-danger"
-                              id={i}
-                              onClick={(e) => this.hide("mlsNumber", i)}
-                            >
-                              No
-                          </a>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        className="row"
-                        style={{
-                          display:
-                            propertyDetails[i] &&
-                              propertyDetails[i].mlsNumber &&
-                              propertyDetails[i].mlsNumber.display != undefined &&
-                              propertyDetails[i].mlsNumber.display
-                              ? "flex"
-                              : "none",
-                        }}
-                      >
-                        <div className="col-md-6 mb-3">
-                          <div className="form-group">
-                            <label>MLS Number</label>
-                            <input
-                              type="text"
-                              name="numberProperty"
-                              className="form-control form-control-lg form-control-a"
-                              placeholder="Enter the MLS Number for Property"
-                              onChange={(e) => this.handleChange("mlsNumber", e)}
-                              value={
-                                propertyDetails[i] &&
-                                propertyDetails[i].mlsNumber &&
-                                propertyDetails[i].mlsNumber.numberProperty
-                              }
-                              id={i}
-                            />
-                          </div>
-                          <div className="validation">
-                            {errors &&
-                              errors[i] &&
-                              errors[i].propertyDetails.mlsNumber.numberProperty}
-                          </div>
-                        </div>
-                        <div className="col-md-12 mb-3">
-                          <div className="form-group">
-                            <label>
-                              Which 'board / association' represents the Realtors
-                              where this property is located?
-                          </label>
-                            <p className="red">
-                              Attention: This is NOT a 'database step'. Click
-                              INSTRUCTIONS on the left for more details
-                          </p>
-                            <div className="form-group">
-                              <select
-                                className="form-control form-control-lg form-control-a"
-                                name="boardAssociation"
-                                onChange={(e) =>
-                                  this.handleChange("mlsNumber", e)
-                                }
-                                value={
-                                  propertyDetails[i] &&
-                                  propertyDetails[i].mlsNumber &&
-                                  propertyDetails[i].mlsNumber.boardAssociation
-                                }
-                                id={i}
-                              >
-                                <option value="">
-                                  -- Please Select a board / association for our
-                                  'Internal Sourcing' --
-                              </option>
-                                <option>
-                                  Amelia Island-Nassau County Real Estate Agent
-                                  List
-                              </option>
-                                <option>Bartow Real Estate Agent List</option>
-
-                                <option>
-                                  Bonita Springs-Estero Real Estate Agent List
-                              </option>
-                                <option>
-                                  Broward, Palm Beaches, and St. Lucie Real Estate
-                                  Agent List (includes Ft Lauderdale)
-                              </option>
-                                <option>
-                                  Central Panhandle Real Estate Agent List
-                              </option>
-                                <option>
-                                  Citrus County Real Estate Agent List
-                              </option>
-                                <option>
-                                  Daytona Beach Area Real Estate Agent List
-                              </option>
-
-                                <option>
-                                  Dixie Gilchrist Levy Counties Real Estate Agent
-                                  List
-                              </option>
-                                <option>East Pasco Real Estate Agent List</option>
-                                <option>
-                                  East Polk County Real Estate Agent List
-                              </option>
-                                <option>
-                                  Emerald Coast Real Estate Agent List
-                              </option>
-                                <option>
-                                  Englewood Area Real Estate Agent List
-                              </option>
-                                <option>
-                                  Flagler County Real Estate Agent List
-                              </option>
-                                <option>
-                                  Florida Keys Real Estate Agent List
-                              </option>
-                                <option>
-                                  Fort Myers/Cape Coral Merger(Royal Palm Coast
-                                  Real Estate Agent List)
-                              </option>
-                                <option>
-                                  Franklin &amp; Gulf Counties Real Estate Agent
-                                  List
-                              </option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <hr />
-                      <br />
-                    </div>
-                  ) : null}
-                <h5>General Property Information</h5>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <div className="form-group">
-                      <label>Property Type:</label>
-                      <div className="form-group">
-                        <select
-                          className="form-control form-control-lg form-control-a"
-                          name="propertyType"
-                          onChange={(e) =>
-                            this.handleChange("propertyInformation", e)
-                          }
-                          id={i}
-                          value={
-                            propertyDetails[i] &&
-                            propertyDetails[i].generalPropertyInformation &&
-                            propertyDetails[i].generalPropertyInformation
-                              .propertyType
-                          }
-                        >
-                          <option>Select Property Type</option>
-                          <option value="" className="">
-                            -- Select Property Type --
-                          </option>
-                          <option>Single Family</option>
-                          <option>Condo/townhome/row home/co-op</option>
-                          <option>Duplex</option>
-                          <option>Farm/Ranch</option>
-                          <option>Mfd/Mobile/Modular Home</option>
-                          <option>Vacant Lot / Vacant Land</option>
-                          <option>Rental Income Property</option>
-                          <option>Other, N/A</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <hr />
-                <br />
               </div>
-            );
-          }, this)}
+              <div className="row">
+                <div className="col-md-12 mb-3">
+                  <div
+                    className="card"
+                    style={{ width: "650px", margin: "20px 0 24px 0" }}
+                  >
+                    <img
+                      className="card-img-top"
+                      src={
+                        propertyImg ||
+                        "../../../public/assets/images/img-4.png"
+                      }
+                      alt="image"
+                      style={{ width: "100%" }}
+                    />
+
+                    <div className="card-body">
+                      <h4 className="card-title">Upload Your Own Flyer</h4>
+                      <input
+                        type="file"
+                        id="imgupload"
+                        style={{ display: "none" }}
+                        onChange={this.imageChange}
+                      />
+                      <a
+                        href="javascript:void(0)"
+                        className="btn btn-primary"
+                        id="OpenImgUpload"
+                        onClick={this.openUpload}
+                      >
+                        Select
+                          </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <br />
+            <h5>Is this an Open House?</h5>
+            <div className="row">
+              <div className="col-md-12 mb-3">
+                <div className="form-group">
+                  <a href="javascript:void(0)" className="btn btn-success"
+                    onClick={() => this.show("openHouse", property, true)}   >
+                    Yes
+                    </a>
+                  <a href="javascript:void(0)" className="btn btn-outline-danger"
+                    onClick={() => this.show("openHouse", property, false)} >
+                    No
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div
+              style={{
+                display:
+                  property.isOpenHouse &&
+                    property.isOpenHouse.display
+                    ? "inline"
+                    : "none",
+              }}              >
+              <div className="row">
+                <div className="col-md-3 mb-3">
+                  <div className="form-group">
+                    <label className="required">Type</label>
+                    <div className="form-group">
+                      <select className="form-control form-control-lg form-control-a"
+                        name="houseType"
+                        value={isOpenHouse.houseType}
+                        onChange={this.openHouseChange}                        >
+                        <option value="">Select</option>
+                        <option value="Open House">Open House</option>
+                        <option value="Broker Open">Broker Open</option>
+                        <option value="Agent Tour">Agent Tour</option>
+                      </select>
+                    </div>
+                    <div className="validation">
+                      {openHouseAdd &&
+                        (!property.isOpenHouse ||
+                          !property.isOpenHouse.houseType) && "This field is required"}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-3 mb-3">
+                  <div className="form-group">
+                    <label className="required">Date</label>
+                    <input className="form-control form-control-lg form-control-a" type="date"
+                      name="date" onChange={this.openHouseChange}
+                      value={isOpenHouse.date}
+                    />
+                  </div>
+                  <div className="validation">
+                    {openHouseAdd &&
+                      (!property.isOpenHouse ||
+                        !property.isOpenHouse.date) && "This field is required."}
+                  </div>
+                </div>
+                <div className="col-md-2 mb-3">
+                  <div className="form-group">
+                    <label>Start Time</label>
+                    <input className="form-control  form-control-lg form-control-a"
+                      type="time" name="startTime"
+                      onChange={this.openHouseChange}
+                      value={isOpenHouse.startTime}
+                    />
+                  </div>
+                </div>
+                <div className="col-md-2 mb-3">
+                  <div className="form-group">
+                    <label>End Time</label>
+                    <input className="form-control  form-control-lg form-control-a"
+                      type="time" onChange={this.openHouseChange}
+                      name="endTime" value={isOpenHouse.endTime}
+                    />
+                  </div>
+                </div>
+                <div className="col-md-2 mb-3">
+                  <div className="form-group pt-4">
+                    <a href="javascript:void(0)"
+                      className="btn btn-primary"
+                      onClick={(e) => this.addOpenHouse(e, property)}                      >
+                      Add
+                  </a>
+                  </div>
+                </div>
+              </div>
+              <table
+                className="table table-bordered"
+                style={{ width: "100%" }}                >
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {property.isOpenHouse &&
+                    property.isOpenHouse.length > 0 &&
+                    property.isOpenHouse.map(function (openHouse, openHouseIndex) {
+                      return (
+                        <tr key={openHouseIndex}>
+                          <td>  {openHouse.houseType}   </td>
+                          <td>  {openHouse.date}  </td>
+                          <td>
+                            {openHouse.startTime && this.to12hourTime(openHouse.startTime) + " to " + this.to12hourTime(openHouse.endTime)}
+                          </td>
+                          <td>
+                            <i className="fa fa-trash" aria-hidden="true"
+                              title="openHoueDelete"
+                              onClick={(e) => this.editOrDelete(e, "delete", property, openHouse)
+                              }
+                            ></i>
+                          </td>
+                        </tr>
+                      );
+                    },
+                      this
+                    )}
+                </tbody>
+              </table>
+            </div>
+            <h5>Property Pricing Information</h5>
+            <div className="row">
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label className="required">Price</label>
+                  <div className="input-group mb-3">
+                    <div className="input-group-prepend">
+                      <span className="input-group-text">
+                        <i className="fa fa-usd"></i>
+                      </span>
+                    </div>
+                    <input type="text" name="price" onChange={(e) => this.handleChange("propertyPricing", e, property)}
+                      value={property.pricingInfo && property.pricingInfo.price
+                      }
+                      className="form-control form-control-lg form-control-a"
+                    />
+                  </div>
+                  <div className="validation">
+                    {submitted &&
+                      (!property.pricingInfo ||
+                        !property.pricingInfo.price) &&
+                      "Price is required"}
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-8 mb-3">
+                <div className="form-group">
+                  <div className="form-group">
+                    <label className="required">Price Display Type</label>
+                    <select className="form-control form-control-lg form-control-a" name="priceType"
+                      onChange={(e) => this.handleChange("propertyPricing", e, property)}
+                      vlaue={property.pricingInfo && property.pricingInfo.priceType} >
+                      <option value="">Select Price Display Type</option>
+                      <option>Display Price Specified</option>
+                      <option>Replace Price with 'AUCTION'</option>
+                      <option>Replace Price with 'Call For Pricing'</option>
+                      <option>Replace Price with 'Call For Offers'</option>
+                      <option>Display Price per Square Foot</option>
+                      <option>Display Price per Month</option>
+                      <option>Display as Value Price Range</option>
+                    </select>
+                  </div>
+                  <div className="validation">
+                    {submitted &&
+                      (!property.pricingInfo ||
+                        !property.pricingInfo.priceType) &&
+                      "Price is required"}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <br />
+            <h5>Property Address</h5>
+            <div className="row">
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label className="required">Address Display Method:</label>
+                  <select className="form-control form-control-lg form-control-a" name="displayMethod"
+                    onChange={(e) => this.handleChange("propertyAddress", e, property)}
+                    value={property.propertyAddress && property.propertyAddress.displayMethod} >
+                    <option>Select Address Display Method</option>
+                    <option>Show Entire Address</option>
+                    <option>Show City & State Only</option>
+                    <option>DO NOT Show Address</option>
+                  </select>
+                </div>
+                <div className="validation">
+                  {submitted &&
+                    (!property.propertyAddress ||
+                      !property.propertyAddress.displayMethod) &&
+                    "Price is required"}
+                </div>
+              </div>
+              <div className="col-md-8 mb-3">
+                <div className="form-group">
+                  <label className="required">Street Address</label>
+                  <input type="text" name="streetAddress" className="form-control form-control-lg form-control-a" placeholder="Street Address"
+                    onChange={(e) => this.handleChange("propertyAddress", e, property)}
+                    value={property.propertyAddress && property.propertyAddress.streetAddress} />
+                </div>
+                <div className="validation">
+                  {submitted &&
+                    (!property.propertyAddress ||
+                      !property.propertyAddress.streetAddress) &&
+                    "Price is required"}
+                </div>
+              </div>
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label className="required">City</label>
+                  <input type="text" name="city" className="form-control form-control-lg form-control-a"
+                    placeholder="City" onChange={(e) => this.handleChange("propertyAddress", e, property)}
+                    value={property.propertyAddress && property.propertyAddress.city} />
+                </div>
+                <div className="validation">
+                  {submitted &&
+                    (!property.propertyAddress ||
+                      !property.propertyAddress.city) &&
+                    "Price is required"}
+                </div>
+              </div>
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label className="required">State</label>
+                  <select className="form-control form-control-lg form-control-a" name="state"
+                    value={property.propertyAddress && property.propertyAddress.state}
+                    onChange={(e) => this.handleChange("propertyAddress", e, property)}>
+                    <option value="">Select State</option>
+                    {globalData.USstates.map((st) =>
+                      <option key={st}>{st}</option>
+                    )}
+                  </select>
+                  <div className="validation">
+                    {submitted &&
+                      (!property.propertyAddress ||
+                        !property.propertyAddress.state) &&
+                      "Price is required"}
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 mb-3">
+                <div className="form-group">
+                  <label>Zip Code</label>
+                  <input type="text" name="zipCode" className="form-control form-control-lg form-control-a"
+                    placeholder="Zip Code" onChange={(e) => this.handleChange("propertyAddress", e, property)}
+                    value={
+                      property.propertyAddress &&
+                      property.propertyAddress.zipCode
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+            <hr />
+            <br />
+            <h5>Do you have a MLS Number?</h5>
+            <div className="row">
+              <div className="col-md-12 mb-3">
+                <div className="form-group">
+                  <a href="javascript:void(0)" className="btn btn-success"
+                    onClick={() => this.show("mlsNumber", property, true)} >
+                    Yes
+                </a>
+                  <a href="javascript:void(0)" className="btn btn-outline-danger"
+                    onClick={() => this.show("mlsNumber", property, false)}>
+                    No
+                </a>
+                </div>
+              </div>
+            </div>
+            <div className="row" style={{
+              display:
+                property.mlsNumber &&
+                  property.mlsNumber.display
+                  ? "flex"
+                  : "none"
+            }}  >
+              <div className="col-md-6 mb-3">
+                <div className="form-group">
+                  <label className="required">MLS Number</label>
+                  <input type="text" name="numberProperty" className="form-control form-control-lg form-control-a"
+                    placeholder="Enter the MLS Number for Property" onChange={(e) => this.handleChange("mlsNumber", e, property)}
+                    value={property.mlsNumber && property.mlsNumber.numberProperty
+                    }
+                  />
+                </div>
+                <div className="validation">
+                  {submitted && (!property.mlsNumber || !property.mlsNumber.numberProperty) && "This field is required."}
+                </div>
+              </div>
+              <div className="col-md-12 mb-3">
+                <div className="form-group">
+                  <label>
+                    Which 'board / association' represents the Realtors
+                    where this property is located?
+                </label>
+                  <p className="red required">
+                    Attention: This is NOT a 'database step'. Click
+                    INSTRUCTIONS on the left for more details
+                </p>
+                  <div className="form-group">
+                    <select className="form-control form-control-lg form-control-a" name="boardAssociation"
+                      onChange={(e) => this.handleChange("mlsNumber", e, property)}
+                      value={property.mlsNumber && property.mlsNumber.boardAssociation} >
+                      <option value="">
+                        -- Please Select a board / association for our
+                        'Internal Sourcing' --
+                    </option>
+                      <option>
+                        Amelia Island-Nassau County Real Estate Agent List
+                    </option>
+                      <option>Bartow Real Estate Agent List</option>
+                      <option>
+                        Bonita Springs-Estero Real Estate Agent List
+                    </option>
+                      <option>
+                        Broward, Palm Beaches, and St. Lucie Real Estate
+                        Agent List (includes Ft Lauderdale)
+                    </option>
+                      <option>
+                        Central Panhandle Real Estate Agent List
+                    </option>
+                      <option>Citrus County Real Estate Agent List</option>
+                      <option>
+                        Daytona Beach Area Real Estate Agent List
+                    </option>
+                      <option>
+                        Dixie Gilchrist Levy Counties Real Estate Agent List
+                    </option>
+                      <option>East Pasco Real Estate Agent List</option>
+                      <option>
+                        East Polk County Real Estate Agent List
+                    </option>
+                      <option>Emerald Coast Real Estate Agent List</option>
+                      <option>Englewood Area Real Estate Agent List</option>
+                      <option>Flagler County Real Estate Agent List</option>
+                      <option>Florida Keys Real Estate Agent List</option>
+                      <option>
+                        Fort Myers/Cape Coral Merger(Royal Palm Coast Real
+                        Estate Agent List)
+                    </option>
+                      <option>
+                        Franklin &amp; Gulf Counties Real Estate Agent List
+                    </option>
+                    </select>
+                    <div className="validation">
+                      {submitted &&
+                        (!property.mlsNumber &&
+                          !property.mlsNumber.boardAssociation) &&
+                        "Price is required"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <br />
+            <h5>General Property Information</h5>
+            <div className="row">
+              <div className="col-md-6 mb-3">
+                <div className="form-group">
+                  <label>Property Type:</label>
+                  <div className="form-group">
+                    <select
+                      className="form-control form-control-lg form-control-a"
+                      name="propertyType"
+                      onChange={(e) =>
+                        this.handleChange("propertyInformation", e)
+                      }
+                      value={
+                        property.generalPropertyInformation &&
+                        property.generalPropertyInformation
+                          .propertyType
+                      }
+                    >
+                      <option value="" className="">
+                        -- Select Property Type --
+                          </option>
+                      <option>Single Family</option>
+                      <option>Condo/townhome/row home/co-op</option>
+                      <option>Duplex</option>
+                      <option>Farm/Ranch</option>
+                      <option>Mfd/Mobile/Modular Home</option>
+                      <option>Vacant Lot / Vacant Land</option>
+                      <option>Rental Income Property</option>
+                      <option>Other, N/A</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <hr />
+            <br />
+          </div>
+
           <div className="col-md-12 mt-4">
             <button
               type="button"
               className="btn btn-primary"
-              onClick={this.saveProperty}
-              disabled={submitForm ? true : false}
-            >
+              onClick={this.saveProperty}  >
               Save
               </button>
             <button
               type="button"
               className="btn btn-primary pull-right"
-              onClick={this.nextPage}
-              disabled={submitForm ? false : true}
+               onClick={this.nextPage}
+              disabled={!submitForm}
             >
               Next
               </button>

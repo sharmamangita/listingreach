@@ -146,7 +146,7 @@ class UserController implements IBaseController<UserBusiness> {
 											email: result.email,
 											firstName: result.firstName,
 											lastName: result.lastName,
-											phone:result.phone,
+											phone: result.phone,
 											token: token,
 											roles: result.roles
 										});
@@ -832,29 +832,9 @@ class UserController implements IBaseController<UserBusiness> {
 						mls_number: prop.mlsNumber.numberProperty,
 						board: prop.mlsNumber.boardAssociation,
 						pricingInfo: prop.pricingInfo,
-						isOpenHouse:prop.isOpenHouse,
-						linksToWebsites:prop.linksToWebsites
+						isOpenHouse: prop.isOpenHouse,
+						linksToWebsites: prop.linksToWebsites
 					}
-					// if (prop.linksToWebsites && prop.linksToWebsites.length > 0) {
-					// 	var linksData: any = [];
-					// 	prop.linksToWebsites.forEach(function (links: any) {
-					// 		if (links) {
-					// 			linksData.push({ linksToWebsiteData: links });
-					// 		}
-					// 	});
-					// 	_propertyform.linksToWebsites = linksData;
-					// }
-
-					// if (prop.isOpenHouse && prop.isOpenHouse.length > 0) {
-					// 	var opneHouseData: any = [];
-					// 	prop.isOpenHouse.forEach(function (house: any) {
-					// 		if (house) {
-					// 			opneHouseData.push({ openHouseData: house.openHouseData });
-					// 		}
-					// 	});
-					// 	_propertyform.isOpenHouse = opneHouseData;
-					// }
-
 					if (prop.propertyImages) {
 						var propertyImages: any = [];
 						let data = prop.propertyImages.img;
@@ -891,7 +871,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 						_templateBusiness.update(_id, _templateform, (error, resultUpdate) => {
 							if (error) {
-								console.log(error);
+								console.log("template update error ", error);
 								res.send({ "error": error });
 							} else {
 
@@ -902,7 +882,7 @@ class UserController implements IBaseController<UserBusiness> {
 									_blastforms.agentData = _blastform.agentData;
 									_blastBusiness.update(_id, _blastforms, (error, blastUpadte) => {
 										if (error) {
-											res.send({ "error": error });
+											res.send({ "blast update error": error });
 										}
 
 										var propertyAggregate = [
@@ -991,6 +971,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 										_propertyBusiness.aggregate(propertyAggregate, (error: any, result: any) => {
 											if (error) {
+												console.log( error)
 												res.send({ "error": error });
 											} else {
 												var returnObj = result.map(function (obj: any): any {
@@ -1045,7 +1026,7 @@ class UserController implements IBaseController<UserBusiness> {
 		}
 		catch (e) {
 			console.log(e);
-			res.send({ "error": "error in your request" });
+			res.send({ "error": e });
 		}
 	}
 
@@ -1301,55 +1282,55 @@ class UserController implements IBaseController<UserBusiness> {
 		try {
 			var _userBusiness = new UserBusiness();
 			var userId: string = req.params._id;
-			console.log("userId===",userId)
+			console.log("userId===", userId)
 			_userBusiness.verifyToken(req, res, (userData) => {
 				const paymentBusiness = new PaymentBusiness();
-					var query: Array<any> = [
-						{
-							$lookup: {
-								from: "blasts",
-								localField: "blast_id",
-								foreignField: "_id",
-								as: "blast"
-							}
-						},
-						
-						{
-							$project: {
-								_id: 1,
-								paymentID: 1,
-								createdOn: 1,
-								amount: 1,
-								user_id:1,
-								invoice_id:1,
-								"blast.blast_type": 1,
-								"blast.status": 1
-								
-							}
-						},
-						{
-							$match:
-							{
-
-								user_id: mongoose.Types.ObjectId(userId)
-							}
+				var query: Array<any> = [
+					{
+						$lookup: {
+							from: "blasts",
+							localField: "blast_id",
+							foreignField: "_id",
+							as: "blast"
 						}
-					];
-					paymentBusiness.aggregate(query, (error, result) => {
-				
+					},
 
-						if (error) {
-							console.log(error);
-							res.send({ "error": error });
-						}
-						else {
-							console.log(result);
-							//res.send(result);
-							return res.json({ payment: result });
-						}
-					});
+					{
+						$project: {
+							_id: 1,
+							paymentID: 1,
+							createdOn: 1,
+							amount: 1,
+							user_id: 1,
+							invoice_id: 1,
+							"blast.blast_type": 1,
+							"blast.status": 1
 
-				
+						}
+					},
+					{
+						$match:
+						{
+
+							user_id: mongoose.Types.ObjectId(userId)
+						}
+					}
+				];
+				paymentBusiness.aggregate(query, (error, result) => {
+
+
+					if (error) {
+						console.log(error);
+						res.send({ "error": error });
+					}
+					else {
+						console.log(result);
+						//res.send(result);
+						return res.json({ payment: result });
+					}
+				});
+
+
 			});
 		}
 		catch (e) {
@@ -1479,7 +1460,6 @@ class UserController implements IBaseController<UserBusiness> {
 				}
 			];
 
-			let _blastBusiness
 			_propertyBusiness.aggregate(propertyAggregate, (error: any, result: any) => {
 				if (error) {
 					res.send({ "error": error });

@@ -214,7 +214,6 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   if(agent.logo_url!=undefined && agent.logo_url){
                      agentlogourl = Common.SITE_URL+"/uploads/"+agent.logo_url;
                   }
-
                   var previewTemplatememail = Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;
                   var emailtemplate = previewTemplatememail
                     .replace(/#multiproperty#/g, html)

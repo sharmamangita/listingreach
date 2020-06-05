@@ -30,7 +30,14 @@ class CreateFlyerPage extends React.Component {
     };
 
 
-    this.state = {
+    this.state = this.newState();
+
+    this.moveTab = this.moveTab.bind(this);
+    this.setKey = this.setKey.bind(this);
+    this.stateSettingsForTabs = this.stateSettingsForTabs.bind(this);
+  }
+  newState() {
+    return {
       blast_id: '',
       profile: {},
       moveTab: "blast",
@@ -56,29 +63,19 @@ class CreateFlyerPage extends React.Component {
         payment: true
       }
     };
-
-    this.moveTab = this.moveTab.bind(this);
-    this.setKey = this.setKey.bind(this);
-    this.stateSettingsForTabs = this.stateSettingsForTabs.bind(this);
   }
+
   componentWillReceiveProps(nextProps) {
     console.log("nextProps Create Flyer Page", nextProps);
+    if (this.state.blast_id == "" && this.state.moveTab != "blast") {
+      this.setState(this.newState());
+    }
     const { location } = nextProps;
     if (nextProps && nextProps.users && nextProps.users.tab) {
       let tab = nextProps.users.tab;
       this.moveTab(tab);
     }
 
-
-
-    // if (nextProps && nextProps.users && nextProps.users.blastData && nextProps.users.blastData.data) {
-    //   var { history } = nextProps;
-    //   var blastid = nextProps.users.blastData.data._id;
-    //   history.push({
-    //     pathname: '/CreateFlayerPage',
-    //     search: "?id=" + blastid + "&tab=" + nextProps.users.tab
-    //   })
-    // }
     if (location && location.savedProps && location.savedProps.moveTab) {
       this.setState({ blast_id: location.savedProps.blast_id });
 
@@ -209,6 +206,7 @@ class CreateFlyerPage extends React.Component {
                               propertyData={propertyData}
                               blast_id={blast_id}
                               uploadBlast={uploadBlast}
+                              moveTab={this.moveTab}
                               saveBlastData={users && users.saveBlastData != undefined && users.saveBlastData}
                             />
                           ) : (
@@ -232,9 +230,10 @@ class CreateFlyerPage extends React.Component {
                           "UploadYourOwnBlast") ? null : (
                           <Tab eventKey="photo" title="Photos" disabled={tabs.photo ? true : false}>
                             <PhotoTab dispatchval={this.dispatchval}
-                             template={propertyData.templateData} 
-                             previewData={previewData}
-                             blast_id={blast_id} />
+                              template={propertyData.templateData}
+                              previewData={previewData}
+                              blast_id={blast_id}
+                              moveTab={this.moveTab} />
                           </Tab>
                         )}
 

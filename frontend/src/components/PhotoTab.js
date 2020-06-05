@@ -51,9 +51,7 @@ class PhotoTab extends React.Component {
 
 
   nextPage() {
-    const { dispatch } = this.props.dispatchval.dispatch;
-    let blast_id = this.state.blast_id;
-    dispatch(userActions.getPreviewhtml(blast_id));
+    this.props.moveTab("preview");    
   }
 
   openUpload(e) {
