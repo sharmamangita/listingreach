@@ -75,8 +75,9 @@ class UserController implements IBaseController<UserBusiness> {
 	register(req: express.Request, res: express.Response): void {
 		try {
 			var user: IUserModel = <IUserModel>req.body.user;
+			//console.log("user====",user);
 			user.createdOn = new Date();
-
+			user.phone = req.body.user.phoneno;
 			user.password = req.body.user.password;
 			user.firstName = req.body.user.firstName.toLowerCase();
 			user.roles = 'agents';
@@ -1298,16 +1299,43 @@ class UserController implements IBaseController<UserBusiness> {
 		try {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.verifyToken(req, res, (userData) => {
-				var _payment: IPaymentModel = <IPaymentModel>req.body;
-				var _paymentBusiness = new PaymentBusiness();
-				var userId: string = req.params._id;
-				_paymentBusiness.retrieve({ "user_id": userId }, (error, result) => {
-					if (error) {
-						console.log("error====", error)
-					} else {
-						return res.json({ payment: result });
-					}
-				});
+				const paymentBusiness = new PaymentBusiness();
+					var query: Array<any> = [
+						{
+							$lookup: {
+								from: "blasts",
+								localField: "blast_id",
+								foreignField: "_id",
+								as: "blast"
+							}
+						},
+						
+						{
+							$project: {
+								_id: 1,
+								paymentID: 1,
+								createdOn: 1,
+								amount: 1,
+								invoice_id:1,
+								"blast.blast_type": 1,
+								"blast.status": 1
+								
+							}
+						}
+					];
+					paymentBusiness.aggregate(query, (error, result) => {
+						if (error) {
+							console.log(error);
+							res.send({ "error": error });
+						}
+						else {
+							console.log(result);
+							//res.send(result);
+							return res.json({ payment: result });
+						}
+					});
+
+				
 			});
 		}
 		catch (e) {

@@ -45,6 +45,9 @@ class UserSchema {
             phone:{
                 type: String,
             },
+            mobileno:{
+                type:String,
+            },
             city:{
                 type: String,
             },
