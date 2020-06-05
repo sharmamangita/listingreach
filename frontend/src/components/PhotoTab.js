@@ -1,18 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { userActions } from "../actions";
-import {
-  Nav,
-  Navbar,
-  NavItem,
-  NavDropdown,
-  MenuItem,
-  NavLink,
-} from "react-bootstrap";
-import Modal from "react-bootstrap4-modal";
-import { connect } from "react-redux";
-import { common } from "../helpers";
-import moment from "moment";
 import { authHeader } from "../helpers";
 import config from "config";
 const axios = require("axios");
@@ -26,7 +13,7 @@ class PhotoTab extends React.Component {
       email: "",
       blast_id: '',
       property_ids: [],
-      template: "",
+      template: {},
       propertyImages: [{}, {}, {}, {}],
 
       imageData: Object.assign(
@@ -62,7 +49,7 @@ class PhotoTab extends React.Component {
   }
 
 
-  nextPage(e) {
+  nextPage() {
     const { dispatch } = this.props.dispatchval.dispatch;
     let blast_id = this.state.blast_id;
     dispatch(userActions.getPreviewhtml(blast_id));
@@ -105,7 +92,7 @@ class PhotoTab extends React.Component {
       .post(`${config.uploadapiUrl}/propertyupload`, formData, configs)
       .then((response) => {
         this.updateimage[id] = response.data.url;
-        console.log("this.updateimage==", this.updateimage);
+        //  console.log("this.updateimage==", this.updateimage);
         this.setState({ updateimage: this.updateimage });
         //if(template=="SingleProperty"){
         let imageids = {};
@@ -113,13 +100,19 @@ class PhotoTab extends React.Component {
         imageids.imageUrl = response.data.url;
         let setimagesData = Object.assign({}, this.state);
         setimagesData.propertyImages[id] = imageids;
-        this.setState(setimagesData);
+        this.setState({ setimagesData });
       })
-      .catch((error) => {
+      .catch(() => {
       });
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.template) {
+      let { template } = this.state;
+      template = nextProps.template;
+      this.setState({ template })
+    }
+
     if (nextProps && nextProps.previewData) {
       let propertyArray = nextProps.previewData;
       this.getPropertyIds(propertyArray);
@@ -141,12 +134,12 @@ class PhotoTab extends React.Component {
     property.property_ids = array;
     property.template = template;
     property.blast_id = blast_id;
-    this.setState(property);
+    this.setState({ property });
   }
 
   render() {
     const { imageData, visible, divCount, updateimage, template, submited } = this.state;
-    console.log("this.state=4545====", this.state);
+    //  console.log("state in render in Photos Tab ====", this.state);
     const { previewData } = this.props;
     //console.log("previewData2323232====",this.props.previewData);
     let images = ["", "", "", ""];
@@ -166,7 +159,7 @@ class PhotoTab extends React.Component {
         aria-labelledby="group-dropdown2-tab"
         aria-expanded="false"
       >
-        {template && template == "SingleProperty" ? (
+        {template && template.template_type == "SingleProperty" ? (
           <div>
             <h4>Property Photos</h4>
             <p>Select the Photo Layout for your property.</p>
