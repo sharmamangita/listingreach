@@ -91,9 +91,7 @@ class PaymentTab extends React.Component {
         <div className="alert alert-info">
           <strong>Your Selected Send Date is: {scheduledDate}</strong>
         </div>
-        <div className="alert alert-success">
-          <strong>Estimated Blast Email Volume: 1,352 Recipients</strong>
-        </div>
+        
         <br />
         <p>Order Details</p>
         <table

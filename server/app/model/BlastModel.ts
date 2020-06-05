@@ -21,7 +21,7 @@ class BlastModel {
     get blast_type (): string {
         return this._blastModel.blast_type;
     }
-    get selected_template_id (): string {
+    get selected_template_id (): mongoose.Types.ObjectId  {
         return this._blastModel.selected_template_id;
     }
      get agentData (): object {

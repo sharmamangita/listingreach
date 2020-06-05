@@ -172,9 +172,9 @@ class EmailBlastsPage extends React.Component {
 				totaldata.push({
 					blasttype: blast.blast_type,
 					headline: blast.template && blast.template.length > 0 ? blast.template[0].headline : "",
-					agent: blast.agentData ? blast.agentData.name : "",
-					email: blast.agentData ? blast.agentData.email : "",
-					company: blast.agentData ? blast.agentData.company_details : "",
+					agentName: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].firstName+' '+blast.users[0].lastName : "",
+					email: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].email : "",
+					company: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].companyName : "",
 					createddate: blast.selected_template_date ? this.createdDate(blast.selected_template_date) : "",
 					totalpaid: "$" + blast.payments.amount,
 					paidon: this.createdDate(blast.payments.createdOn),
