@@ -16,8 +16,8 @@ class Common {
     static SEND_FROM_EMAIL: string ="info@76east.com";
     static ADMIN_EMAIL: string = "info@76east.com";
 
-    static SITE_URL: string = "http://66.235.194.119:3006";
-    //static SITE_URL: string = "http://localhost:3000"; 
+    static SITE_URL: string = "http://66.235.194.119:3006"; 
+   // static SITE_URL: string = "http://localhost:3000"; 
 	
 	//live details
 	static MAIL_CONFIG: any = {
