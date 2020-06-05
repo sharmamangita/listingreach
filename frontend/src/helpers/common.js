@@ -165,8 +165,8 @@ export const common = {
       width: 200
     },   
     {
-      label: 'Approve',
-      field: 'approve',
+      label: 'Actions',
+      field: 'actions',
       sort: 'asc',
       width: 50
     },

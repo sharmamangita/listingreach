@@ -178,7 +178,7 @@ class EmailBlastsPage extends React.Component {
 					createddate: blast.selected_template_date ? this.createdDate(blast.selected_template_date) : "",
 					totalpaid: "$" + blast.payments.amount,
 					paidon: this.createdDate(blast.payments.createdOn),
-					approve: (
+					actions: (
 						<span> {this.deletelink(blast._id)} </span>
 					),
 					sentdate: (

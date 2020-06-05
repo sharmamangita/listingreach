@@ -251,7 +251,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	}
 
-	sendBlast(req: express.Request, res: express.Response): void {
+	sendBlast(req: express.Request, res: express.Response): void {	
 		try {
 			const blastid = req.params.id;
 			//Get BLAST//
@@ -271,7 +271,6 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 							res.send({ error: "Error generating email." });
 							return;
 						}
-						console.log("HTML   ",HTML)
 						const templateBusiness = new AgentTemplateBusiness();
 						templateBusiness.findById(blast.selected_template_id, (templateError, template) => {
 							if (templateError) {
@@ -326,7 +325,6 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 										//	console.log("message ", message);									
 										const moment = require('moment');
 										let testDate = moment(new Date()).add(1, 'm').toDate();
-										testDate = testDate.toUTCString();
 										if (message.id) {
 											//	console.log("associations:" + blast.associations)
 											blast.associations.forEach(function (association) {
