@@ -37,13 +37,9 @@ class EmailBlastsPage extends React.Component {
 			return (<div> {dataval[0] ? dataval[0].city + ' ' + dataval[0].country : ''}</div>);
 		}
 	}
-	componentWillMount() {
-		this.props.dispatch(adminActions.getBlasts());
-	}
+
 	componentDidMount() {
-		setTimeout(() => {
-			this.setState({ blasts: this.props.blasts });
-		}, 1000);
+		this.props.dispatch(adminActions.getBlasts());
 	}
 
 	deletelink(id) {
@@ -179,20 +175,16 @@ class EmailBlastsPage extends React.Component {
 					agent: blast.agentData ? blast.agentData.name : "",
 					email: blast.agentData ? blast.agentData.email : "",
 					company: blast.agentData ? blast.agentData.company_details : "",
-					sentdate: blast.selected_template_date ? this.createdDate(blast.selected_template_date) : "",
+					createddate: blast.selected_template_date ? this.createdDate(blast.selected_template_date) : "",
 					totalpaid: "$" + blast.payments.amount,
 					paidon: this.createdDate(blast.payments.createdOn),
-					// prefrences: (
-					// 	<a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id={subscriber._id} onClick={this.handleModalOpem()} data-target="#intro">
-					// 		<span className="fa fa-settings"></span>
-					// 	</a>						
-					// ),
 					approve: (
 						<span> {this.deletelink(blast._id)} </span>
 					),
-					send: (
-						<button className="btn btn-success" onClick={(event) => this.sendBlast(event, blast._id)} >
-							Send
+					sentdate: (
+						blast.sentOn ? this.createdDate(blast.sentOn) :
+							<button className="btn btn-success" onClick={(event) => this.sendBlast(event, blast._id)} >
+								Send
 						</button>
 					)
 				});
@@ -216,6 +208,9 @@ class EmailBlastsPage extends React.Component {
 				this.setState({ show: true, profile: filteredEmployee[0] });
 			}
 		};
+	}
+	componentWillReceiveProps(props){
+		this.setState({ blasts: props.blasts });
 	}
 }
 

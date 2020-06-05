@@ -147,8 +147,8 @@ export const common = {
       width: 50
     },
     {
-      label: 'Sent Date',
-      field: 'sentdate',
+      label: 'Created On',
+      field: 'createddate',
       sort: 'asc',
       width: 200
     },   
@@ -172,7 +172,7 @@ export const common = {
     },
     {
       label: 'Send',
-      field: 'status',
+      field: 'sentdate',
       sort: 'asc',
       width: 50
     },

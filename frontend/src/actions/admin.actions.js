@@ -81,8 +81,9 @@ function sendBlast(id) {
         dispatch(request(id));
         adminService.sendBlast(id)
             .then(
-                prices => {
-                    dispatch(success());
+                blastresponse => {
+                    dispatch(success(blastresponse));
+                    dispatch(getBlasts())
                     dispatch(alertActions.success('Sent successfully.'));
                 },
                 error => {
@@ -91,8 +92,8 @@ function sendBlast(id) {
                 }
             );
     };
-    function request(blastsettings) { return { type: adminConstants.SEND_BLAST_REQUEST, blastsettings } }
-    function success(blastsettings) { return { type: adminConstants.SEND_BLAST_SUCCESS, blastsettings } }
+    function request(blastresponse) { return { type: adminConstants.SEND_BLAST_REQUEST, blastresponse } }
+    function success(blastresponse) { return { type: adminConstants.SEND_BLAST_SUCCESS, blastresponse } }
     function failure(error) { return { type: adminConstants.SEND_BLAST_FAILURE, error } }
 }
 function updateBlastSettings(blastsetting) {

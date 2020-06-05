@@ -70,7 +70,6 @@ function sendBlast(id) {
     };
     return fetch(`${config.apiUrl}/adminuser/sendblast/${id}`, requestOptions).then(handleResponse)
         .then(user => {
-            location.reload();
             return user;
         }).catch(this.handleError)
 }

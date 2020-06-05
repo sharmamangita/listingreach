@@ -224,6 +224,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 						_id: 1,
 						blast_type: 1,
 						selected_template_date: 1,
+						sentOn: 1,
 						"agentData.email": 1,
 						"agentData.name": 1,
 						"agentData.company_details": 1,
@@ -250,30 +251,30 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 
 	}
 
-	sendBlast(req: express.Request, res: express.Response) {
-		const blastid = req.params.id;
+	sendBlast(req: express.Request, res: express.Response): void {
 		try {
+			const blastid = req.params.id;
 			//Get BLAST//
 			const blastBusiness = new BlastBusiness();
 			blastBusiness.findById(blastid, async (blastError, blast) => {
 				if (blastError) {
-					res.send(blastError);
+					res.send({blastError});
 				} else {
 					if (!blast.associations || blast.associations.length < 1) {
-						res.send("No Associations found to send emails to");
+						res.send({ error: "No Associations found to send emails to" });
 						return;
 					}
 					// GET HTML //
 					await blastBusiness.getEmailHTML(blast.id).then(function (HTML) {
 						//	console.log("HTML", HTML);
 						if (HTML == null) {
-							res.send("Error generating email.");
-							return
+							res.send({ error: "Error generating email." });
+							return;
 						}
 						const templateBusiness = new AgentTemplateBusiness();
 						templateBusiness.findById(blast.selected_template_id, (templateError, template) => {
 							if (templateError) {
-								res.send(templateError);
+								res.send({templateError});
 							} else {
 								// Create Message On Active Campaign //
 								var data = {
@@ -302,9 +303,9 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 									listids += aso.association.id + ",";
 								});
 								listids = listids.slice(0, -1);// remove last comma from string
-								console.log('listids', listids);
+								//	console.log('listids', listids);
 								data["p[" + listids + "]"] = listids;
-								console.log("message to post", data);
+								//	console.log("message to post", data);
 								var dataString = querystring.stringify(data)
 								var headers = {
 									'Content-Length': dataString.length,
@@ -314,16 +315,19 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 									headers: headers,
 									body: dataString
 								}, function (er: any, response: { statusCode: number; }, mesg: any) {
-									if (!er) {
+									if (er) {
+										console.log("Error   : ", er)
+										res.send({ er });
+									}
+									else {
 										// Create Campaigns on ActiveCampaign //
 										var message = JSON.parse(mesg);
-										console.log("message ", message);
-										console.log("message ", message.id);
+										//	console.log("message ", message);									
 										const moment = require('moment');
 										let testDate = moment(new Date()).add(1, 'm').toDate();
 										testDate = testDate.toUTCString();
 										if (message.id) {
-											console.log("associations:" + blast.associations)
+											//	console.log("associations:" + blast.associations)
 											blast.associations.forEach(function (association) {
 												//console.log("template",template);
 												var data = {
@@ -333,17 +337,17 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 													type: "single",
 													name: template.email_subject,
 													//sdate: "2020-05-23 1:25:00 AM",
-													sdate: testDate.scheduledDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+													sdate: testDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
 													//sdate: blast.scheduledDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
 													status: "1", //Active
 													public: "1", //Visible
 													priority: 3, //Medium
 													segmentid: association.segment.id
 												};
-												console.log("messageid  ", message.id)
+												//	console.log("messageid  ", message.id)
 												data["p[" + association.association.id + "]"] = association.association.id;
 												data["m[" + message.id + "]"] = 100;//to send to 100%
-												console.log("data to post", data)
+												//	console.log("data to post", data)
 												var dataString = querystring.stringify(data);
 												var headers = {
 													'Content-Length': dataString.length,
@@ -353,36 +357,36 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 												request.post(Common.ActiveCampaignUrl, {
 													headers: headers,
 													body: dataString
-												}, function (er: any, response: { statusCode: number; }, body: any) {
-													if (!er) {
-
+												}, function (error: any, response: { statusCode: number; }, body: any) {
+													if (error) {
+														console.log("Error   : ", error)
+														res.send({ error });
+													}
+													else {
 														//UPDATE BLAST//
 														let update = {
 															$set: {
 																status: "Sent",
-																sentDate: new Date()
+																sentOn: new Date()
 															}
 														}
 
 														blastBusiness.findOneAndUpdate(blast._id, update, (updateBlastError, updatedBlast) => {
 															if (updateBlastError) {
 																console.log("updateBlastError", updateBlastError);
-																res.send(updateBlastError)
+																res.send(updateBlastError);
+																return;
 															} else {
-																res.send("Campaign Created Successfuly");
+																res.send({ message: "success" });
+																return;
 															}
 														})
-														console.log("campaign body  : ", body)
-													} else {
-														console.log("Error   : ", er)
-														res.send(er);
+														//	console.log("campaign body  : ", body)
 													}
 												});
 
 											})
 										}
-									} else {
-										console.log("Error   : ", er)
 									}
 								});
 							}
@@ -390,6 +394,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 					}
 						, function (error) {
 							console.log("Error", error);
+							res.send({ error });
 						});
 				}
 			})
@@ -397,7 +402,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 		catch (e) {
 
 			console.log("Exception :", e);
-			res.send({ "error": "error in your request" });
+			res.send({ error: "error in your request" });
 		}
 	}
 
