@@ -347,7 +347,7 @@ class UserController implements IBaseController<UserBusiness> {
 									return {
 										id: obj._id,
 										name: obj.name,
-										email: obj.website_url,
+										email: obj.email,
 										designation: obj.designation,
 										website_url: obj.website_url,
 										phone_number: obj.phone_number,
@@ -767,6 +767,7 @@ class UserController implements IBaseController<UserBusiness> {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.verifyToken(req, res, (userData) => {
 				var _agent: IAgentModel = <IAgentModel>req.body;
+				console.log("_agent====",_agent);
 				_agent.createdOn = new Date();
 
 				_agent.user_id = userData._id;

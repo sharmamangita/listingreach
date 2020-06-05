@@ -45,11 +45,11 @@ class ListingSubmenu extends React.Component {
           const { dispatch } = this.state.user.userId;
         }
     }
-   
-
     
     resetForm(e){
-     window.location.reload()
+      history.push('/CreateFlyerPage');
+      window.location.reload()
+
     }
     render() {
      
