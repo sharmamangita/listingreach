@@ -170,7 +170,7 @@ export function users(state = {}, action) {
       case userConstants.GETPREVIEW_SUCCESS:
            newState = objectAssign({}, state, {
             tab: "preview",
-            praviewHtml:action.users
+            previewHtml:action.HTML.html
         });
        return newState;
 

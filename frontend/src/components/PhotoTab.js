@@ -6,12 +6,13 @@ const axios = require("axios");
 class PhotoTab extends React.Component {
   constructor(props) {
     super(props);
+
     this.updateimage = ["", "", "", ""];
     this.state = {
       userId: "",
       updateimage: [],
       email: "",
-      blast_id: '',
+      blast_id: "",
       property_ids: [],
       template: {},
       propertyImages: [{}, {}, {}, {}],
@@ -53,8 +54,6 @@ class PhotoTab extends React.Component {
     const { dispatch } = this.props.dispatchval.dispatch;
     let blast_id = this.state.blast_id;
     dispatch(userActions.getPreviewhtml(blast_id));
-
-    //dispatch(userActions.getPreviewhtml('5ed5fad930de7c24bc9423d4'));
   }
 
   openUpload(e) {
@@ -107,10 +106,14 @@ class PhotoTab extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log("nextProps in Photo Tab ", nextProps)
     if (nextProps.template) {
       let { template } = this.state;
       template = nextProps.template;
       this.setState({ template })
+    }
+    if (!this.state.blast_id) {
+      this.setState({ blast_id: nextProps.blast_id })
     }
 
     if (nextProps && nextProps.previewData) {
@@ -139,7 +142,8 @@ class PhotoTab extends React.Component {
 
   render() {
     const { imageData, visible, divCount, updateimage, template, submited } = this.state;
-    //  console.log("state in render in Photos Tab ====", this.state);
+    console.log("state in render in Photos Tab ====", this.state);
+    console.log("props in render in Photos Tab ====", this.props);
     const { previewData } = this.props;
     //console.log("previewData2323232====",this.props.previewData);
     let images = ["", "", "", ""];

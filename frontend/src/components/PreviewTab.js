@@ -1,21 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { userActions } from "../actions";
-import {
-  Nav,
-  Navbar,
-  NavItem,
-  NavDropdown,
-  MenuItem,
-  NavLink,
-} from "react-bootstrap";
-import Modal from "react-bootstrap4-modal";
-import { connect } from "react-redux";
-import { common } from "../helpers";
-import Moment from "moment";
-import config from "config";
 import { Markup } from 'interweave';
-
 
 class PreviewTab extends React.Component {
   constructor(props) {
@@ -23,7 +8,7 @@ class PreviewTab extends React.Component {
     this.navId = "";
     this.state = {
       email: "",
-      submitted:'',
+      submitted: '',
     };
     let user = JSON.parse(localStorage.getItem("user"));
     if (user && user.userId && this.props && this.props.dispatchval) {
@@ -34,23 +19,14 @@ class PreviewTab extends React.Component {
     this.handleChangepreview = this.handleChangepreview.bind(this);
     this.handleSubmitPreviw = this.handleSubmitPreviw.bind(this);
     this.nexttab = this.nexttab.bind(this);
-  
-    const { dispatch } = this.props.dispatchval.dispatch;
-    const { blast_id } = this.props;
-
   }
-
-
-
-
   handleChangepreview(e) {
     const { name, value } = e.target;
     this.setState({ [name]: value });
   }
-
   handleSubmitPreviw(e) {
     e.preventDefault();
-    const { previewData, propertyImages,blast_id} = this.props;
+    const { blast_id } = this.props;
     const { email } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
     if (email && blast_id) {
@@ -73,38 +49,21 @@ class PreviewTab extends React.Component {
     }
   }
 
-
-  nexttab(){
+  nexttab() {
     const { dispatch } = this.props.dispatchval.dispatch;
     dispatch(userActions.preview());
   }
 
   render() {
-    console.log("this.props4545======",this.props);
-    const { previewData, blast_id,praviewHtml } = this.props;
-    const {submitted,email} = this.state;
-    let agentData = "";
-    if (previewData && previewData.length) {
-      agentData = previewData[0].agentData[0].agentData;
-    }
-      let html = '';
-    if(praviewHtml && praviewHtml.html){
-      html = praviewHtml.html;
-    }
-
-     // ReactDOM.render(<p>Helloasasasa asasasas</p>, document.getElementById('preview'));
+    console.log("props in render in Preview Tab ", this.props);
+    const { previewData, previewHtml } = this.props;
+    const { submitted, email } = this.state;
 
     return (
-      <div
-        className="tab-pane fade mt-2"
-        id="preview"
-        role="tabpanel"
-        aria-labelledby="group-dropdown2-tab"
-        aria-expanded="false">
+      <div className="tab-pane fade mt-2" id="preview" role="tabpanel"
+        aria-labelledby="group-dropdown2-tab" aria-expanded="false">
         <h4>Preview Blast</h4>
         <p>Finalize your Blast.</p>
-       
-       
         <div className="row">
           <div className="col-md-12 mb-3">
             Thoroughly read the email including -
@@ -122,13 +81,10 @@ class PreviewTab extends React.Component {
               <input
                 value={this.state.email}
                 onChange={this.handleChangepreview}
-                name="email"
-                type="text"
-                className="form-control form-control-lg form-control-a"
-                placeholder="Email Address"
+                name="email" type="text" className="form-control form-control-lg form-control-a" placeholder="Email Address"
               />
-              { !email && submitted &&(
-                <div className="help-block red" style={{"color":"red"}}>Email is required</div>
+              {!email && submitted && (
+                <div className="help-block red" style={{ "color": "red" }}>Email is required</div>
               )}
             </div>
           </div>
@@ -140,7 +96,7 @@ class PreviewTab extends React.Component {
             </div>
           </div>
         </div>
-          <Markup content={html} />
+        {previewHtml && <Markup content={previewHtml} />}
         <div className="col-md-12 mt-4">
           <a href="javascript:void(0)" className="btn btn-primary" onClick={this.nexttab}>
             Save

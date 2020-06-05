@@ -271,6 +271,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 							res.send({ error: "Error generating email." });
 							return;
 						}
+						console.log("HTML   ",HTML)
 						const templateBusiness = new AgentTemplateBusiness();
 						templateBusiness.findById(blast.selected_template_id, (templateError, template) => {
 							if (templateError) {

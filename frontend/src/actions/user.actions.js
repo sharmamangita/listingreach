@@ -655,12 +655,12 @@ function getPreviewhtml(blastId){
         dispatch(request());
         userService.getPreviewhtml(blastId)
             .then(
-                users => dispatch(success(users)),
+                HTML => dispatch(success(HTML)),
                 error => dispatch(failure(error.toString()))
             );
     };
     function request(users) { return { type: userConstants.GETPREVIEW_REQUEST } }
-    function success(users) { return { type: userConstants.GETPREVIEW_SUCCESS, users } }
+    function success(HTML) { return { type: userConstants.GETPREVIEW_SUCCESS, HTML } }
     function failure(error) { return { type: userConstants.GETPREVIEW_FAILURE, error } } 
 }
 
