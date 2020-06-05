@@ -1351,7 +1351,16 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                      </div>
                      <div class="mb-3 mt-3 text-right ml-3" style="width:25%;text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
                         <a class="btn btn-primary" href="mailto:#agentEmail#" style="background-color: #EE8C3A;
-     >Forward to Associate</a>
+         border: #EE8C3A;
+         color:#fff;display: inline-block;
+         font-weight: 400;
+         text-align: center;
+         white-space: nowrap;
+         vertical-align: middle;
+         padding: 0.375rem 0.75rem;
+         line-height: 1.5;
+         border-radius: 0.25rem;
+         box-shadow 0.15s ease-in-out;">Forward to Associate</a>
                      </div>
                   </div>`;
 static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">

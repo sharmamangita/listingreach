@@ -260,7 +260,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     openhousehtml += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
-                                                      <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment(resut.startTime).format('HH:mm A')}  - ${resut.endTime && moment(resut.endTime).format('HH:mm A')}  </span><br>
+                                                      <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment(startTime).format('HH:mm A')}  - ${resut.endTime && moment(endTime).format('HH:mm A')}  </span><br>
                                                     </div>`;
                   });
 
@@ -436,7 +436,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     openhousehtml += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
-                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment(resut.startTime).format('HH:mm A')}  - ${resut.endTime && moment(resut.endTime).format('HH:mm A')}  </span><br>
+                                                       <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${resut.startTime && moment(startTime).format('HH:mm A')}  - ${resut.endTime && moment(endTime).format('HH:mm A')}  </span><br>
                                                     </div>`;
                   });
 
@@ -525,7 +525,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#agentName#/g, agent.name || " ")
                     .replace(/#agentEmail#/g, agent.email || "")
                     .replace(/#agentImage#/g, agentimgurl || Common.SITE_URL+"/uploads/previewimages/dummy-profile.png")
-                    .replace(/#companyLogo#/g, agentlogourl || Common.SITE_URL+"/uploads/previewimages/images/dummy-logo.png")
+                    .replace(/#companyLogo#/g, agentlogourl || Common.SITE_URL+"/uploads/previewimages/dummy-logo.png")
                     .replace(/#WebsiteUrl#/g, agent.website_url || " ")
                     .replace(/#phone_number#/g, agent.phone_number || " ")
                     .replace(/#companyDetail#/g, agent.company_details ||" ")
