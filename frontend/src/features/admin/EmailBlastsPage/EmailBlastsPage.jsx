@@ -2,10 +2,13 @@ import React from "react";
 import { connect } from "react-redux";
 import { common } from "../../../helpers";
 import { adminActions } from "../../../actions";
+import { userActions } from "../../../actions";
 import moment from "moment";
 import { MDBDataTable } from "mdbreact";
 import UserProfileModal from "../../../components/UserProfileModal"
 import SubscriberPreferencesModal from "../../../components/SubscriberPreferencesModal";
+import Modal from 'react-bootstrap4-modal';
+import { Markup } from 'interweave';
 class EmailBlastsPage extends React.Component {
 	constructor(props) {
 		super(props);
@@ -13,7 +16,8 @@ class EmailBlastsPage extends React.Component {
 			show: false,
 			blasts: this.props.blasts,
 			prefrences: {},
-			totalblasts: []
+			totalblasts: [],
+			showModel:false
 		};
 		this.handleShow = this.handleShow.bind(this);
 		this.deleteUsers = this.deleteUsers.bind(this);
@@ -23,6 +27,18 @@ class EmailBlastsPage extends React.Component {
 		this.userStatus = this.userStatus.bind(this);
 		this.getById = this.getById.bind(this);
 		this.deletelink = this.deletelink.bind(this);
+		this.hideModel= this.hideModel.bind(this);
+		this.getEmailTemplate= this.getEmailTemplate.bind(this);
+		
+	}
+
+	hideModel(){
+		this.setState({showModel:false});
+	}
+
+	getEmailTemplate(id){
+		this.props.dispatch(userActions.getPreviewhtml(id));
+		this.setState({showModel:true});
 	}
 
 	handleShow() {
@@ -141,7 +157,10 @@ class EmailBlastsPage extends React.Component {
 	}
 	render() {
 		var { totaldata, caddata } = this.prepareTable();
-		console.log('totaldata   ', totaldata)
+         var { previewHtml }  = this.props;
+		var {showModel}=this.state;
+		console.log('totaldata   ', totaldata);
+		console.log('adminprops   ', this.props);
 		return (
 			<main className="col-xs-12 col-sm-8 col-lg-9 col-xl-10 pt-3 pl-4 ml-auto">
 				<h3 className="admin-title"> Paid Blasts</h3>
@@ -160,6 +179,15 @@ class EmailBlastsPage extends React.Component {
 						</section>
 					</div>
 				</section>
+	 <Modal visible={showModel} dialogClassName="modal-lg">
+
+				{previewHtml && <Markup content={previewHtml} />}
+            <div className="modal-footer">
+	          <button type="button" className="btn btn-secondary" onClick={this.hideModel}>
+	            Cancel
+	          </button>
+        </div>
+      </Modal>
 			</main>
 		);
 	}
@@ -170,7 +198,7 @@ class EmailBlastsPage extends React.Component {
 			for (var cad = 0; cad <= this.props.blasts.length - 1; cad++) {
 				var blast = this.props.blasts[cad];
 				totaldata.push({
-					blasttype: blast.blast_type,
+					blasttype: (<a href="javascript:void(0)" onClick={(event) => this.getEmailTemplate(blast._id)}>{blast.blast_type}</a>),
 					headline: blast.template && blast.template.length > 0 ? blast.template[0].headline : "",
 					agentName: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].firstName+' '+blast.users[0].lastName : "",
 					email: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].email : "",
@@ -210,7 +238,7 @@ class EmailBlastsPage extends React.Component {
 		};
 	}
 	componentWillReceiveProps(props){
-		this.setState({ blasts: props.blasts });
+		this.setState({ blasts: props.blasts,previewHtml:props.previewHtml });
 	}
 }
 
@@ -218,10 +246,11 @@ function mapStateToProps(state) {
 	const { authentication, admins } = state;
 	const { user } = authentication;
 	const { blasts } = admins;
-	console.log("blasts====", blasts);
+	const { previewHtml } = admins;
 	return {
 		user,
-		blasts
+		blasts,
+		previewHtml
 	};
 }
 

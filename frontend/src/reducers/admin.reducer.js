@@ -170,6 +170,12 @@ export function admins(state = {}, action) {
           error: action.error
         };
   
+     case "GETPREVIEW_SUCCESS":
+          newState = objectAssign({}, state, {
+          loading: true,
+           previewHtml:action.HTML.html
+        });
+        return newState;
   
 
 
