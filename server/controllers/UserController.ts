@@ -1178,10 +1178,10 @@ class UserController implements IBaseController<UserBusiness> {
 				_payment.amount = _payment.total;
 				_payment.paymentID = _payment.paymentID;
 				var blastId: string = req.params.blastId;
-				_paymentBusiness.retrieve({ "blast_id": blastId }, (error, result) => {
+				_paymentBusiness.retrieve({ "user_id": userData._id }, (error, result) => {
 
 					if (result && result.length > 0) {
-						lastInvoiceId = +result + +1;
+						var lastInvoiceId = +result.length + +1;
 						_payment.invoice_id = lastInvoiceId;
 					}
 					else {
@@ -1298,6 +1298,8 @@ class UserController implements IBaseController<UserBusiness> {
 	getPayment(req: express.Request, res: express.Response) {
 		try {
 			var _userBusiness = new UserBusiness();
+			var userId: string = req.params._id;
+			console.log("userId===",userId)
 			_userBusiness.verifyToken(req, res, (userData) => {
 				const paymentBusiness = new PaymentBusiness();
 					var query: Array<any> = [
@@ -1316,14 +1318,24 @@ class UserController implements IBaseController<UserBusiness> {
 								paymentID: 1,
 								createdOn: 1,
 								amount: 1,
+								user_id:1,
 								invoice_id:1,
 								"blast.blast_type": 1,
 								"blast.status": 1
 								
 							}
+						},
+						{
+							$match:
+							{
+
+								user_id: mongoose.Types.ObjectId(userId)
+							}
 						}
 					];
 					paymentBusiness.aggregate(query, (error, result) => {
+				
+
 						if (error) {
 							console.log(error);
 							res.send({ "error": error });
