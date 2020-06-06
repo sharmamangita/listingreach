@@ -65,6 +65,7 @@ class PaypalButton extends React.Component {
       blast_id=uploadBlast._id;
       console.log("blast_id===gh===",blast_id);
       dispatch.dispatchval.dispatch.dispatch(userActions.savePayment(payment,blast_id));
+      this.props.resetState();
     }
     
   }

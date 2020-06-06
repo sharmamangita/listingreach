@@ -71,6 +71,7 @@ class PaymentTab extends React.Component {
           dispatchval = {this.dispatchval}
           dataBaseData={this.props.dataBaseData}
           total= {invoiveTotal}
+          resetState={this.props.resetState}
         />
       );
     }

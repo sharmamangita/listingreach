@@ -42,6 +42,7 @@ class UploadBlastTab extends React.Component {
         price: "",
         priceType: "",
       },
+      propertyImages:[],
       propertyAddress: {
         displayMethod: "",
         streetAddress: "",
@@ -78,7 +79,6 @@ class UploadBlastTab extends React.Component {
       blast_id: "",
       submitForm: false,
       blastImageUrl: "",
-      propertyImages: [],
       propertyCount: 1,
       templateId: "",
       disabled: true,
@@ -149,20 +149,20 @@ class UploadBlastTab extends React.Component {
       .post(`${config.uploadapiUrl}/propertyupload`, formData, configs)
       .then((response) => {
         let image = {
-          id: response.data.imageId,
-          url: response.data.url,
+          imageId: response.data.imageId,
+          imageUrl: response.data.url,
         }
-        let { blastImageUrl, propertyImages } = this.state;
+        let { blastImageUrl, property } = this.state;
 
         blastImageUrl = response.data.url;
-        propertyImages[0] = image;
-        this.setState({ blastImageUrl, propertyImages });
+        property.propertyImages.push(image);
+        this.setState({ blastImageUrl, property });
         this.render();
       })
       .catch(() => { });
   }
 
-  nextPage(){
+  nextPage() {
     this.props.moveTab("preview");
   }
   selectBlast(blast_type) {
@@ -365,11 +365,32 @@ class UploadBlastTab extends React.Component {
     const { blast_id } = this.props;
     const { property, Email } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
-    if (
-      property &&
-      Email.formSubject &&
-      Email.formReply
-    ) {
+    let isvalid = true;
+    if (!Email || !Email.formSubject || !Email.formReply) {
+      isvalid = false;
+    }
+    if (!property.pricingInfo || !property.pricingInfo.price || !property.pricingInfo.priceType) {
+      isvalid = false;
+      console.log("validation failed property pricing", property.pricingInfo);
+    }
+    if (!property.propertyAddress || !property.propertyAddress.displayMethod
+      || !property.propertyAddress.streetAddress || !property.propertyAddress.state
+      || !property.propertyAddress.city) {
+      isvalid = false;
+      console.log("validation failed property address", property.propertyAddress);
+    }
+    if (property.mlsNumber && property.mlsNumber.display
+      && (!property.mlsNumber.boardAssociation || !property.mlsNumber.numberProperty)) {
+      isvalid = false;
+      console.log("validation failed property MLS Number", property.mlsNumber);
+    }
+    if (!property.generalPropertyInformation ||
+      !property.generalPropertyInformation.propertyType) {
+      isvalid = false;
+      console.log("validation failed general property info", property.generalPropertyInformation);
+    }
+    if (isvalid) {
+      //  alert("submitting...")
       let properties = [];
       properties.push(property);
       dispatch(userActions.saveProperty(properties, "", Email, "", templateId, blast_id));
@@ -377,6 +398,7 @@ class UploadBlastTab extends React.Component {
       this.setState({ submitForm: true });
     } else {
       this.setState({ submitted: true });
+      alert("some required fields were not filled");
     }
   }
 
@@ -1020,7 +1042,7 @@ class UploadBlastTab extends React.Component {
             <button
               type="button"
               className="btn btn-primary pull-right"
-               onClick={this.nextPage}
+              onClick={this.nextPage}
               disabled={!submitForm}
             >
               Next

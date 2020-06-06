@@ -48,7 +48,7 @@ renderPaymentModal(amount) {
           id={this.state.modalpaymentid}
          
           total={amount}
-         
+          resetState={this.props.resetState}
         />
      
       );

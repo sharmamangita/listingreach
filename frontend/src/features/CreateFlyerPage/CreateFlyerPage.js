@@ -36,6 +36,10 @@ class CreateFlyerPage extends React.Component {
     this.setKey = this.setKey.bind(this);
     this.stateSettingsForTabs = this.stateSettingsForTabs.bind(this);
   }
+  resetState() {
+    console("Resetting State");
+    this.setState(this.newState())
+  }
   newState() {
     return {
       blast_id: '',
@@ -259,7 +263,9 @@ class CreateFlyerPage extends React.Component {
                         <TermsTab dispatchval={this.dispatchval} />
                       </Tab>
                       <Tab eventKey="payment" title="Payment" disabled={tabs.payment ? true : false}>
-                        <PaymentTab dispatchval={this.dispatchval} dataBaseData={dataBaseData} blastsettingData={blastsettingData} scheduledDate={scheduledDate} />
+                        <PaymentTab dispatchval={this.dispatchval} dataBaseData={dataBaseData}
+                          blastsettingData={blastsettingData} scheduledDate={scheduledDate}
+                          resetState={this.resetState} />
                       </Tab>
                     </Tabs>
                   </div>
