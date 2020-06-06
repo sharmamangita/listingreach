@@ -86,6 +86,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 						"users.email": 1,
 						"users.companyName": 1,
 						"blast.selected_template_date": 1,
+						"blast_id": 1
 					}
 				}
 			];

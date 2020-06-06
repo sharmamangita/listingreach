@@ -31,6 +31,7 @@ class SetDateTab extends React.Component {
     this.navId = "";
 
     this.state = {
+		isSelected: false,
       calendarWeekends: false,
       calendarEvents: [ // initial event data
         
@@ -62,7 +63,8 @@ class SetDateTab extends React.Component {
     if (confirm('Would you like to add an blast to ' + arg.dateStr + ' ?')) {
       if (arg.dateStr) {
        //this.submitdata(arg.dateStr);
-       this.setState({scheduledDate:arg.dateStr})
+	   this.setState({scheduledDate:arg.dateStr,isSelected: true})
+	   
       }
     }
   }
@@ -107,6 +109,7 @@ class SetDateTab extends React.Component {
               dateClick={this.handleDateClick}
             />
           </div>
+		  {this.state.isSelected ? (
           <div className="col-md-12 mt-4">
             <a
               href="javascript:void(0)"
@@ -123,6 +126,7 @@ class SetDateTab extends React.Component {
               Next
             </a>
           </div>
+		  ) : null}
         </div>
       </div>
     );

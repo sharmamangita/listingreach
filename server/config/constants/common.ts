@@ -1335,7 +1335,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                   <div  style="display: flex;flex-wrap: wrap;">
                      <div class="mb-3 mt-3 ml-3" style="width:41%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
                         <i>Powered by</i>	<br>
-                        <img src="/public/assets/images/listing-reach-logo.png" alt="" class="img-a img-fluid">
+                        <img src="`+Common.SITE_URL+`"/uploads/previewimages/listing-reach-logo.png" alt="" class="img-a img-fluid">
                      </div>
                      <div class="mb-3 mt-3 text-right" style="width:25%;text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
                 <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;font-weight: 400;text-align: center;
@@ -1415,7 +1415,7 @@ static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER:string =`
                   <div  style="display: flex;flex-wrap: wrap;">
                      <div class="mb-3 mt-3 ml-3" style="width:41%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
                         <i>Powered by</i>	<br>
-                        <img src="/public/assets/images/listing-reach-logo.png" alt="" class="img-a img-fluid">
+                        <img src="`+Common.SITE_URL+`"/uploads/previewimages/listing-reach-logo.png" alt="" class="img-a img-fluid">
                      </div>
                      <div class="mb-3 mt-3 text-right" style="width:25%;text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
                         <button class="btn btn-primary" style="background-color: #EE8C3A;

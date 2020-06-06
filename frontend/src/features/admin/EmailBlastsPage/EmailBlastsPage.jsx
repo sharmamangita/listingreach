@@ -6,7 +6,6 @@ import { userActions } from "../../../actions";
 import moment from "moment";
 import { MDBDataTable } from "mdbreact";
 import UserProfileModal from "../../../components/UserProfileModal"
-import SubscriberPreferencesModal from "../../../components/SubscriberPreferencesModal";
 import Modal from 'react-bootstrap4-modal';
 import { Markup } from 'interweave';
 class EmailBlastsPage extends React.Component {
@@ -22,7 +21,7 @@ class EmailBlastsPage extends React.Component {
 		this.handleShow = this.handleShow.bind(this);
 		this.deleteUsers = this.deleteUsers.bind(this);
 		this.createdDate = this.createdDate.bind(this);
-		this.lastLogin = this.lastLogin.bind(this);
+		
 		this.sendBlast = this.sendBlast.bind(this);
 		this.userStatus = this.userStatus.bind(this);
 		this.getById = this.getById.bind(this);
@@ -88,11 +87,7 @@ class EmailBlastsPage extends React.Component {
 		return created;
 	}
 
-	lastLogin(lastlogin) {
-		var expDate = new moment(lastlogin, "YYYY-MM-DD");
-		var lastlogin = moment(expDate).format("DD-MM-YYYY");
-		return lastlogin;
-	}
+	
 
 	userStatus(id) {
 		this.props.dispatch(adminActions.userStatus(id));
@@ -116,55 +111,15 @@ class EmailBlastsPage extends React.Component {
 	}
 
 
-	renderSubscriberPreferencesModal() {
-		const dispatchval = {
-			tagName: "span",
-			className: "",
-			children: null,
-			dispatch: this.props
-		};
-		let modalClose = () => this.setState({ show: false, prefrences: {} });
-		return (
-			<SubscriberPreferencesModal
-				dispatchval={dispatchval}
-				prefrences={this.state.prefrences}
-				users={this.state.user}
-				visible={this.state.show}
-				onClickBackdrop={modalClose}
-				dialogClassName="modal-lg"
-			/>
-		);
-	}
 
-	renderUserProfileModal() {
-		const dispatchval = {
-			tagName: "span",
-			className: "",
-			children: null,
-			dispatch: this.props
-		};
-		let modalClose = () => this.setState({ show: false, profile: "" });
-		return (
-			<UserProfileModal
-				dispatchval={dispatchval}
-				profile={this.state.profile}
-				users={this.state.user}
-				visible={this.state.show}
-				onClickBackdrop={modalClose}
-				dialogClassName="modal-lg"
-			/>
-		);
-	}
 	render() {
 		var { totaldata, caddata } = this.prepareTable();
-         var { previewHtml }  = this.props;
+        var { previewHtml }  = this.props;
 		var {showModel}=this.state;
-		console.log('totaldata   ', totaldata);
-		console.log('adminprops   ', this.props);
 		return (
 			<main className="col-xs-12 col-sm-8 col-lg-9 col-xl-10 pt-3 pl-4 ml-auto">
 				<h3 className="admin-title"> Paid Blasts</h3>
-				{/* {this.renderSubscriberPreferencesModal()} */}
+				
 				<section className="row">
 					<div className="col-sm-12">
 						<section className="row">

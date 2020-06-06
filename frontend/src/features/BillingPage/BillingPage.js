@@ -49,7 +49,7 @@ class BillingPage extends React.Component {
     		return created;
  	}
  	status(status){
- 		if(status=='sent'){
+ 		if(status=='Sent'){
  			return "Email Sent"
 
  		}else{
