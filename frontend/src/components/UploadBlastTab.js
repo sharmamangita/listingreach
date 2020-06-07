@@ -42,7 +42,7 @@ class UploadBlastTab extends React.Component {
         price: "",
         priceType: "",
       },
-      propertyImages:[],
+      propertyImages: [],
       propertyAddress: {
         displayMethod: "",
         streetAddress: "",
@@ -95,7 +95,6 @@ class UploadBlastTab extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.show = this.show.bind(this);
-    this.hide = this.hide.bind(this);
     this.addOpenHouse = this.addOpenHouse.bind(this);
     this.openHouseChange = this.openHouseChange.bind(this);
     this.linksToWebsitesChange = this.linksToWebsitesChange.bind(this);
@@ -244,42 +243,25 @@ class UploadBlastTab extends React.Component {
     }
   }
 
-  show(flag, id) {
-    let states = Object.assign({}, this.state);
-    switch (flag) {
-      case "openHouse":
-        states.property.isOpenHouse.display = true;
-        break;
-      case "mlsNumber":
-        states.property.mlsNumber.display = true;
-        break;
-      case "linksToWebsites":
-        states.property.linksToWebsites.display = true;
-        break;
-      case "garage":
-        states.property.generalPropertyInformation.garage = true;
-        break;
-    }
-    this.setState(states);
-  }
+  show(flag, value) {
+    // let states = Object.assign({}, this.state);
+    let { property } = this.state;
 
-  hide(flag, id) {
-    let states = Object.assign({}, this.state);
     switch (flag) {
       case "openHouse":
-        states.property.isOpenHouse.display = false;
+        property.isOpenHouse.display = value;
         break;
       case "mlsNumber":
-        states.property.mlsNumber.display = false;
+        property.mlsNumber.display = value;
         break;
       case "linksToWebsites":
-        states.property.linksToWebsites.display = false;
+        property.linksToWebsites.display = value;
         break;
       case "garage":
-        states.property.generalPropertyInformation.garage = false;
+        property.generalPropertyInformation.garage = value;
         break;
     }
-    this.setState(states);
+    this.setState({ property });
   }
 
   handleChange(flag, event) {
@@ -491,11 +473,11 @@ class UploadBlastTab extends React.Component {
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("linksToWebsites", property, true)}                    >
+                    onClick={() => this.show("linksToWebsites", true)}                    >
                     Yes
                 </a>
                   <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.hide("linksToWebsites", i)}                    >
+                    onClick={() => this.show("linksToWebsites", false)}                    >
                     No
                 </a>
                 </div>
@@ -634,11 +616,11 @@ class UploadBlastTab extends React.Component {
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("openHouse", property, true)}   >
+                    onClick={() => this.show("openHouse",  true)}   >
                     Yes
                     </a>
                   <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.show("openHouse", property, false)} >
+                    onClick={() => this.show("openHouse",  false)} >
                     No
                   </a>
                 </div>
@@ -896,11 +878,11 @@ class UploadBlastTab extends React.Component {
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("mlsNumber", property, true)} >
+                    onClick={() => this.show("mlsNumber", true)} >
                     Yes
                 </a>
                   <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.show("mlsNumber", property, false)}>
+                    onClick={() => this.show("mlsNumber", false)}>
                     No
                 </a>
                 </div>

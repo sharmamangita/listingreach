@@ -834,18 +834,19 @@ class UserController implements IBaseController<UserBusiness> {
 						board: prop.mlsNumber.boardAssociation,
 						pricingInfo: prop.pricingInfo,
 						isOpenHouse: prop.isOpenHouse,
-						linksToWebsites: prop.linksToWebsites
+						linksToWebsites: prop.linksToWebsites,
+						propertyImages:prop.propertyImages
 					}
-					if (prop.propertyImages) {
-						var propertyImages: any = [];
-						let data = prop.propertyImages.img;
-						data.forEach(function (images: any) {
-							if (images) {
-								propertyImages.push({ imageId: images.id, imageUrl: images.imgUrl });
-							}
-						});
-						_propertyform.propertyImages = propertyImages;
-					}
+					// if (prop.propertyImages) {
+					// 	var propertyImages: any = [];
+					// 	let data = prop.propertyImages.img;
+					// 	data.forEach(function (images: any) {
+					// 		if (images) {
+					// 			propertyImages.push({ imageId: images.id, imageUrl: images.imgUrl });
+					// 		}
+					// 	});
+					// 	_propertyform.propertyImages = propertyImages;
+					// }
 					_propertyform.property_type = prop.generalPropertyInformation.propertyType;
 					_propertyform.property_style = prop.generalPropertyInformation.propertyStyle;
 					_propertyform.lot_size = prop.generalPropertyInformation.lotSize;
