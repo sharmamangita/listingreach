@@ -29,7 +29,6 @@ interface IPropertyModel extends mongoose.Document {
     pricingInfo: {
         price: string,
         priceType: string
-
     },
     number_bathrooms: {
         full: string,
@@ -45,10 +44,10 @@ interface IPropertyModel extends mongoose.Document {
         startTime: String,
         endTime: String
     }[],
-    propertyImages:{
+    propertyImages: {
         imageId: String,
         imageUrl: String
-    } []
+    }[]
 
 
 }

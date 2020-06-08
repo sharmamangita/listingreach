@@ -252,20 +252,20 @@ function getTemplateOrPropertydata(blast_id) {
     return fetch(`${config.apiUrl}/users/propertyDetail`, requestOptions).then(handleResponse);
 }	
 
-function blast(blast_type,user_id){
+function blast(blast_type,user_id,blastId){
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({blast_type,user_id})
+        body: JSON.stringify({blast_type,user_id,blastId})
     };
     return fetch(`${config.apiUrl}/users/saveBlast`, requestOptions).then(handleResponse);    
 }
 
-function designTemplate(template_type,blast_id){
+function designTemplate(template_type,blastId,templateId){
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({template_type,blast_id})
+        body: JSON.stringify({template_type,blastId,templateId})
     };
     return fetch(`${config.apiUrl}/users/saveDesignTemplate`, requestOptions).then(handleResponse);    
 } 

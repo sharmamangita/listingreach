@@ -34,23 +34,25 @@ class CreateFlyerPage extends React.Component {
 
     this.moveTab = this.moveTab.bind(this);
     this.setKey = this.setKey.bind(this);
-    this.stateSettingsForTabs = this.stateSettingsForTabs.bind(this);
+    //  this.stateSettingsForTabs = this.stateSettingsForTabs.bind(this);
   }
   resetState() {
     console("Resetting State");
     this.setState(this.newState())
   }
   newState() {
+    console.log("New State............");
     return {
       blast_id: '',
       profile: {},
       moveTab: "blast",
-      previewData: [],
-      propertyImages: [],
+      //previewData: [],
+      // propertyImages: [],
+      blast: null,
       propertyData: "",
-      uploadBlast: "",
-      property_images: '',
-      scheduledDate: "",
+      template: "",
+      // property_images: '',
+      //  scheduledDate: "",
       blastsettingData: "",
       dataBaseData: "",
       previewHtml: '',
@@ -68,79 +70,90 @@ class CreateFlyerPage extends React.Component {
       }
     };
   }
-
+  getBlast(id) {
+    this.props.dispatch(userActions.getBlast(id));
+  }
+  componentDidMount() {
+    const { location } = this.props;
+    if (location.savedProps && location.savedProps.blast_id) {
+      this.getBlast(location.savedProps.blast_id);
+      this.moveTab(location.savedProps.moveTab);
+    }
+  }
   componentWillReceiveProps(nextProps) {
     console.log("nextProps Create Flyer Page", nextProps);
-    if (this.state.blast_id == "" && this.state.moveTab != "blast") {
-      this.setState(this.newState());
+    // if (this.state.blast_id == "" && this.state.moveTab != "blast") {
+    //   this.setState(this.newState());
+    // }
+  
+    if (!this.state.blast && nextProps.blast && nextProps.blast.blast) {
+      let confugredBlast = nextProps.blast.blast;
+      confugredBlast["template"] = nextProps.blast.template;
+      confugredBlast["properties"] = nextProps.blast.properties;
+      this.setState({ blast: confugredBlast });    
     }
-    const { location } = nextProps;
-    if (nextProps && nextProps.users && nextProps.users.tab) {
-      let tab = nextProps.users.tab;
-      this.moveTab(tab);
-    }
-
-    if (location && location.savedProps && location.savedProps.moveTab) {
-      this.setState({ blast_id: location.savedProps.blast_id });
-
-      if (location.savedProps.moveTab == "property" && this.state.blast_id == "") {
-        this.stateSettingsForTabs(location.savedProps);
-      }
-    }
-
-    if (
-      (nextProps.users != undefined && nextProps.users.blastData) ||
-      (nextProps.agentData != undefined && nextProps.agentData) ||
-      (nextProps.profile != undefined && nextProps.profile) ||
-      (nextProps.imageData != undefined && nextProps.imageData) ||
-      (nextProps.propertyImages != undefined && nextProps.propertyImages)
-    ) {
-      this.stateSettingsForTabs(nextProps.users);
-    }
+    
+    // if (nextProps && nextProps.users && nextProps.users.tab) {
+    //   let tab = nextProps.users.tab;
+    //   this.moveTab(tab);
+    // }
+    // const { location } = nextProps;
+    // if (location && location.savedProps) {
+    //   this.setState({ blast_id: location.savedProps.blast_id });
+    // }
+    // if (
+    //   (nextProps.users != undefined && nextProps.users.blastData) ||
+    //   (nextProps.agentData != undefined && nextProps.agentData) ||
+    //   (nextProps.profile != undefined && nextProps.profile) ||
+    //   (nextProps.imageData != undefined && nextProps.imageData) ||
+    //   (nextProps.propertyImages != undefined && nextProps.propertyImages)
+    // ) {
+    //   this.stateSettingsForTabs(nextProps.users);
+    // }
   }
 
 
 
-  stateSettingsForTabs(nextProps) {
-    if (nextProps.blastData != undefined && nextProps.blastData) {
-      let blast = {};
-      blast.blastData = nextProps.blastData.data;
-      //  console.log("blast Dtaa ",blast);
-      this.setState({ propertyData: blast, uploadBlast: blast, blast_id: nextProps.blastData.data._id, scheduledDate: nextProps.scheduledDate, blastsettingData: nextProps.blastsettingData, dataBaseData: nextProps.dataBaseData });
-      //previewData:nextProps.propertyData
-    }
+  // stateSettingsForTabs(nextProps) {
+  //   if (nextProps.blastData != undefined && nextProps.blastData) {
+  //     let blast = {};
+  //     blast.blastData = nextProps.blastData.data;
+  //     //  console.log("blast Dtaa ",blast);
+  //     this.setState({ propertyData: blast, uploadBlast: blast, blast_id: nextProps.blastData.data._id, scheduledDate: nextProps.scheduledDate, blastsettingData: nextProps.blastsettingData, dataBaseData: nextProps.dataBaseData });
+  //     //previewData:nextProps.propertyData
+  //   }
 
-    if (nextProps.moveTab != undefined && nextProps.moveTab) {
-      let blast = {};
-      blast.blast_id = nextProps.blast_id;
-      blast.templateId = nextProps.templateId;
-      this.setState({ moveTab: nextProps.moveTab, propertyData: blast, blast_id: nextProps.blast_id });
-      const { dispatch } = this.props;
-      dispatch(userActions.getTemplateOrPropertydata(nextProps.blast_id));
-    }
+  //   if (nextProps.moveTab != undefined && nextProps.moveTab) {
+  //     let blast = {};
+  //     blast.blast_id = nextProps.blast_id;
+  //     blast.templateId = nextProps.templateId;
+  //     this.setState({ moveTab: nextProps.moveTab, propertyData: blast, blast_id: nextProps.blast_id });
+  //     const { dispatch } = this.props;
+  //     dispatch(userActions.getTemplateOrPropertydata(nextProps.blast_id));
+  //   }
 
-    if (nextProps.propertyImages != undefined && nextProps.propertyImages) {
-      //console.log("nextProps.propertyImages.data======",nextProps.propertyImages);
-      this.setState({ previewData: nextProps.propertyImages.data, propertyImages: nextProps.propertyImages.data });
-    }
+  //   if (nextProps.propertyImages != undefined && nextProps.propertyImages) {
+  //     //console.log("nextProps.propertyImages.data======",nextProps.propertyImages);
+  //     this.setState({ previewData: nextProps.propertyImages.data, propertyImages: nextProps.propertyImages.data });
+  //   }
 
-    if (nextProps.templateName != undefined && nextProps.templateName) {
-      let template = {};
-      template.templateData = nextProps.templateName.data;
-      this.setState({ propertyData: template });
-    }
-    if (nextProps.agentData != undefined && nextProps.agentData) {
-      this.setState({ agentData: nextProps.agentData });
-    }
-    if (nextProps.propertyData != undefined && nextProps.propertyData) {
-      this.setState({ previewData: nextProps.propertyData });
-    }
+  //   if (nextProps.templateName != undefined && nextProps.templateName) {
+  //     let template = {};
+  //     template.templateData = nextProps.templateName.data;
+  //     this.setState({ propertyData: template });
+  //   }
+  //   if (nextProps.agentData != undefined && nextProps.agentData) {
+  //     this.setState({ agentData: nextProps.agentData });
+  //   }
+  //   if (nextProps.propertyData != undefined && nextProps.propertyData) {
+  //     this.setState({ previewData: nextProps.propertyData });
+  //   }
 
-    if (nextProps.previewHtml) {
-      this.setState({ previewHtml: nextProps.previewHtml });
-    }
+  //   if (nextProps.previewHtml) {
+  //     this.setState({ previewHtml: nextProps.previewHtml });
+  //   }
 
-  }
+  // }
 
   moveTab(tab) {
     let { moveTab, tabs } = this.state;
@@ -154,9 +167,10 @@ class CreateFlyerPage extends React.Component {
   }
 
   render() {
-    const { moveTab, previewHtml, previewData, propertyData, uploadBlast, tabs, blast_id, propertyImages, scheduledDate, blastsettingData, dataBaseData, profile, agentData } = this.state;
+    const { blast, moveTab, previewHtml, previewData, tabs, blastsettingData, dataBaseData, profile } = this.state;
     console.log("State in create flayer render :", this.state);
     const { users } = this.props;
+
     return (
       <div>
         <ListingSubmenu />
@@ -180,63 +194,53 @@ class CreateFlyerPage extends React.Component {
                   </div>
 
                   <div className="tabs-falyer">
-                    <Tabs
-                      id="tab-example"
+                    <Tabs id="tab-example"
                       activeKey={moveTab}
-                      onSelect={(tab) => this.setKey(tab)}
-                    >
+                      onSelect={(tab) => this.setKey(tab)}>
                       <Tab eventKey="blast" title="Blast Type">
-                        <BlastTab dispatchval={this.dispatchval} />
+                        <BlastTab dispatchval={this.dispatchval}
+                          blastId={blast && blast._id}
+                        />
                       </Tab>
 
                       <Tab eventKey="designTemplateTab" title="Design Template" disabled={tabs.designTemplateTab ? true : false}>
                         <AgentTemplateTab
                           dispatchval={this.dispatchval}
-                          blastType={uploadBlast}
+                          blastId={blast && blast._id}
+                          templateId={blast && blast.selected_template_id}
                         />
                       </Tab>
 
                       <Tab eventKey="property" title="Property Details" disabled={tabs.property ? true : false}>
-                        {(propertyData &&
-                          propertyData.templateData &&
-                          propertyData.templateData.template_type ==
-                          "UploadBlast") ||
-                          (propertyData &&
-                            propertyData.templateData &&
-                            propertyData.templateData.template_type ==
-                            "UploadYourOwnBlast") ? (
+                        {blast && blast.template &&
+                          (blast.template.template_type == "UploadBlast" ||
+                            blast.template.template_type == "UploadYourOwnBlast") ? (
                             <UploadBlastTab
                               dispatchval={this.dispatchval}
-                              propertyData={propertyData}
-                              blast_id={blast_id}
-                              uploadBlast={uploadBlast}
+                              properties={blast.properties}
+                              blast_id={blast && blast._id}
+                              // uploadBlast={uploadBlast}
                               moveTab={this.moveTab}
-                              saveBlastData={users && users.saveBlastData != undefined && users.saveBlastData}
                             />
                           ) : (
                             <PropertyTab
                               dispatchval={this.dispatchval}
-                              propertyData={propertyData}
-                              blast_id={blast_id}
+                              properties={blast && blast.properties}
+                              blast_id={blast && blast._id}
+                              template={blast && blast.template}
                               profile={profile}
-                              agentData={agentData}
-                              saveBlastData={users && users.saveBlastData != undefined && users.saveBlastData}
+                              agentData={blast && blast.agentData}
                             />
                           )}
                       </Tab>
-                      {(propertyData &&
-                        propertyData.templateData &&
-                        propertyData.templateData.template_type ==
-                        "UploadBlast") ||
-                        (propertyData &&
-                          propertyData.templateData &&
-                          propertyData.templateData.template_type ==
-                          "UploadYourOwnBlast") ? null : (
+                      {blast && blast.template &&
+                        (blast.template.template_type == "UploadBlast" ||
+                          blast.template.template_type == "UploadYourOwnBlast") ? null : (
                           <Tab eventKey="photo" title="Photos" disabled={tabs.photo ? true : false}>
                             <PhotoTab dispatchval={this.dispatchval}
-                              template={propertyData.templateData}
+                              template={blast && blast && blast.template}
                               previewData={previewData}
-                              blast_id={blast_id}
+                              blast_id={blast && blast._id}
                               moveTab={this.moveTab} />
                           </Tab>
                         )}
@@ -246,25 +250,27 @@ class CreateFlyerPage extends React.Component {
                         <PreviewTab
                           dispatchval={this.dispatchval}
                           previewHtml={previewHtml}
-                          propertyImages={propertyImages}
-                          blast_id={blast_id}
+                          propertyImages={blast && blast.propertyImages}
+                          blast_id={blast && blast._id}
                         />
                       </Tab>
 
 
                       <Tab eventKey="selectdatabase" title="Select Database" disabled={tabs.selectdatabase ? true : false}>
                         <DatabaseTab dispatchval={this.dispatchval}
-                          blast_id={blast_id} />
+                          blast_id={blast && blast._id} />
                       </Tab>
                       <Tab eventKey="setDate" title="Set Date" disabled={tabs.setDate ? true : false}>
-                        <SetDateTab dispatchval={this.dispatchval} uploadBlast={uploadBlast} />
+                        <SetDateTab dispatchval={this.dispatchval}
+                        // uploadBlast={uploadBlast}
+                        />
                       </Tab>
                       <Tab eventKey="terms" title="Terms & Condition" disabled={tabs.terms ? true : false}>
                         <TermsTab dispatchval={this.dispatchval} />
                       </Tab>
                       <Tab eventKey="payment" title="Payment" disabled={tabs.payment ? true : false}>
                         <PaymentTab dispatchval={this.dispatchval} dataBaseData={dataBaseData}
-                          blastsettingData={blastsettingData} scheduledDate={scheduledDate}
+                          blastsettingData={blastsettingData} scheduledDate={blast && blast.scheduledDate}
                           resetState={this.resetState} />
                       </Tab>
                     </Tabs>
@@ -280,14 +286,14 @@ class CreateFlyerPage extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { alert, users } = state;
+  const { alert, users, } = state;
   const { profile } = users;
-  const { agentData } = users;
+  const { agentData, blast } = users;
   const { imageData } = users;
   const { scheduledDate } = users;
   const { blastsettingData } = users;
   const { dataBaseData } = users;
-  //console.log("imageData===scheduledDate=", state);
+  // console.log("imageData===scheduledDate=", state);
   return {
     alert,
     users,
@@ -295,6 +301,7 @@ function mapStateToProps(state) {
     agentData,
     imageData,
     scheduledDate,
+    blast,
     blastsettingData,
     dataBaseData
   };

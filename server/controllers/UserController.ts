@@ -36,7 +36,7 @@ import AgentBusiness = require("./../app/business/AgentBusiness");
 import IAgentModel = require("./../app/model/interfaces/IAgentModel");
 import IBlastImageModel = require("./../app/model/interfaces/IBlastImageModel");
 import BlastImageBusiness = require("./../app/business/BlastImageBusiness");
-
+import BlastModel = require("./../app/model/BlastModel");
 var BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
 
 var moment = require('moment');
@@ -706,16 +706,27 @@ class UserController implements IBaseController<UserBusiness> {
 	saveBlast(req: express.Request, res: express.Response): void {
 		try {
 			var _blastform: IBlastModel = <IBlastModel>req.body;
+			const blastId = req.body.blastId;
 			var _blastBusiness = new BlastBusiness();
-			_blastform.status = ' ';
+			_blastform.status = 'Draft';
 			_blastform.selected_template_date = new Date();
-			_blastBusiness.create(_blastform, (error, result) => {
-				if (error) {
-					console.log(error);
-					res.send({ "error": error });
-				}
-				else res.send({ "success": "success", data: result });
-			});
+			if (!blastId) {
+				_blastBusiness.create(_blastform, (error, result) => {
+					if (error) {
+						console.log(error);
+						res.send({ "error": error });
+					}
+					else res.send({ "success": "success", data: result });
+				});
+			} else {
+				_blastBusiness.update(blastId, _blastform, (error, result) => {
+					if (error) {
+						console.log(error);
+						res.send({ "error": error });
+					}
+					else res.send({ "success": "success", data: result });
+				});
+			}
 		}
 		catch (e) {
 			console.log(e);
@@ -729,30 +740,43 @@ class UserController implements IBaseController<UserBusiness> {
 			let _agentTemplateBusiness = new AgentTemplateBusiness();
 
 			let _blastform: IBlastModel = <IBlastModel>req.body;
+			
+			let templateId = req.body.templateId;
 			let _blastBusiness = new BlastBusiness();
 			_blastform.selected_template_date = new Date();
-			_agentTemplateBusiness.create(_IagentTemplateModel, (error, result) => {
-				if (error) {
-					console.log(error);
-					res.send({ "error": error });
-				} else {
-					if (result && result._id) {
-						_blastform.selected_template_id = result._id;
-						_blastform.status = 'Draft';
-						_blastBusiness.findOne({ _id: _IagentTemplateModel.blast_id }, (error, user) => {
-							let _id: string = user._id.toString();
-							_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
-								if (error) {
-									console.log(error);
-									res.send(error);
-								} else {
-									return res.json({ "sucess": "sucess", "data": result });
-								}
+			if (!templateId) {
+				_agentTemplateBusiness.create(_IagentTemplateModel, (error, result) => {
+					if (error) {
+						console.log(error);
+						res.send({ "error": error });
+					} else {
+						if (result && result._id) {
+							_blastform.selected_template_id = result._id;
+							_blastform.status = 'Draft';
+							_blastBusiness.findOne({ _id: req.body.blastId }, (error, user) => {
+								let _id: string = user._id.toString();
+								_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
+									if (error) {
+										console.log(error);
+										res.send(error);
+									} else {
+										return res.json({ "sucess": "sucess", "data": result });
+									}
+								});
 							});
-						});
+						}
 					}
-				}
-			});
+				});
+			} else {
+				_agentTemplateBusiness.update(templateId, _IagentTemplateModel, (error: any, resultUpdate: any) => {
+					if (error) {
+						console.log(error);
+						res.send(error);
+					} else {
+						return res.json({ "sucess": "sucess", "data": resultUpdate });
+					}
+				});
+			}
 		}
 		catch (e) {
 			console.log(e);
@@ -760,14 +784,12 @@ class UserController implements IBaseController<UserBusiness> {
 		}
 	}
 
-
-
 	saveAgents(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.verifyToken(req, res, (userData) => {
 				var _agent: IAgentModel = <IAgentModel>req.body;
-				console.log("_agent====",_agent);
+				console.log("_agent====", _agent);
 				_agent.createdOn = new Date();
 
 				_agent.user_id = userData._id;
@@ -835,18 +857,9 @@ class UserController implements IBaseController<UserBusiness> {
 						pricingInfo: prop.pricingInfo,
 						isOpenHouse: prop.isOpenHouse,
 						linksToWebsites: prop.linksToWebsites,
-						propertyImages:prop.propertyImages
+						propertyImages: prop.propertyImages
 					}
-					// if (prop.propertyImages) {
-					// 	var propertyImages: any = [];
-					// 	let data = prop.propertyImages.img;
-					// 	data.forEach(function (images: any) {
-					// 		if (images) {
-					// 			propertyImages.push({ imageId: images.id, imageUrl: images.imgUrl });
-					// 		}
-					// 	});
-					// 	_propertyform.propertyImages = propertyImages;
-					// }
+
 					_propertyform.property_type = prop.generalPropertyInformation.propertyType;
 					_propertyform.property_style = prop.generalPropertyInformation.propertyStyle;
 					_propertyform.lot_size = prop.generalPropertyInformation.lotSize;
@@ -973,7 +986,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 										_propertyBusiness.aggregate(propertyAggregate, (error: any, result: any) => {
 											if (error) {
-												console.log( error)
+												console.log(error)
 												res.send({ "error": error });
 											} else {
 												var returnObj = result.map(function (obj: any): any {
@@ -1193,15 +1206,34 @@ class UserController implements IBaseController<UserBusiness> {
 	getBlast(req: express.Request, res: express.Response): void {
 		try {
 			const blastId = req.params.id;
-			console.log("id: ", req.params)
+		//	console.log("id: ", req.params)
 			var blastBusiness = new BlastBusiness();
-			blastBusiness.findById(blastId, (error: any, result: any) => {
+			blastBusiness.findById(blastId, (error: any, blast: IBlastModel) => {
 				if (error) {
-					console.log("error in getBlast :", error);
+					console.log("error in getting blast :", error);
 					res.send(error);
 				} else {
-					console.log("blast response", result)
-					res.send(result);
+
+					let _templateBusiness = new AgentTemplateBusiness();
+					console.log("ddddd",blastId.selected_template_id)
+					_templateBusiness.findById(blast.selected_template_id, (templateError: any, template: IAgentTemplateModel) => {
+						if (templateError) {
+							console.log("error in getting template :", templateError);
+							res.send(error);
+						} else {
+							console.log("Template ,",template)
+							let _propertyBusiness = new PropertyBusiness();
+							_propertyBusiness.retrieve({ blast_id: blast.id }, (propertiesError: any, properties: any) => {
+								if (propertiesError) {
+									console.log("error in getting properties :", propertiesError);
+									res.send(error);
+								} else {									
+									res.send({ blast, template, properties });
+								}
+							})
+						}
+					})
+
 				}
 			}
 			);

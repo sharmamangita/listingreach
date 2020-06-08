@@ -18,41 +18,41 @@ class AgentModel {
     get user_id (): mongoose.Types.ObjectId {
         return this._agentModel.user_id;
     }
-    get name (): string {
+    get name (): String {
         return this._agentModel.name;
     }
-    get designation (): string {
+    get designation (): String {
         return this._agentModel.designation;
     }
-    get email (): string {
+    get email (): String {
         return this._agentModel.email;
     }
-    get website_url():string{
+    get website_url():String{
         return this._agentModel.website_url;
     }
-    get phone_number():string{
+    get phone_number():String{
         return this._agentModel.phone_number;
     }
-    get company_details():string{
+    get company_details():String{
         return this._agentModel.company_details;
     }
-    get other_information():string{
+    get other_information():String{
         return this._agentModel.other_information;
     }
-    get image_url (): string {
+    get image_url (): String {
         return this._agentModel.image_url;
     }
-    get logo_url (): string {
+    get logo_url (): String {
         return this._agentModel.logo_url;
     }
     get createdOn (): Date {
         return this._agentModel.createdOn;
     }
     get updateOn (): Date {
-        return this._agentModel.updateOn;
+        return this._agentModel.updatedOn;
     }
 	
 }
-Object.seal(UserModel);
-export =  UserModel;
+Object.seal(AgentModel);
+export =  AgentModel;
 

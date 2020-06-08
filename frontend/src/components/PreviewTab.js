@@ -28,7 +28,7 @@ class PreviewTab extends React.Component {
     const { dispatch } = this.props.dispatchval.dispatch;
     if (email && blast_id) {
       dispatch(userActions.emailPreviewTemplate(email, blast_id));
-      //window.scrollTo(0,0);
+      window.scrollTo(0,0);
       this.setState({
         email: "",
         submitted: false,
@@ -63,7 +63,7 @@ class PreviewTab extends React.Component {
     if (nextProprs.blast_id && !nextProprs.previewHtml && !this.state.previewHtml) {
       const { dispatch } = this.props.dispatchval.dispatch;
       let blast_id = nextProprs.blast_id;
-      dispatch(userActions.getPreviewhtml(blast_id));
+    //  dispatch(userActions.getPreviewhtml(blast_id));
     }
   }
   render() {
