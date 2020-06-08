@@ -102,12 +102,12 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                 var html = '';
                 properties.forEach(function (property: IPropertyModel) {
                   html += `<div class="flyer-bg" style="background: #f1f1f1;">
-                                             <div class="" style="display: block;display: flex;flex-wrap: wrap;border-top: 2px solid #ccc;">
-                                                <div style="width:50%;display: block; background:#f1f1f1;height: 400px;">`;
+                                             <div class="" style="display: block;display: flex;border-top: 2px solid #ccc;">
+                                                <div style="display: block; background:#f1f1f1;height: 400px;">`;
                   if (property.propertyImages && property.propertyImages.length == 1) {
-                      html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl} />`;
+                      html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl} style="width:50%" />`;
                     } else {
-                      html += `<img src="`+Common.SITE_URL+`/uploads/previewimages/img2.jpg" />`;
+                      html += `<img src="`+Common.SITE_URL+`/uploads/previewimages/img2.jpg"  style="width:50%"/>`;
                     }
 
                   html += `</div><div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
@@ -558,7 +558,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#numberOfStories#/g, number_stories)
                     .replace(/#garageSize#/g,garageSize)
                     .replace(/#building_size#/g,building_size)
-                    
+                   console.log("emailtemplat23e====",emailtemplate);
 
                   resolve(emailtemplate);
                 });

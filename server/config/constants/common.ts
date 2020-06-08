@@ -1311,7 +1311,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
          line-height: 1.5;
          padding: 30px;display: block;">
          <div style="display: block;display: flex;flex-wrap: wrap;margin-right:0;margin-left:0">
-            <div style="display: block;width:66%;margin: auto;">
+            <div style="display: block;width:100%;margin: auto;">
                <div class="border2" style="display: block;border: 3px solid #eee;">
                   <div style="display: block;display: flex;flex-wrap: wrap;">
                      <div class="mb-3 mt-3 text-right" style="display: block;width:30%;text-align: right !important; margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">					 
