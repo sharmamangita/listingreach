@@ -483,7 +483,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
                   let lot_size = "";
                   if(property.lot_size!=undefined && property.lot_size){
-                    lot_size=`<li>Lot Size: #lotSize# sqft</li>`;
+                    lot_size=`<li>Lot Size: ${property.lot_size} sqft</li>`;
                   }
 
 
@@ -558,7 +558,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#numberOfStories#/g, number_stories)
                     .replace(/#garageSize#/g,garageSize)
                     .replace(/#building_size#/g,building_size)
-                   console.log("emailtemplat23e====",emailtemplate);
+                  // console.log("emailtemplat23e====",emailtemplate);
 
                   resolve(emailtemplate);
                 });

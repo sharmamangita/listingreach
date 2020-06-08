@@ -1518,7 +1518,7 @@ static PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE:string= Common.PREVIEW_EMAIL_TEMPLAT
 
 static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ ` 
                   <div class="row" style="display: flex;flex-wrap: wrap;">
-                     <div style="width:100%;padding-right: 15px;padding-left: 15px;">
+                     <div style="width:100%">
                         <div class="flyer-header" style="display: block;overflow: hidden;
          background-color: #EE8C3A;
          color: #fff;
