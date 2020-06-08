@@ -105,10 +105,10 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                              <div class="" style="display: block;display: flex;flex-wrap: wrap;border-top: 2px solid #ccc;">
                                                 <div style="width:50%;display: block; background:#f1f1f1;height: 400px;">`;
                   if (property.propertyImages && property.propertyImages.length == 1) {
-                    html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl || "/public/assets/images/img1.jpg"} />`;
-                  } else {
-                    html += `<img src="`+Common.SITE_URL+`/uploads/previewimages/img2.jpg" />`;
-                  }
+                      html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl} />`;
+                    } else {
+                      html += `<img src="`+Common.SITE_URL+`/uploads/previewimages/img2.jpg" />`;
+                    }
 
                   html += `</div><div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
                                                    <div class="" style="display: flex;flex-wrap: wrap;">
@@ -241,7 +241,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
                 let image = '';
                 properties.forEach(function (property: IPropertyModel) {
-                  console.log("property====", property);
+                 // console.log("property====", property);
                   if (property.propertyImages && property.propertyImages.length == 1) {
                     image += `<div class="row">
                                       <div class="col-md-12">
