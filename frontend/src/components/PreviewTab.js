@@ -48,13 +48,13 @@ class PreviewTab extends React.Component {
 
   nexttab() {
     const { dispatch } = this.props.dispatchval.dispatch;
-    dispatch(userActions.preview());
+    this.props.moveTab("selectdatabase");
+   // dispatch(userActions.preview());
   }
 
   componentWillReceiveProps(nextProprs) {
-    console.log("nextProps in Preview ", nextProprs)
-    if(nextProprs.moveTab=="preview"){
-
+    if(nextProprs.activeTab=="preview"){
+      console.log("nextProps in Preview ", nextProprs)
       if (nextProprs.blast_id != this.state.blast_id) {
         this.setState({ blast_id: nextProprs.blast_id });
       }

@@ -32,7 +32,6 @@ export const userActions = {
     deleteSavedBlast,
     selectDatabase,
     saveImages,
-    preview,
     termsNext,
     saveCalenderData,
     getPreviewhtml
@@ -629,13 +628,6 @@ function deleteSavedBlast(id) {
     function request(users) { return { type: userConstants.DELETE_REQUEST, users } }
     function success(users) { return { type: userConstants.DELETE_SUCCESS, users } }
     function failure(error) { return { type: userConstants.DELETE_FAILURE, error } }
-}
-
-function preview() {
-    return dispatch => {
-        dispatch(request());
-    };
-    function request() { return { type: userConstants.PREVIEW_REQUEST } }
 }
 
 function termsNext() {

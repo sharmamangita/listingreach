@@ -74,7 +74,7 @@ class DatabaseTab extends React.Component {
   }
   handleStateChange(e) {
     const associationid = e.target.value;
-    console.log("assoid:",associationid);
+    console.log("assoid:", associationid);
     var index = e.nativeEvent.target.selectedIndex;
     const { activeCampaign } = this.state;
     const filteredSegments = activeCampaign.segments.filter(
@@ -83,7 +83,7 @@ class DatabaseTab extends React.Component {
     const selectedAssocaition = activeCampaign.associations.filter(
       (asso) => asso.id == associationid
     )[0];
-  //  console.log("selectedAssocaition=====",selectedAssocaition)
+    //  console.log("selectedAssocaition=====",selectedAssocaition)
     activeCampaign.segment = [];
     this.setState({
       selectedAssocaition,
@@ -128,10 +128,10 @@ class DatabaseTab extends React.Component {
     if (checked) {
       let asso = {
         association: { id: selectedAssocaition.id, name: selectedAssocaition.name },
-        segment: { id: _segment.id, lists: _segment.lists,name:_segment.name }
+        segment: { id: _segment.id, lists: _segment.lists, name: _segment.name }
       }
       associations.push(asso);
-     // console.log("this.associations=====", associations);
+      // console.log("this.associations=====", associations);
     } else {
       var indexToRemove;
       associations.forEach(function (item, index) {
@@ -230,18 +230,12 @@ class DatabaseTab extends React.Component {
     );
   }
   render() {
-    var that = this;
-    console.log("database====", this.props);
     var { submitted, associations } = this.state;
     return (
       <React.Fragment>
-        <div
-          className="tab-pane fade mt-2"
-          id="database"
-          role="tabpanel"
-          aria-labelledby="group-dropdown2-tab"
-          aria-expanded="false"
-        >
+        <div className="tab-pane fade mt-2"
+          id="database" role="tabpanel" aria-labelledby="group-dropdown2-tab"
+          aria-expanded="false"        >
           <h4>Select Database</h4>
           <p>
             Select the databases you wish to send your Blast to by clicking the
@@ -278,7 +272,7 @@ class DatabaseTab extends React.Component {
                         {asso.association.name} --  {asso.segment.name}
                         <span>
                           <i className="fa fa-trash pull-right" aria-hidden="true" title="Delete"
-                            onClick={(e) => that.deleteAssociation(e, asso)}
+                            onClick={(e) => this.deleteAssociation(e, asso)}
                           ></i></span>
                       </td>
                     </tr>
@@ -297,13 +291,18 @@ class DatabaseTab extends React.Component {
     );
   }
   componentWillReceiveProps(props) {
-    this.setState({
-      activeCampaign: props.activeCampaign,
-      loading: props.loading,
-    });
-    if (props.clearForm) {
-      var defaultstate = this.resetState();
-      this.setState(defaultstate);
+    if (props.activeTab == "selectdatabase") {
+      console.log("nextPRops in databases ", props);
+      this.setState({
+        blast_id: props.blast_id,
+        activeCampaign: props.activeCampaign,
+        loading: props.loading,
+        associations: props.associations
+      });
+      if (props.clearForm) {
+        var defaultstate = this.resetState();
+        this.setState({ defaultstate });
+      }
     }
   }
 }

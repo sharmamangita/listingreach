@@ -325,6 +325,7 @@ class PropertyTab extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if(nextProps.activeTab=="property"){
     console.log("nextPros in Property ", nextProps)
     if (nextProps.properties && nextProps.properties.length > 0) {
       let props = nextProps.properties;
@@ -347,6 +348,7 @@ class PropertyTab extends React.Component {
     if (nextProps.template) {
       this.setState({ template: nextProps.template });
     }
+  }
   }
 
   saveProperty(event) {

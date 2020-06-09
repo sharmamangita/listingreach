@@ -94,7 +94,7 @@ class CreateFlyerPage extends React.Component {
     moveTab = tab;
     tabs[tab] = false;
     this.setState({ tabs, moveTab });
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
   }
 
   setKey(tab) {
@@ -135,11 +135,13 @@ class CreateFlyerPage extends React.Component {
                       <Tab eventKey="blast" title="Blast Type">
                         <BlastTab dispatchval={this.dispatchval}
                           blastId={blast && blast._id}
+                          activeTab={moveTab}
                         />
                       </Tab>
 
                       <Tab eventKey="designTemplateTab" title="Design Template" disabled={tabs.designTemplateTab ? true : false}>
                         <AgentTemplateTab
+                         activeTab={moveTab}
                           dispatchval={this.dispatchval}
                           blastId={blast && blast._id}
                           templateId={blast && blast.selected_template_id}
@@ -151,6 +153,7 @@ class CreateFlyerPage extends React.Component {
                           (blast.template.template_type == "UploadBlast" ||
                             blast.template.template_type == "UploadYourOwnBlast") ? (
                             <UploadBlastTab
+                             activeTab={moveTab}
                               dispatchval={this.dispatchval}
                               properties={blast.properties}
                               blast_id={blast && blast._id}
@@ -158,6 +161,7 @@ class CreateFlyerPage extends React.Component {
                             />
                           ) : (
                             <PropertyTab
+                             activeTab={moveTab}
                               dispatchval={this.dispatchval}
                               properties={blast && blast.properties}
                               blastId={blast && blast._id}
@@ -174,6 +178,7 @@ class CreateFlyerPage extends React.Component {
                             <PhotoTab dispatchval={this.dispatchval}
                               template={blast && blast && blast.template}
                               previewData={previewData}
+                              activeTab={moveTab}
                               properties={blast && blast.properties}
                               blast_id={blast && blast._id}
                               moveTab={this.moveTab} />
@@ -186,25 +191,29 @@ class CreateFlyerPage extends React.Component {
                           dispatchval={this.dispatchval}
                           previewHtml={previewHtml}
                           blast_id={blast && blast._id}
-                          moveTab={moveTab}
+                          activeTab={moveTab}
+                          moveTab={this.moveTab}
                         />
                       </Tab>
 
 
                       <Tab eventKey="selectdatabase" title="Select Database" disabled={tabs.selectdatabase ? true : false}>
                         <DatabaseTab dispatchval={this.dispatchval}
-                          blast_id={blast && blast._id} />
+                          blast_id={blast && blast._id}
+                          activeTab={moveTab}
+                          associations={blast && blast.associations} />
                       </Tab>
                       <Tab eventKey="setDate" title="Set Date" disabled={tabs.setDate ? true : false}>
                         <SetDateTab dispatchval={this.dispatchval}
-                        // uploadBlast={uploadBlast}
+                         activeTab={moveTab}
                         />
                       </Tab>
                       <Tab eventKey="terms" title="Terms & Condition" disabled={tabs.terms ? true : false}>
-                        <TermsTab dispatchval={this.dispatchval} />
+                        <TermsTab dispatchval={this.dispatchval}  activeTab={moveTab} />
                       </Tab>
                       <Tab eventKey="payment" title="Payment" disabled={tabs.payment ? true : false}>
                         <PaymentTab dispatchval={this.dispatchval} dataBaseData={dataBaseData}
+                         activeTab={moveTab}
                           blastsettingData={blastsettingData} scheduledDate={blast && blast.scheduledDate}
                           resetState={this.resetState} />
                       </Tab>

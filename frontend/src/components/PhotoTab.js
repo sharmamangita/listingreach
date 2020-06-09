@@ -106,19 +106,21 @@ class PhotoTab extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("nextProps in Photo Tab ", nextProps)
-    if (nextProps.template) {
-      let { template } = this.state;
-      template = nextProps.template;
-      this.setState({ template })
-    }
-    if (!this.state.blast_id) {
-      this.setState({ blast_id: nextProps.blast_id })
-    }
+    if (nextProps.activeTab == "photo") {
+      console.log("nextProps in Photo Tab ", nextProps)
+      if (nextProps.template) {
+        let { template } = this.state;
+        template = nextProps.template;
+        this.setState({ template })
+      }
+      if (!this.state.blast_id) {
+        this.setState({ blast_id: nextProps.blast_id })
+      }
 
-    if (nextProps && nextProps.properties) {
-      let properties = nextProps.properties;
-      this.setState({ properties });
+      if (nextProps && nextProps.properties) {
+        let properties = nextProps.properties;
+        this.setState({ properties });
+      }
     }
   }
 
