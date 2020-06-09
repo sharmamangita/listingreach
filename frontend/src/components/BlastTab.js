@@ -18,45 +18,32 @@ class BlastTab extends React.Component {
     });
   }
 
-   selectBlast(blast_type) {
+  selectBlast(blast_type) {
     if (blast_type) {
-        const { dispatch } = this.props.dispatchval.dispatch;
-        const {userId} = this.state;
-        dispatch(userActions.blast(blast_type,userId));
+      const { dispatch } = this.props.dispatchval.dispatch;
+      const { userId } = this.state;
+      dispatch(userActions.blast(blast_type, userId,this.props.blastId));
     }
   }
 
 
   render() {
     return (
-      <div
-        role="tabpanel"
-        className="tab-pane fade active show mt-2"
-        id="type"
-        aria-labelledby="public-tab"
-        aria-expanded="true"
-      >
+      <div role="tabpanel" className="tab-pane fade active show mt-2"
+        id="type" aria-labelledby="public-tab" aria-expanded="true"      >
         <h4>Select Blast Type</h4>
-        <form
-          className="form-a contactForm"
-          action=""
-          method="post"
-          role="form"
-        >
+        <form className="form-a contactForm"
+          action="" method="post" role="form"        >
           <div className="row">
             <div className="col-md-6 mb-3">
-              <div
-                className="card"
+              <div className="card"
                 style={{
                   width: "30rem",
                   margin: "20px 0 24px 0",
-                }}
-              >
-                <img
-                  className="card-img-top"
+                }}              >
+                <img className="card-img-top"
                   src="../../../public/assets/images/house.png"
-                  alt="image"
-                  style={{ width: "100%" }}
+                  alt="image" style={{ width: "100%" }}
                 />
                 <div className="card-body">
                   <h4 className="card-title">
@@ -81,8 +68,7 @@ class BlastTab extends React.Component {
                     className="btn btn-primary"
                     onClick={(e) =>
                       this.selectBlast("ResidentialListings")
-                    }
-                  >
+                    }                  >
                     Select
                   </a>
                 </div>
@@ -94,8 +80,7 @@ class BlastTab extends React.Component {
                 style={{
                   width: "30rem",
                   margin: "20px 0 24px 0",
-                }}
-              >
+                }}              >
                 <img
                   className="card-img-top"
                   src="../../../public/assets/images/services.png"

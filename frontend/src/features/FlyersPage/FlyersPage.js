@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import ListingSubmenu from "../../components/ListingSubmenu";
 import { userActions } from "../../actions";
 import moment from "moment";
-const Entities = require("html-entities").XmlEntities;
 class FlyersPage extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +31,7 @@ class FlyersPage extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    console.log("nextProps==3535=====", nextProps);
+    //console.log("nextProps==3535=====", nextProps);
   }
 
   render() {
@@ -73,7 +72,7 @@ class FlyersPage extends React.Component {
               </thead>
               <tbody>
                 {savedBlast &&
-                  savedBlast.map(function (data, i) {
+                  savedBlast.map(function (data) {
                     return (
                       <tr key={data.id}>
                         <td>

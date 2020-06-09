@@ -13,7 +13,7 @@ export function users(state = {}, action) {
     case userConstants.GETALL_SUCCESS:
       newState = objectAssign({}, state, {
         items: action.users,
-        saveBlastData:action.users
+        saveBlastData: action.users
       });
       return newState;
     case userConstants.GETSAVEDALL_SUCCESS:
@@ -87,30 +87,29 @@ export function users(state = {}, action) {
         error: action.error,
       };
 
-      case userConstants.GET_BLAST_REQUEST:
-        newState = objectAssign({}, state, {
-          loading: true,
-        });
-        return newState;
-  
-      case userConstants.GET_BLAST_SUCCESS:
-        newState = objectAssign({}, state, {
-          loading: true,
-          blast: action.blast,
-        });
-        return newState;
-  
-      case userConstants.GET_BLAST_FAILURE:
-        return {
-          error: action.error,
-        };
+    case userConstants.GET_BLAST_REQUEST:
+      newState = objectAssign({}, state, {
+        loading: true,
+      });
+      return newState;
+
+    case userConstants.GET_BLAST_SUCCESS:
+      newState = objectAssign({}, state, {
+        loading: true,
+        blast: action.blast,
+      });
+      return newState;
+
+    case userConstants.GET_BLAST_FAILURE:
+      return {
+        error: action.error,
+      };
 
     case userConstants.BLAST_SUCCESS:
       newState = objectAssign({}, state, {
-        tab: "designTemplateTab",
-        blastData: action.users
-     });
-     return newState;
+        tab: "designTemplateTab"
+      });
+      return newState;
 
     case userConstants.DESIGNTEMPLATE_SUCCESS:
       newState = objectAssign({}, state, {
@@ -129,62 +128,56 @@ export function users(state = {}, action) {
       newState = objectAssign({}, state, {
         tab: "terms",
         scheduledDate: action.users.data,
-        blastsettingData:action.users.blastsettingData,
-        dataBaseData:action.users.dataBaseData
+        blastsettingData: action.users.blastsettingData,
+        dataBaseData: action.users.dataBaseData
       });
       return newState;
 
     case userConstants.PREVIEW_REQUEST:
-       newState = objectAssign({}, state, {
+      newState = objectAssign({}, state, {
         tab: "selectdatabase",
-    });
-    return newState;
+      });
+      return newState;
 
     case userConstants.PROPERTY_SUCCESS:
       let tab = '';
-      if (action.users && action.users.length) {
-        if(action.users[0].templates.length && 
-          action.users[0].templates[0] && 
-          action.users[0].templates[0].template_type=="UploadBlast" ||
-          action.users[0].templates.length && 
-          action.users[0].templates[0] && 
-          action.users[0].templates[0].template_type=="UploadYourOwnBlast"){
-          //tab = "preview";
+      if (action.users && action.users.template) {
+        if (action.users.template.template_type == "UploadBlast" || action.users.template.template_type == "UploadYourOwnBlast") {
+          tab = "preview";
         } else {
-          tab="photo";
+          tab = "photo";
         }
         newState = objectAssign({}, state, {
-          tab: tab,
-          propertyData: action.users,
+          tab: tab
         });
-         return newState;
+        return newState;
       }
 
 
-      case userConstants.SAVEIMAGES_SUCCESS:
-          newState = objectAssign({}, state, {
-          propertyImages:action.users
+    case userConstants.SAVEIMAGES_SUCCESS:
+      newState = objectAssign({}, state, {
+        propertyImages: action.users
       });
       return newState;
 
-      case userConstants.GETPREVIEW_SUCCESS:
-           newState = objectAssign({}, state, {          
-            previewHtml:action.HTML.html
-        });
-       return newState;
-
-
-
-
-      case userConstants.TERMS_REQUEST:
-          newState = objectAssign({}, state, {
-          tab: "payment",
+    case userConstants.GETPREVIEW_SUCCESS:
+      newState = objectAssign({}, state, {
+        previewHtml: action.HTML.html
       });
       return newState;
-      
 
-     case userConstants.SAVEDBLAST_SUCCESS:
-       newState = objectAssign({}, state, {
+
+
+
+    case userConstants.TERMS_REQUEST:
+      newState = objectAssign({}, state, {
+        tab: "payment",
+      });
+      return newState;
+
+
+    case userConstants.SAVEDBLAST_SUCCESS:
+      newState = objectAssign({}, state, {
         loading: true,
         savedBlast: action.user,
       });

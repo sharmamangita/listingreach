@@ -36,7 +36,7 @@ import AgentBusiness = require("./../app/business/AgentBusiness");
 import IAgentModel = require("./../app/model/interfaces/IAgentModel");
 import IBlastImageModel = require("./../app/model/interfaces/IBlastImageModel");
 import BlastImageBusiness = require("./../app/business/BlastImageBusiness");
-
+import BlastModel = require("./../app/model/BlastModel");
 var BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
 
 var moment = require('moment');
@@ -706,16 +706,27 @@ class UserController implements IBaseController<UserBusiness> {
 	saveBlast(req: express.Request, res: express.Response): void {
 		try {
 			var _blastform: IBlastModel = <IBlastModel>req.body;
+			const blastId = req.body.blastId;
 			var _blastBusiness = new BlastBusiness();
-			_blastform.status = ' ';
+			_blastform.status = 'Draft';
 			_blastform.selected_template_date = new Date();
-			_blastBusiness.create(_blastform, (error, result) => {
-				if (error) {
-					console.log(error);
-					res.send({ "error": error });
-				}
-				else res.send({ "success": "success", data: result });
-			});
+			if (!blastId) {
+				_blastBusiness.create(_blastform, (error, result) => {
+					if (error) {
+						console.log(error);
+						res.send({ "error": error });
+					}
+					else res.send({ "success": "success", data: result });
+				});
+			} else {
+				_blastBusiness.update(blastId, _blastform, (error, result) => {
+					if (error) {
+						console.log(error);
+						res.send({ "error": error });
+					}
+					else res.send({ "success": "success", data: result });
+				});
+			}
 		}
 		catch (e) {
 			console.log(e);
@@ -729,30 +740,43 @@ class UserController implements IBaseController<UserBusiness> {
 			let _agentTemplateBusiness = new AgentTemplateBusiness();
 
 			let _blastform: IBlastModel = <IBlastModel>req.body;
+
+			let templateId = req.body.templateId;
 			let _blastBusiness = new BlastBusiness();
 			_blastform.selected_template_date = new Date();
-			_agentTemplateBusiness.create(_IagentTemplateModel, (error, result) => {
-				if (error) {
-					console.log(error);
-					res.send({ "error": error });
-				} else {
-					if (result && result._id) {
-						_blastform.selected_template_id = result._id;
-						_blastform.status = 'Draft';
-						_blastBusiness.findOne({ _id: _IagentTemplateModel.blast_id }, (error, user) => {
-							let _id: string = user._id.toString();
-							_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
-								if (error) {
-									console.log(error);
-									res.send(error);
-								} else {
-									return res.json({ "sucess": "sucess", "data": result });
-								}
+			if (!templateId) {
+				_agentTemplateBusiness.create(_IagentTemplateModel, (error, result) => {
+					if (error) {
+						console.log(error);
+						res.send({ "error": error });
+					} else {
+						if (result && result._id) {
+							_blastform.selected_template_id = result._id;
+							_blastform.status = 'Draft';
+							_blastBusiness.findOne({ _id: req.body.blastId }, (error, user) => {
+								let _id: string = user._id.toString();
+								_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
+									if (error) {
+										console.log(error);
+										res.send(error);
+									} else {
+										return res.json({ "sucess": "sucess", "data": result });
+									}
+								});
 							});
-						});
+						}
 					}
-				}
-			});
+				});
+			} else {
+				_agentTemplateBusiness.update(templateId, _IagentTemplateModel, (error: any, resultUpdate: any) => {
+					if (error) {
+						console.log(error);
+						res.send(error);
+					} else {
+						return res.json({ "sucess": "sucess", "data": resultUpdate });
+					}
+				});
+			}
 		}
 		catch (e) {
 			console.log(e);
@@ -760,14 +784,12 @@ class UserController implements IBaseController<UserBusiness> {
 		}
 	}
 
-
-
 	saveAgents(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.verifyToken(req, res, (userData) => {
 				var _agent: IAgentModel = <IAgentModel>req.body;
-				console.log("_agent====",_agent);
+				console.log("_agent====", _agent);
 				_agent.createdOn = new Date();
 
 				_agent.user_id = userData._id;
@@ -808,223 +830,55 @@ class UserController implements IBaseController<UserBusiness> {
 			console.log("Properties Body : ", req.body)
 			var _propertyforms = req.body;
 			var _propertyBusiness = new PropertyBusiness();
+			let _templateform: IAgentTemplateModel;
 			if (_propertyforms && _propertyforms.properties && _propertyforms.properties.length) {
-				var { Email, blastHeadline } = req.body;
 				var _templateBusiness = new AgentTemplateBusiness();
 				var _blastform = req.body;
 				var _blastBusiness = new BlastBusiness();
 				_propertyforms.properties.forEach(function (prop: any) {
-					let _templateform: IAgentTemplateModel = <IAgentTemplateModel>{
-						email_subject: Email.formSubject,
-						from_line: Email.formLine,
-						address: Email.formReply,
-						headline: blastHeadline,
-						userId: prop.userId,
-					}
-
-					let _propertyform: IPropertyModel = <IPropertyModel>{
-						display_method: prop.propertyAddress.displayMethod,
-						blast_id: _propertyforms.blast_id,
-						street_address: prop.propertyAddress.streetAddress,
-						city: prop.propertyAddress.city,
-						state: prop.propertyAddress.state,
-						zipcode: prop.propertyAddress.zipCode,
-						userId: prop.userId,
-						mls_number: prop.mlsNumber.numberProperty,
-						board: prop.mlsNumber.boardAssociation,
-						pricingInfo: prop.pricingInfo,
-						isOpenHouse: prop.isOpenHouse,
-						linksToWebsites: prop.linksToWebsites,
-						propertyImages:prop.propertyImages
-					}
-					// if (prop.propertyImages) {
-					// 	var propertyImages: any = [];
-					// 	let data = prop.propertyImages.img;
-					// 	data.forEach(function (images: any) {
-					// 		if (images) {
-					// 			propertyImages.push({ imageId: images.id, imageUrl: images.imgUrl });
-					// 		}
-					// 	});
-					// 	_propertyform.propertyImages = propertyImages;
-					// }
-					_propertyform.property_type = prop.generalPropertyInformation.propertyType;
-					_propertyform.property_style = prop.generalPropertyInformation.propertyStyle;
-					_propertyform.lot_size = prop.generalPropertyInformation.lotSize;
-					_propertyform.number_bedrooms = prop.generalPropertyInformation.numberOfBedrooms;
-					_propertyform.building_size = prop.generalPropertyInformation.buildingSize;
-					_propertyform.number_stories = prop.generalPropertyInformation.numberOfStories;
-					_propertyform.number_bathrooms = prop.generalPropertyInformation.numberOfBathrooms;
-					_propertyform.year_built = prop.generalPropertyInformation.yearBuilt;
-					_propertyform.garage = prop.generalPropertyInformation.garage;
-					_propertyform.garageSize = prop.generalPropertyInformation.garageSize;
-					_propertyform.price = prop.generalPropertyInformation.pricePerSquareFoot;
-					_propertyform.property_details = prop.propertyDetail;
-
-					_propertyBusiness.create(_propertyform, (error, result) => {
-						if (error) {
-							console.log("Property create error :", error);
-							res.send({ "error": error });
-							return;
-						}
-						_templateform.Property_id = result._id.toString();
-						let _id: string = req.body.templateId;
-						_templateform._id = mongoose.Types.ObjectId(_id);
-						console.log("update temp ", _templateform);
-
-						_templateBusiness.update(_id, _templateform, (error, resultUpdate) => {
+					if (prop._id) {
+						_propertyBusiness.update(prop._idc, prop, (error, result) => {
 							if (error) {
-								console.log("template update error ", error);
+								console.log("Property update error :", error);
 								res.send({ "error": error });
-							} else {
-
-								let _blastforms: IBlastModel = <IBlastModel>req.body;
-								let _id: string = _blastform.blast_id;
-
-								if (_blastform && _blastform.agentData != undefined) {
-									_blastforms.agentData = _blastform.agentData;
-									_blastBusiness.update(_id, _blastforms, (error, blastUpadte) => {
-										if (error) {
-											res.send({ "blast update error": error });
-										}
-
-										var propertyAggregate = [
-											{
-												$lookup:
-												{
-													from: "users",
-													localField: "userId",
-													foreignField: "_id",
-													as: "users"
-												}
-											},
-											{
-												$unwind: "$users"
-
-											},
-											{
-												$lookup:
-												{
-													from: "templates",
-													localField: "_id",
-													foreignField: "Property_id",
-													as: "templates"
-												}
-											},
-											{
-												$lookup:
-												{
-													from: "blasts",
-													localField: "blast_id",
-													foreignField: "_id",
-													as: "blasts"
-												}
-											},
-											{
-												$project:
-												{
-													"_id": 1,
-													"userId": 1,
-													"display_method": 1,
-													"street_address": 1,
-													"city": 1,
-													"state": 1,
-													"zipcode": 1,
-													"blast_id": 1,
-													"mls_number": 1,
-													"board": 1,
-													"property_type": 1,
-													"property_style": 1,
-													"lot_size": 1,
-													"number_bedrooms": 1,
-													"building_size": 1,
-													"number_stories": 1,
-													"number_bathrooms": 1,
-													"year_built": 1,
-													"garage": 1,
-													"garageSize": 1,
-													"price": 1,
-													"pricingInfo": 1,
-													"property_details": 1,
-													"isOpenHouse": 1,
-													"propertyImages": 1,
-													"linksToWebsites": 1,
-													"templates.email_subject": 1,
-													"templates.from_line": 1,
-													"templates.address": 1,
-													"templates.Property_id": 1,
-													"templates.headline": 1,
-													"templates.template_type": 1,
-													"templates.userId": 1,
-													"users.userName": 1,
-													"users.firstName": 1,
-													"users.lastName": 1,
-													"users.roles": 1,
-													"blasts": 1,
-
-												}
-											},
-											{
-												$match:
-												{
-													blast_id: mongoose.Types.ObjectId(_propertyforms.blast_id.toString())
-												}
-											}
-										];
-
-										_propertyBusiness.aggregate(propertyAggregate, (error: any, result: any) => {
-											if (error) {
-												console.log( error)
-												res.send({ "error": error });
-											} else {
-												var returnObj = result.map(function (obj: any): any {
-													return {
-														id: obj._id,
-														firstName: obj.users.firstName,
-														lastName: obj.users.lastName,
-														middleName: obj.users.middleName,
-														building_size: obj.building_size,
-														number_bathrooms: obj.number_bathrooms,
-														isOpenHouse: obj.isOpenHouse,
-														property_type: obj.property_type,
-														property_style: obj.property_style,
-														mls_number: obj.mls_number,
-														linksToWebsites: obj.linksToWebsites,
-														property_detail: obj.property_details,
-														pricingInfo: obj.pricingInfo,
-														board: obj.board,
-														zipcode: obj.zipcode,
-														city: obj.city,
-														display_method: obj.display_method,
-														street_address: obj.street_address,
-														number_bedrooms: obj.number_bedrooms,
-														year_built: obj.year_built,
-														number_stories: obj.number_stories,
-														lot_size: obj.lot_size,
-														templates: obj.templates,
-														price: obj.price,
-														garageSize: obj.garageSize,
-														blast_id: obj.blast_id,
-														agentData: obj.blasts,
-														propertyImages: obj.propertyImages
-													};
-
-												});
-												//console.log("returnObj=====",returnObj);
-												return res.json(returnObj);
-											}
-										});
-
-									});
-								}
-
+								return;
 							}
 						});
-					});
 
+					} else {
+						prop.blast_id = req.body.blastId;
+						_propertyBusiness.create(prop, (error, result) => {
+							if (error) {
+								console.log("Property create error :", error);
+								res.send({ "error": error });
+								return;
+							}
+						});
+					}
 				});
+				let _template: IAgentTemplateModel = <IAgentTemplateModel>req.body.template;
+				console.log("Template ", _template)
+				_templateBusiness.update(_template._id.toString(), _template, (error, resultUpdate) => {
+					if (error) {
+						console.log("template update error ", error);
+						res.send({ "error": error });
+					}
+				});
+				let agentData = req.body.agentData;
+				let blast: IBlastModel = <IBlastModel>{
+					agentData=agentData
+				};
+				let blastId = req.body.blastId;
 
+				if (agentData) {
+					_blastBusiness.update(blastId, blast, (error, blastUpadte) => {
+						if (error) {
+							res.send({ "blast update error": error });
+						}
+					});
+				}
+				res.send({ template: _template });
 			}
-
 		}
 		catch (e) {
 			console.log(e);
@@ -1124,27 +978,16 @@ class UserController implements IBaseController<UserBusiness> {
 
 	saveImages(req: express.Request, res: express.Response) {
 		try {
-			var _property: IPropertyModel = <IPropertyModel>req.body;
-
 			var _propertyBusiness = new PropertyBusiness();
-			let array = [];
-			_property.property_ids.forEach(function (item) {
-				let _id: string = item.id;
-				_propertyBusiness.update(_id, _property, (error, resultUpdate) => {
+			req.body.properties.forEach(function (property: IPropertyModel) {
+				let _id: string = property._id.toString();
+				_propertyBusiness.update(_id, property, (error, resultUpdate) => {
 					if (error) {
 						res.send({ "error": "error in your request" });
-					} else {
-						_propertyBusiness.findById(_id, (error, result) => {
-							if (error) {
-								res.send({ "error": "error in your request" });
-							} else {
-								array.push(result);
-								res.send({ "success": "success", data: array });
-							}
-						})
 					}
 				})
 			});
+			res.send({ message: "success" });
 		} catch (e) {
 			console.log(e);
 			res.send({ "error": "error in your request" });
@@ -1193,15 +1036,34 @@ class UserController implements IBaseController<UserBusiness> {
 	getBlast(req: express.Request, res: express.Response): void {
 		try {
 			const blastId = req.params.id;
-			console.log("id: ", req.params)
+			//	console.log("id: ", req.params)
 			var blastBusiness = new BlastBusiness();
-			blastBusiness.findById(blastId, (error: any, result: any) => {
+			blastBusiness.findById(blastId, (error: any, blast: IBlastModel) => {
 				if (error) {
-					console.log("error in getBlast :", error);
+					console.log("error in getting blast :", error);
 					res.send(error);
 				} else {
-					console.log("blast response", result)
-					res.send(result);
+
+					let _templateBusiness = new AgentTemplateBusiness();
+					console.log("ddddd", blastId.selected_template_id)
+					_templateBusiness.findById(blast.selected_template_id, (templateError: any, template: IAgentTemplateModel) => {
+						if (templateError) {
+							console.log("error in getting template :", templateError);
+							res.send(error);
+						} else {
+							console.log("Template ,", template)
+							let _propertyBusiness = new PropertyBusiness();
+							_propertyBusiness.retrieve({ blast_id: blast.id }, (propertiesError: any, properties: any) => {
+								if (propertiesError) {
+									console.log("error in getting properties :", propertiesError);
+									res.send(error);
+								} else {
+									res.send({ blast, template, properties });
+								}
+							})
+						}
+					})
+
 				}
 			}
 			);

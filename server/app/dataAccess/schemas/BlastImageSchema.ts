@@ -26,7 +26,7 @@ class BlastImageSchema {
 }
 
 // we need to create a model using it
-var BlastImageSchema = mongooseConnection.model("blastImage", BlastImageSchema.schema);
-export = BlastImageSchema;
+var BlastImageModel = mongooseConnection.model("blastImage", BlastImageSchema.schema);
+export = BlastImageModel;
 
 

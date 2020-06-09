@@ -68,22 +68,22 @@ class PropertySchema {
             garageSize: {
                 type: String
             },
-            pricingInfo: [{
+            pricingInfo: {
                 price: {
                     type: String
                 },
                 priceType: {
                     type: String
                 }
-            }],
-            number_bathrooms: [{
+            },
+            number_bathrooms: {
                 full: {
                     type: String
                 },
                 half: {
                     type: String
                 }
-            }],
+            },
 
             linksToWebsites: [{
                 text: { type: String },

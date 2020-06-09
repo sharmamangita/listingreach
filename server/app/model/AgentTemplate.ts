@@ -5,63 +5,63 @@ import mongoose = require("mongoose");
 
 import IAgentTemplateModel = require('./interfaces/IAgentTemplateModel');
 
-class AgentTemplate {
+class AgentTemplateModel {
 
-    private _agentTemplateModel :IAgentTemplateModel;
+    private _agentTemplateModel: IAgentTemplateModel;
 
     constructor(AgentTemplateModel: IAgentTemplateModel) {
         this._agentTemplateModel = AgentTemplateModel;
     }
-    get _id (): mongoose.Types.ObjectId {
+    get _id(): mongoose.Types.ObjectId {
         return this._agentTemplateModel._id;
     }
-    get template_type (): string {
+    get template_type(): String {
         return this._agentTemplateModel.template_type;
     }
 
-    get email_subject (): string {
+    get email_subject(): String {
         return this._agentTemplateModel.email_subject;
     }
-    get from_line (): string {
+    get from_line(): String {
         return this._agentTemplateModel.from_line;
     }
-   
-    get address (): string {
+
+    get address(): String {
         return this._agentTemplateModel.address;
     }
-    get headline (): string {
+    get headline(): String {
         return this._agentTemplateModel.headline;
     }
 
-	get database_id (): string {
+    get database_id(): String {
         return this._agentTemplateModel.database_id;
     }
 
-    get paid (): string {
+    get paid(): string {
         return this._agentTemplateModel.paid;
     }
-    get image_id (): mongoose.Types.ObjectId  {
+    get image_id(): mongoose.Types.ObjectId {
         return this._agentTemplateModel.image_id;
     }
 
-    get status (): string {
+    get status(): string {
         return this._agentTemplateModel.status;
     }
 
-    get Property_id (): mongoose.Types.ObjectId {
+    get Property_id(): mongoose.Types.ObjectId {
         return this._agentTemplateModel.Property_id;
     }
 
-    get userId (): mongoose.Types.ObjectId {
+    get userId(): mongoose.Types.ObjectId {
         return this._agentTemplateModel.Property_id;
     }
-    
-    get created_on (): string {
+
+    get created_on(): string {
         return this._agentTemplateModel.created_on;
     }
 
 
 }
-Object.seal(AgentTemplate);
-export =  AgentTemplate;
+Object.seal(AgentTemplateModel);
+export =  AgentTemplateModel;
 
