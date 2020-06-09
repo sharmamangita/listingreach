@@ -107,7 +107,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   if (property.propertyImages && property.propertyImages.length == 1) {
                       html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl} style="width:50%" />`;
                     } else {
-                      html += `<img src="`+Common.SITE_URL+`/uploads/previewimages/img2.jpg"  style="width:50%"/>`;
+                      html += `<img src=${Common.SITE_URL+ "/uploads/previewimages/img2.jpg"} style="width:50%" />`;
                     }
 
                   html += `</div><div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
@@ -134,8 +134,8 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                         html +=`<li>${property.number_bedrooms} Bedrooms</li>`;
                                                     }
 
-                                                    if(property.number_bathrooms[0].full!=undefined && property.number_bathrooms[0].full || property.number_bathrooms[0].half!=undefined && property.number_bathrooms[0].half){
-                                                      html +=`<li>${property.number_bathrooms[0].full+' Full'}  ${property.number_bathrooms[0].half+' Half'} Bathrooms</li>`;
+                                                    if(property.number_bathrooms.full!=undefined && property.number_bathrooms.full || property.number_bathrooms.half!=undefined && property.number_bathrooms.half){
+                                                      html +=`<li>${property.number_bathrooms.full+' Full'}  ${property.number_bathrooms.half+' Half'} Bathrooms</li>`;
                                                     }
 
                                                     if(property.building_size!=undefined && property.building_size){
@@ -279,10 +279,10 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   }
 
                   let price = "";
-                    if(property.price!=undefined && property.price){
+                    if(property.pricingInfo.price!=undefined && property.pricingInfo.price){
                       price=`<div class="row" style="display: flex;flex-wrap: wrap;">
                         <div class="mt-3 mb-3 ml-3" style="position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
-                           <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $ ${property.price} per Square Foot</h4>
+                           <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $ ${property.pricingInfo.price} per Square Foot</h4>
                         </div>
                      </div>`;
                    }
@@ -472,8 +472,8 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   }
 
                   let bathrooms = "";
-                  if(property.number_bathrooms[0].full!=undefined && property.number_bathrooms[0].full || property.number_bathrooms[0].half!=undefined && property.number_bathrooms[0].half){
-                    bathrooms=`<li>${property.number_bathrooms[0].full+' Full'}  ${property.number_bathrooms[0].half+' Half'} Bathrooms</li>`;
+                  if(property.number_bathrooms.full!=undefined && property.number_bathrooms.full || property.number_bathrooms.half!=undefined && property.number_bathrooms.half){
+                    bathrooms=`<li>${property.number_bathrooms.full+' Full'}  ${property.number_bathrooms.half+' Half'} Bathrooms</li>`;
                   }
 
                   let year_built = "";
