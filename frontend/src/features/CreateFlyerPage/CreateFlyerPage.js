@@ -206,6 +206,8 @@ class CreateFlyerPage extends React.Component {
                       <Tab eventKey="setDate" title="Set Date" disabled={tabs.setDate ? true : false}>
                         <SetDateTab dispatchval={this.dispatchval}
                          activeTab={moveTab}
+                         blast_id={blast && blast._id}
+                         scheduledDate={blast && blast.scheduledDate}
                         />
                       </Tab>
                       <Tab eventKey="terms" title="Terms & Condition" disabled={tabs.terms ? true : false}>

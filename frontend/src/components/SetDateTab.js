@@ -1,28 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { userActions } from "../actions";
-import {
-  Nav,
-  Navbar,
-  NavItem,
-  NavDropdown,
-  MenuItem,
-  NavLink,
-} from "react-bootstrap";
-import Modal from "react-bootstrap4-modal";
-/*import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
-*/
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction'; // needed for dayClick
-
-
-import { connect } from "react-redux";
-import { common } from "../helpers";
-import moment from "moment";
+import { userActions } from "../actions";
 require('./main.css');
 
 class SetDateTab extends React.Component {
@@ -31,18 +12,12 @@ class SetDateTab extends React.Component {
     this.navId = "";
 
     this.state = {
-		isSelected: false,
+      isSelected: false,
       calendarWeekends: false,
       calendarEvents: [ // initial event data
-        
+
       ]
     };
-    let user = JSON.parse(localStorage.getItem("user"));
-    if (user && user.userId && this.props && this.props.dispatchval) {
-
-      const { dispatch } = this.props.dispatchval.dispatch;
-      dispatch(userActions.getById(user.userId));
-    }
     this.toggleWeekends = this.toggleWeekends.bind(this);
     this.gotoPast = this.gotoPast.bind(this);
     this.handleDateClick = this.handleDateClick.bind(this);
@@ -62,25 +37,30 @@ class SetDateTab extends React.Component {
   handleDateClick(arg) {
     if (confirm('Would you like to add an blast to ' + arg.dateStr + ' ?')) {
       if (arg.dateStr) {
-       //this.submitdata(arg.dateStr);
-	   this.setState({scheduledDate:arg.dateStr,isSelected: true})
-	   
+        this.setState({ scheduledDate: arg.dateStr, isSelected: true })
       }
     }
   }
-  submitdata(data) {
+  submitdata() {
 
     const { dispatch } = this.props.dispatchval.dispatch;
-    var blast_id = '';
-    const { scheduledDate } = this.state;
-    console.log("scheduledDate====",scheduledDate);
-    if (this.props.uploadBlast && this.props.uploadBlast.blastData) {
-      blast_id = this.props.uploadBlast.blastData._id;
+    const { scheduledDate, blast_id } = this.state;
+    console.log("scheduledDate====", scheduledDate);
+    if (blast_id && scheduledDate) {
       dispatch(userActions.saveCalenderData(scheduledDate, blast_id));
     }
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.activeTab == "setDate") {
+      console.log("nextProps in Set Date", nextProps)
+      this.setState({
+        blast_id: nextProps.blast_id,
+        scheduledDate: nextProps.scheduledDate
+      })
+    }
+  }
   render() {
-    const { calendarWeekends, calendarEvents } = this.state;
+    const { scheduledDate } = this.state;
     return (
       <div
         className="tab-pane fade mt-2"
@@ -92,11 +72,12 @@ class SetDateTab extends React.Component {
         <h4>Set Date</h4>
         <p>Choose date for emailing the Blast.</p>
         <div className='demo-app'>
-          
+
           <div className='demo-app-calendar'>
             <FullCalendar
               defaultView="dayGridMonth"
               timeZone="UTC"
+              defaultDate={scheduledDate}
               header={{
                 left: 'prev,next today',
                 center: 'title',
@@ -109,24 +90,24 @@ class SetDateTab extends React.Component {
               dateClick={this.handleDateClick}
             />
           </div>
-		  {this.state.isSelected ? (
-          <div className="col-md-12 mt-4">
-            <a
-              href="javascript:void(0)"
-              className="btn btn-primary"
-              onClick={this.submitdata}
-            >
-              Save
+          {this.state.isSelected ? (
+            <div className="col-md-12 mt-4">
+              <a
+                href="javascript:void(0)"
+                className="btn btn-primary"
+                onClick={this.submitdata}
+              >
+                Save
             </a>
-            <a
-              href="javascript:void(0)"
-              className="btn btn-primary pull-right"
-              onClick={this.submitdata}
-            >
-              Next
+              <a
+                href="javascript:void(0)"
+                className="btn btn-primary pull-right"
+                onClick={this.submitdata}
+              >
+                Next
             </a>
-          </div>
-		  ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
     );
