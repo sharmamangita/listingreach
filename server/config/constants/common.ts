@@ -1299,16 +1299,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
 <html>
    <head>
       <meta charset='UTF-8'>
-      <style scoped>
-			@media (max-width: 1500px) {
-			    .text-center{
-			        background:"#000 !important" 
-			    }
-			    a{
-			    	font-size:"40px"
-			    }
-}
-</style>
+
    </head>
    <body>
       <div class="blast-box" style=" max-width: 100%;
@@ -1348,11 +1339,19 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                         <img src=${Common.PRAVIEW_LOGO} style="" class="img-a img-fluid">
                 <div style="text-align: right;">
                      <span class="mb-3 mt-3 text-right" style="text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-                <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;font-weight: 400;text-align: center;
-						user-select: none;padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 0.25rem;box-shadow 0.15s ease-in-out;">Reply to Sender</a></span>
+                <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background: #ee8c3a;
+    color: #fff;
+    display: inline-block;
+    font-weight: 400;
+    padding: 8px 22px;
+    border-radius: 8px;text-decoration: none;margin: 10px">Reply to Sender</a></span>
 	<span class="mb-3 mt-3 text-right ml-3" style="text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-        <a class="btn btn-primary" href="mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;
-         			font-weight: 400;text-align: center;white-space: nowrap;vertical-align: middle;padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 0.25rem; box-shadow 0.15s ease-in-out;">Forward to Associate</a>
+        <a class="btn btn-primary" href="mailto:#agentEmail#" style="background: #ee8c3a;
+    color: #fff;
+    display: inline-block;
+    font-weight: 400;
+    padding: 8px 22px;
+    border-radius: 8px;text-decoration: none;margin: 10px">Forward to Associate</a>
                      </span>
                   </div>
                      </div></div>`;
