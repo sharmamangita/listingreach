@@ -89,6 +89,9 @@ class CreateFlyerPage extends React.Component {
         this.moveTab(nextProps.tab);
       }
     }
+    if(nextProps.previewHtml){
+      this.setState({previewHtml:nextProps.previewHtml})
+    }
   }
 
   moveTab(tab) {
@@ -237,7 +240,7 @@ class CreateFlyerPage extends React.Component {
 
 function mapStateToProps(state) {
   const { alert, users, agentData } = state;
-  const { profile } = users;
+  const { profile,previewHtml } = users;
   const { blast } = users;
   const { imageData } = users;
   const { scheduledDate } = users;
@@ -253,6 +256,7 @@ function mapStateToProps(state) {
     defaultAgent: agentData,
     scheduledDate,
     blast,
+    previewHtml,
     blastsettingData,
     dataBaseData
   };
