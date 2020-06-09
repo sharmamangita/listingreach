@@ -105,12 +105,6 @@ class UploadBlastTab extends React.Component {
     this.openUpload = this.openUpload.bind(this);
     this.imageChange = this.imageChange.bind(this);
     this.nextPage = this.nextPage.bind(this);
-
-    // let user = JSON.parse(localStorage.getItem("user"));
-    // if (user && user.userId && this.props && this.props.dispatchval) {
-    //   const { dispatch } = this.props.dispatchval.dispatch;
-    //   dispatch(userActions.getById(user.userId));
-    // }
   }
 
   openUpload() {
@@ -303,29 +297,29 @@ class UploadBlastTab extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.uploadBlast && nextProps.uploadBlast.blastData) {
-      let blast = nextProps.uploadBlast;
-      this.propsDataupdate(blast);
-    }
-
-    if (nextProps.propertyData && nextProps.propertyData.templateData) {
-      let templateData = nextProps.propertyData;
-      this.propsDataupdate(templateData);
-    }
-  }
-
-  //propsDataupdate(data, agentData, profile, images) {
-  propsDataupdate(data) {
-    let states = Object.assign({}, this.state);
-
-    if (data && data.templateData) {
-      states.templateId = data.templateData._id;
-      this.setState({ templateId: data.templateData._id });
-    }
-
-    if (data && data.blastData) {
-      states.blast_id = data.blastData._id;
-      this.setState({ blast_id: data.blastData._id });
+    if (nextProps.activeTab == "property") {
+      console.log("nextPros in Property ", nextProps);
+      if (nextProps.properties && nextProps.properties.length > 0) {
+        let props = nextProps.properties;
+        props.forEach(function (prop) {
+          if (prop.isOpenHouse) {
+            prop.isOpenHouse["display"] = prop.isOpenHouse.length > 0;
+          }
+          if (prop.linksToWebsites) {
+            prop.linksToWebsites["display"] = prop.linksToWebsites.length > 0;
+          }
+          if (prop.mls_number) {
+            prop["displayMls"] = typeof (prop.mls_number) != "undefined";
+          }
+        })
+        this.setState({ properties: nextProps.properties });
+      }
+      if (nextProps.agentData) {
+        this.setState({ agentData: nextProps.agentData });
+      }
+      if (nextProps.template) {
+        this.setState({ template: nextProps.template });
+      }
     }
   }
 
@@ -616,11 +610,11 @@ class UploadBlastTab extends React.Component {
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("openHouse",  true)}   >
+                    onClick={() => this.show("openHouse", true)}   >
                     Yes
                     </a>
                   <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.show("openHouse",  false)} >
+                    onClick={() => this.show("openHouse", false)} >
                     No
                   </a>
                 </div>
@@ -1034,6 +1028,7 @@ class UploadBlastTab extends React.Component {
       </div>
     );
   }
+
 }
 
 export default UploadBlastTab;

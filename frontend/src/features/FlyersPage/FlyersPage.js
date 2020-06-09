@@ -7,15 +7,12 @@ import moment from "moment";
 class FlyersPage extends React.Component {
   constructor(props) {
     super(props);
-
     this.deleteSavedBlast = this.deleteSavedBlast.bind(this);
-    this.state={
-      savedBlast:[]
+    this.state = {
+      savedBlast: []
     }
   }
-
   componentDidMount() {
-
     var user = JSON.parse(localStorage.getItem("user"));
     this.props.dispatch(userActions.getSavedBlast(user.userId));
   }
@@ -29,9 +26,6 @@ class FlyersPage extends React.Component {
       this.props.dispatch(userActions.deleteSavedBlast(id));
     }
   }
-
-
-
   componentWillReceiveProps(nextProps) {
     console.log("nextProps==3535=====", nextProps);
     if (nextProps.users && nextProps.users.savedBlast) {
@@ -49,7 +43,7 @@ class FlyersPage extends React.Component {
     // ) {
     //   savedBlast = this.props.users.savedBlast;
     // }
-     const {savedBlast}=this.state;
+    const { savedBlast } = this.state;
     // let savedBlast=users.savedBlast;
     return (
       <div>

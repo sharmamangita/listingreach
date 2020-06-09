@@ -13,9 +13,8 @@ class PhotoTab extends React.Component {
       updateimage: [],
       email: "",
       blast_id: "",
-      property_ids: [],
+      properties: [],
       template: {},
-      propertyImages: [{}, {}, {}, {}],
 
       imageData: Object.assign(
         {
@@ -47,7 +46,6 @@ class PhotoTab extends React.Component {
     }
   }
 
-
   nextPage() {
     this.props.moveTab("preview");
   }
@@ -57,13 +55,15 @@ class PhotoTab extends React.Component {
     $(".imgupload" + id).trigger("click");
   }
 
-  showModal(e) {
-    const { id } = e.target;
-    var data = [];
-    for (var i = 1; i <= id; i++) {
-      data.push(id);
+  showModal(e, count) {
+    let properties = this.state.properties;
+    if (properties && count) {
+      properties[0].propertyImages=[];
+      for(let i=1;i<=count;i++){
+        properties[0].propertyImages.push({imageUrl:"",imageId:""});
+      }
+      this.setState({ visible: true, properties });
     }
-    this.setState({ visible: true, divCount: data });
   }
 
   modelClose() {
@@ -93,7 +93,6 @@ class PhotoTab extends React.Component {
 
         const index = properties.indexOf(property);
         if (properties[index].propertyImages.length > 0) {
-          // const imageIndex = properties[index].propertyImages.indexOf(image);
           properties[index].propertyImages[imageIndex] = _image;
         } else {
           properties[index].propertyImages.push(_image);
@@ -108,24 +107,17 @@ class PhotoTab extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.activeTab == "photo") {
       console.log("nextProps in Photo Tab ", nextProps)
-      if (nextProps.template) {
-        let { template } = this.state;
-        template = nextProps.template;
-        this.setState({ template })
-      }
-      if (!this.state.blast_id) {
-        this.setState({ blast_id: nextProps.blast_id })
-      }
-
-      if (nextProps && nextProps.properties) {
-        let properties = nextProps.properties;
-        this.setState({ properties });
-      }
+      this.setState({
+        template: nextProps.template,
+        blast_id: nextProps.blast_id,
+        properties: nextProps.properties,
+        visible :true
+      });
     }
   }
 
   render() {
-    const { imageData, visible, divCount, updateimage, template, submited, properties } = this.state;
+    const { imageData, visible, updateimage, template, submited, properties } = this.state;
     console.log("state in render in Photos Tab ====", this.state);
     console.log("props in render in Photos Tab ====", this.props);
     let images = ["", "", "", ""];
@@ -136,7 +128,6 @@ class PhotoTab extends React.Component {
         }
       });
     }
-
     return (
       <div className="tab-pane fade mt-2" id="photos"
         role="tabpanel" aria-labelledby="group-dropdown2-tab" aria-expanded="false"
@@ -154,8 +145,8 @@ class PhotoTab extends React.Component {
                   />
                 </div>
                 <div className="text-center">
-                  <button className="btn btn-primary" id="1"
-                    onClick={this.showModal} >
+                  <button className="btn btn-primary"
+                    onClick={(e) => this.showModal(e, 1)} >
                     click here
                   </button>
                 </div>
@@ -169,7 +160,7 @@ class PhotoTab extends React.Component {
                 </div>
                 <div className="text-center">
                   <button className="btn btn-primary"
-                    onClick={this.showModal} id="2"
+                    onClick={(e) => this.showModal(e, 2)}
                   >
                     click here
                   </button>
@@ -184,8 +175,7 @@ class PhotoTab extends React.Component {
                 </div>
                 <div className="text-center">
                   <a href="javascript:void(0)" className="btn btn-primary"
-                    onClick={this.showModal}
-                    id="3"
+                    onClick={(e) => this.showModal(e, 3)}
                   >
                     click here
                   </a>
@@ -200,8 +190,7 @@ class PhotoTab extends React.Component {
                 </div>
                 <div className="text-center">
                   <button className="btn btn-primary"
-                    onClick={this.showModal}
-                    id="4"
+                    onClick={(e) => this.showModal(e, 4)}
                   >
                     click here
                   </button>
@@ -212,26 +201,21 @@ class PhotoTab extends React.Component {
             <div id="myModal" style={{ display: visible ? "inline" : "none" }}>
               <div className="modal-content">
                 <div className="row">
-                  {divCount.map(function (item, index) {
+                  {properties[0].propertyImages.map(function (image, index) {
                     return (
                       <div key={index} className="col-md-4 mb-3">
-                        <div
-                          className="card"
+                        <div className="card"
                           style={{
-                            width: "20rem",
-                            margin: "20px 0 24px 0",
-                            border: "dashed",
-                            padding: "5px",
-                            borderColor: "#ccc",
+                            width: "20rem", margin: "20px 0 24px 0", border: "dashed",
+                            padding: "5px", borderColor: "#ccc",
                           }}
                         >
                           <div className="card-body">
                             <h4 className="card-title">Position {index + 1}</h4>
                           </div>
-                          <img
-                            className="card-img-bottom"
+                          <img className="card-img-bottom"
                             src={
-                              images[index] ||
+                              (image && image.imageUrl && config.uploadapiUrl + "/uploads/" + image.imageUrl) ||
                               "../../../public/assets/images/img1.jpg"
                             }
                             alt="image"
@@ -239,11 +223,9 @@ class PhotoTab extends React.Component {
                           />
                         </div>
                         <input
-                          type="file"
-                          id={index}
-                          className={"imgupload" + index}
+                          type="file" className={"imgupload" + index}
                           style={{ display: "none" }}
-                          onChange={this.imageChange}
+                          onChange={(e) => this.imageChange(e, properties[0], index)}
                         />
                         <button
                           id={index}
@@ -279,7 +261,7 @@ class PhotoTab extends React.Component {
               </div>
             </div>
 
-            <p>Click on the image(s) below to upload your photo(s)</p>
+            {/* <p>Click on the image(s) below to upload your photo(s)</p> */}
             <div className="row">
               <div className="col-md-2 mb-3"></div>
               {imageData &&
