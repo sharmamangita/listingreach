@@ -53,22 +53,25 @@ class PreviewTab extends React.Component {
 
   componentWillReceiveProps(nextProprs) {
     console.log("nextProps in Preview ", nextProprs)
-    if (nextProprs.blast_id != this.state.blast_id) {
-      this.setState({ blast_id: nextProprs.blast_id });
-    }
-    if (nextProprs.previewHtml != this.state.previewHtml) {
-      this.setState({ previewHtml: nextProprs.previewHtml });
-    }
+    if(nextProprs.moveTab=="preview"){
 
-    if (nextProprs.blast_id && !nextProprs.previewHtml && !this.state.previewHtml) {
-      const { dispatch } = this.props.dispatchval.dispatch;
-      let blast_id = nextProprs.blast_id;
-    //  dispatch(userActions.getPreviewhtml(blast_id));
+      if (nextProprs.blast_id != this.state.blast_id) {
+        this.setState({ blast_id: nextProprs.blast_id });
+      }
+      if (nextProprs.previewHtml != this.state.previewHtml) {
+        this.setState({ previewHtml: nextProprs.previewHtml });
+      }
+      
+      if (nextProprs.blast_id && !nextProprs.previewHtml && !this.state.previewHtml) {
+        const { dispatch } = this.props.dispatchval.dispatch;
+        let blast_id = nextProprs.blast_id;
+        dispatch(userActions.getPreviewhtml(blast_id));
+      }
     }
   }
   render() {
     console.log("props in render in Preview Tab ", this.props);
-    const { previewData, previewHtml } = this.props;
+    const {  previewHtml } = this.props;
     const { submitted, email } = this.state;
 
     return (

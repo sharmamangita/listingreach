@@ -185,8 +185,8 @@ class CreateFlyerPage extends React.Component {
                         <PreviewTab
                           dispatchval={this.dispatchval}
                           previewHtml={previewHtml}
-                          propertyImages={blast && blast.propertyImages}
                           blast_id={blast && blast._id}
+                          moveTab={moveTab}
                         />
                       </Tab>
 
