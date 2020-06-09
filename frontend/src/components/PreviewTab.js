@@ -63,7 +63,7 @@ class PreviewTab extends React.Component {
         this.setState({ previewHtml: nextProprs.previewHtml });
       }
 
-      if (nextProprs.blast_id && nextProprs.previewHtml && this.state.previewHtml == null) {
+      if (nextProprs.blast_id && !nextProprs.previewHtml && this.state.previewHtml == null) {
         const { dispatch } = this.props.dispatchval.dispatch;
         let blast_id = nextProprs.blast_id;
         dispatch(userActions.getPreviewhtml(blast_id));
