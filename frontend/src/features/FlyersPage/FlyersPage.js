@@ -7,22 +7,24 @@ import moment from "moment";
 class FlyersPage extends React.Component {
   constructor(props) {
     super(props);
-   
+
     this.deleteSavedBlast = this.deleteSavedBlast.bind(this);
+    this.state={
+      savedBlast:[]
+    }
   }
 
   componentDidMount() {
-    
+
     var user = JSON.parse(localStorage.getItem("user"));
     this.props.dispatch(userActions.getSavedBlast(user.userId));
   }
   createdDate(createdOn) {
-		var expDate = new moment(createdOn, "YYYY-MM-DD");
-		var created = moment(expDate).format("DD-MM-YYYY");
-		return created;
-	}
-  deleteSavedBlast(event) {
-    const { id } = event.target;
+    var expDate = new moment(createdOn, "YYYY-MM-DD");
+    var created = moment(expDate).format("DD-MM-YYYY");
+    return created;
+  }
+  deleteSavedBlast(event, id) {
     if (window.confirm("Are you sure you wish to delete this record?")) {
       this.props.dispatch(userActions.deleteSavedBlast(id));
     }
@@ -31,19 +33,24 @@ class FlyersPage extends React.Component {
 
 
   componentWillReceiveProps(nextProps) {
-    //console.log("nextProps==3535=====", nextProps);
+    console.log("nextProps==3535=====", nextProps);
+    if (nextProps.users && nextProps.users.savedBlast) {
+      this.setState({ savedBlast: nextProps.users.savedBlast })
+    }
   }
 
   render() {
-    console.log("test==232===", this.props);
-    let savedBlast = [];
-    if (
-      this.props.users &&
-      this.props.users.savedBlast &&
-      this.props.users.savedBlast.length
-    ) {
-      savedBlast = this.props.users.savedBlast;
-    }
+    // console.log("test==232===", this.props);
+    // let savedBlast = [];
+    // if (
+    //   this.props.users &&
+    //   this.props.users.savedBlast &&
+    //   this.props.users.savedBlast.length
+    // ) {
+    //   savedBlast = this.props.users.savedBlast;
+    // }
+     const {savedBlast}=this.state;
+    // let savedBlast=users.savedBlast;
     return (
       <div>
         <ListingSubmenu />
@@ -82,7 +89,7 @@ class FlyersPage extends React.Component {
                               savedProps: {
                                 moveTab: "property",
                                 blast_id: data.id,
-                                templateId:data.templateId
+                                templateId: data.templateId
                               }
                             }} >
                               {data.id}
@@ -112,17 +119,15 @@ class FlyersPage extends React.Component {
                                   savedProps: {
                                     moveTab: "property",
                                     blast_id: data.id,
-                                    templateId:data.templateId
+                                    templateId: data.templateId
                                   },
                                 }} >
                                 <i className="fa fa-edit"></i>
                               </Link>{" "}
                               &nbsp; &nbsp;
-                              <i
-                                className="fa fa-trash"
-                                aria-hidden="true"
-                                title="Delete Flyer"
-                                id={data.id} onClick={this.deleteSavedBlast}
+                              <i className="fa fa-trash"
+                                aria-hidden="true" title="Delete Flyer"
+                                onClick={(e) => this.deleteSavedBlast(e, data.id)}
                               ></i>
                             </div>
                           ) : null}

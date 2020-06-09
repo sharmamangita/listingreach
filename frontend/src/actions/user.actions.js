@@ -621,13 +621,17 @@ function deleteSavedBlast(id) {
         dispatch(request());
         userService.deleteSavedBlast(id)
             .then(
-                users => dispatch(success(users)),
+                users => {
+                    dispatch(success(users))
+                    var user = JSON.parse(localStorage.getItem("user"));
+                    dispatch(userActions.getSavedBlast(user.userId));
+                },
                 error => dispatch(failure(error.toString()))
             );
     };
-    function request(users) { return { type: userConstants.DELETE_REQUEST, users } }
-    function success(users) { return { type: userConstants.DELETE_SUCCESS, users } }
-    function failure(error) { return { type: userConstants.DELETE_FAILURE, error } }
+    function request(users) { return { type: userConstants.DELETE_BLAST_REQUEST, users } }
+    function success(users) { return { type: userConstants.DELETE_BLAST_SUCCESS, users } }
+    function failure(error) { return { type: userConstants.DELETE_BLAST_FAILURE, error } }
 }
 
 function termsNext() {

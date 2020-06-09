@@ -935,6 +935,7 @@ class UserController implements IBaseController<UserBusiness> {
 								});
 							});
 						});
+						res.send({message:"success"})
 					}
 				});
 			});

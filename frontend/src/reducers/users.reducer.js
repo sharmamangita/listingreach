@@ -200,6 +200,23 @@ export function users(state = {}, action) {
       return {
         error: action.error,
       };
+
+      case userConstants.DELETE_BLAST_REQUEST:
+        // add 'deleting:true' property to user being deleted
+        return {
+          loading: true,
+        };
+      case userConstants.DELETE_BLAST_SUCCESS:
+        // remove deleted user from state
+        return {
+          message: action,
+        };
+        case userConstants.DELETE_BLAST_FAILURE:
+          // add 'deleting:true' property to user being deleted
+          return {
+            loading: true,
+          };
+
     case userConstants.DELETE_REQUEST:
       // add 'deleting:true' property to user being deleted
       return {
