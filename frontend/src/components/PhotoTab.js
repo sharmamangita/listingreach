@@ -13,7 +13,7 @@ class PhotoTab extends React.Component {
       updateimage: [],
       email: "",
       blast_id: "",
-      property_ids: [], 
+      property_ids: [],
       template: {},
       propertyImages: [{}, {}, {}, {}],
 
@@ -39,19 +39,17 @@ class PhotoTab extends React.Component {
 
   updateImages(e) {
     e.preventDefault();
-    var { property_ids, propertyImages } = this.state;
-    var newArray = propertyImages.filter(value => JSON.stringify(value) !== '{}');
+    var { properties } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
-    if (newArray && property_ids) {
-      dispatch(userActions.saveImages(property_ids, newArray));
+    if (properties) {
+      dispatch(userActions.saveImages(properties));
       this.setState({ submited: true })
     }
-
   }
 
 
   nextPage() {
-    this.props.moveTab("preview");    
+    this.props.moveTab("preview");
   }
 
   openUpload(e) {
@@ -72,8 +70,7 @@ class PhotoTab extends React.Component {
     this.setState({ visible: false });
   }
 
-  imageChange(e) {
-    // const {template} = this.state;
+  imageChange(e, property, imageIndex) {
     const { id } = e.target;
     const configs = {
       headers: {
@@ -88,19 +85,24 @@ class PhotoTab extends React.Component {
     axios
       .post(`${config.uploadapiUrl}/propertyupload`, formData, configs)
       .then((response) => {
-        this.updateimage[id] = response.data.url;
-        //  console.log("this.updateimage==", this.updateimage);
-        this.setState({ updateimage: this.updateimage });
-        //if(template=="SingleProperty"){
-        let imageids = {};
-        imageids.imageId = response.data.imageId;
-        imageids.imageUrl = response.data.url;
-        let setimagesData = Object.assign({}, this.state);
-        setimagesData.propertyImages[id] = imageids;
-        this.setState({ setimagesData });
+        console.log("Image uplaod response ", response);
+        let { properties } = this.state;
+        let _image = {};
+        _image.imageId = response.data.imageId;
+        _image.imageUrl = response.data.url;
+
+        const index = properties.indexOf(property);
+        if (properties[index].propertyImages.length > 0) {
+          // const imageIndex = properties[index].propertyImages.indexOf(image);
+          properties[index].propertyImages[imageIndex] = _image;
+        } else {
+          properties[index].propertyImages.push(_image);
+        }
+        this.setState({ properties });
       })
       .catch(() => {
       });
+    this.setState({ submited: false });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -114,38 +116,16 @@ class PhotoTab extends React.Component {
       this.setState({ blast_id: nextProps.blast_id })
     }
 
-    if (nextProps && nextProps.previewData) {
-      let propertyArray = nextProps.previewData;
-      this.getPropertyIds(propertyArray);
+    if (nextProps && nextProps.properties) {
+      let properties = nextProps.properties;
+      this.setState({ properties });
     }
   }
 
-  getPropertyIds(propertyArray) {
-    let array = [];
-    let template = "";
-    let blast_id = '';
-    propertyArray.length &&
-      propertyArray.forEach(function (item) {
-        console.log("item2323===",item);
-        array.push({ id: item.id });
-        template = item.template && item.template.length > 0 && item.templates[0].template_type;
-        blast_id = item.blast_id;
-      });
-
-     this.setState({property_ids:array})
-    let property = Object.assign({}, this.state);
-    property.property_ids = array;
-    property.template = template;
-    property.blast_id = blast_id;
-    this.setState({ property });
-  }
-
   render() {
-    const { imageData, visible, divCount, updateimage, template, submited } = this.state;
+    const { imageData, visible, divCount, updateimage, template, submited, properties } = this.state;
     console.log("state in render in Photos Tab ====", this.state);
     console.log("props in render in Photos Tab ====", this.props);
-    const { previewData } = this.props;
-    //console.log("previewData2323232====",this.props.previewData);
     let images = ["", "", "", ""];
     if (updateimage && updateimage.length) {
       updateimage.forEach(function (item, i) {
@@ -156,12 +136,8 @@ class PhotoTab extends React.Component {
     }
 
     return (
-      <div
-        className="tab-pane fade mt-2"
-        id="photos"
-        role="tabpanel"
-        aria-labelledby="group-dropdown2-tab"
-        aria-expanded="false"
+      <div className="tab-pane fade mt-2" id="photos"
+        role="tabpanel" aria-labelledby="group-dropdown2-tab" aria-expanded="false"
       >
         {template && template.template_type == "SingleProperty" ? (
           <div>
@@ -170,37 +146,28 @@ class PhotoTab extends React.Component {
             <div className="row">
               <div className="col-md-3 mb-3">
                 <div className="form-group">
-                  <img
-                    alt="Photo"
-                    className="img-square"
+                  <img alt="Photo" className="img-square"
                     style={{ width: "200px" }}
                     src="../../../public/assets/images/1photo.png"
                   />
                 </div>
                 <div className="text-center">
-                  <button
-                    className="btn btn-primary"
-                    id="1"
-                    onClick={this.showModal}
-                  >
+                  <button className="btn btn-primary" id="1"
+                    onClick={this.showModal} >
                     click here
                   </button>
                 </div>
               </div>
               <div className="col-md-3 mb-3">
                 <div className="form-group">
-                  <img
-                    alt="Photo"
-                    className="img-square"
+                  <img alt="Photo" className="img-square"
                     style={{ width: "200px" }}
                     src="../../../public/assets/images/2photo.png"
                   />
                 </div>
                 <div className="text-center">
-                  <button
-                    className="btn btn-primary"
-                    onClick={this.showModal}
-                    id="2"
+                  <button className="btn btn-primary"
+                    onClick={this.showModal} id="2"
                   >
                     click here
                   </button>
@@ -208,17 +175,13 @@ class PhotoTab extends React.Component {
               </div>
               <div className="col-md-3 mb-3">
                 <div className="form-group">
-                  <img
-                    alt="Photo"
-                    className="img-square"
+                  <img alt="Photo" className="img-square"
                     style={{ width: "200px" }}
                     src="../../../public/assets/images/3photo.png"
                   />
                 </div>
                 <div className="text-center">
-                  <a
-                    href="javascript:void(0)"
-                    className="btn btn-primary"
+                  <a href="javascript:void(0)" className="btn btn-primary"
                     onClick={this.showModal}
                     id="3"
                   >
@@ -228,16 +191,13 @@ class PhotoTab extends React.Component {
               </div>
               <div className="col-md-3 mb-3">
                 <div className="form-group">
-                  <img
-                    alt="Photo"
-                    className="img-square"
+                  <img alt="Photo" className="img-square"
                     style={{ width: "200px" }}
                     src="../../../public/assets/images/4photo.png"
                   />
                 </div>
                 <div className="text-center">
-                  <button
-                    className="btn btn-primary"
+                  <button className="btn btn-primary"
                     onClick={this.showModal}
                     id="4"
                   >
@@ -353,9 +313,9 @@ class PhotoTab extends React.Component {
           </div>
         ) : (
             <div>
-              {previewData &&
-                previewData.length &&
-                previewData.map(function (data, index) {
+              {properties &&
+                properties.length &&
+                properties.map(function (property, index) {
                   return (
                     <div key={index}>
                       <h4>Property Photos</h4>
@@ -366,25 +326,19 @@ class PhotoTab extends React.Component {
                       <div className="row">
                         <div className="col-md-4 mb-3">
                           <div className="form-group">
-                            <img
-                              alt="Photo"
-                              className="img-square"
+                            <img alt="Photo" className="img-square"
                               style={{ width: "200px" }}
                               src="../../../public/assets/images/1photo.png"
                             />{" "}
                           </div>
-                          <input
-                            type="file"
-                            id={index}
-                            className={"imgupload" + index}
+                          <input type="file"
+                            id={index} className={"imgupload" + index}
                             style={{ display: "none" }}
-                            onChange={this.imageChange}
+                            onChange={(e) => this.imageChange(e, property, 0)}
                           />
                           <div className="text-left">
-                            <a
-                              href="javascript:void(0)"
-                              className="btn btn-primary"
-                              id={index}
+                            <a href="javascript:void(0)"
+                              className="btn btn-primary" id={index}
                               onClick={this.openUpload}
                             >
                               Upload Photo
@@ -392,20 +346,17 @@ class PhotoTab extends React.Component {
                           </div>
                         </div>
                         <div className="col-md-8 mb-3">
-                          <div
-                            className="card"
+                          <div className="card"
                             style={{
-                              width: "24rem",
-                              border: "dashed",
-                              padding: "5px",
-                              borderColor: "#ccc",
+                              width: "24rem", border: "dashed", padding: "5px", borderColor: "#ccc",
                             }}
                           >
                             <img
                               className="card-img-bottom"
                               src={
-                                images[index] ||
-                                "../../../public/assets/images/1photo.png"
+                                (property.propertyImages && property.propertyImages.length > 0
+                                  && config.uploadapiUrl + "/uploads/" + property.propertyImages[0].imageUrl)
+                                || "../../../public/assets/images/1photo.png"
                               }
                               alt="image"
                               style={{ width: "100%" }}
@@ -417,17 +368,13 @@ class PhotoTab extends React.Component {
                   );
                 }, this)}
               <div className="col-md-12 mt-4">
-                <button
-                  type="button"
-                  className="btn btn-primary"
+                <button type="button" className="btn btn-primary"
                   onClick={this.updateImages}
                   disabled={submited ? true : false}
                 >
                   Save
               </button>
-                <button
-                  type="button"
-                  className="btn btn-primary pull-right"
+                <button type="button" className="btn btn-primary pull-right"
                   onClick={this.nextPage}
                   disabled={submited ? false : true}
                 >

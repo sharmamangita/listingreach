@@ -23,7 +23,7 @@ class AgentTemplateTab extends React.Component {
     console.log("template PROPS ",this.props)
     if (designTemplate) {
       const { dispatch } = this.props.dispatchval.dispatch;
-      if (this.props.blastId && this.props.templateId) {
+      if (this.props.blastId) {
         dispatch(userActions.designTemplate(designTemplate, this.props.blastId, this.props.templateId));
       }
     }

@@ -22,16 +22,16 @@ class PaymentsPage extends React.Component {
 		this.createdDate = this.createdDate.bind(this);
 		this.getById = this.getById.bind(this);
 		this.hideModel= this.hideModel.bind(this);
-		//this.getEmailTemplate= this.getEmailTemplate.bind(this);
+		this.getEmailTemplate= this.getEmailTemplate.bind(this);
 	}
 	hideModel(){
 		this.setState({showModel:false});
 	}
 
-	// getEmailTemplate(id){
-	// 	this.props.dispatch(userActions.getPreviewhtml(id));
-	// 	this.setState({showModel:true});
-	// }
+	getEmailTemplate(id){
+		this.props.dispatch(userActions.getPreviewhtml(id));
+		this.setState({showModel:true});
+	}
 
 	handleShow() {
 		this.setState({

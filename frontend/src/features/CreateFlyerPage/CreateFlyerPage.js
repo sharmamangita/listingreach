@@ -37,7 +37,7 @@ class CreateFlyerPage extends React.Component {
     //  this.stateSettingsForTabs = this.stateSettingsForTabs.bind(this);
   }
   resetState() {
-    console("Resetting State");
+    console.log("Resetting State");
     this.setState(this.newState())
   }
   newState() {
@@ -46,13 +46,7 @@ class CreateFlyerPage extends React.Component {
       blast_id: '',
       profile: {},
       moveTab: "blast",
-      //previewData: [],
-      // propertyImages: [],
       blast: null,
-      propertyData: "",
-      template: "",
-      // property_images: '',
-      //  scheduledDate: "",
       blastsettingData: "",
       dataBaseData: "",
       previewHtml: '',
@@ -78,88 +72,29 @@ class CreateFlyerPage extends React.Component {
     if (location.savedProps && location.savedProps.blast_id) {
       this.getBlast(location.savedProps.blast_id);
       this.moveTab(location.savedProps.moveTab);
+    } else {
+      this.resetState();
     }
   }
   componentWillReceiveProps(nextProps) {
     console.log("nextProps Create Flyer Page", nextProps);
-    // if (this.state.blast_id == "" && this.state.moveTab != "blast") {
-    //   this.setState(this.newState());
-    // }
-  
-    if (!this.state.blast && nextProps.blast && nextProps.blast.blast) {
+    if (nextProps.blast && nextProps.blast.blast) {
       let confugredBlast = nextProps.blast.blast;
       confugredBlast["template"] = nextProps.blast.template;
       confugredBlast["properties"] = nextProps.blast.properties;
-      this.setState({ blast: confugredBlast });    
+      this.setState({ blast: confugredBlast });
     }
-    
-    // if (nextProps && nextProps.users && nextProps.users.tab) {
-    //   let tab = nextProps.users.tab;
-    //   this.moveTab(tab);
-    // }
-    // const { location } = nextProps;
-    // if (location && location.savedProps) {
-    //   this.setState({ blast_id: location.savedProps.blast_id });
-    // }
-    // if (
-    //   (nextProps.users != undefined && nextProps.users.blastData) ||
-    //   (nextProps.agentData != undefined && nextProps.agentData) ||
-    //   (nextProps.profile != undefined && nextProps.profile) ||
-    //   (nextProps.imageData != undefined && nextProps.imageData) ||
-    //   (nextProps.propertyImages != undefined && nextProps.propertyImages)
-    // ) {
-    //   this.stateSettingsForTabs(nextProps.users);
-    // }
+    if (nextProps.tab) {
+      this.moveTab(nextProps.tab);
+    }
   }
-
-
-
-  // stateSettingsForTabs(nextProps) {
-  //   if (nextProps.blastData != undefined && nextProps.blastData) {
-  //     let blast = {};
-  //     blast.blastData = nextProps.blastData.data;
-  //     //  console.log("blast Dtaa ",blast);
-  //     this.setState({ propertyData: blast, uploadBlast: blast, blast_id: nextProps.blastData.data._id, scheduledDate: nextProps.scheduledDate, blastsettingData: nextProps.blastsettingData, dataBaseData: nextProps.dataBaseData });
-  //     //previewData:nextProps.propertyData
-  //   }
-
-  //   if (nextProps.moveTab != undefined && nextProps.moveTab) {
-  //     let blast = {};
-  //     blast.blast_id = nextProps.blast_id;
-  //     blast.templateId = nextProps.templateId;
-  //     this.setState({ moveTab: nextProps.moveTab, propertyData: blast, blast_id: nextProps.blast_id });
-  //     const { dispatch } = this.props;
-  //     dispatch(userActions.getTemplateOrPropertydata(nextProps.blast_id));
-  //   }
-
-  //   if (nextProps.propertyImages != undefined && nextProps.propertyImages) {
-  //     //console.log("nextProps.propertyImages.data======",nextProps.propertyImages);
-  //     this.setState({ previewData: nextProps.propertyImages.data, propertyImages: nextProps.propertyImages.data });
-  //   }
-
-  //   if (nextProps.templateName != undefined && nextProps.templateName) {
-  //     let template = {};
-  //     template.templateData = nextProps.templateName.data;
-  //     this.setState({ propertyData: template });
-  //   }
-  //   if (nextProps.agentData != undefined && nextProps.agentData) {
-  //     this.setState({ agentData: nextProps.agentData });
-  //   }
-  //   if (nextProps.propertyData != undefined && nextProps.propertyData) {
-  //     this.setState({ previewData: nextProps.propertyData });
-  //   }
-
-  //   if (nextProps.previewHtml) {
-  //     this.setState({ previewHtml: nextProps.previewHtml });
-  //   }
-
-  // }
 
   moveTab(tab) {
     let { moveTab, tabs } = this.state;
     moveTab = tab;
     tabs[tab] = false;
     this.setState({ tabs, moveTab });
+    window.scrollTo(0,0);
   }
 
   setKey(tab) {
@@ -219,17 +154,16 @@ class CreateFlyerPage extends React.Component {
                               dispatchval={this.dispatchval}
                               properties={blast.properties}
                               blast_id={blast && blast._id}
-                              // uploadBlast={uploadBlast}
                               moveTab={this.moveTab}
                             />
                           ) : (
                             <PropertyTab
                               dispatchval={this.dispatchval}
                               properties={blast && blast.properties}
-                              blast_id={blast && blast._id}
+                              blastId={blast && blast._id}
                               template={blast && blast.template}
                               profile={profile}
-                              agentData={blast && blast.agentData}
+                              agentData={(blast && blast.agentData) || this.props.agentData}
                             />
                           )}
                       </Tab>
@@ -240,6 +174,7 @@ class CreateFlyerPage extends React.Component {
                             <PhotoTab dispatchval={this.dispatchval}
                               template={blast && blast && blast.template}
                               previewData={previewData}
+                              properties={blast && blast.properties}
                               blast_id={blast && blast._id}
                               moveTab={this.moveTab} />
                           </Tab>
@@ -286,20 +221,21 @@ class CreateFlyerPage extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { alert, users, } = state;
+  const { alert, users, agentData } = state;
   const { profile } = users;
-  const { agentData, blast } = users;
+  const { blast } = users;
   const { imageData } = users;
   const { scheduledDate } = users;
   const { blastsettingData } = users;
-  const { dataBaseData } = users;
-  // console.log("imageData===scheduledDate=", state);
+  const { dataBaseData, tab } = users;
   return {
     alert,
+    tab,
     users,
     profile,
-    agentData,
+    agentData: users.agentData,
     imageData,
+    defaultAgent: agentData,
     scheduledDate,
     blast,
     blastsettingData,

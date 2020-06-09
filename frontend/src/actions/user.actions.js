@@ -466,7 +466,9 @@ function blast(blast_type, user, blastId) {
             .then(
                 blast => {
                     dispatch(success(blast));
-                    dispatch(getBlast(blastId));
+                    if (blast && blast.data && blast.data._id) {
+                        dispatch(getBlast(blast.data._id));
+                    }
                 },
                 error => dispatch(failure(error.toString()))
             );
@@ -483,7 +485,12 @@ function designTemplate(designTemplate, blastId, templateId) {
         dispatch(request());
         userService.designTemplate(designTemplate, blastId, templateId)
             .then(
-                users => dispatch(success(users)),
+                users => {
+                    dispatch(success(users))
+                    if (blastId) {
+                        dispatch(getBlast(blastId));
+                    }
+                },
                 error => dispatch(failure(error.toString()))
             );
     };
@@ -498,25 +505,24 @@ function designTemplate(designTemplate, blastId, templateId) {
 
 
 
-function saveProperty(property, agentData, Email, blastHeadline, templateId, blast_id) {
+function saveProperty(property, agentData, template, blast_id) {
     console.log("property====", property);
 
     return dispatch => {
         dispatch(request());
-        userService.saveProperty(property, agentData, Email, blastHeadline, templateId, blast_id)
+        userService.saveProperty(property, agentData, template, blast_id)
             .then(
-                users => dispatch(success(users)),
+                users => {
+                    dispatch(success(users))
+                    if (blast_id) {
+                        dispatch(getBlast(blast_id));
+                    }
+                },
                 error => dispatch(failure(error.toString()))
             );
     };
 
     function request() { return { type: userConstants.PROPERTY_REQUEST } }
-    /*    function callService(users) { 
-            userService.getTemplateOrPropertydata().then(
-                    users => dispatch(success(users.userId)),
-                    error => dispatch(failure(error.toString()))
-                );
-        }*/
     function success(users) { return { type: userConstants.PROPERTY_SUCCESS, users } }
     function failure(error) { return { type: userConstants.PROPERTY_FAILURE, error } }
 
@@ -595,10 +601,10 @@ function selectDatabase(blast_id, associations) {
     function failure(error) { return { type: userConstants.SELECTDATABASE_FAILURE, error } }
 }
 
-function saveImages(property_id, images) {
+function saveImages(properties) {
     return dispatch => {
         dispatch(request());
-        userService.saveImages(property_id, images)
+        userService.saveImages(properties)
             .then(
                 users => dispatch(success(users)),
                 error => dispatch(failure(error.toString()))

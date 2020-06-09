@@ -12,7 +12,7 @@ export const userService = {
     update,
     updatepassword,
     contactForm,
-	emailPreviewTemplate,
+    emailPreviewTemplate,
     deleteprofilepic,
     deleteprofileCover,
     delete: _delete,
@@ -31,7 +31,7 @@ export const userService = {
     deleteSavedBlast,
     selectDatabase,
     saveImages,
-	saveCalenderData,
+    saveCalenderData,
     getPreviewhtml
 };
 
@@ -42,32 +42,32 @@ function login(email, password) {
         body: JSON.stringify({ email, password })
     };
     return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
-    .then(handleResponse)
-    .then(user => {
-        console.log("user====",user);
-        if (user.token) {
-            localStorage.setItem('user', JSON.stringify(user));
-            if(user.profilePic){
-             localStorage.setItem('profileimage', JSON.stringify(user.profilePic));
+        .then(handleResponse)
+        .then(user => {
+            console.log("user====", user);
+            if (user.token) {
+                localStorage.setItem('user', JSON.stringify(user));
+                if (user.profilePic) {
+                    localStorage.setItem('profileimage', JSON.stringify(user.profilePic));
+                }
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
             }
-        setTimeout(() => {
-            location.reload();
-        }, 1000);
-        }
 
-        return user;
-    }).catch(this.handleError);
+            return user;
+        }).catch(this.handleError);
 }
 
 function logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('profileimage');
     localStorage.removeItem('user');
-  //location.reload();
+    //location.reload();
 }
 
-function unsetsrcid(){
- localStorage.removeItem("srcid");
+function unsetsrcid() {
+    localStorage.removeItem("srcid");
 }
 
 
@@ -79,14 +79,14 @@ function getAll() {
     return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
 }
 
-function getReferences(userid){
+function getReferences(userid) {
 
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({userid})
+        body: JSON.stringify({ userid })
     };
-    return fetch(`${config.apiUrl}/users/getReferences`, requestOptions).then(handleResponse);    
+    return fetch(`${config.apiUrl}/users/getReferences`, requestOptions).then(handleResponse);
 }
 
 function getById(id) {
@@ -96,9 +96,9 @@ function getById(id) {
     };
 
     return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
 }
 
 function getVerification(token) {
@@ -108,7 +108,7 @@ function getVerification(token) {
     return fetch(`${config.apiUrl}/users/verification/${token}`, requestOptions).then(handleResponse);
 }
 function register(user) {
-    console.log("user=====",user);
+    console.log("user=====", user);
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -122,75 +122,75 @@ function forgotpassword(email) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email})
+        body: JSON.stringify({ email })
     };
     return fetch(`${config.apiUrl}/users/forgetUserPassword`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
 }
 
 
 /* change password */
-function updatepassword(user,currentpassword,newpassword) {
+function updatepassword(user, currentpassword, newpassword) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({user,currentpassword,newpassword})
+        body: JSON.stringify({ user, currentpassword, newpassword })
     };
     return fetch(`${config.apiUrl}/users/UpdateUserPassword`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
 }
 /* contact form */
-function contactForm(fullname,email,phone,message){
-	    const requestOptions = {
+function contactForm(fullname, email, phone, message) {
+    const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({fullname,email,phone,message})
+        body: JSON.stringify({ fullname, email, phone, message })
     };
     return fetch(`${config.apiUrl}/users/contactForm`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
-	}
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
+}
 /* contact form */
-function emailPreviewTemplate(email,blast_id){
-		const requestOptions = {
+function emailPreviewTemplate(email, blast_id) {
+    const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({email,blast_id})
+        body: JSON.stringify({ email, blast_id })
     };
     return fetch(`${config.apiUrl}/users/emailPreviewTemplate`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
-	}
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
+}
 
 
 function update(user) {
     const requestOptions = {
         method: 'PUT',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({user})
+        body: JSON.stringify({ user })
     };
     return fetch(`${config.apiUrl}/userUpdate`, requestOptions).then(handleResponse);;
 }
 
 
 function updateStatus(user) {
-    console.log("updateStatus121",user);
+    console.log("updateStatus121", user);
     const requestOptions = {
         method: 'PUT',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({user})
+        body: JSON.stringify({ user })
     };
     return fetch(`${config.apiUrl}/updateStatus`, requestOptions).then(handleResponse);;
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id,flag) {
+function _delete(id, flag) {
     const requestOptions = {
         method: 'DELETE',
         headers: authHeader()
@@ -204,113 +204,112 @@ function handleResponse(response) {
         const data = text && JSON.parse(text);
         if (!response.ok) {
             if (response.status === 401) {
-               //return data.error;
-               var scrollTop = $(window).scrollTop();
-               window.scrollTo(0,0);
-               return Promise.reject(data.error);
+                //return data.error;
+                var scrollTop = $(window).scrollTop();
+                window.scrollTo(0, 0);
+                return Promise.reject(data.error);
             }
 
         }
         return data;
     });
 }
-   
 
-function deleteprofilepic(uid){
-var user = {"userid":uid};
-	 const requestOptions = {
+
+function deleteprofilepic(uid) {
+    var user = { "userid": uid };
+    const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
     };
     return fetch(`${config.apiUrl}/users/deleteprofilepic`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);	
-	}
-	
-function deleteprofileCover(uid){
-var user = {"userid":uid};
-	 const requestOptions = {
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
+}
+
+function deleteprofileCover(uid) {
+    var user = { "userid": uid };
+    const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
     };
     return fetch(`${config.apiUrl}/users/deleteprofileCover`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);	
-	}	
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
+}
 
 
 function getTemplateOrPropertydata(blast_id) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({blast_id})
+        body: JSON.stringify({ blast_id })
     };
     return fetch(`${config.apiUrl}/users/propertyDetail`, requestOptions).then(handleResponse);
-}	
-
-function blast(blast_type,user_id,blastId){
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({blast_type,user_id,blastId})
-    };
-    return fetch(`${config.apiUrl}/users/saveBlast`, requestOptions).then(handleResponse);    
 }
 
-function designTemplate(template_type,blastId,templateId){
+function blast(blast_type, user_id, blastId) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({template_type,blastId,templateId})
+        body: JSON.stringify({ blast_type, user_id, blastId })
     };
-    return fetch(`${config.apiUrl}/users/saveDesignTemplate`, requestOptions).then(handleResponse);    
-} 
-
-
-function saveProperty(property,agentData,Email,blastHeadline,templateId,blast_id){
-
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({properties: property,agentData,Email,blastHeadline,templateId,blast_id})
-    };
-    return fetch(`${config.apiUrl}/users/saveProperty`, requestOptions).then(handleResponse);    
+    return fetch(`${config.apiUrl}/users/saveBlast`, requestOptions).then(handleResponse);
 }
 
-function saveAgents(agentData){
+function designTemplate(template_type, blastId, templateId) {
     const requestOptions = {
         method: 'POST',
-        
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ template_type, blastId, templateId })
+    };
+    return fetch(`${config.apiUrl}/users/saveDesignTemplate`, requestOptions).then(handleResponse);
+}
+
+
+function saveProperty(property, agentData, template, blastId) {
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ properties: property, agentData, template, blastId })
+    };
+    return fetch(`${config.apiUrl}/users/saveProperty`, requestOptions).then(handleResponse);
+}
+
+function saveAgents(agentData) {
+    const requestOptions = {
+        method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
         body: JSON.stringify(agentData)
     };
     return fetch(`${config.apiUrl}/users/saveAgents`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
-       
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
+
 }
 
-function savePayment(payment,blastId){
+function savePayment(payment, blastId) {
     const requestOptions = {
         method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
         body: JSON.stringify(payment)
     };
-    return fetch(`${config.apiUrl}/users/savePayment/${blastId}`, requestOptions).then(handleResponse);    
+    return fetch(`${config.apiUrl}/users/savePayment/${blastId}`, requestOptions).then(handleResponse);
 }
 
-function selectDatabase(blast_id,associations){
+function selectDatabase(blast_id, associations) {
     const requestOptions = {
         method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({blast_id,associations})
+        body: JSON.stringify({ blast_id, associations })
     };
-    return fetch(`${config.apiUrl}/users/selectDatabase`, requestOptions).then(handleResponse);    
+    return fetch(`${config.apiUrl}/users/selectDatabase`, requestOptions).then(handleResponse);
 }
 
 function getPayment(id) {
@@ -320,78 +319,78 @@ function getPayment(id) {
     };
 
     return fetch(`${config.apiUrl}/users/getPayment/${id}`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
 }
 
 function getSavedBlast(agentId) {
     const requestOptions = {
-            method: 'GET',
-            headers: authHeader()
-        };
+        method: 'GET',
+        headers: authHeader()
+    };
     return fetch(`${config.apiUrl}/users/getSavedBlast/${agentId}`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
 }
 function getBlast(id) {
     const requestOptions = {
-            method: 'GET',
-            headers: authHeader()
-        };
-    return fetch(`${config.apiUrl}/users/getBlast/${id}`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
-}
-function deleteSavedBlast(id){
-    const requestOptions = {
-            method: 'GET',
-            headers: authHeader()
-        };
-    return fetch(`${config.apiUrl}/users/deleteSavedBlast/${id}`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
-}
-
-function saveImages(property_ids,propertyImages){
-    const requestOptions = {
-        method: 'POST',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({property_ids,propertyImages})
+        method: 'GET',
+        headers: authHeader()
     };
-    return fetch(`${config.apiUrl}/users/saveImages`, requestOptions).then(handleResponse);    
+    return fetch(`${config.apiUrl}/users/getBlast/${id}`, requestOptions).then(handleResponse)
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
+}
+function deleteSavedBlast(id) {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+    return fetch(`${config.apiUrl}/users/deleteSavedBlast/${id}`, requestOptions).then(handleResponse)
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
+}
+
+function saveImages(properties) {
+    const requestOptions = {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ properties })
+    };
+    return fetch(`${config.apiUrl}/users/saveImages`, requestOptions).then(handleResponse);
 }
 
 
 
 
-function saveCalenderData(data,blastId){
-    console.log("blast_id=ssssss==",blastId);
+function saveCalenderData(data, blastId) {
+    console.log("blast_id=ssssss==", blastId);
     const requestOptions = {
         method: 'POST',
         headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({"data":data})
+        body: JSON.stringify({ "data": data })
     };
     return fetch(`${config.apiUrl}/saveBlastCalender/${blastId}`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
-       
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
+
 }
 
 
-function getPreviewhtml(id){
+function getPreviewhtml(id) {
     const requestOptions = {
-            method: 'GET',
-            headers: authHeader()
-        };
+        method: 'GET',
+        headers: authHeader()
+    };
     return fetch(`${config.apiUrl}/users/getPreviewhtml/${id}`, requestOptions).then(handleResponse)
-    .then(user => {
-        return user;
-    }).catch(this.handleError);
+        .then(user => {
+            return user;
+        }).catch(this.handleError);
 }
 
 

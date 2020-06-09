@@ -33,7 +33,7 @@ interface IPropertyModel extends mongoose.Document {
     number_bathrooms: {
         full: string,
         half: string
-    }[],
+    },
     linksToWebsites: {
         text: String,
         url: String

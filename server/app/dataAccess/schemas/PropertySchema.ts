@@ -76,14 +76,14 @@ class PropertySchema {
                     type: String
                 }
             },
-            number_bathrooms: [{
+            number_bathrooms: {
                 full: {
                     type: String
                 },
                 half: {
                     type: String
                 }
-            }],
+            },
 
             linksToWebsites: [{
                 text: { type: String },
