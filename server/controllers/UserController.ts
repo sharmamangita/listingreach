@@ -1082,17 +1082,17 @@ class UserController implements IBaseController<UserBusiness> {
 					$lookup:
 					{
 						from: "templates",
-						localField: "user_id",
-						foreignField: "userId",
+						localField: "selected_template_id",
+						foreignField: "_id",
 						as: "templates"
 					}
 				},
 				{
 					$lookup:
 					{
-						from: "payment",
-						localField: "user_id",
-						foreignField: "user_id",
+						from: "payments",
+						localField: "_id",
+						foreignField: "blast_id",
 						as: "payment"
 					}
 				},
@@ -1106,6 +1106,7 @@ class UserController implements IBaseController<UserBusiness> {
 						"selected_template_id": 1,
 						"scheduledDate": 1,
 						"templates.headline": 1,
+						"templates.template_type": 1,
 						"payment.amount": 1
 					}
 				},

@@ -1,14 +1,10 @@
 import React from "react";
 import { userActions } from "../actions";
 import { authHeader } from "../helpers";
-import { Alert } from "reactstrap";
 const axios = require("axios");
 import config from "config";
 import { globalData } from '../constants/data.constants';
 
-const validEmailRegex = RegExp(
-  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-);
 
 class UploadBlastTab extends React.Component {
   constructor(props) {
@@ -28,64 +24,67 @@ class UploadBlastTab extends React.Component {
     let user = JSON.parse(localStorage.getItem("user"));
     let property =
     {
+      _id: "",
       blast_id: "",
       userId: user.userId,
-      propertyId: "",
-      Email: {
-        formSubject: "",
-        formLine: "",
-        formReply: "",
-      },
-      blastHeadline: "",
       isOpenHouse: [],
       pricingInfo: {
         price: "",
         priceType: "",
       },
-      propertyImages: [],
-      propertyAddress: {
-        displayMethod: "",
-        streetAddress: "",
-        city: "",
-        State: "",
-        zipCode: "",
+      display_method: "",
+      street_address: "",
+      city: "",
+      state: "",
+      zipcode: "",
+      board: "",
+      mls_number: "",
+      property_type: "",
+      property_style: "",
+      price: "",
+      building_size: "",
+      lot_size: "",
+      lotType: "",
+      number_bedrooms: "",
+      number_bathrooms: {
+        full: "",
+        half: "",
       },
-      mlsNumber: {
-        display: true,
-        numberProperty: "",
-        boardAssociation: "",
-      },
-      generalPropertyInformation: {
-        propertyType: "",
-        propertyStyle: "",
-        pricePerSquareFoot: "",
-        buildingSize: "",
-        lotSize: "",
-        lotType: "",
-        numberOfBedrooms: "",
-        numberOfBathrooms: {
-          full: "",
-          half: "",
-        },
-        yearBuilt: "",
-        numberOfStories: "",
-        garage: false,
-      },
-      propertyDetail: "",
-      linksToWebsites: []
+      year_built: "",
+      number_stories: "",
+      garage: false,
+      garageSize: "",
+      property_details: "",
+      linksToWebsites: [],
+      propertyImages: []
     };
     this.state = {
+      showprofilelogo: false,
+      showprofileimage: false,
       userId: "",
       blast_id: "",
       submitForm: false,
       blastImageUrl: "",
-      propertyCount: 1,
       templateId: "",
       disabled: true,
-      Email: {
-        formSubject: "",
-        formLine: "",
-        formReply: "",
+      agentData: Object.assign({
+        name: "",
+        designation: "",
+        email: "",
+        website_url: "",
+        phone_number: "",
+        company_details: "",
+        other_information: "",
+        image_url: "",
+        logo_url: "",
+      }, this.props.agentData),
+      template: {
+        _id: null,
+        template_type: null,
+        address: null,
+        email_subject: null,
+        from_line: null,
+        headline: null
       },
       property,
       linksToWebsites,
@@ -101,7 +100,6 @@ class UploadBlastTab extends React.Component {
     this.addLinksToWebsites = this.addLinksToWebsites.bind(this);
     this.editOrDelete = this.editOrDelete.bind(this);
     this.saveProperty = this.saveProperty.bind(this);
-    this.propsDataupdate = this.propsDataupdate.bind(this);
     this.openUpload = this.openUpload.bind(this);
     this.imageChange = this.imageChange.bind(this);
     this.nextPage = this.nextPage.bind(this);
@@ -166,7 +164,7 @@ class UploadBlastTab extends React.Component {
     }
   }
 
-  addOpenHouse(event) {
+  addOpenHouse() {
     let { property, isOpenHouse } = this.state;
     if (isOpenHouse.houseType && isOpenHouse.date) {
       property.isOpenHouse.push(isOpenHouse);
@@ -187,10 +185,9 @@ class UploadBlastTab extends React.Component {
     this.setState({ [name]: value });
   }
 
-
   openHouseChange(event) {
     event.preventDefault();
-    const { name, value, id } = event.target;
+    const { name, value } = event.target;
 
     if (value != "" && name != "") {
       let { isOpenHouse } = this.state;
@@ -212,7 +209,7 @@ class UploadBlastTab extends React.Component {
     }
   }
 
-  editOrDelete(event, flag, p, item) {
+  editOrDelete(event, item) {
     const { title } = event.target;
     let { property } = this.state;
     if (title == "linkDelete") {
@@ -225,7 +222,7 @@ class UploadBlastTab extends React.Component {
     this.setState({ property });
   }
 
-  addLinksToWebsites(e) {
+  addLinksToWebsites() {
     let { linksToWebsites, property } = this.state;
     if (linksToWebsites.url && linksToWebsites.text) {
       property.linksToWebsites.push(linksToWebsites);
@@ -257,48 +254,34 @@ class UploadBlastTab extends React.Component {
     }
     this.setState({ property });
   }
-
-  handleChange(flag, event) {
+  handleChange(event, category) {
     event.preventDefault();
     const { name, value } = event.target;
-    let states = Object.assign({}, this.state);
-    this.setState(states);
-    switch (flag) {
-      case "email":
-        states.Email[name] = value;
-        this.setState(states);
-        break;
-      case "propertyPricing":
-        states.property.pricingInfo[name] = value;
-        this.setState(states);
-        break;
-      case "propertyAddress":
-        states.property.propertyAddress[name] = value;
-        let user = JSON.parse(localStorage.getItem("user"));
-        states.property.userId = user.userId;
-        this.setState(states);
-        break;
-      case "mlsNumber":
-        states.property.mlsNumber[name] = value;
-        this.setState(states);
-        break;
-      case "propertyInformation":
-        states.property.generalPropertyInformation[name] = value;
-        this.setState(states);
-        break;
-
-      case "propertyInformationBathrooms":
-        states.property.generalPropertyInformation.numberOfBathrooms[
-          name
-        ] = value;
-        this.setState(states);
-        break;
+    let property = this.state.property;
+    if (category == "propertyPricing") {
+      property.pricingInfo[name] = value;
     }
-  }
+    else {
+      property[name] = value;
+    }
 
+    this.setState({ property });
+  }
+  handleTemplateChange(event) {
+    const { name, value } = event.target;
+    let template = this.state.template;
+    template[name] = value;
+    this.setState({ template });
+  }
+  handleAgentChange(event) {
+    const { name, value } = event.target;
+    let agentData = this.state.agentData;
+    agentData[name] = value;
+    this.setState({ agentData });
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.activeTab == "property") {
-      console.log("nextPros in Property ", nextProps);
+      console.log("nextPros in Uplaod Blast Property ", nextProps);
       if (nextProps.properties && nextProps.properties.length > 0) {
         let props = nextProps.properties;
         props.forEach(function (prop) {
@@ -312,7 +295,7 @@ class UploadBlastTab extends React.Component {
             prop["displayMls"] = typeof (prop.mls_number) != "undefined";
           }
         })
-        this.setState({ properties: nextProps.properties });
+        this.setState({ property: nextProps.properties[0] });
       }
       if (nextProps.agentData) {
         this.setState({ agentData: nextProps.agentData });
@@ -333,54 +316,62 @@ class UploadBlastTab extends React.Component {
     this.setState(states)
   }
 
+
   saveProperty(event) {
     event.preventDefault();
-    const { propertyData } = this.props;
-    // console.log("ids on submit", propertyData);
-    const templateId = propertyData.templateData._id;
-    const { blast_id } = this.props;
-    const { property, Email } = this.state;
+    const { property, agentData, template } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
+    this.setState({ submitted: true });
     let isvalid = true;
-    if (!Email || !Email.formSubject || !Email.formReply) {
+    if (!agentData.name || !agentData.email) {
       isvalid = false;
+      console.log("validation failed for agent ", agentData);
     }
-    if (!property.pricingInfo || !property.pricingInfo.price || !property.pricingInfo.priceType) {
+    let properties = [];
+    properties.push(property);
+    if (properties && properties.length > 0) {
+      properties.forEach(function (prop) {
+        console.log(prop);
+        if (!template.email_subject || !template.from_line || !template.address) {
+          isvalid = false;
+          console.log("validation failed for email fields ");
+        }
+
+        if (!prop.pricingInfo || !prop.pricingInfo.price || !prop.pricingInfo.priceType) {
+          isvalid = false;
+          console.log("validation failed property pricing", prop.pricingInfo);
+        }
+        if (!prop.display_method || !prop.street_address || !prop.state || !prop.city) {
+          isvalid = false;
+          console.log("validation failed property address");
+        }
+        if (prop.displayMls && (!prop.board || !prop.mls_number)) {
+          isvalid = false;
+          console.log("validation failed property MLS Number", prop.mls_number);
+        }
+        if (!prop.property_type) {
+          isvalid = false;
+          console.log("validation failed general property info");
+        }
+      })
+    } else {
       isvalid = false;
-      console.log("validation failed property pricing", property.pricingInfo);
-    }
-    if (!property.propertyAddress || !property.propertyAddress.displayMethod
-      || !property.propertyAddress.streetAddress || !property.propertyAddress.state
-      || !property.propertyAddress.city) {
-      isvalid = false;
-      console.log("validation failed property address", property.propertyAddress);
-    }
-    if (property.mlsNumber && property.mlsNumber.display
-      && (!property.mlsNumber.boardAssociation || !property.mlsNumber.numberProperty)) {
-      isvalid = false;
-      console.log("validation failed property MLS Number", property.mlsNumber);
-    }
-    if (!property.generalPropertyInformation ||
-      !property.generalPropertyInformation.propertyType) {
-      isvalid = false;
-      console.log("validation failed general property info", property.generalPropertyInformation);
+      console.log("No properties added");
     }
     if (isvalid) {
       //  alert("submitting...")
-      let properties = [];
-      properties.push(property);
-      dispatch(userActions.saveProperty(properties, "", Email, "", templateId, blast_id));
-
-      this.setState({ submitForm: true });
+      const { blastId } = this.props;
+      dispatch(userActions.saveProperty(properties, agentData, template, blastId));
+      this.setState({ submitted: false });
     } else {
-      this.setState({ submitted: true });
       alert("some required fields were not filled");
     }
+
   }
 
   render() {
-    const { errors, property, disabled, alert,
-      submitted, Email, blastImageUrl, submitForm, linksToWebsites, isOpenHouse, openHouseAdd
+    const { property, template, submitted, blastImageUrl,
+      submitForm, linksToWebsites, isOpenHouse, openHouseAdd
     } = this.state;
     console.log("state in Uplaod Blast ", this.state);
     let propertyImg = "";
@@ -388,7 +379,6 @@ class UploadBlastTab extends React.Component {
       propertyImg = config.uploadapiUrl + "/uploads/" + blastImageUrl;
     }
 
-    const { uploadBlast } = this.props;
     return (
       <div
         className="tab-pane fade mt-2"
@@ -410,16 +400,16 @@ class UploadBlastTab extends React.Component {
               <div className="form-group">
                 <label className="required">Email Subject</label>
                 <input
-                  name="formSubject"
+                  name="email_subject"
                   type="text"
-                  onChange={(e) => this.handleChange("email", e)}
+                  onChange={(e) => this.handleTemplateChange(e)}
                   className="form-control form-control-lg form-control-a"
                   placeholder="Subject"
-                  value={Email && Email.formSubject}
+                  value={template && template.email_subject}
                 />
                 <div className="validation">
                   {
-                    (submitted && !Email.formSubject && "Email is required")}
+                    (submitted && !template.email_subject && "Email is required")}
                 </div>
               </div>
             </div>
@@ -427,15 +417,15 @@ class UploadBlastTab extends React.Component {
               <div className="form-group">
                 <label className="required">From Line</label>
                 <input
-                  name="formLine"
+                  name="from_line"
                   type="text"
-                  onChange={(e) => this.handleChange("email", e)}
+                  onChange={(e) => this.handleTemplateChange(e)}
                   className="form-control form-control-lg form-control-a"
                   placeholder="Eg. Your Name"
-                  value={Email && Email.formLine}
+                  value={template && template.from_line}
                 />
                 <div className="validation">
-                  {(submitted && !Email.formLine && "Form Line is required")}
+                  {(submitted && !template.from_line && "Form Line is required")}
                 </div>
               </div>
             </div>
@@ -443,16 +433,16 @@ class UploadBlastTab extends React.Component {
               <div className="form-group">
                 <label className="required">Reply To Address</label>
                 <input
-                  name="formReply"
+                  name="address"
                   type="email"
-                  onChange={(e) => this.handleChange("email", e)}
+                  onChange={(e) => this.handleTemplateChange(e)}
                   className="form-control form-control-lg form-control-a"
                   placeholder="name@domain.com"
-                  value={Email && Email.formReply}
+                  value={template && template.address}
                 />
                 <div className="validation">
                   {(submitted &&
-                    !Email.formReply &&
+                    !template.address &&
                     "Form Reply Line is required")}
                 </div>
               </div>
@@ -467,11 +457,11 @@ class UploadBlastTab extends React.Component {
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("linksToWebsites", true)}                    >
+                    onClick={() => this.show("linksToWebsites", property, true)}                    >
                     Yes
                 </a>
                   <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.show("linksToWebsites", false)}                    >
+                    onClick={() => this.show("linksToWebsites", property, false)}                    >
                     No
                 </a>
                 </div>
@@ -479,8 +469,7 @@ class UploadBlastTab extends React.Component {
             </div>
             <div style={{
               display:
-                property.linksToWebsites &&
-                  property.linksToWebsites.display
+                property.linksToWebsites && property.linksToWebsites.display
                   ? "inline"
                   : "none",
             }}  >
@@ -511,7 +500,7 @@ class UploadBlastTab extends React.Component {
                 <div className="col-md-2 mb-3">
                   <div className="form-group pt-4">
                     <a href="javascript:void(0)" className="btn btn-primary"
-                      onClick={(e) => this.addLinksToWebsites(e, property)}                      >
+                      onClick={() => this.addLinksToWebsites()}                      >
                       Add
                   </a>
                   </div>
@@ -529,7 +518,7 @@ class UploadBlastTab extends React.Component {
                 </thead>
                 <tbody>
                   {property.linksToWebsites &&
-                    property.linksToWebsites.length > 0 &&
+                    property.linksToWebsites.display &&
                     property.linksToWebsites.map(
                       function (linkData, linkIndex) {
                         return (
@@ -610,22 +599,20 @@ class UploadBlastTab extends React.Component {
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("openHouse", true)}   >
+                    onClick={() => this.show("openHouse", property, true)}   >
                     Yes
                     </a>
                   <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.show("openHouse", false)} >
+                    onClick={() => this.show("openHouse", property, false)} >
                     No
                   </a>
                 </div>
               </div>
             </div>
-
             <div
               style={{
                 display:
-                  property.isOpenHouse &&
-                    property.isOpenHouse.display
+                  property.isOpenHouse && property.isOpenHouse.display
                     ? "inline"
                     : "none",
               }}              >
@@ -688,7 +675,7 @@ class UploadBlastTab extends React.Component {
                   <div className="form-group pt-4">
                     <a href="javascript:void(0)"
                       className="btn btn-primary"
-                      onClick={(e) => this.addOpenHouse(e, property)}                      >
+                      onClick={() => this.addOpenHouse()}                      >
                       Add
                   </a>
                   </div>
@@ -742,9 +729,8 @@ class UploadBlastTab extends React.Component {
                         <i className="fa fa-usd"></i>
                       </span>
                     </div>
-                    <input type="text" name="price" onChange={(e) => this.handleChange("propertyPricing", e, property)}
-                      value={property.pricingInfo && property.pricingInfo.price
-                      }
+                    <input type="text" name="price" onChange={(e) => this.handleChange(e, "propertyPricing")}
+                      value={property.pricingInfo && property.pricingInfo.price}
                       className="form-control form-control-lg form-control-a"
                     />
                   </div>
@@ -761,8 +747,8 @@ class UploadBlastTab extends React.Component {
                   <div className="form-group">
                     <label className="required">Price Display Type</label>
                     <select className="form-control form-control-lg form-control-a" name="priceType"
-                      onChange={(e) => this.handleChange("propertyPricing", e, property)}
-                      vlaue={property.pricingInfo && property.pricingInfo.priceType} >
+                      value={property.pricingInfo && property.pricingInfo.priceType}
+                      onChange={(e) => this.handleChange(e, "propertyPricing")}>
                       <option value="">Select Price Display Type</option>
                       <option>Display Price Specified</option>
                       <option>Replace Price with 'AUCTION'</option>
@@ -782,6 +768,7 @@ class UploadBlastTab extends React.Component {
                 </div>
               </div>
             </div>
+
             <hr />
             <br />
             <h5>Property Address</h5>
@@ -789,9 +776,9 @@ class UploadBlastTab extends React.Component {
               <div className="col-md-4 mb-3">
                 <div className="form-group">
                   <label className="required">Address Display Method:</label>
-                  <select className="form-control form-control-lg form-control-a" name="displayMethod"
-                    onChange={(e) => this.handleChange("propertyAddress", e, property)}
-                    value={property.propertyAddress && property.propertyAddress.displayMethod} >
+                  <select className="form-control form-control-lg form-control-a" name="display_method"
+                    value={property && property.display_method}
+                    onChange={(e) => this.handleChange(e, property)}>
                     <option>Select Address Display Method</option>
                     <option>Show Entire Address</option>
                     <option>Show City & State Only</option>
@@ -800,22 +787,22 @@ class UploadBlastTab extends React.Component {
                 </div>
                 <div className="validation">
                   {submitted &&
-                    (!property.propertyAddress ||
-                      !property.propertyAddress.displayMethod) &&
+                    (!property ||
+                      !property.display_method) &&
                     "Price is required"}
                 </div>
               </div>
               <div className="col-md-8 mb-3">
                 <div className="form-group">
                   <label className="required">Street Address</label>
-                  <input type="text" name="streetAddress" className="form-control form-control-lg form-control-a" placeholder="Street Address"
-                    onChange={(e) => this.handleChange("propertyAddress", e, property)}
-                    value={property.propertyAddress && property.propertyAddress.streetAddress} />
+                  <input type="text" name="street_address" className="form-control form-control-lg form-control-a" placeholder="Street Address"
+                    onChange={(e) => this.handleChange(e, property)}
+                    value={property && property.street_address} />
                 </div>
                 <div className="validation">
                   {submitted &&
-                    (!property.propertyAddress ||
-                      !property.propertyAddress.streetAddress) &&
+                    (!property ||
+                      !property.street_address) &&
                     "Price is required"}
                 </div>
               </div>
@@ -823,22 +810,20 @@ class UploadBlastTab extends React.Component {
                 <div className="form-group">
                   <label className="required">City</label>
                   <input type="text" name="city" className="form-control form-control-lg form-control-a"
-                    placeholder="City" onChange={(e) => this.handleChange("propertyAddress", e, property)}
-                    value={property.propertyAddress && property.propertyAddress.city} />
+                    placeholder="City" onChange={(e) => this.handleChange(e, property)}
+                    value={property && property.city} />
                 </div>
                 <div className="validation">
                   {submitted &&
-                    (!property.propertyAddress ||
-                      !property.propertyAddress.city) &&
-                    "Price is required"}
+                    (!property || !property.city) && "Price is required"}
                 </div>
               </div>
               <div className="col-md-4 mb-3">
                 <div className="form-group">
                   <label className="required">State</label>
                   <select className="form-control form-control-lg form-control-a" name="state"
-                    value={property.propertyAddress && property.propertyAddress.state}
-                    onChange={(e) => this.handleChange("propertyAddress", e, property)}>
+                    value={property && property.state}
+                    onChange={(e) => this.handleChange(e, property)}>
                     <option value="">Select State</option>
                     {globalData.USstates.map((st) =>
                       <option key={st}>{st}</option>
@@ -846,25 +831,22 @@ class UploadBlastTab extends React.Component {
                   </select>
                   <div className="validation">
                     {submitted &&
-                      (!property.propertyAddress ||
-                        !property.propertyAddress.state) &&
-                      "Price is required"}
+                      (!property ||
+                        !property.state) && "Price is required"}
                   </div>
                 </div>
               </div>
               <div className="col-md-4 mb-3">
                 <div className="form-group">
                   <label>Zip Code</label>
-                  <input type="text" name="zipCode" className="form-control form-control-lg form-control-a"
-                    placeholder="Zip Code" onChange={(e) => this.handleChange("propertyAddress", e, property)}
-                    value={
-                      property.propertyAddress &&
-                      property.propertyAddress.zipCode
-                    }
+                  <input type="text" name="zipcode" className="form-control form-control-lg form-control-a"
+                    placeholder="Zip Code" onChange={(e) => this.handleChange(e, property)}
+                    value={property && property.zipcode}
                   />
                 </div>
               </div>
             </div>
+
             <hr />
             <br />
             <h5>Do you have a MLS Number?</h5>
@@ -872,11 +854,11 @@ class UploadBlastTab extends React.Component {
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("mlsNumber", true)} >
+                    onClick={() => this.show("mlsNumber", property, true)} >
                     Yes
                 </a>
                   <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.show("mlsNumber", false)}>
+                    onClick={() => this.show("mlsNumber", property, false)}>
                     No
                 </a>
                 </div>
@@ -884,22 +866,20 @@ class UploadBlastTab extends React.Component {
             </div>
             <div className="row" style={{
               display:
-                property.mlsNumber &&
-                  property.mlsNumber.display
+                property.displayMls
                   ? "flex"
                   : "none"
             }}  >
               <div className="col-md-6 mb-3">
                 <div className="form-group">
                   <label className="required">MLS Number</label>
-                  <input type="text" name="numberProperty" className="form-control form-control-lg form-control-a"
-                    placeholder="Enter the MLS Number for Property" onChange={(e) => this.handleChange("mlsNumber", e, property)}
-                    value={property.mlsNumber && property.mlsNumber.numberProperty
-                    }
+                  <input type="text" name="mls_number" className="form-control form-control-lg form-control-a"
+                    placeholder="Enter the MLS Number for Property" onChange={(e) => this.handleChange(e, property)}
+                    value={property && property.mls_number}
                   />
                 </div>
                 <div className="validation">
-                  {submitted && (!property.mlsNumber || !property.mlsNumber.numberProperty) && "This field is required."}
+                  {submitted && (!property || !property.mls_number) && "This field is required."}
                 </div>
               </div>
               <div className="col-md-12 mb-3">
@@ -913,9 +893,9 @@ class UploadBlastTab extends React.Component {
                     INSTRUCTIONS on the left for more details
                 </p>
                   <div className="form-group">
-                    <select className="form-control form-control-lg form-control-a" name="boardAssociation"
-                      onChange={(e) => this.handleChange("mlsNumber", e, property)}
-                      value={property.mlsNumber && property.mlsNumber.boardAssociation} >
+                    <select className="form-control form-control-lg form-control-a" name="board"
+                      onChange={(e) => this.handleChange(e, property)}
+                      value={property && property.board} >
                       <option value="">
                         -- Please Select a board / association for our
                         'Internal Sourcing' --
@@ -959,14 +939,13 @@ class UploadBlastTab extends React.Component {
                     </select>
                     <div className="validation">
                       {submitted &&
-                        (!property.mlsNumber &&
-                          !property.mlsNumber.boardAssociation) &&
-                        "Price is required"}
+                        (!property && !property.board) && "Price is required"}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
             <hr />
             <br />
             <h5>General Property Information</h5>
@@ -977,14 +956,12 @@ class UploadBlastTab extends React.Component {
                   <div className="form-group">
                     <select
                       className="form-control form-control-lg form-control-a"
-                      name="propertyType"
+                      name="property_type"
                       onChange={(e) =>
-                        this.handleChange("propertyInformation", e)
+                        this.handleChange(e)
                       }
                       value={
-                        property.generalPropertyInformation &&
-                        property.generalPropertyInformation
-                          .propertyType
+                        property && property.property_type
                       }
                     >
                       <option value="" className="">

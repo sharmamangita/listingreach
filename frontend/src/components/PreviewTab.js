@@ -49,8 +49,7 @@ class PreviewTab extends React.Component {
 
   nexttab() {
     const { dispatch } = this.props.dispatchval.dispatch;
-    this.props.moveTab("selectdatabase");
-    // dispatch(userActions.preview());
+    dispatch(userActions.moveTab("selectdatabase"));
   }
 
   componentWillReceiveProps(nextProprs) {
@@ -114,12 +113,12 @@ class PreviewTab extends React.Component {
         </div>
         {previewHtml && <Markup content={previewHtml} />}
         <div className="col-md-12 mt-4">
-          <a href="javascript:void(0)" className="btn btn-primary" onClick={() => this.nexttab}>
+          <button className="btn btn-primary" onClick={(e) => this.nexttab(e)}>
             Save
-          </a>
-          <a href="javascript:void(0)" className="btn btn-primary pull-right" onClick={() => this.nexttab} >
+          </button>
+          <button className="btn btn-primary pull-right" onClick={(e) => this.nexttab(e)} >
             Next
-          </a>
+          </button>
         </div>
       </div>
     );
