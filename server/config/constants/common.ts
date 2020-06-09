@@ -1299,6 +1299,16 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
 <html>
    <head>
       <meta charset='UTF-8'>
+      <style scoped>
+			@media (max-width: 1500px) {
+			    .text-center{
+			        background:"#000 !important" 
+			    }
+			    a{
+			    	font-size:"40px"
+			    }
+}
+</style>
    </head>
    <body>
       <div class="blast-box" style=" max-width: 100%;
@@ -1332,19 +1342,20 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                </div>
                <div class="border3" style=" border: 3px solid #eee;
          border-top: 0;">
-                  <div  style="display: flex;flex-wrap: wrap;">
-                     <div class="mb-3 mt-3 ml-3" style="width:41%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
+                  <div  style="display: flex;" class="text-right-row">
+                     <div class="mb-3 mt-3 ml-3" style="margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
                         <i>Powered by</i>	<br>
-                        <img src=${Common.PRAVIEW_LOGO} alt="" class="img-a img-fluid">
+                        <img src=${Common.PRAVIEW_LOGO} style="width:100%" class="img-a img-fluid">
                      </div>
-                     <div class="mb-3 mt-3 text-right" style="width:25%;text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+                     <div style="display:inline-block">
+                     <div class="mb-3 mt-3 text-right" style="text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
                 <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;font-weight: 400;text-align: center;
 						user-select: none;padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 0.25rem;box-shadow 0.15s ease-in-out;">Reply to Sender</a></div>
-	<div class="mb-3 mt-3 text-right ml-3" style="width:25%;text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+	<div class="mb-3 mt-3 text-right ml-3" style="text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
         <a class="btn btn-primary" href="mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;
          			font-weight: 400;text-align: center;white-space: nowrap;vertical-align: middle;padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 0.25rem; box-shadow 0.15s ease-in-out;">Forward to Associate</a>
                      </div>
-                  </div>`;
+                  </div> </div>`;
 static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
                      <div class="mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
                         <div class="text-center" style="width:16%;text-align: center !important;">
@@ -1398,7 +1409,7 @@ static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER:string =`
          line-height: 1.5;
          padding: 30px;display: block;">
          <div style="display: block;display: flex;flex-wrap: wrap;margin-right:0;margin-left:0">
-            <div style="display: block;width:66%;margin: auto;">
+            <div style="display: block;width:100%;margin: auto;">
                <div class="border2" style="display: block;border: 3px solid #eee;">
                   <div style="display: block;display: flex;flex-wrap: wrap;">
                      <div class="mb-3 text-right" style="display: block;width:30%;text-align: right !important;margin-bottom: 1rem !important;text-align: right !important;">					 
@@ -1412,37 +1423,21 @@ static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER:string =`
                </div>
                <div class="border3" style=" border: 3px solid #eee;
          border-top: 0;">
-                  <div  style="display: flex;flex-wrap: wrap;">
-                     <div class="mb-3 mt-3 ml-3" style="width:41%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
+                  <div style="">
+                  <div style="display: flex;" class="text-right-row">
+                     <div class="mb-3 mt-3 ml-3" style="margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
                         <i>Powered by</i>	<br>
-                        <img src=${Common.PRAVIEW_LOGO} alt="" class="img-a img-fluid">
+                        <img src=${Common.PRAVIEW_LOGO} style="width:100%" class="img-a img-fluid">
                      </div>
-                     <div class="mb-3 mt-3 text-right" style="width:25%;text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-                        <button class="btn btn-primary" style="background-color: #EE8C3A;
-												         border: #EE8C3A;
-												         color:#fff;display: inline-block;
-												         font-weight: 400;
-												         text-align: center;
-												         user-select: none;
-												         padding: 0.375rem 0.75rem;
-												         line-height: 1.5;
-												         border-radius: 0.25rem;
-												         box-shadow 0.15s ease-in-out;">Reply to Sender</button>
+                     <div style="display:inline-block">
+                     <div class="mb-3 mt-3 text-right" style="text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+                <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;font-weight: 400;text-align: center;
+						user-select: none;padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 0.25rem;box-shadow 0.15s ease-in-out;">Reply to Sender</a></div>
+	<div class="mb-3 mt-3 text-right ml-3" style="text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+        <a class="btn btn-primary" href="mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;
+         			font-weight: 400;text-align: center;white-space: nowrap;vertical-align: middle;padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 0.25rem; box-shadow 0.15s ease-in-out;">Forward to Associate</a>
                      </div>
-                     <div class="mb-3 mt-3 text-right ml-3" style="width:25%;text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-                        <button class="btn btn-primary" style="background-color: #EE8C3A;
-         border: #EE8C3A;
-         color:#fff;display: inline-block;
-         font-weight: 400;
-         text-align: center;
-         white-space: nowrap;
-         vertical-align: middle;
-         padding: 0.375rem 0.75rem;
-         line-height: 1.5;
-         border-radius: 0.25rem;
-         box-shadow 0.15s ease-in-out;">Forward to Associate</button>
-                     </div>
-                  </div>`;
+                  </div> </div>`;
 
 static PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER:string =`<div class="flyer-btm" style="background: #8c8c8c;padding: 10px;font-size: 0.8rem; color: #fff; margin-top: 10px;">
                      <div style="display: flex;flex-wrap: wrap;">
@@ -1454,23 +1449,8 @@ static PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER:string =`<div class="flyer-btm" style="
 
 
 static PREVIEW_EMAIL_UPLOAD_BLAST:string= Common.PREVIEW_EMAIL_UPLOAD_BLAST_HEADER+` 
-                  <div class="row" style="display: flex;flex-wrap: wrap;">
-                     <div style="width:100%;padding-right: 15px;padding-left: 15px;">
-                        <div class="flyer-header" style="display: block;overflow: hidden;
-				         background-color: #EE8C3A;
-				         color: #fff;
-				         box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(20, 19, 18, 0.1);
-				         border-top: 4px solid #EE8C3A;
-				         height: 80px;
-				         text-align: center;
-				         font-size: 28px;
-				         font-weight: bold;
-				         padding: 17px 0 10px 0;">					 
-                        </div>
-                     </div>
-                  </div>
                   #propertyImage#
-                  <div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc;">
+                  <div class="" style="background: #f1f1f1;width:100%">
 					 #pricePerSquareFoot# 
                      <div class="" style="">
                         <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
@@ -1494,20 +1474,6 @@ static PREVIEW_EMAIL_UPLOAD_BLAST:string= Common.PREVIEW_EMAIL_UPLOAD_BLAST_HEAD
 
 
 static PREVIEW_EMAIL_REAL_ESTATE_BROKERAGE:string=Common.PREVIEW_EMAIL_UPLOAD_BLAST_HEADER+`
-                  <div class="row" style="display: flex;flex-wrap: wrap;">
-                     <div style="width:100%;padding-right: 15px;padding-left: 15px;">
-                        <div class="flyer-header" style="display: block;overflow: hidden;
-				         background-color: #EE8C3A;
-				         color: #fff;
-				         box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(20, 19, 18, 0.1);
-				         border-top: 4px solid #EE8C3A;
-				         height: 80px;
-				         text-align: center;
-				         font-size: 28px;
-				         font-weight: bold;
-				         padding: 17px 0 10px 0;">					 
-                        </div>
-                     </div>
                   </div>
                   #propertyImage#
 `+Common.PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER;
@@ -1517,7 +1483,7 @@ static PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE:string= Common.PREVIEW_EMAIL_TEMPLAT
 `+ Common.PREVIEW_EMAIL_TEMPLATE_FOOTER;
 
 static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ ` 
-                  <div class="row" style="display: flex;flex-wrap: wrap;">
+                  <div style="display: flex;flex-wrap: wrap;">
                      <div style="width:100%">
                         <div class="flyer-header" style="display: block;overflow: hidden;
          background-color: #EE8C3A;
