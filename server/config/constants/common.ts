@@ -1315,18 +1315,18 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
             <div style="display: block;width:100%;margin: auto;">
                <div class="border2" style="display: block;border: 3px solid #eee;">
                   <div style="display: block;display: flex;flex-wrap: wrap;">
-                     <div class="mb-3 mt-3 text-right" style="display: block;width:30%;text-align: right !important; margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">					 
+                     <div class="mb-3 mt-3 text-right" style="display: block;width:30%;text-align: right !important; margin-bottom: 2% !important;margin-top: 2% !important;text-align: right !important;">					 
                         <label style="display: inline-block;
          margin-bottom: 0.5rem;">From:	</label>
                      </div>
-                     <div style="display: block;width:66%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;" class="mb-3 mt-3 ml-3">
+                     <div style="display: block;width:66%;margin-bottom: 2% !important; margin-left: 2% !important;margin-top: 2% !important;" class="mb-3 mt-3 ml-3">
                         #agentName# via Listingreach.com
                      </div>
-                     <div class="mb-3 text-right" style="display: block;width:30%;text-align: right !important;margin-bottom: 1rem !important;text-align: right !important;">					 
+                     <div class="mb-3 text-right" style="display: block;width:30%;text-align: right !important;margin-bottom: 2% !important;text-align: right !important;">					 
                         <label style="display: inline-block;
          margin-bottom: 0.5rem;">Email Subject Line: #subject#</label>
                      </div>
-                     <div class="mb-3 ml-3" style="width:66%; margin-left: 1rem !important;">
+                     <div class="mb-3 ml-3" style="width:66%; margin-left: 2% !important;">
                         #formLine#
                      </div>
                   </div>
@@ -1357,10 +1357,10 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                      </div></div>`;
 static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
                      <div class="mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
-                        <div class="text-center" style="width:16%;text-align: center !important;">
-                           <img alt="Photo" class="img-square" style="width:100px;" src="#companyLogo#">
+                        <div class="text-center" style="width:20%;text-align: center !important;overflow:hidden">
+                           <img alt="Photo" class="img-square" style="width:70%;" src="#companyLogo#">
                         </div>
-                        <div class="text-center" style="width:66%;text-align: center !important;">
+                        <div class="text-center" style="width:60%;text-align: center !important;">
                            <b> #agentName# </b><br>
                            Agent<br>
                            #agentEmail#<br>
@@ -1368,8 +1368,8 @@ static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
                            #phone_number#<br><br>
                           	#companyDetail#,<br>
                         </div>
-                        <div class="text-center pl-0" style="width:16%;text-align: center !important;">
-                           <img alt="Photo" class="img-circle" style="width:100px;" src="#agentImage#">
+                        <div class="text-center pl-0" style="width:20%;text-align: center !important;overflow:hidden">
+                           <img alt="Photo" class="img-circle" style="width:70%;" src="#agentImage#">
                         </div>
                      </div>
                   </div>
