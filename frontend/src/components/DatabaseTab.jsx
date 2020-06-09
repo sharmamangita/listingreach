@@ -83,7 +83,7 @@ class DatabaseTab extends React.Component {
     const selectedAssocaition = activeCampaign.associations.filter(
       (asso) => asso.id == associationid
     )[0];
-    console.log("selectedAssocaition",selectedAssocaition)
+  //  console.log("selectedAssocaition=====",selectedAssocaition)
     activeCampaign.segment = [];
     this.setState({
       selectedAssocaition,
@@ -102,6 +102,7 @@ class DatabaseTab extends React.Component {
     // states.associations = this.associations;
     // this.setState(states);
   }
+
   componentDidMount() {
     var subscribeButton = document.querySelector("#sub-button");
     if (subscribeButton) {
@@ -130,7 +131,7 @@ class DatabaseTab extends React.Component {
         segment: { id: _segment.id, lists: _segment.lists,name:_segment.name }
       }
       associations.push(asso);
-      console.log("this.associations=====", associations);
+     // console.log("this.associations=====", associations);
     } else {
       var indexToRemove;
       associations.forEach(function (item, index) {
@@ -229,6 +230,7 @@ class DatabaseTab extends React.Component {
     );
   }
   render() {
+    var that = this;
     console.log("database====", this.props);
     var { submitted, associations } = this.state;
     return (
@@ -276,7 +278,7 @@ class DatabaseTab extends React.Component {
                         {asso.association.name} --  {asso.segment.name}
                         <span>
                           <i className="fa fa-trash pull-right" aria-hidden="true" title="Delete"
-                            onClick={(e) => this.deleteAssociation(e, asso)}
+                            onClick={(e) => that.deleteAssociation(e, asso)}
                           ></i></span>
                       </td>
                     </tr>

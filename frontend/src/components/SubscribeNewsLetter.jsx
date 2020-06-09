@@ -14,6 +14,7 @@ class SubscribeNewsLetter extends React.Component {
         this.handleClose = this.handleClose.bind(this);
         this.handleStateChange = this.handleStateChange.bind(this);
         this.clearAgentDataBase = this.clearAgentDataBase.bind(this);
+        this.deleteAssociation = this.deleteAssociation.bind(this);
     }
 
     resetState() {
@@ -34,6 +35,7 @@ class SubscribeNewsLetter extends React.Component {
                 associations: [],
                 segments: []
             },
+            associations: [],
             propertyTypes: propertyTypes,
             priceFilters: priceFilters,
             preferedVendors: preferedVendors,
@@ -73,14 +75,19 @@ class SubscribeNewsLetter extends React.Component {
         const filteredSegments = activeCampaign.segments.filter((segment) => (
             segment.lists[associationid]
         ));
-        console.log(filteredSegments)
+        const selectedAssocaition = activeCampaign.associations.filter(
+              (asso) => asso.id == associationid
+        )[0];
+        //console.log(filteredSegments)
         activeCampaign.segment = [];
         this.setState({
+            selectedAssocaition,
             activeCampaign,
             filteredSegments
         });
 
     }
+
     componentDidMount() {
         var subscribeButton = document.querySelector('#sub-button')
         if (subscribeButton) {
@@ -98,9 +105,16 @@ class SubscribeNewsLetter extends React.Component {
 
     }
 
+    deleteAssociation(e, item) {
+        const { associations } = this.state;
+        let index = associations.indexOf(item);
+        associations.splice(index, 1);
+        this.setState(associations);
+    }
+
     handleChange(e, selectedItem) {
         const { name, value, checked } = e.target;
-        var { subscriber, isFormValid } = this.state;
+        var { subscriber, isFormValid,selectedAssocaition,associations} = this.state;
         switch (name) {
             case "name":
                 subscriber.name = value;
@@ -166,9 +180,26 @@ class SubscribeNewsLetter extends React.Component {
             default:
                 break;
         }
-
+            if (checked) {
+              let asso = {
+                association: { id: selectedAssocaition.id, name: selectedAssocaition.name },
+                segment: { id: selectedItem.id, lists: selectedItem.lists,name:selectedItem.name }
+              }
+              associations.push(asso);
+             // console.log("this.associations=====", associations);
+            } else {
+              var indexToRemove;
+              associations.forEach(function (item, index) {
+                if (item.segment.id == selectedItem.id) {
+                  indexToRemove = index;
+                }
+              });
+              if (indexToRemove > -1) {
+                associations.splice(indexToRemove, 1);
+              }
+            }
         //console.log("eeeeeeee", e.target);
-        this.setState({ subscriber: subscriber });
+        this.setState({ subscriber: subscriber,associations:associations });
     }
     handleSubmit(e) {
         e.preventDefault();
@@ -245,8 +276,11 @@ class SubscribeNewsLetter extends React.Component {
             </Modal>
         )
     };
+
+
     render() {
-        var { subscriber, submitted, propertyTypes, priceFilters, preferedVendors } = this.state;
+        var that = this;
+        var { subscriber, submitted, propertyTypes, priceFilters,preferedVendors,associations} = this.state;
         console.log("state in render", this.state)
         return (
             <React.Fragment>
@@ -390,9 +424,29 @@ class SubscribeNewsLetter extends React.Component {
                                                     <div className="help-block text-danger">Select aleast 1 Database</div>
                                                 }
                                             </div>
-
+                                              <table
+                                                id="example"
+                                                className="table table-bordered"
+                                                style={{ width: "100%" }}
+                                              >
+                                                <tbody>
+                                                  {associations &&
+                                                    associations.map(function (asso, i) {
+                                                      return (
+                                                        <tr key={i}>
+                                                          <td>
+                                                            {asso.association.name} --  {asso.segment.name}
+                                                            <span>
+                                                              <i className="fa fa-trash pull-right" aria-hidden="true" title="Delete"
+                                                                onClick={(e) => that.deleteAssociation(e, asso)}
+                                                              ></i></span>
+                                                          </td>
+                                                        </tr>
+                                                      );
+                                                    })}
+                                                </tbody>
+                                              </table>
                                             <div className="col-md-12 mb-3">
-
                                                 <div className="form-group">
                                                     <label className="check">Do NOT send Properties Out of my Area
                                                      <input type="checkbox" name="outsideareaproperties" value={!subscriber.includeOutsideAreaProperties} onChange={this.handleChange} />
@@ -401,6 +455,7 @@ class SubscribeNewsLetter extends React.Component {
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div className="col-md-12">

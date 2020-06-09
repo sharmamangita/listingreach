@@ -1293,7 +1293,7 @@ static EMAIL_FOR_LOGIN_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
         <p><a href="`+Common.SITE_URL+`/login?ref=#autotoken#">Post Reference</a> to see the application.</p>
 ` +Common.EMAIL_TEMPLATE_FOOTER;
 
-
+static PRAVIEW_LOGO = Common.SITE_URL+'/uploads/previewimages/listing-reach-logo.png';
 
 static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
 <html>
@@ -1311,7 +1311,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
          line-height: 1.5;
          padding: 30px;display: block;">
          <div style="display: block;display: flex;flex-wrap: wrap;margin-right:0;margin-left:0">
-            <div style="display: block;width:66%;margin: auto;">
+            <div style="display: block;width:100%;margin: auto;">
                <div class="border2" style="display: block;border: 3px solid #eee;">
                   <div style="display: block;display: flex;flex-wrap: wrap;">
                      <div class="mb-3 mt-3 text-right" style="display: block;width:30%;text-align: right !important; margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">					 
@@ -1335,7 +1335,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                   <div  style="display: flex;flex-wrap: wrap;">
                      <div class="mb-3 mt-3 ml-3" style="width:41%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
                         <i>Powered by</i>	<br>
-                        <img src="`+Common.SITE_URL+`"/uploads/previewimages/listing-reach-logo.png" alt="" class="img-a img-fluid">
+                        <img src=${Common.PRAVIEW_LOGO} alt="" class="img-a img-fluid">
                      </div>
                      <div class="mb-3 mt-3 text-right" style="width:25%;text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
                 <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;font-weight: 400;text-align: center;
@@ -1415,7 +1415,7 @@ static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER:string =`
                   <div  style="display: flex;flex-wrap: wrap;">
                      <div class="mb-3 mt-3 ml-3" style="width:41%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">					 
                         <i>Powered by</i>	<br>
-                        <img src="`+Common.SITE_URL+`"/uploads/previewimages/listing-reach-logo.png" alt="" class="img-a img-fluid">
+                        <img src=${Common.PRAVIEW_LOGO} alt="" class="img-a img-fluid">
                      </div>
                      <div class="mb-3 mt-3 text-right" style="width:25%;text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
                         <button class="btn btn-primary" style="background-color: #EE8C3A;
@@ -1518,7 +1518,7 @@ static PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE:string= Common.PREVIEW_EMAIL_TEMPLAT
 
 static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ ` 
                   <div class="row" style="display: flex;flex-wrap: wrap;">
-                     <div style="width:100%;padding-right: 15px;padding-left: 15px;">
+                     <div style="width:100%">
                         <div class="flyer-header" style="display: block;overflow: hidden;
          background-color: #EE8C3A;
          color: #fff;

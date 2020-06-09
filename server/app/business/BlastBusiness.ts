@@ -102,13 +102,13 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                 var html = '';
                 properties.forEach(function (property: IPropertyModel) {
                   html += `<div class="flyer-bg" style="background: #f1f1f1;">
-                                             <div class="" style="display: block;display: flex;flex-wrap: wrap;border-top: 2px solid #ccc;">
-                                                <div style="width:50%;display: block; background:#f1f1f1;height: 400px;">`;
+                                             <div class="" style="display: block;display: flex;border-top: 2px solid #ccc;">
+                                                <div style="display: block; background:#f1f1f1;height: 400px;">`;
                   if (property.propertyImages && property.propertyImages.length == 1) {
-                    html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl || "/public/assets/images/img1.jpg"} />`;
-                  } else {
-                    html += `<img src="`+Common.SITE_URL+`/uploads/previewimages/img2.jpg" />`;
-                  }
+                      html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl} style="width:50%" />`;
+                    } else {
+                      html += `<img src="`+Common.SITE_URL+`/uploads/previewimages/img2.jpg"  style="width:50%"/>`;
+                    }
 
                   html += `</div><div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
                                                    <div class="" style="display: flex;flex-wrap: wrap;">
@@ -241,7 +241,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
                 let image = '';
                 properties.forEach(function (property: IPropertyModel) {
-                  console.log("property====", property);
+                 // console.log("property====", property);
                   if (property.propertyImages && property.propertyImages.length == 1) {
                     image += `<div class="row">
                                       <div class="col-md-12">
@@ -483,7 +483,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
                   let lot_size = "";
                   if(property.lot_size!=undefined && property.lot_size){
-                    lot_size=`<li>Lot Size: #lotSize# sqft</li>`;
+                    lot_size=`<li>Lot Size: ${property.lot_size} sqft</li>`;
                   }
 
 
@@ -558,7 +558,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#numberOfStories#/g, number_stories)
                     .replace(/#garageSize#/g,garageSize)
                     .replace(/#building_size#/g,building_size)
-                    
+                  // console.log("emailtemplat23e====",emailtemplate);
 
                   resolve(emailtemplate);
                 });
