@@ -935,7 +935,7 @@ class UserController implements IBaseController<UserBusiness> {
 								});
 							});
 						});
-						res.send({message:"success"})
+						res.send({ message: "success" })
 					}
 				});
 			});
@@ -1087,15 +1087,17 @@ class UserController implements IBaseController<UserBusiness> {
 						as: "templates"
 					}
 				},
+				{ $unwind: { path: "$templates" } },
 				{
 					$lookup:
 					{
 						from: "payments",
 						localField: "_id",
 						foreignField: "blast_id",
-						as: "payment"
+						as: "payments"
 					}
 				},
+				{ $unwind: { path: "$payments", preserveNullAndEmptyArrays: true } },
 				{
 					$project:
 					{
@@ -1107,6 +1109,7 @@ class UserController implements IBaseController<UserBusiness> {
 						"scheduledDate": 1,
 						"templates.headline": 1,
 						"templates.template_type": 1,
+						"templates.email_subject": 1,
 						"payment.amount": 1
 					}
 				},
@@ -1126,10 +1129,11 @@ class UserController implements IBaseController<UserBusiness> {
 						return {
 							id: obj._id,
 							status: obj.status,
-							payment: obj.payment,
-							subject: obj.templates,
+							payment: obj.payments && obj.payments.amount,
+							subject: obj.templates.email_subject,
 							createdon: obj.selected_template_date,
 							scheduledDate: obj.scheduledDate,
+							templateType: obj.templates.template_type,
 							templateId: obj.selected_template_id
 						};
 

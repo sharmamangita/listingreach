@@ -65,6 +65,7 @@ class FlyersPage extends React.Component {
                 <tr>
                   <th>Flyer ID</th>
                   <th>Subject</th>
+                  <th>Type</th>
                   <th>Value</th>
                   <th>Created On</th>
                   <th>Status</th>
@@ -92,14 +93,17 @@ class FlyersPage extends React.Component {
                           }
                         </td>
                         <td>
-                          {data.subject.length && data.subject[0].headline
-                            ? data.subject[0].headline
+                          {data.subject ? data.subject
                             : "---"}
                         </td>
                         <td>
+                          {data.templateType ? data.templateType
+                            : "---"}
+                        </td>
+
+                        <td>
                           {" "}
-                          {data.payment.length && data.payment[0].amount
-                            ? "$" + data.payment[0].amount
+                          {data.payment ? "$" + data.payment
                             : "---"}
                         </td>
                         <td>{this.createdDate(data.createdon)}</td>
