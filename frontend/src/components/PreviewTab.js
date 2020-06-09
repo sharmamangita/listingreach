@@ -9,6 +9,7 @@ class PreviewTab extends React.Component {
     this.state = {
       email: "",
       submitted: '',
+      previewHtml: null
     };
 
 
@@ -28,7 +29,7 @@ class PreviewTab extends React.Component {
     const { dispatch } = this.props.dispatchval.dispatch;
     if (email && blast_id) {
       dispatch(userActions.emailPreviewTemplate(email, blast_id));
-      window.scrollTo(0,0);
+      window.scrollTo(0, 0);
       this.setState({
         email: "",
         submitted: false,
@@ -49,11 +50,11 @@ class PreviewTab extends React.Component {
   nexttab() {
     const { dispatch } = this.props.dispatchval.dispatch;
     this.props.moveTab("selectdatabase");
-   // dispatch(userActions.preview());
+    // dispatch(userActions.preview());
   }
 
   componentWillReceiveProps(nextProprs) {
-    if(nextProprs.activeTab=="preview"){
+    if (nextProprs.activeTab == "preview") {
       console.log("nextProps in Preview ", nextProprs)
       if (nextProprs.blast_id != this.state.blast_id) {
         this.setState({ blast_id: nextProprs.blast_id });
@@ -61,8 +62,8 @@ class PreviewTab extends React.Component {
       if (nextProprs.previewHtml != this.state.previewHtml) {
         this.setState({ previewHtml: nextProprs.previewHtml });
       }
-      
-      if (nextProprs.blast_id && !nextProprs.previewHtml && !this.state.previewHtml) {
+
+      if (nextProprs.blast_id && nextProprs.previewHtml && this.state.previewHtml == null) {
         const { dispatch } = this.props.dispatchval.dispatch;
         let blast_id = nextProprs.blast_id;
         dispatch(userActions.getPreviewhtml(blast_id));
@@ -71,7 +72,7 @@ class PreviewTab extends React.Component {
   }
   render() {
     console.log("props in render in Preview Tab ", this.props);
-    const {  previewHtml } = this.props;
+    const { previewHtml } = this.props;
     const { submitted, email } = this.state;
 
     return (
@@ -113,10 +114,10 @@ class PreviewTab extends React.Component {
         </div>
         {previewHtml && <Markup content={previewHtml} />}
         <div className="col-md-12 mt-4">
-          <a href="javascript:void(0)" className="btn btn-primary" onClick={this.nexttab}>
+          <a href="javascript:void(0)" className="btn btn-primary" onClick={() => this.nexttab}>
             Save
           </a>
-          <a href="javascript:void(0)" className="btn btn-primary pull-right" onClick={this.nexttab} >
+          <a href="javascript:void(0)" className="btn btn-primary pull-right" onClick={() => this.nexttab} >
             Next
           </a>
         </div>

@@ -47,7 +47,7 @@ class PhotoTab extends React.Component {
   }
 
   nextPage() {
-    this.props.moveTab("preview");
+    this.props.dispatchval.dispatch.dispatch(userActions.moveTab("preview"));
   }
 
   openUpload(e) {
@@ -58,9 +58,9 @@ class PhotoTab extends React.Component {
   showModal(e, count) {
     let properties = this.state.properties;
     if (properties && count) {
-      properties[0].propertyImages=[];
-      for(let i=1;i<=count;i++){
-        properties[0].propertyImages.push({imageUrl:"",imageId:""});
+      properties[0].propertyImages = [];
+      for (let i = 1; i <= count; i++) {
+        properties[0].propertyImages.push({ imageUrl: "", imageId: "" });
       }
       this.setState({ visible: true, properties });
     }
@@ -111,7 +111,7 @@ class PhotoTab extends React.Component {
         template: nextProps.template,
         blast_id: nextProps.blast_id,
         properties: nextProps.properties,
-        visible :true
+        visible: true
       });
     }
   }

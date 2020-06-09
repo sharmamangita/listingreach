@@ -2,6 +2,7 @@ import { adminConstants } from '../constants';
 import { adminService } from '../services';
 import { alertActions } from './';
 import { history } from '../helpers';
+import { Tab } from 'react-bootstrap';
 
 
 export const adminActions = {
@@ -63,7 +64,7 @@ function getActiveCampaignAssociations() {
             .then(
                 activeCampaign => {
                     dispatch(success(activeCampaign));
-                    dispatch(alertActions.success('')); 
+                    dispatch(alertActions.success(''));
                 },
                 error => {
                     dispatch(failure(error.toString()));
@@ -166,6 +167,8 @@ function getPayments() {
     function success(payments) { return { type: adminConstants.GET_PAYMENTS_SUCCESS, payments } }
     function failure(error) { return { type: adminConstants.GET_PAYMENTS_FAILURE, error } }
 }
+
+
 
 function getSubscribers() {
     return dispatch => {

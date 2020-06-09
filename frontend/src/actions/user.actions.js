@@ -34,8 +34,16 @@ export const userActions = {
     saveImages,
     termsNext,
     saveCalenderData,
-    getPreviewhtml
+    getPreviewhtml,
+    moveTab,
 };
+
+function moveTab(tab) {
+    return dispatch => {
+        dispatch(success(tab));;
+    };
+    function success(tab) { return { type: userConstants.MOVE_TAB_SUCCESS, tab } }   
+}
 /* Get References */
 function getReferences(userid) {
     console.log("userdata");
@@ -664,7 +672,7 @@ function getPreviewhtml(blastId) {
                 error => dispatch(failure(error.toString()))
             );
     };
-    function request(users) { return { type: userConstants.GETPREVIEW_REQUEST } }
+    function request() { return { type: userConstants.GETPREVIEW_REQUEST } }
     function success(HTML) { return { type: userConstants.GETPREVIEW_SUCCESS, HTML } }
     function failure(error) { return { type: userConstants.GETPREVIEW_FAILURE, error } }
 }

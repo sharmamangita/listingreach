@@ -167,7 +167,11 @@ export function users(state = {}, action) {
       return newState;
 
 
-
+      case userConstants.MOVE_TAB_SUCCESS:
+        newState = objectAssign({}, state, {
+          tab: action.tab,
+        });
+        return newState;
 
     case userConstants.TERMS_REQUEST:
       newState = objectAssign({}, state, {
@@ -201,21 +205,21 @@ export function users(state = {}, action) {
         error: action.error,
       };
 
-      case userConstants.DELETE_BLAST_REQUEST:
-        // add 'deleting:true' property to user being deleted
-        return {
-          loading: true,
-        };
-      case userConstants.DELETE_BLAST_SUCCESS:
-        // remove deleted user from state
-        return {
-          message: action,
-        };
-        case userConstants.DELETE_BLAST_FAILURE:
-          // add 'deleting:true' property to user being deleted
-          return {
-            loading: true,
-          };
+    case userConstants.DELETE_BLAST_REQUEST:
+      // add 'deleting:true' property to user being deleted
+      return {
+        loading: true,
+      };
+    case userConstants.DELETE_BLAST_SUCCESS:
+      // remove deleted user from state
+      return {
+        message: action,
+      };
+    case userConstants.DELETE_BLAST_FAILURE:
+      // add 'deleting:true' property to user being deleted
+      return {
+        loading: true,
+      };
 
     case userConstants.DELETE_REQUEST:
       // add 'deleting:true' property to user being deleted

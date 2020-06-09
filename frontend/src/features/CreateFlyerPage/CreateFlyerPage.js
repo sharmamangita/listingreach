@@ -85,7 +85,9 @@ class CreateFlyerPage extends React.Component {
       this.setState({ blast: confugredBlast });
     }
     if (nextProps.tab) {
-      this.moveTab(nextProps.tab);
+      if (nextProps.tab != this.state.moveTab) {
+        this.moveTab(nextProps.tab);
+      }
     }
   }
 
