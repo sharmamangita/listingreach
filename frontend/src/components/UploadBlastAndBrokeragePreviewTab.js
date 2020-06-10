@@ -12,7 +12,7 @@ import {
 import Modal from "react-bootstrap4-modal";
 import { connect } from "react-redux";
 import { common } from "../helpers";
-import Moment from "moment";
+
 import config from "config";
 class UploadBlastAndBrokeragePreviewTab extends React.Component {
   constructor(props) {

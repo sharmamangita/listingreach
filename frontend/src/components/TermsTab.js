@@ -9,10 +9,10 @@ import {
   MenuItem,
   NavLink,
 } from "react-bootstrap";
-import Modal from "react-bootstrap4-modal";
+
 import { connect } from "react-redux";
 import { common } from "../helpers";
-import moment from "moment";
+
 
 class TermsTab extends React.Component {
   constructor(props) {

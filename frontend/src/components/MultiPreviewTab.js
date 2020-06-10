@@ -9,10 +9,10 @@ import {
   MenuItem,
   NavLink,
 } from "react-bootstrap";
-import Modal from "react-bootstrap4-modal";
+
 import { connect } from "react-redux";
 import { common } from "../helpers";
-import Moment from "moment";
+
 import config from "config";
 
 class MultiPreviewTab extends React.Component {
