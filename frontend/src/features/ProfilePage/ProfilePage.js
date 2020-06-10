@@ -172,6 +172,7 @@ class ProfilePage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log("nextProps45-----",nextProps);
     if ((nextProps.agentData != undefined && nextProps.agentData) || nextProps.profile != undefined && nextProps.profile) {
       this.propsDataupdate(nextProps.agentData, nextProps.profile);
     }
@@ -192,7 +193,6 @@ class ProfilePage extends React.Component {
   render() {
 
     const { submitted, submittedagent, profile, user, agentData } = this.state;
-    console.log("agentData====",agentData);
     let modalproimageOpen = (event) => {
       var id = event.currentTarget.dataset.id;
       this.setState({ showprofileimage: true, agentData: agentData, modalid: id });

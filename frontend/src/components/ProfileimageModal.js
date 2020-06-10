@@ -57,7 +57,11 @@ class ProfileimageModal extends React.Component {
 		axios.post(`${config.uploadapiUrl}/updatedupload/`,data,configs)
 			.then((response) => {
 			localStorage.setItem('profileimage', JSON.stringify(response.data.profileimg));
-			this.setState({ updateprofile:response.profileimg});	
+				let getlogin = localStorage.getItem('user');
+				let user = JSON.parse(getlogin);
+				const { dispatch } = this.props.dispatchval.dispatch;
+				dispatch(userActions.getById(user.userId));
+			//this.setState({ updateprofile:response.profileimg});	
 			this.setState({loader:false})
 			/*window.location.reload();*/
 			handleClose();

@@ -57,8 +57,12 @@ class ProfilelogoModal extends React.Component {
 		
 		axios.post(`${config.uploadapiUrl}/logoupload/`,data,configs)
 			.then((response) => {
-			localStorage.setItem('profileimage', JSON.stringify(response.data.profileimg));
-			this.setState({ updateprofile:response.profileimg});	
+				localStorage.setItem('profileimage', JSON.stringify(response.data.profileimg));
+			let getlogin = localStorage.getItem('user');
+			let user = JSON.parse(getlogin);
+			const { dispatch } = this.props.dispatchval.dispatch;
+			dispatch(userActions.getById(user.userId));
+
 			this.setState({loader:false})
 			this.props.onClickBackdrop();
           	this.handleClose();
@@ -69,7 +73,7 @@ class ProfilelogoModal extends React.Component {
           	this.handleClose();
 			this.setState({loader:false})
 			});
-		
+		//this.props.dispatchval.dispatch.dispatch(userActions.moveTab("preview"));
 		}
 		/*onClickDelete(){
 		var userid = this.props.profile;
@@ -117,7 +121,7 @@ class ProfilelogoModal extends React.Component {
 				<div className="modal-body">
 				<div className="col-sm-12 text-center">
 				<Spinner size={120} spinnerColor={"#333"} spinnerWidth={2} visible={this.state.loader} />
-				<img src={(url ? url :'/public/assets/images/dummy-profile.png')}  style={imgstyle} className="img-circle" />
+				<img src={(url ? url :'/public/assets/images/dummy-logo.png')}  style={imgstyle} className="img-circle" />
 			</div>
              <div className="row form-group">
                 <div className="col-md-12 col-lg-12 mb-3 mb-md-0">
