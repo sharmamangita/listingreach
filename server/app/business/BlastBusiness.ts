@@ -101,22 +101,38 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                 console.log("multiple properties....",properties);
                 var html = '';
                 properties.forEach(function (property: IPropertyModel) {
-                  html += `<div class="flyer-bg" style="background: #f1f1f1;">
+                  html += `<div style="display: flex;flex-wrap: wrap;">
+                     <div style="width:100%">
+                                <div class="flyer-header" style="display: block;overflow: hidden;
+                 background-color: #EE8C3A;
+                 color: #fff;
+                 box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(20, 19, 18, 0.1);
+                 border-top: 4px solid #EE8C3A;
+                 height: 80px;
+                 text-align: center;
+                 font-size: 28px;
+                 font-weight: bold;
+                 padding: 17px 0 10px 0;">           
+                                   #blastHeadline#
+                                </div>
+                             </div>
+                  </div>
+         
                                              <div class="" style="display: block;display: flex;border-top: 2px solid #ccc;">
-                                                <div style="display: block; background:#f1f1f1;height: 400px;">`;
+                                                <div style="display: block; background:#f1f1f1;height:auto;overflow: hidden;width:50%">`;
                   if (property.propertyImages && property.propertyImages.length == 1) {
-                      html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl} style="width:50%" />`;
+                      html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl} />`;
                     } else {
-                      html += `<img src=${Common.SITE_URL+ "/uploads/previewimages/img2.jpg"} style="width:50%" />`;
+                      html += `<img src=${Common.SITE_URL+ "/uploads/previewimages/img2.jpg"}  />`;
                     }
 
-                  html += `</div><div style="width:50%;display: block; background:#f1f1f1; height: 400px;">
+                  html += `</div><div style="width:50%;display: block; background:#f1f1f1; height:auto;">
                                                    <div class="" style="display: flex;flex-wrap: wrap;">
-                                                      <div style="width:100%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;">
+                                                      <div style="width:100%;margin-bottom: 1rem !important;margin-top: 1rem !important;">
                                                          <h4 style=" background: #f1f1f1;font-size: 1.5rem;margin-top: 0;
                                                             margin-bottom: 1rem;">Price: ${property.price} per Square Foot</h4>
-                                                      </div>
-                                                      <div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+                                                 
+                                                      <div class="ml-3" style="width:100%;">
                                                          <label class="flyer-label" style="color: #EE8C3A;
                                                             font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Key Features:</label>
                                                          <ul>`;
@@ -165,6 +181,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                  html +=`
                                                          </ul>
                                                       </div>
+                                                       </div>
                                                    </div>
                                                 </div>
                                              </div>`;

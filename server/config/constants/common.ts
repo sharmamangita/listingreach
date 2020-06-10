@@ -1299,16 +1299,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
 <html>
    <head>
       <meta charset='UTF-8'>
-      <style scoped>
-			@media (max-width: 1500px) {
-			    .text-center{
-			        background:"#000 !important" 
-			    }
-			    a{
-			    	font-size:"40px"
-			    }
-}
-</style>
+
    </head>
    <body>
       <div class="blast-box" style=" max-width: 100%;
@@ -1324,18 +1315,18 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
             <div style="display: block;width:100%;margin: auto;">
                <div class="border2" style="display: block;border: 3px solid #eee;">
                   <div style="display: block;display: flex;flex-wrap: wrap;">
-                     <div class="mb-3 mt-3 text-right" style="display: block;width:30%;text-align: right !important; margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">					 
+                     <div class="mb-3 mt-3 text-right" style="display: block;width:30%;text-align: right !important; margin-bottom: 2% !important;margin-top: 2% !important;text-align: right !important;">					 
                         <label style="display: inline-block;
          margin-bottom: 0.5rem;">From:	</label>
                      </div>
-                     <div style="display: block;width:66%;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;" class="mb-3 mt-3 ml-3">
+                     <div style="display: block;width:66%;margin-bottom: 2% !important; margin-left: 2% !important;margin-top: 2% !important;" class="mb-3 mt-3 ml-3">
                         #agentName# via Listingreach.com
                      </div>
-                     <div class="mb-3 text-right" style="display: block;width:30%;text-align: right !important;margin-bottom: 1rem !important;text-align: right !important;">					 
+                     <div class="mb-3 text-right" style="display: block;width:30%;text-align: right !important;margin-bottom: 2% !important;text-align: right !important;">					 
                         <label style="display: inline-block;
          margin-bottom: 0.5rem;">Email Subject Line: #subject#</label>
                      </div>
-                     <div class="mb-3 ml-3" style="width:66%; margin-left: 1rem !important;">
+                     <div class="mb-3 ml-3" style="width:66%; margin-left: 2% !important;">
                         #formLine#
                      </div>
                   </div>
@@ -1348,20 +1339,28 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                         <img src=${Common.PRAVIEW_LOGO} style="" class="img-a img-fluid">
                 <div style="text-align: right;">
                      <span class="mb-3 mt-3 text-right" style="text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-                <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;font-weight: 400;text-align: center;
-						user-select: none;padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 0.25rem;box-shadow 0.15s ease-in-out;">Reply to Sender</a></span>
+                <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background: #ee8c3a;
+    color: #fff;
+    display: inline-block;
+    font-weight: 400;
+    padding: 8px 22px;
+    border-radius: 8px;text-decoration: none;margin: 10px">Reply to Sender</a></span>
 	<span class="mb-3 mt-3 text-right ml-3" style="text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-        <a class="btn btn-primary" href="mailto:#agentEmail#" style="background-color: #EE8C3A;border: #EE8C3A; color:#fff;display: inline-block;
-         			font-weight: 400;text-align: center;white-space: nowrap;vertical-align: middle;padding: 0.375rem 0.75rem;line-height: 1.5;border-radius: 0.25rem; box-shadow 0.15s ease-in-out;">Forward to Associate</a>
+        <a class="btn btn-primary" href="mailto:#agentEmail#" style="background: #ee8c3a;
+    color: #fff;
+    display: inline-block;
+    font-weight: 400;
+    padding: 8px 22px;
+    border-radius: 8px;text-decoration: none;margin: 10px">Forward to Associate</a>
                      </span>
                   </div>
                      </div></div>`;
 static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
                      <div class="mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
-                        <div class="text-center" style="width:16%;text-align: center !important;">
-                           <img alt="Photo" class="img-square" style="width:100px;" src="#companyLogo#">
+                        <div class="text-center" style="width:20%;text-align: center !important;overflow:hidden">
+                           <img alt="Photo" class="img-square" style="width:70%;" src="#companyLogo#">
                         </div>
-                        <div class="text-center" style="width:66%;text-align: center !important;">
+                        <div class="text-center" style="width:60%;text-align: center !important;">
                            <b> #agentName# </b><br>
                            Agent<br>
                            #agentEmail#<br>
@@ -1369,8 +1368,8 @@ static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
                            #phone_number#<br><br>
                           	#companyDetail#,<br>
                         </div>
-                        <div class="text-center pl-0" style="width:16%;text-align: center !important;">
-                           <img alt="Photo" class="img-circle" style="width:100px;" src="#agentImage#">
+                        <div class="text-center pl-0" style="width:20%;text-align: center !important;overflow:hidden">
+                           <img alt="Photo" class="img-circle" style="width:70%;" src="#agentImage#">
                         </div>
                      </div>
                   </div>
