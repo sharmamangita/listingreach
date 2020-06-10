@@ -666,7 +666,10 @@ function saveCalenderData(data, blastId) {
         dispatch(request());
         userService.saveCalenderData(data, blastId)
             .then(
-                users => dispatch(success(users)),
+                users => {
+                    dispatch(success(users))
+                    dispatch(getBlast(blastId))
+                },
                 error => dispatch(failure(error.toString()))
             );
     };

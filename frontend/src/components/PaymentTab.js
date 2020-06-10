@@ -10,8 +10,6 @@ class PaymentTab extends React.Component {
     this.state = {
       userId: "",
     };
-
-
     this.dispatchval = ({
       tagName: 'span',
       className: '',
