@@ -7,7 +7,7 @@ import { userActions } from "../actions";
 require('@fullcalendar/core/main.css');
 require('@fullcalendar/daygrid/main.css');
 // require('./main.css');
-
+import moment from "moment";
 
 class SetDateTab extends React.Component {
   constructor(props) {
@@ -41,6 +41,12 @@ class SetDateTab extends React.Component {
     if (confirm('Would you like to add an blast to ' + arg.dateStr + ' ?')) {
       if (arg.dateStr) {
         this.setState({ scheduledDate: arg.dateStr, isSelected: true })
+        this.setState({  // add new event data
+          calendarEvents: this.state.calendarEvents.concat({ // creates a new array
+            title: arg.dateStr,
+            start: arg.date
+          })
+        }) 
       }
     }
   }
@@ -50,17 +56,26 @@ class SetDateTab extends React.Component {
     const { scheduledDate, blast_id } = this.state;
     console.log("scheduledDate====", scheduledDate);
     if (blast_id && scheduledDate) {
+
       dispatch(userActions.saveCalenderData(scheduledDate, blast_id));
     }
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.activeTab == "setDate") {
       console.log("nextProps in Set Date", nextProps)
+      var scheduledDateVal =moment(nextProps.scheduledDate).format('YYYY-MM-DD');
+      console.log("formatedate====",scheduledDateVal)
       this.setState({
         blast_id: nextProps.blast_id,
         scheduledDate: nextProps.scheduledDate,
         isSelected: nextProps.scheduledDate ? true : false
       })
+      this.setState({  // add new event data
+        calendarEvents: this.state.calendarEvents.concat({ // creates a new array
+          title: scheduledDateVal,
+          start:scheduledDateVal
+        })
+      }) 
     }
   }
   render() {

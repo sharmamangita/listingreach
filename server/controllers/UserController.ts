@@ -288,14 +288,17 @@ class UserController implements IBaseController<UserBusiness> {
 				_agentBusiness.update(_id, _agent, (error: any, resultUpdate: any) => {
 					if (error) {
 					} else {
-						return res.json({ profileimg: agentresult.profilePic });
+						_agentBusiness.findById(_id, async (agentError, result) => { 
+							return res.json({ profileimg: result });
+						});
+						
 					}
 				});
 			} else {
 				_agentBusiness.create(_agent, (error, agentresultData) => {
 					if (error) {
 					} else {
-						return res.json({ profileimg: agentresultData.image_url });
+						return res.json({ profileimg: agentresultData });
 					}
 				});
 			}

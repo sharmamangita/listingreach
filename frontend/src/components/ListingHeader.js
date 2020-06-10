@@ -68,7 +68,8 @@ class ListingHeader extends React.Component {
       let profileimage = localStorage.getItem('profileimage');
 
       console.log("localStorage.getItem('profileimage')======", profileimage, typeof profileimage);
-      if (profileimage != 'undefined') {
+/*  Dinesh === > In tarea cant find indexOf
+if (profileimage != 'undefined') {
         profileimage = JSON.parse(localStorage.getItem('profileimage'));
 
         if (profileimage) {
@@ -80,7 +81,7 @@ class ListingHeader extends React.Component {
             profilepc = `${config.uploadapiUrl}/uploads/${profileimage}`;
           }
         }
-      }
+      }   */
       return (
         <header>
           <nav className="navbar navbar-default navbar-trans navbar-expand-lg fixed-top">

@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 const axios = require("axios");
 import { common } from '../helpers';
 import { authHeader } from '../helpers';
-import moment from "moment";
+
 import Spinner from 'react-spinner-material'; 
 class UserProfileModal extends React.Component {
     constructor(props, context) {
