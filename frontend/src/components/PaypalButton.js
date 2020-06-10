@@ -57,20 +57,19 @@ class PaypalButton extends React.Component {
       }
     }
   }
-  onSuccess(payment,dispatch,uploadBlast){
-    console.log('Successful payment!', uploadBlast);
+  onSuccess(payment,dispatch,blast_id){
+    console.log('Successful payment!', blast_id);
     console.log("this.props.dispatchval===",dispatch.dispatchval.dispatch);
     var blast_id='';
-    if(uploadBlast ){
-      blast_id=uploadBlast._id;
+    if(blast_id ){
+      blast_id=blast_id._id;
       console.log("blast_id===gh===",blast_id);
       dispatch.dispatchval.dispatch.dispatch(userActions.savePayment(payment,blast_id));
-      this.props.resetState();
     }
     
   }
   render() {
-    const { total,id,currency,env,commit,client,dispatch,page,uploadBlast
+    const { total,id,currency,env,commit,client,dispatch,page,blast_id
     } = this.props;
     const onError = (error) =>
     console.log('Erroneous payment OR failed to load script!', error);
@@ -94,7 +93,7 @@ class PaypalButton extends React.Component {
         },
       ],
     });
-    console.log("uploadBlast=====",uploadBlast);
+    console.log("blast_id=====",blast_id);
     const onAuthorize = (data, actions) =>
       actions.payment.execute()
         .then(() => {
@@ -110,11 +109,11 @@ class PaypalButton extends React.Component {
             paymentID: data.paymentID,
             paymentToken: data.paymentToken,
             returnUrl: data.returnUrl,
-            uploadBlast:uploadBlast,
+            blast_id:blast_id,
           };
           this.props.onClickBackdrop();
           this.handleClose();
-          this.onSuccess(payment,dispatch,uploadBlast);
+          this.onSuccess(payment,dispatch,blast_id);
         });
 
     return (

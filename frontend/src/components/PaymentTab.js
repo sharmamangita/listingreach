@@ -1,21 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { userActions } from "../actions";
 import CommonDownload from './CommonDownload'
 import { globalData } from '../constants/data.constants';
-import {
-  Nav,
-  Navbar,
-  NavItem,
-  NavDropdown,
-  MenuItem,
-  NavLink,
-} from "react-bootstrap";
-import Modal from "react-bootstrap4-modal";
-import { connect } from "react-redux";
-import { common } from "../helpers";
 import moment from "moment";
-
+import { adminActions } from './../actions/admin.actions';
 class PaymentTab extends React.Component {
   constructor(props) {
     super(props);
@@ -23,59 +10,64 @@ class PaymentTab extends React.Component {
     this.state = {
       userId: "",
     };
+
+
     this.dispatchval = ({
-      tagName : 'span',
-      className : '',
-      children : null,
-      dispatch :this.props
+      tagName: 'span',
+      className: '',
+      children: null,
+      dispatch: this.props
     });
     this.createdDate = this.createdDate.bind(this);
   }
- 
- createdDate(createdOn) {
-    if(createdOn!==''){
-      var datformt = new moment(createdOn, "YYYY-MM-DD");
-      return datformt;
-    }else{
-      return '';
-    }
-      
+  componentWillMount() {
+    this.props.dispatchval.dispatch.dispatch(adminActions.getBlastSettings());
+    //	window.scrollTo(0,0);
+  }
+  createdDate(createdOn) {
+    var expDate = new moment(createdOn, "YYYY-MM-DD");
+    var created = moment(expDate).format("DD-MM-YYYY");
+    return created;
+  }
+  accept(e) {
+    const { checked } = e.target;
+    this.setState({ accepted: checked })
   }
   render() {
-    var  scheduledDate='';
-    if(this.props.scheduledDate){
+    const { accepted } = this.state;
+    var scheduledDate = '';
+    if (this.props.scheduledDate) {
       scheduledDate = this.props.scheduledDate;
     }
-    var associations='';
-    var per_email_blast_price=0;
-    var additional_email_blast_price=0;
-    var invoiveTotal= 0;
-    var blast_type='';
-    if(this.props.dataBaseData && this.props.blastsettingData){
-      per_email_blast_price =this.props.blastsettingData[0].per_email_blast_price;
-      additional_email_blast_price =this.props.blastsettingData[0].additional_email_blast_price;
-      
-      blast_type=this.props.dataBaseData.blast_type;
-      associations=this.props.dataBaseData.associations;
-      console.log("associations====",associations.length);
-      associations.forEach(function(item){
-        if(associations.length>1){
-          invoiveTotal=per_email_blast_price+(additional_email_blast_price*associations.length);
-        }else{
-          invoiveTotal=per_email_blast_price;
+    var associations = this.props.associations;
+    var per_email_blast_price = 0;
+    var additional_email_blast_price = 0;
+    var invoiveTotal = 0;
+    var blast_type = this.props.blast_type;
+    if (this.props.blastsettingData) {
+      per_email_blast_price = this.props.blastsettingData[0].per_email_blast_price;
+      additional_email_blast_price = this.props.blastsettingData[0].additional_email_blast_price;
+
+      // blast_type=this.props.dataBaseData.blast_type;
+      // associations=this.props.dataBaseData.associations;
+      console.log("associations====", associations.length);
+      associations.forEach(function () {
+        if (associations.length > 1) {
+          invoiveTotal = per_email_blast_price + (additional_email_blast_price * associations.length);
+        } else {
+          invoiveTotal = per_email_blast_price;
         }
       });
-       var downloadLink=
+      var downloadLink =
         (
-        <CommonDownload
-          dispatchval = {this.dispatchval}
-          dataBaseData={this.props.dataBaseData}
-          total= {invoiveTotal}
-          resetState={this.props.resetState}
-        />
-      );
+          <CommonDownload
+            dispatchval={this.dispatchval}
+            blast_id={this.props.blast_id}
+            total={invoiveTotal}
+          />
+        );
     }
-   
+
     return (
       <div
         className="tab-pane fade mt-2"
@@ -90,9 +82,9 @@ class PaymentTab extends React.Component {
           below.
         </p>
         <div className="alert alert-info">
-          <strong>Your Selected Send Date is: {scheduledDate}</strong>
+          <strong>Your Selected Send Date is: {this.createdDate(scheduledDate)}</strong>
         </div>
-        
+
         <br />
         <p>Order Details</p>
         <table
@@ -107,31 +99,31 @@ class PaymentTab extends React.Component {
               <th>Amount</th>
             </tr>
           </thead>
-          <tbody>            
-          {associations &&
-                associations.map((result, i) =>(                 
-                  i == 0 ?
-                    <tr key={i}>
-                    <td>{i+1}</td>
-                      <td>Blast Type {blast_type} -{result.association.name}</td>
-                      <td>
-                        ${per_email_blast_price}
-                      </td>
-                    </tr>
-                    : <tr>
+          <tbody>
+            {associations &&
+              associations.map((result, i) => (
+                i == 0 ?
+                  <tr key={result.segment.name}>
+                    <td>{i + 1}</td>
+                    <td>Blast Type {blast_type} -{result.association.name}</td>
+                    <td>
+                      ${per_email_blast_price}
+                    </td>
+                  </tr>
+                  : <tr>
                     <td></td>
-                      <td>Additional-{result.association.name}</td>
-                      <td>
-                        ${additional_email_blast_price}
-                      </td>
-                    </tr>
-                ))
-                }
+                    <td>Additional-{result.association.name}</td>
+                    <td>
+                      ${additional_email_blast_price}
+                    </td>
+                  </tr>
+              ))
+            }
             <tr>
               <td></td>
               <td className="text-right">Invoice Total</td>
               <td>${invoiveTotal}</td>
-            </tr> 
+            </tr>
           </tbody>
         </table>
         <br />
@@ -238,14 +230,14 @@ class PaymentTab extends React.Component {
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <label>State</label>
-                   <select className="form-control form-control-a" >
-                        <option>Select State</option>
-                        {
-                            globalData.USstates.map((st) => (
-                                <option key={st}>{st}</option>
-                            ))
-                        }
-                    </select>
+                  <select className="form-control form-control-a" >
+                    <option>Select State</option>
+                    {
+                      globalData.USstates.map((st) => (
+                        <option key={st}>{st}</option>
+                      ))
+                    }
+                  </select>
                 </div>
               </div>
               <div className="col-md-12 mb-3">
@@ -265,7 +257,7 @@ class PaymentTab extends React.Component {
                 <div className="form-group">
                   <label className="check">
                     I Accept the Terms &amp; Conditions
-                    <input type="checkbox" />
+                    <input type="checkbox" onChange={(e) => this.accept(e)} />
                     <span className="checkmark"></span>
                   </label>
                 </div>{" "}
@@ -273,9 +265,9 @@ class PaymentTab extends React.Component {
             </div>
           </div>
           <div className="col-md-12 mt-4 text-center">
-            {downloadLink ? downloadLink:""}
+            {downloadLink && accepted ? downloadLink : ""}
           </div>
-           
+
         </div>
       </div>
     );

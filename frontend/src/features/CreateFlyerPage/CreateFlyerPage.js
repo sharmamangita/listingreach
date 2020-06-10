@@ -89,7 +89,10 @@ class CreateFlyerPage extends React.Component {
       }
     }
     if (nextProps.previewHtml) {
-      this.setState({ previewHtml: nextProps.previewHtml })
+      this.setState({ previewHtml: nextProps.previewHtml });
+    }
+    if (nextProps.blastsettingData) {
+      this.setState({ blastsettingData: nextProps.blastsettingData });
     }
   }
 
@@ -106,7 +109,7 @@ class CreateFlyerPage extends React.Component {
   }
 
   render() {
-    const { blast, moveTab, previewHtml, previewData, tabs, blastsettingData, dataBaseData, profile } = this.state;
+    const { blast, moveTab, previewHtml, previewData, tabs, blastsettingData, profile } = this.state;
     console.log("State in create flayer render :", this.state);
     return (
       <div>
@@ -217,15 +220,17 @@ class CreateFlyerPage extends React.Component {
                       </Tab>
                       <Tab eventKey="terms" title="Terms & Condition" disabled={tabs.terms ? true : false}>
                         <TermsTab dispatchval={this.dispatchval}
-                         activeTab={moveTab} />
+                          activeTab={moveTab} />
                       </Tab>
                       <Tab eventKey="payment" title="Payment" disabled={tabs.payment ? true : false}>
                         <PaymentTab dispatchval={this.dispatchval}
-                          dataBaseData={blast && blast.associations}
+                          associations={blast && blast.associations}
+                          blast_type={blast && blast.blast_type}
+                          blast_id={blast && blast._id}
                           activeTab={moveTab}
-                          blastsettingData={blastsettingData} 
+                          blastsettingData={blastsettingData}
                           scheduledDate={blast && blast.scheduledDate}
-                          />
+                        />
                       </Tab>
                     </Tabs>
                   </div>

@@ -36,13 +36,14 @@ export const userActions = {
     saveCalenderData,
     getPreviewhtml,
     moveTab,
+    getBlastSettings
 };
 
 function moveTab(tab) {
     return dispatch => {
         dispatch(success(tab));;
     };
-    function success(tab) { return { type: userConstants.MOVE_TAB_SUCCESS, tab } }   
+    function success(tab) { return { type: userConstants.MOVE_TAB_SUCCESS, tab } }
 }
 /* Get References */
 function getReferences(userid) {
@@ -512,7 +513,7 @@ function designTemplate(designTemplate, blastId, templateId) {
 
 
 
-function saveProperty(property, agentData, template, blast_id) {   
+function saveProperty(property, agentData, template, blast_id) {
     return dispatch => {
         dispatch(request());
         userService.saveProperty(property, agentData, template, blast_id)
@@ -592,6 +593,19 @@ function getPayment(id) {
     function failure(error) { return { type: userConstants.GETBYPAYMENTID_FAILURE, error } }
 }
 
+function getBlastSettings() {
+    return dispatch => {
+        dispatch(request());
+        adminService.getBlastSettings()
+            .then(
+                blastsettings => dispatch(success(blastsettings)),
+                error => dispatch(failure(error.toString()))
+            );
+    };
+    function request() { return { type: userConstants.BLAST_SETTINGS_REQUEST } }
+    function success(blastsettings) { return { type: userConstants.BLAST_SETTINGS_SUCCESS, blastsettings } }
+    function failure(error) { return { type: userConstants.BLAST_SETTINGS_FAILURE, error } }
+}
 function selectDatabase(blast_id, associations) {
     return dispatch => {
         dispatch(request());

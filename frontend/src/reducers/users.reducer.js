@@ -32,6 +32,25 @@ export function users(state = {}, action) {
       return {
         error: action.error,
       };
+
+
+      case userConstants.BLAST_SETTINGS_REQUEST:
+        newState = objectAssign({}, state, {
+          loading: true
+        });
+        return newState;
+      case userConstants.BLAST_SETTINGS_SUCCESS:
+        newState = objectAssign({}, state, {
+          loading: true,
+          blastsettings: action.blastsettings[0]
+        });
+        return newState;
+      case userConstants.BLAST_SETTINGS_FAILURE:
+        return {
+          error: action.error
+        };
+
+
     case userConstants.GETBYID_REQUEST:
       newState = objectAssign({}, state, {
         loading: true,
