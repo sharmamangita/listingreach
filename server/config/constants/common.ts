@@ -1345,7 +1345,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
     font-weight: 400;
     padding: 8px 22px;
     border-radius: 8px;text-decoration: none;margin: 10px">Reply to Sender</a></span>
-	<span class="mb-3 mt-3 text-right ml-3" style="text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+	<span class="" style="text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
         <a class="btn btn-primary" href="mailto:#agentEmail#" style="background: #ee8c3a;
     color: #fff;
     display: inline-block;
@@ -1434,7 +1434,7 @@ static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER:string =`
     font-weight: 400;
     padding: 8px 22px;
     border-radius: 8px;text-decoration: none;margin: 10px">Reply to Sender</a></span>
-	<span class="mb-3 mt-3 text-right ml-3" style="text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
+	<span class="" style="text-align: right !important;margin-bottom: 1rem !important; margin-left: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
         <a class="btn btn-primary" href="mailto:#agentEmail#" style="background: #ee8c3a;
     color: #fff;
     display: inline-block;
