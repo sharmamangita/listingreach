@@ -125,11 +125,11 @@ class PaymentTab extends React.Component {
           </tbody>
         </table>
         <br />
-      
+
         <div className="row">
           <div className="col-md-6 mb-3">
             <div className="row">
-             
+
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <label className="check">
