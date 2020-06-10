@@ -1358,7 +1358,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
 static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
                      <div class="mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
                         <div class="text-center" style="width:20%;text-align: center !important;overflow:hidden">
-                           <img alt="Photo" class="img-square" style="width:70%;" src="#companyLogo#">
+                           <img alt="Photo" class="img-square" style="width:70%;border-radius: 50%;" src="#companyLogo#">
                         </div>
                         <div class="text-center" style="width:60%;text-align: center !important;">
                            <b> #agentName# </b><br>
@@ -1369,7 +1369,7 @@ static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
                           	#companyDetail#,<br>
                         </div>
                         <div class="text-center pl-0" style="width:20%;text-align: center !important;overflow:hidden">
-                           <img alt="Photo" class="img-circle" style="width:70%;" src="#agentImage#">
+                           <img alt="Photo" class="img-circle" style="width:70%;border-radius: 50%;" src="#agentImage#">
                         </div>
                      </div>
                   </div>
