@@ -42,7 +42,7 @@ class PaymentTab extends React.Component {
     var additional_email_blast_price = 0;
     var invoiveTotal = 0;
     var blast_type = this.props.blast_type;
-    if (this.props.blastsettingData) {
+    if (this.props.blastsettingData && this.props.blastsettingData.length > 0) {
       per_email_blast_price = this.props.blastsettingData[0].per_email_blast_price;
       additional_email_blast_price = this.props.blastsettingData[0].additional_email_blast_price;
 
