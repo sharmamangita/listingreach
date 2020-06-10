@@ -5,7 +5,6 @@ const axios = require("axios");
 import config from "config";
 import { globalData } from '../constants/data.constants';
 
-
 class UploadBlastTab extends React.Component {
   constructor(props) {
     super(props);
@@ -93,6 +92,7 @@ class UploadBlastTab extends React.Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleTemplateChange = this.handleTemplateChange.bind(this);
     this.show = this.show.bind(this);
     this.addOpenHouse = this.addOpenHouse.bind(this);
     this.openHouseChange = this.openHouseChange.bind(this);
@@ -104,16 +104,38 @@ class UploadBlastTab extends React.Component {
     this.imageChange = this.imageChange.bind(this);
     this.nextPage = this.nextPage.bind(this);
   }
+  componentWillMount() {
+    this.initialize();
+  }
+  initialize() {
+    console.log("PORPS in  Construcot ", this.props)
+    if (this.props.activeTab == "property") {
+      if (this.props.properties && this.props.properties.length > 0) {
+        let props = this.props.properties;
+        props.forEach(function (prop) {
+          if (prop.isOpenHouse) {
+            prop.isOpenHouse["display"] = prop.isOpenHouse.length > 0;
+          }
+          if (prop.linksToWebsites) {
+            prop.linksToWebsites["display"] = prop.linksToWebsites.length > 0;
+          }
+          if (prop.mls_number) {
+            prop["displayMls"] = typeof (prop.mls_number) != "undefined";
+          }
+        })
+        this.setState({ property: this.props.properties[0] });
+      }
+      if (this.props.template) {
+        // alert(this.props.template._id)
+        this.setState({ template: this.props.template });
+      }
+    }
+  }
 
   openUpload() {
     $("#imgupload").trigger("click");
   }
 
-  // nextPage() {
-  //   const { dispatch } = this.props.dispatchval.dispatch;
-  //   let blast_id = this.state.blast_id;
-  //   dispatch(userActions.getPreviewhtml(blast_id));
-  // }
   to12hourTime(time) {
     // Check correct time format and split into components
     time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
@@ -146,9 +168,13 @@ class UploadBlastTab extends React.Component {
         let { blastImageUrl, property } = this.state;
 
         blastImageUrl = response.data.url;
-        property.propertyImages.push(image);
+        if (property.propertyImages.length > 0) {
+          property.propertyImages[0] = image;
+        } else {
+          property.propertyImages.push(image);
+        }
         this.setState({ blastImageUrl, property });
-        this.render();
+        // this.render();
       })
       .catch(() => { });
   }
@@ -243,7 +269,7 @@ class UploadBlastTab extends React.Component {
         property.isOpenHouse.display = value;
         break;
       case "mlsNumber":
-        property.mlsNumber.display = value;
+        property.displayMls = value;
         break;
       case "linksToWebsites":
         property.linksToWebsites.display = value;
@@ -273,37 +299,8 @@ class UploadBlastTab extends React.Component {
     template[name] = value;
     this.setState({ template });
   }
-  handleAgentChange(event) {
-    const { name, value } = event.target;
-    let agentData = this.state.agentData;
-    agentData[name] = value;
-    this.setState({ agentData });
-  }
   componentWillReceiveProps(nextProps) {
-    if (nextProps.activeTab == "property") {
-      console.log("nextPros in Uplaod Blast Property ", nextProps);
-      if (nextProps.properties && nextProps.properties.length > 0) {
-        let props = nextProps.properties;
-        props.forEach(function (prop) {
-          if (prop.isOpenHouse) {
-            prop.isOpenHouse["display"] = prop.isOpenHouse.length > 0;
-          }
-          if (prop.linksToWebsites) {
-            prop.linksToWebsites["display"] = prop.linksToWebsites.length > 0;
-          }
-          if (prop.mls_number) {
-            prop["displayMls"] = typeof (prop.mls_number) != "undefined";
-          }
-        })
-        this.setState({ property: nextProps.properties[0] });
-      }
-      if (nextProps.agentData) {
-        this.setState({ agentData: nextProps.agentData });
-      }
-      if (nextProps.template) {
-        this.setState({ template: nextProps.template });
-      }
-    }
+
   }
 
   componentDidMount() {
@@ -316,17 +313,12 @@ class UploadBlastTab extends React.Component {
     this.setState(states)
   }
 
-
   saveProperty(event) {
     event.preventDefault();
-    const { property, agentData, template } = this.state;
+    const { property, template } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
     this.setState({ submitted: true });
     let isvalid = true;
-    if (!agentData.name || !agentData.email) {
-      isvalid = false;
-      console.log("validation failed for agent ", agentData);
-    }
     let properties = [];
     properties.push(property);
     if (properties && properties.length > 0) {
@@ -353,6 +345,10 @@ class UploadBlastTab extends React.Component {
           isvalid = false;
           console.log("validation failed general property info");
         }
+        if (!prop.propertyImages || prop.propertyImages.length < 1) {
+          isvalid = false;
+          console.log("validation failed for image");
+        }
       })
     } else {
       isvalid = false;
@@ -361,12 +357,11 @@ class UploadBlastTab extends React.Component {
     if (isvalid) {
       //  alert("submitting...")
       const { blastId } = this.props;
-      dispatch(userActions.saveProperty(properties, agentData, template, blastId));
+      dispatch(userActions.saveProperty(properties, null, template, blastId));
       this.setState({ submitted: false });
     } else {
       alert("some required fields were not filled");
     }
-
   }
 
   render() {
@@ -561,10 +556,10 @@ class UploadBlastTab extends React.Component {
                     className="card"
                     style={{ width: "650px", margin: "20px 0 24px 0" }}
                   >
-                    <img
-                      className="card-img-top"
+                    <img className="card-img-top"
                       src={
-                        propertyImg ||
+                        property.propertyImages.length > 0
+                        && config.uploadapiUrl + "/uploads/" + property.propertyImages[0].imageUrl ||
                         "../../../public/assets/images/img-4.png"
                       }
                       alt="image"
@@ -587,6 +582,11 @@ class UploadBlastTab extends React.Component {
                       >
                         Select
                           </a>
+                      <div className="validation">
+                        {submitted &&
+                          (!property.propertyImages ||
+                            property.propertyImages.length < 1) && "Image is required."}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -796,8 +796,8 @@ class UploadBlastTab extends React.Component {
                 <div className="form-group">
                   <label className="required">Street Address</label>
                   <input type="text" name="street_address" className="form-control form-control-lg form-control-a" placeholder="Street Address"
-                    onChange={(e) => this.handleChange(e, property)}
-                    value={property && property.street_address} />
+                    value={property && property.street_address}
+                    onChange={(e) => this.handleChange(e, property)} />
                 </div>
                 <div className="validation">
                   {submitted &&
@@ -810,8 +810,10 @@ class UploadBlastTab extends React.Component {
                 <div className="form-group">
                   <label className="required">City</label>
                   <input type="text" name="city" className="form-control form-control-lg form-control-a"
-                    placeholder="City" onChange={(e) => this.handleChange(e, property)}
-                    value={property && property.city} />
+                    placeholder="City"
+                    value={property && property.city}
+                    onChange={(e) => this.handleChange(e, property)}
+                  />
                 </div>
                 <div className="validation">
                   {submitted &&
@@ -840,8 +842,9 @@ class UploadBlastTab extends React.Component {
                 <div className="form-group">
                   <label>Zip Code</label>
                   <input type="text" name="zipcode" className="form-control form-control-lg form-control-a"
-                    placeholder="Zip Code" onChange={(e) => this.handleChange(e, property)}
+                    placeholder="Zip Code"
                     value={property && property.zipcode}
+                    onChange={(e) => this.handleChange(e, property)}
                   />
                 </div>
               </div>
@@ -854,11 +857,11 @@ class UploadBlastTab extends React.Component {
               <div className="col-md-12 mb-3">
                 <div className="form-group">
                   <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("mlsNumber", property, true)} >
+                    onClick={() => this.show("mlsNumber", true)} >
                     Yes
                 </a>
                   <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.show("mlsNumber", property, false)}>
+                    onClick={() => this.show("mlsNumber", false)}>
                     No
                 </a>
                 </div>
@@ -894,8 +897,9 @@ class UploadBlastTab extends React.Component {
                 </p>
                   <div className="form-group">
                     <select className="form-control form-control-lg form-control-a" name="board"
+                      value={property && property.board}
                       onChange={(e) => this.handleChange(e, property)}
-                      value={property && property.board} >
+                    >
                       <option value="">
                         -- Please Select a board / association for our
                         'Internal Sourcing' --
@@ -952,16 +956,13 @@ class UploadBlastTab extends React.Component {
             <div className="row">
               <div className="col-md-6 mb-3">
                 <div className="form-group">
-                  <label>Property Type:</label>
+                  <label className="required">Property Type:</label>
                   <div className="form-group">
                     <select
                       className="form-control form-control-lg form-control-a"
                       name="property_type"
-                      onChange={(e) =>
-                        this.handleChange(e)
-                      }
-                      value={
-                        property && property.property_type
+                      value={property && property.property_type}
+                      onChange={(e) => this.handleChange(e)
                       }
                     >
                       <option value="" className="">
@@ -1007,5 +1008,4 @@ class UploadBlastTab extends React.Component {
   }
 
 }
-
 export default UploadBlastTab;

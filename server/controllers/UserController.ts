@@ -827,7 +827,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 	saveProperty(req: express.Request, res: express.Response): void {
 		try {
-			console.log("Properties Body : ", req.body)
+		//	console.log("Properties Body : ", req.body)
 			var _propertyforms = req.body;
 			var _propertyBusiness = new PropertyBusiness();
 			let _templateform: IAgentTemplateModel;
@@ -835,9 +835,9 @@ class UserController implements IBaseController<UserBusiness> {
 				var _templateBusiness = new AgentTemplateBusiness();
 				var _blastform = req.body;
 				var _blastBusiness = new BlastBusiness();
-				_propertyforms.properties.forEach(function (prop: any) {
+				_propertyforms.properties.forEach(function (prop: IPropertyModel) {
 					if (prop._id) {
-						_propertyBusiness.update(prop._idc, prop, (error, result) => {
+						_propertyBusiness.update(prop._id.toString(), prop, (error, result) => {
 							if (error) {
 								console.log("Property update error :", error);
 								res.send({ "error": error });

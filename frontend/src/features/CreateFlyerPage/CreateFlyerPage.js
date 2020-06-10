@@ -17,7 +17,6 @@ import Tab from "react-bootstrap/Tab";
 
 import { userActions } from "../../actions";
 
-const Entities = require("html-entities").XmlEntities;
 
 class CreateFlyerPage extends React.Component {
   constructor(props) {
@@ -89,8 +88,8 @@ class CreateFlyerPage extends React.Component {
         this.moveTab(nextProps.tab);
       }
     }
-    if(nextProps.previewHtml){
-      this.setState({previewHtml:nextProps.previewHtml})
+    if (nextProps.previewHtml) {
+      this.setState({ previewHtml: nextProps.previewHtml })
     }
   }
 
@@ -109,8 +108,6 @@ class CreateFlyerPage extends React.Component {
   render() {
     const { blast, moveTab, previewHtml, previewData, tabs, blastsettingData, dataBaseData, profile } = this.state;
     console.log("State in create flayer render :", this.state);
-    const { users } = this.props;
-
     return (
       <div>
         <ListingSubmenu />
@@ -153,31 +150,33 @@ class CreateFlyerPage extends React.Component {
                         />
                       </Tab>
 
-                      <Tab eventKey="property" title="Property Details" disabled={tabs.property ? true : false}>
-                        {blast && blast.template &&
-                          (blast.template.template_type == "UploadBlast" ||
-                            blast.template.template_type == "UploadYourOwnBlast") ? (
+
+                      {blast && blast.template &&
+                        (blast.template.template_type == "UploadBlast" ||
+                          blast.template.template_type == "UploadYourOwnBlast") ? (
+                          <Tab eventKey="property" title="Property Details" disabled={tabs.property ? true : false}>
                             <UploadBlastTab
                               activeTab={moveTab}
                               dispatchval={this.dispatchval}
-                              properties={blast.properties}
+                              properties={blast && blast.properties}
                               template={blast && blast.template}
-                              agentData={(blast && blast.agentData) || this.props.agentData}
-                              blast_id={blast && blast._id}
-                              moveTab={this.moveTab}
+                              blastId={blast && blast._id}
                             />
-                          ) : (
+                          </Tab>
+                        ) : (
+                          <Tab eventKey="property" title="Property Details" disabled={tabs.property ? true : false}>
                             <PropertyTab
                               activeTab={moveTab}
                               dispatchval={this.dispatchval}
                               properties={blast && blast.properties}
-                              blastId={blast && blast._id}
                               template={blast && blast.template}
+                              blastId={blast && blast._id}
                               profile={profile}
                               agentData={(blast && blast.agentData) || this.props.agentData}
                             />
-                          )}
-                      </Tab>
+                          </Tab>
+                        )}
+
                       {blast && blast.template &&
                         (blast.template.template_type == "UploadBlast" ||
                           blast.template.template_type == "UploadYourOwnBlast") ? null : (
@@ -203,7 +202,6 @@ class CreateFlyerPage extends React.Component {
                         />
                       </Tab>
 
-
                       <Tab eventKey="selectdatabase" title="Select Database" disabled={tabs.selectdatabase ? true : false}>
                         <DatabaseTab dispatchval={this.dispatchval}
                           blast_id={blast && blast._id}
@@ -218,13 +216,16 @@ class CreateFlyerPage extends React.Component {
                         />
                       </Tab>
                       <Tab eventKey="terms" title="Terms & Condition" disabled={tabs.terms ? true : false}>
-                        <TermsTab dispatchval={this.dispatchval} activeTab={moveTab} />
+                        <TermsTab dispatchval={this.dispatchval}
+                         activeTab={moveTab} />
                       </Tab>
                       <Tab eventKey="payment" title="Payment" disabled={tabs.payment ? true : false}>
-                        <PaymentTab dispatchval={this.dispatchval} dataBaseData={dataBaseData}
+                        <PaymentTab dispatchval={this.dispatchval}
+                          dataBaseData={blast && blast.associations}
                           activeTab={moveTab}
-                          blastsettingData={blastsettingData} scheduledDate={blast && blast.scheduledDate}
-                          resetState={this.resetState} />
+                          blastsettingData={blastsettingData} 
+                          scheduledDate={blast && blast.scheduledDate}
+                          />
                       </Tab>
                     </Tabs>
                   </div>
@@ -240,7 +241,7 @@ class CreateFlyerPage extends React.Component {
 
 function mapStateToProps(state) {
   const { alert, users, agentData } = state;
-  const { profile,previewHtml } = users;
+  const { profile, previewHtml } = users;
   const { blast } = users;
   const { imageData } = users;
   const { scheduledDate } = users;
