@@ -4,7 +4,10 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction'; // needed for dayClick
 import { userActions } from "../actions";
-require('./main.css');
+require('@fullcalendar/core/main.css');
+require('@fullcalendar/daygrid/main.css');
+// require('./main.css');
+
 
 class SetDateTab extends React.Component {
   constructor(props) {
@@ -55,7 +58,8 @@ class SetDateTab extends React.Component {
       console.log("nextProps in Set Date", nextProps)
       this.setState({
         blast_id: nextProps.blast_id,
-        scheduledDate: nextProps.scheduledDate
+        scheduledDate: nextProps.scheduledDate,
+        isSelected: nextProps.scheduledDate ? true : false
       })
     }
   }
@@ -77,7 +81,8 @@ class SetDateTab extends React.Component {
             <FullCalendar
               defaultView="dayGridMonth"
               timeZone="UTC"
-              defaultDate={scheduledDate}
+              now={scheduledDate}
+              themeSystem="Minty"
               header={{
                 left: 'prev,next today',
                 center: 'title',
