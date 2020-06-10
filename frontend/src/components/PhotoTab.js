@@ -72,7 +72,7 @@ class PhotoTab extends React.Component {
 
   imageChange(e, property, imageIndex) {
     const { id } = e.target;
-    this.setState({submited:true});
+    this.setState({ submited: true });
     const configs = {
       headers: {
         ...authHeader(),
@@ -98,7 +98,7 @@ class PhotoTab extends React.Component {
         } else {
           properties[index].propertyImages.push(_image);
         }
-        this.setState({ properties,submited:false });
+        this.setState({ properties, submited: false });
       })
       .catch(() => {
       });
@@ -202,7 +202,7 @@ class PhotoTab extends React.Component {
             <div id="myModal" style={{ display: visible ? "inline" : "none" }}>
               <div className="modal-content">
                 <div className="row">
-                  {properties[0].propertyImages.map(function (image, index) {
+                  {properties && properties.length > 0 && properties[0].propertyImages.map(function (image, index) {
                     return (
                       <div key={index} className="col-md-4 mb-3">
                         <div className="card"
@@ -244,7 +244,7 @@ class PhotoTab extends React.Component {
                         type="button"
                         className="btn btn-primary"
                         onClick={this.updateImages}
-                        disabled={submited ? true : false}
+                        disabled={submited}
                       >
                         Save
               </button>
@@ -252,7 +252,7 @@ class PhotoTab extends React.Component {
                         type="button"
                         className="btn btn-primary pull-right"
                         onClick={this.nextPage}
-                        disabled={submited ? false : true}
+                        disabled={submited}
                       >
                         Next
               </button>
