@@ -1,11 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import Select from "react-select";
-import config from "config";
-import { Alert } from "reactstrap";
 import ListingSubmenu from '../../components/ListingSubmenu';
-import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 import { userActions } from "../../actions";
 const Entities = require('html-entities').XmlEntities;
 import moment from "moment";
@@ -40,7 +35,6 @@ class BillingPage extends React.Component {
 	    }
 	}
   	componentDidMount(){
-	  	const { dispatch } = this.props;
 		 
 	}
 	createdDate(createdOn) {
@@ -57,13 +51,11 @@ class BillingPage extends React.Component {
  		}
  	}
   	render() {
-  	const { submitted, submittedagent, user, payment } = this.state;
+  	const { payment } = this.state;
 	console.log("paymentData====",payment);	
 	console.log("length====",payment.length);	
   	if(this.props.users && this.props.users.items){
 	  	if(this.props.users.items[0]){
-		  var abouttitle = entities.decode(this.props.users.items[0].page);
-		  var aboutpage = entities.decode(this.props.users.items[0].content);
 		}
 	}
 	
@@ -82,18 +74,18 @@ class BillingPage extends React.Component {
 					<table id="example" className="table table-striped table-bordered" style={{width:"100%"}}>
 						<thead>
 							<tr>
-								<th>Invoice ID</th>
+								<th>Payment ID</th>
 								<th>Date</th>
 								<th>Total</th>
-								<th>Status</th>
+								{/* <th>Status</th> */}
 							</tr>
 							{
 		                     payment && payment.length>0 && payment.map((payments) => (
 		                            <tr>
-										<td>{payments.invoice_id}</td>
+										<td>{payments.paymentID}</td>
 										<td>{this.createdDate(payments.createdOn)}</td>
-										<td>{payments.amount}</td>
-										<td>{this.status(payments.status)}</td>
+										<td>{payments.amount ? "$"+payments.amount:"--"}</td>
+										{/* <td>{this.status(payments.status)}</td> */}
 									</tr> 
 								))
                           	}  

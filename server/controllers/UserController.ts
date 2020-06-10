@@ -7,11 +7,9 @@ import UserBusiness = require("./../app/business/UserBusiness");
 
 
 
-import PagesBusiness = require("./../app/business/PagesBusiness");
 
 import IBaseController = require("./BaseController");
 import IUserModel = require("./../app/model/interfaces/IUserModel");
-import IPagesModel = require("./../app/model/interfaces/IPagesModel");
 import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
 import ContactformBusiness = require("./../app/business/ContactformBusiness");
 import BlastBusiness = require("./../app/business/BlastBusiness");
@@ -21,7 +19,6 @@ import IPaymentModel = require("./../app/model/interfaces/IPaymentModel");
 
 import AgentTemplateBusiness = require("./../app/business/AgentTemplateBusiness");
 
-import InvitationBusiness = require("./../app/business/InvitationBusiness");
 import IAdminUserModel = require("./../app/model/interfaces/IAdminUserModel");
 import IContactformModel = require("./../app/model/interfaces/IContactformModel");
 import IBlastModel = require("./../app/model/interfaces/IBlastModel");
@@ -29,25 +26,16 @@ import IPropertyModel = require("./../app/model/interfaces/IPropertyModel");
 
 import IAgentTemplateModel = require("./../app/model/interfaces/IAgentTemplateModel");
 
-import IInvitationModel = require("./../app/model/interfaces/IInvitationModel");
 import Common = require("./../config/constants/common");
-import PlanBusiness = require("./../app/business/PlanBusiness");
 import AgentBusiness = require("./../app/business/AgentBusiness");
 import IAgentModel = require("./../app/model/interfaces/IAgentModel");
 import IBlastImageModel = require("./../app/model/interfaces/IBlastImageModel");
 import BlastImageBusiness = require("./../app/business/BlastImageBusiness");
-import BlastModel = require("./../app/model/BlastModel");
 var BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
 
-var moment = require('moment');
-var mammoth = require("mammoth");
-const fs = require('fs');
 
-var _ = require('underscore');
 var mongoose = require('mongoose');
 var async = require('async');
-var base64Img = require('base64-img');
-var stripe = require("stripe")(Common.STRIPESECRETKEY);
 class UserController implements IBaseController<UserBusiness> {
 	update: express.RequestHandler;
 	//being called by client getEmailExists
@@ -85,7 +73,6 @@ class UserController implements IBaseController<UserBusiness> {
 			user.paidOn = false;
 			user.isDeleted = false;
 			var userBusiness = new UserBusiness();
-			var token = userBusiness.createToken(user);
 
 			userBusiness.create(user, (error, userdata) => {
 				if (error) {
@@ -97,7 +84,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 					var signupemailtemplatetouser = Common.SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER;
 					var emailtemplate = signupemailtemplatetouser.replace(/#email#/g, userdata.email).replace(/#password#/g, userdata.password);
-					Common.sendMail(userdata.email, Common.ADMIN_EMAIL, 'Welcome to ListingReach!', null, emailtemplate, function (error: any, response: any) {
+					Common.sendMail(userdata.email, Common.ADMIN_EMAIL, 'Welcome to ListingReach!', null, emailtemplate, function (error: any) {
 						if (error) {
 							res.send("error");
 						} else {
@@ -138,7 +125,7 @@ class UserController implements IBaseController<UserBusiness> {
 								_updateData.token = token;
 								var _id: string = result._id.toString();
 								var _userBusinessUpdate = new UserBusiness();
-								_userBusinessUpdate.update(_id, _updateData, (error, resultUpdate) => {
+								_userBusinessUpdate.update(_id, _updateData, (error) => {
 									if (error) res.send({ "error": "error", "message": "Authentication error" });//res.status(401).send({"error": "Authentication error"});
 									else {
 										res.send({
@@ -169,12 +156,12 @@ class UserController implements IBaseController<UserBusiness> {
 	create(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
-			_userBusiness.verifyToken(req, res, (userData) => {
+			_userBusiness.verifyToken(req, res, () => {
 				var _user: IUserModel = <IUserModel>req.body;
 
 				_user.createdOn = new Date();
 				var _userBusiness = new UserBusiness();
-				_userBusiness.create(_user, (error, result) => {
+				_userBusiness.create(_user, (error) => {
 					if (error) {
 						res.send({ "error": error });
 					}
@@ -190,7 +177,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 
 
-	updateStatus(req: express.Request, res: express.Response): void {
+	updateStatus(res: express.Response): void {
 		try {
 
 
@@ -205,10 +192,10 @@ class UserController implements IBaseController<UserBusiness> {
 	updateUser(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
-			_userBusiness.verifyToken(req, res, (UserData: any) => {
+			_userBusiness.verifyToken(req, res, () => {
 				var _user: IUserModel = <IUserModel>req.body.user;
 				var _id: string = _user.id.toString();
-				_userBusiness.update(mongoose.Types.ObjectId(_id), _user, (error: any, userdata: any) => {
+				_userBusiness.update(mongoose.Types.ObjectId(_id), _user, (error: any) => {
 					if (error) {
 						console.log(error);
 						res.send({ "error": error });
@@ -272,9 +259,7 @@ class UserController implements IBaseController<UserBusiness> {
 		var _agentBusiness = new AgentBusiness();
 		var _agent: IAgentModel = <IAgentModel>data;
 		_agent.createdOn = new Date();
-		var type = data.mimetype.split("/");
 		var userid: string = id.toString();
-		var _id = userid;
 		_agent.userId = userid;
 		if (flag == 'logo') {
 			_agent.logo_url = data.filename;
@@ -285,13 +270,13 @@ class UserController implements IBaseController<UserBusiness> {
 		_agentBusiness.findOne({ 'userId': userid }, (error: any, agentresult: any) => {
 			if (agentresult != null) {
 				var _id: string = agentresult._id.toString();
-				_agentBusiness.update(_id, _agent, (error: any, resultUpdate: any) => {
+				_agentBusiness.update(_id, _agent, (error: any) => {
 					if (error) {
 					} else {
-						_agentBusiness.findById(_id, async (agentError, result) => { 
+						_agentBusiness.findById(_id, async (agentError, result) => {
 							return res.json({ profileimg: result });
 						});
-						
+
 					}
 				});
 			} else {
@@ -320,7 +305,7 @@ class UserController implements IBaseController<UserBusiness> {
 	retrieve(req: express.Request, res: express.Response): void {
 		try {
 			var _userBusiness = new UserBusiness();
-			_userBusiness.verifyToken(req, res, (userData) => {
+			_userBusiness.verifyToken(req, res, () => {
 				_userBusiness.retrieve(req.body, (error, result) => {
 					if (error) res.send({ "error": "error" });
 					else res.send(result);
@@ -433,13 +418,13 @@ class UserController implements IBaseController<UserBusiness> {
 			_contactform.phone = req.body.phone;
 			_contactform.message = req.body.message;
 			_contactform.createdOn = new Date();
-			_contactformBusiness.create(_contactform, (error, result) => {
+			_contactformBusiness.create(_contactform, (error) => {
 				if (error) {
 					res.send({ "error=========": error });
 				} else {
 					var contactFormemail = Common.CONTACT_FORM;
 					var emailtemplate = contactFormemail.replace(/#fullname#/g, _contactform.fullname).replace(/#email#/g, _contactform.email).replace(/#phone#/g, _contactform.phone).replace(/#message#/g, _contactform.message).replace(/#date#/g, _contactform.createdOn);
-					Common.sendMail('salvep@salvesoft.com', _contactform.email, 'Contact Form', null, emailtemplate, function (error: any, response: any) {
+					Common.sendMail('salvep@salvesoft.com', _contactform.email, 'Contact Form', null, emailtemplate, function (error: any) {
 						if (error) {
 							res.end("error");
 						}
@@ -456,17 +441,16 @@ class UserController implements IBaseController<UserBusiness> {
 	emailPreviewTemplate(req: express.Request, res: express.Response): void {
 		try {
 			let _IagentTemplateModel: IAgentTemplateModel = <IAgentTemplateModel>req.body;
-			let _agentTemplateBusiness = new AgentTemplateBusiness();
 			const blastBusiness = new BlastBusiness();
 			let blastid = _IagentTemplateModel.blast_id;
-			blastBusiness.findById(blastid, async (blastError, blast) => {
+			blastBusiness.findById(blastid, async () => {
 				await blastBusiness.getEmailHTML(blastid).then(function (HTML) {
 					if (HTML == null) {
 						res.send("Error generating email.");
 						return
 					}
 					if (_IagentTemplateModel.email) {
-						Common.sendMail(_IagentTemplateModel.email, 'support@ListingReach.com', 'Property Email', null, HTML, function (error: any, response: any) {
+						Common.sendMail(_IagentTemplateModel.email, 'support@ListingReach.com', 'Property Email', null, HTML, function (error: any) {
 							if (error) {
 								console.log(error);
 								res.end("error");
@@ -505,17 +489,17 @@ class UserController implements IBaseController<UserBusiness> {
 							// Generate new password ...
 							var autoGeneratedPassword = Math.random().toString(36).slice(-8);
 							_user.password = 'P' + autoGeneratedPassword;
-							_userBusinessUpdate.update(_id, _updateData, (error, resultUpdate) => {
+							_userBusinessUpdate.update(_id, _updateData, (error) => {
 								if (error) res.send({ "error": "error", "message": "Authentication error" });//res.status(401).send({"error": "Authentication error"});
 								else {
 
 									var _userBusiness = new UserBusiness();
-									_userBusiness.findById(_id, (error, resultuser) => {
+									_userBusiness.findById(_id, (error) => {
 										if (error) res.send({ "error": "error", "message": "Authentication error" });
 										else {
 											var emailresetpassword = Common.EMAIL_TEMPLATE_RESET_USER_PASSWORD;
 											var emailtemplate = emailresetpassword.replace(/#password#/g, _user.password);
-											Common.sendMail(result.email, 'support@ListingReach.com', 'Forgot Password', null, emailtemplate, function (error: any, response: any) {
+											Common.sendMail(result.email, 'support@ListingReach.com', 'Forgot Password', null, emailtemplate, function (error: any) {
 												if (error) {
 													console.log(error);
 													res.end("error");
@@ -557,7 +541,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 				} else {
 					_user.password = req.body.newpassword;
-					_userBusiness.update(_idc, _user, (error, resultUpdate) => {
+					_userBusiness.update(_idc, _user, (error) => {
 						if (error) res.send({ "error": "error", "message": "Your password is not updated." });
 						else {
 							res.status(201).send({ "success": "Your password is successfully updated." });
@@ -589,7 +573,7 @@ class UserController implements IBaseController<UserBusiness> {
 											});
 								   _propertyform.isOpenHouse=opneHouseData;
 							}*/
-			_blastBusiness.update(_id, _blastform, (error, resultUpdate) => {
+			_blastBusiness.update(_id, _blastform, (error) => {
 				if (error) {
 					console.log("save asscoiations error :", error);
 					res.send({ "error": error });
@@ -626,16 +610,16 @@ class UserController implements IBaseController<UserBusiness> {
 							// Generate new password ...
 							var autoGeneratedPassword = Math.random().toString(36).slice(-8);
 							_user.password = 'P' + autoGeneratedPassword;
-							_adminUserBusiness.update(_id, _updateAdminData, (error, resultUpdate) => {
+							_adminUserBusiness.update(_id, _updateAdminData, (error) => {
 								if (error) res.send({ "error": "error", "message": "Authentication error" });//res.status(401).send({"error": "Authentication error"});
 								else {
 									var companyId = result._id;
-									_adminUserBusiness.retrieve(companyId, (error, resultCompany) => {
+									_adminUserBusiness.retrieve(companyId, (error) => {
 										if (error) res.send({ "error": "error", "message": "Authentication error" });
 										else {
 											var emailresetpassword = Common.EMAIL_TEMPLATE_RESET_ADMIN_PASSWORD;
 											var emailtemplate = emailresetpassword.replace(/#password#/g, _user.password);
-											Common.sendMail(result.email, 'support@inteleagent.com', 'Forgot Password', null, emailtemplate, function (error: any, response: any) {
+											Common.sendMail(result.email, 'support@inteleagent.com', 'Forgot Password', null, emailtemplate, function (error: any) {
 												if (error) {
 													console.log(error);
 													res.end("error");
@@ -663,7 +647,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 	verifytoken(req: express.Request, res: express.Response): void {
 		var _userBusiness = new UserBusiness();
-		_userBusiness.verifyToken(req, res, (userData) => {
+		_userBusiness.verifyToken(req, res, () => {
 			res.status(201).send({
 				token: "valid"
 			});
@@ -695,7 +679,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 
 
-	getReferences(req: express.Request, res: express.Response): void {
+	getReferences(res: express.Response): void {
 		try {
 
 
@@ -758,7 +742,7 @@ class UserController implements IBaseController<UserBusiness> {
 							_blastform.status = 'Draft';
 							_blastBusiness.findOne({ _id: req.body.blastId }, (error, user) => {
 								let _id: string = user._id.toString();
-								_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
+								_blastBusiness.update(_id, _blastform, (error: any) => {
 									if (error) {
 										console.log(error);
 										res.send(error);
@@ -810,7 +794,7 @@ class UserController implements IBaseController<UserBusiness> {
 							}
 						});
 					} else {
-						_agentBusiness.create(_agent, (error, agentresultData) => {
+						_agentBusiness.create(_agent, (error) => {
 							if (error) {
 								console.log("error====", error)
 							} else {
@@ -830,17 +814,15 @@ class UserController implements IBaseController<UserBusiness> {
 
 	saveProperty(req: express.Request, res: express.Response): void {
 		try {
-		//	console.log("Properties Body : ", req.body)
+			//	console.log("Properties Body : ", req.body)
 			var _propertyforms = req.body;
 			var _propertyBusiness = new PropertyBusiness();
-			let _templateform: IAgentTemplateModel;
 			if (_propertyforms && _propertyforms.properties && _propertyforms.properties.length) {
 				var _templateBusiness = new AgentTemplateBusiness();
-				var _blastform = req.body;
 				var _blastBusiness = new BlastBusiness();
 				_propertyforms.properties.forEach(function (prop: IPropertyModel) {
 					if (prop._id) {
-						_propertyBusiness.update(prop._id.toString(), prop, (error, result) => {
+						_propertyBusiness.update(prop._id.toString(), prop, (error) => {
 							if (error) {
 								console.log("Property update error :", error);
 								res.send({ "error": error });
@@ -850,7 +832,7 @@ class UserController implements IBaseController<UserBusiness> {
 
 					} else {
 						prop.blast_id = req.body.blastId;
-						_propertyBusiness.create(prop, (error, result) => {
+						_propertyBusiness.create(prop, (error) => {
 							if (error) {
 								console.log("Property create error :", error);
 								res.send({ "error": error });
@@ -861,7 +843,7 @@ class UserController implements IBaseController<UserBusiness> {
 				});
 				let _template: IAgentTemplateModel = <IAgentTemplateModel>req.body.template;
 				console.log("Template ", _template)
-				_templateBusiness.update(_template._id.toString(), _template, (error, resultUpdate) => {
+				_templateBusiness.update(_template._id.toString(), _template, (error) => {
 					if (error) {
 						console.log("template update error ", error);
 						res.send({ "error": error });
@@ -874,7 +856,7 @@ class UserController implements IBaseController<UserBusiness> {
 				let blastId = req.body.blastId;
 
 				if (agentData) {
-					_blastBusiness.update(blastId, blast, (error, blastUpadte) => {
+					_blastBusiness.update(blastId, blast, (error) => {
 						if (error) {
 							res.send({ "blast update error": error });
 						}
@@ -894,7 +876,6 @@ class UserController implements IBaseController<UserBusiness> {
 		var _blastimageBusiness = new BlastImageBusiness();
 		var _blastimage: IBlastImageModel = <IBlastImageModel>data;
 
-		var type = data.mimetype.split("/");
 		var userid: string = id.toString();
 
 		_blastimage.user_id = userid;
@@ -919,20 +900,20 @@ class UserController implements IBaseController<UserBusiness> {
 			_blastBusiness.findById(_id, (error, result) => {
 				let _id: string = result._id.toString();
 				let selected_template_id: string = result.selected_template_id;
-				_blastBusiness.delete(_id, (error, deleted) => {
+				_blastBusiness.delete(_id, (error) => {
 					if (error) {
 						res.send({ "error": "error" });
 					} else {
 						let _id = selected_template_id;
 						_agentTemplateBusiness.findById(_id, (error, result) => {
 							let propertyid: string = result.Property_id.toString();
-							_agentTemplateBusiness.delete(_id, (error, template) => {
+							_agentTemplateBusiness.delete(_id, (error) => {
 								if (error) {
 									res.send({ "error": "error" });
 								}
 								let _id = propertyid;
-								_propertyBusiness.findById(_id, (error, result) => {
-									_propertyBusiness.delete(_id, (error, template) => {
+								_propertyBusiness.findById(_id, () => {
+									_propertyBusiness.delete(_id, () => {
 										res.send({ "sucess": "sucess" });
 									});
 								});
@@ -985,7 +966,7 @@ class UserController implements IBaseController<UserBusiness> {
 			var _propertyBusiness = new PropertyBusiness();
 			req.body.properties.forEach(function (property: IPropertyModel) {
 				let _id: string = property._id.toString();
-				_propertyBusiness.update(_id, property, (error, resultUpdate) => {
+				_propertyBusiness.update(_id, property, (error) => {
 					if (error) {
 						res.send({ "error": "error in your request" });
 					}
@@ -1009,7 +990,6 @@ class UserController implements IBaseController<UserBusiness> {
 				_payment.blast_id = req.params.blastId;
 				_payment.amount = _payment.total;
 				_payment.paymentID = _payment.paymentID;
-				var blastId: string = req.params.blastId;
 				_paymentBusiness.retrieve({ "user_id": userData._id }, (error, result) => {
 
 					if (result && result.length > 0) {
@@ -1020,11 +1000,22 @@ class UserController implements IBaseController<UserBusiness> {
 						var invoice_number = 1;
 						_payment.invoice_id = invoice_number;
 					}
-					_paymentBusiness.create(_payment, (error, paymentresultData) => {
+					_paymentBusiness.create(_payment, (error) => {
 						if (error) {
 							console.log("error====", error)
 						} else {
-							res.status(201).send({ "success": "Your payment successfully done." });
+							let blastBusiness = new BlastBusiness();
+							let update = {
+								$set: {
+									status: "Ready",
+								}
+							}
+							blastBusiness.findOneAndUpdate(req.params.blastId, update, (error) => {
+								if (error) {
+									console.log("blast status update error ====", error)
+								}
+								res.status(201).send({ "success": "Your payment successfully done." });
+							})
 						}
 					});
 				});
@@ -1113,7 +1104,7 @@ class UserController implements IBaseController<UserBusiness> {
 						"templates.headline": 1,
 						"templates.template_type": 1,
 						"templates.email_subject": 1,
-						"payment.amount": 1
+						"payments.amount": 1
 					}
 				},
 				{
@@ -1156,7 +1147,7 @@ class UserController implements IBaseController<UserBusiness> {
 			var _userBusiness = new UserBusiness();
 			var userId: string = req.params._id;
 			console.log("userId===", userId)
-			_userBusiness.verifyToken(req, res, (userData) => {
+			_userBusiness.verifyToken(req, res, () => {
 				const paymentBusiness = new PaymentBusiness();
 				var query: Array<any> = [
 					{
@@ -1221,7 +1212,7 @@ class UserController implements IBaseController<UserBusiness> {
 				var _blastform: IBlastModel = <IBlastModel>req.body;
 				_blastform.scheduledDate = _blastform.data;
 				_blastBusiness.findOne({ "_id": _id }, (error, dataBaseData) => {
-					_blastBusiness.update(_id, _blastform, (error: any, resultUpdate: any) => {
+					_blastBusiness.update(_id, _blastform, (error: any) => {
 						if (error) {
 						} else {
 							var _blastSettingsBusiness = new BlastSettingsBusiness();
