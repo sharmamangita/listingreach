@@ -72,6 +72,7 @@ class PhotoTab extends React.Component {
 
   imageChange(e, property, imageIndex) {
     const { id } = e.target;
+    this.setState({submited:true});
     const configs = {
       headers: {
         ...authHeader(),
@@ -97,11 +98,11 @@ class PhotoTab extends React.Component {
         } else {
           properties[index].propertyImages.push(_image);
         }
-        this.setState({ properties });
+        this.setState({ properties,submited:false });
       })
       .catch(() => {
       });
-    this.setState({ submited: false });
+    //this.setState({ submited: false });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -354,13 +355,13 @@ class PhotoTab extends React.Component {
               <div className="col-md-12 mt-4">
                 <button type="button" className="btn btn-primary"
                   onClick={this.updateImages}
-                  disabled={submited ? true : false}
+                  disabled={submited}
                 >
                   Save
               </button>
                 <button type="button" className="btn btn-primary pull-right"
-                  onClick={this.nextPage}
-                  disabled={submited ? false : true}
+                  onClick={this.updateImages}
+                  disabled={submited}
                 >
                   Next
               </button>

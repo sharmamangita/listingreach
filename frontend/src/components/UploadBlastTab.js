@@ -62,7 +62,7 @@ class UploadBlastTab extends React.Component {
       showprofileimage: false,
       userId: "",
       blast_id: "",
-      submitForm: false,
+      submitForm: true,
       blastImageUrl: "",
       templateId: "",
       disabled: true,
@@ -136,7 +136,7 @@ class UploadBlastTab extends React.Component {
     $("#imgupload").trigger("click");
   }
 
-  to12hourTime(time) {
+  to12hourTime(time) {submitForm
     // Check correct time format and split into components
     time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
@@ -148,6 +148,7 @@ class UploadBlastTab extends React.Component {
     return time.join(''); // return adjusted time or original string
   }
   imageChange(e) {
+    this.setState({ submitForm: false })
     const configs = {
       headers: {
         ...authHeader(),
@@ -173,7 +174,7 @@ class UploadBlastTab extends React.Component {
         } else {
           property.propertyImages.push(image);
         }
-        this.setState({ blastImageUrl, property });
+        this.setState({ blastImageUrl, property, submitForm: true });
         // this.render();
       })
       .catch(() => { });
@@ -988,15 +989,14 @@ class UploadBlastTab extends React.Component {
 
           <div className="col-md-12 mt-4">
             <button
-              type="button"
-              className="btn btn-primary"
-              onClick={this.saveProperty}  >
+              type="button" className="btn btn-primary"
+              onClick={this.saveProperty}
+              disabled={!submitForm} >
               Save
               </button>
             <button
-              type="button"
-              className="btn btn-primary pull-right"
-              onClick={this.nextPage}
+              type="button" className="btn btn-primary pull-right"
+              onClick={this.saveProperty}
               disabled={!submitForm}
             >
               Next

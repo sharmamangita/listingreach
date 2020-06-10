@@ -156,7 +156,8 @@ export function users(state = {}, action) {
 
     case userConstants.SAVEIMAGES_SUCCESS:
       newState = objectAssign({}, state, {
-        propertyImages: action.users
+        propertyImages: action.users,
+        tab:"preview"
       });
       return newState;
 

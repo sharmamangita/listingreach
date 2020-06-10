@@ -512,9 +512,7 @@ function designTemplate(designTemplate, blastId, templateId) {
 
 
 
-function saveProperty(property, agentData, template, blast_id) {
-    console.log("property====", property);
-
+function saveProperty(property, agentData, template, blast_id) {   
     return dispatch => {
         dispatch(request());
         userService.saveProperty(property, agentData, template, blast_id)
