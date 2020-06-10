@@ -80,7 +80,7 @@ class PaymentTab extends React.Component {
           below.
         </p>
         <div className="alert alert-info">
-          <strong>Your Selected Send Date is: {this.createdDate(scheduledDate)}</strong>
+          <strong className="text-scondary">Your Selected Send Date is: {this.createdDate(scheduledDate)}</strong>
         </div>
 
         <br />
