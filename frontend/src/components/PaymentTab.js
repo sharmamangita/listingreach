@@ -3,6 +3,7 @@ import CommonDownload from './CommonDownload'
 import { globalData } from '../constants/data.constants';
 import moment from "moment";
 import { adminActions } from './../actions/admin.actions';
+import { userActions } from "../actions";
 class PaymentTab extends React.Component {
   constructor(props) {
     super(props);
@@ -19,8 +20,7 @@ class PaymentTab extends React.Component {
     this.createdDate = this.createdDate.bind(this);
   }
   componentWillMount() {
-    this.props.dispatchval.dispatch.dispatch(adminActions.getBlastSettings());
-    //	window.scrollTo(0,0);
+    this.props.dispatchval.dispatch.dispatch(userActions.getBlastSettings());
   }
   createdDate(createdOn) {
     var expDate = new moment(createdOn, "YYYY-MM-DD");
