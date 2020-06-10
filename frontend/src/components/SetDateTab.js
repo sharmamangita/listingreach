@@ -38,6 +38,9 @@ class SetDateTab extends React.Component {
   }
 
   handleDateClick(arg) {
+      this.setState({  // add new event data
+        calendarEvents:[]
+      });
     if (confirm('Would you like to add an blast to ' + arg.dateStr + ' ?')) {
       if (arg.dateStr) {
         this.setState({ scheduledDate: arg.dateStr, isSelected: true })

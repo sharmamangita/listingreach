@@ -60,10 +60,8 @@ class PaypalButton extends React.Component {
   onSuccess(payment,dispatch,blast_id){
     console.log('Successful payment!', blast_id);
     console.log("this.props.dispatchval===",dispatch.dispatchval.dispatch);
-    var blast_id='';
     if(blast_id ){
-      blast_id=blast_id._id;
-      console.log("blast_id===gh===",blast_id);
+       console.log("blast_id===gh===",blast_id);
       dispatch.dispatchval.dispatch.dispatch(userActions.savePayment(payment,blast_id));
     }
     
