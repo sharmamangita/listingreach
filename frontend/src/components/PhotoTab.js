@@ -116,7 +116,6 @@ class PhotoTab extends React.Component {
       });
     }
   }
-
   render() {
     const { imageData, visible, updateimage, template, submited, properties } = this.state;
     console.log("state in render in Photos Tab ====", this.state);

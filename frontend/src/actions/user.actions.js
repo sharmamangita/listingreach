@@ -36,7 +36,8 @@ export const userActions = {
     saveCalenderData,
     getPreviewhtml,
     moveTab,
-    getBlastSettings
+    getBlastSettings,
+    resetCreateFlyerState
 };
 
 function moveTab(tab) {
@@ -693,5 +694,11 @@ function getPreviewhtml(blastId) {
 }
 
 
+function resetCreateFlyerState() {
+    return dispatch => {
+        dispatch(success())
+    };
+    function success(HTML) { return { type: userConstants.RESET_CREATE_FLYER_STATE, HTML } }
+}
 
 

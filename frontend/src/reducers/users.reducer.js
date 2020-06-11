@@ -1,7 +1,7 @@
 import { userConstants } from "../constants";
 import objectAssign from "object-assign";
-
-export function users(state = {}, action) {
+let initialState={};
+export function users(state = initialState, action) {
   let newState;
 
   switch (action.type) {
@@ -34,21 +34,21 @@ export function users(state = {}, action) {
       };
 
 
-      case userConstants.BLAST_SETTINGS_REQUEST:
-        newState = objectAssign({}, state, {
-          loading: true
-        });
-        return newState;
-      case userConstants.BLAST_SETTINGS_SUCCESS:
-        newState = objectAssign({}, state, {
-          loading: true,
-          blastsettings: action.blastsettings[0]
-        });
-        return newState;
-      case userConstants.BLAST_SETTINGS_FAILURE:
-        return {
-          error: action.error
-        };
+    case userConstants.BLAST_SETTINGS_REQUEST:
+      newState = objectAssign({}, state, {
+        loading: true
+      });
+      return newState;
+    case userConstants.BLAST_SETTINGS_SUCCESS:
+      newState = objectAssign({}, state, {
+        loading: true,
+        blastsettings: action.blastsettings[0]
+      });
+      return newState;
+    case userConstants.BLAST_SETTINGS_FAILURE:
+      return {
+        error: action.error
+      };
 
 
     case userConstants.GETBYID_REQUEST:
@@ -176,7 +176,7 @@ export function users(state = {}, action) {
     case userConstants.SAVEIMAGES_SUCCESS:
       newState = objectAssign({}, state, {
         propertyImages: action.users,
-        tab:"preview"
+        tab: "preview"
       });
       return newState;
 
@@ -187,11 +187,11 @@ export function users(state = {}, action) {
       return newState;
 
 
-      case userConstants.MOVE_TAB_SUCCESS:
-        newState = objectAssign({}, state, {
-          tab: action.tab,
-        });
-        return newState;
+    case userConstants.MOVE_TAB_SUCCESS:
+      newState = objectAssign({}, state, {
+        tab: action.tab,
+      });
+      return newState;
 
     case userConstants.TERMS_REQUEST:
       newState = objectAssign({}, state, {
@@ -266,7 +266,11 @@ export function users(state = {}, action) {
           return user;
         }),
       };
-
+    case userConstants.RESET_CREATE_FLYER_STATE:
+      // newState = objectAssign({}, state, {
+      //   users: null,
+      // });
+      return initialState;
     default:
       return state;
   }

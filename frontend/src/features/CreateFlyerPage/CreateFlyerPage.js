@@ -33,11 +33,12 @@ class CreateFlyerPage extends React.Component {
 
     this.moveTab = this.moveTab.bind(this);
     this.setKey = this.setKey.bind(this);
-    //  this.stateSettingsForTabs = this.stateSettingsForTabs.bind(this);
+    this.resetState = this.resetState.bind(this);
   }
   resetState() {
     console.log("Resetting State");
-    this.setState(this.newState())
+    let newState=this.newState();
+    this.setState(newState)
   }
   newState() {
     console.log("New State............");
@@ -74,6 +75,9 @@ class CreateFlyerPage extends React.Component {
     } else {
       this.resetState();
     }
+  }
+  componentWillUnmount() {
+    this.props.dispatch(userActions.resetCreateFlyerState());
   }
   componentWillReceiveProps(nextProps) {
     console.log("nextProps Create Flyer Page", nextProps);
@@ -190,6 +194,8 @@ class CreateFlyerPage extends React.Component {
                               activeTab={moveTab}
                               properties={blast && blast.properties}
                               blast_id={blast && blast._id}
+                              resetState={this.resetState}
+                              newState={this.newState}
                               moveTab={this.moveTab} />
                           </Tab>
                         )}
@@ -257,7 +263,7 @@ function mapStateToProps(state) {
     tab,
     users,
     profile,
-    agentData: users.agentData,
+    agentData: users && users.agentData,
     imageData,
     defaultAgent: agentData,
     scheduledDate,
