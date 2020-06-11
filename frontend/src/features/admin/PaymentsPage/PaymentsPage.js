@@ -16,21 +16,21 @@ class PaymentsPage extends React.Component {
 			payments: this.props.payments,
 			prefrences: {},
 			totaldatacad: "",
-			showModel:false
+			showModel: false
 		};
 		this.handleShow = this.handleShow.bind(this);
 		this.createdDate = this.createdDate.bind(this);
 		this.getById = this.getById.bind(this);
-		this.hideModel= this.hideModel.bind(this);
-		this.getEmailTemplate= this.getEmailTemplate.bind(this);
+		this.hideModel = this.hideModel.bind(this);
+		this.getEmailTemplate = this.getEmailTemplate.bind(this);
 	}
-	hideModel(){
-		this.setState({showModel:false});
+	hideModel() {
+		this.setState({ showModel: false });
 	}
 
-	getEmailTemplate(id){
+	getEmailTemplate(id) {
 		this.props.dispatch(userActions.getPreviewhtml(id));
-		this.setState({showModel:true});
+		this.setState({ showModel: true });
 	}
 
 	handleShow() {
@@ -57,7 +57,7 @@ class PaymentsPage extends React.Component {
 		var created = moment(expDate).format("DD-MM-YYYY");
 		return created;
 	}
-	
+
 	getById(id) {
 		if (this.props.payments) {
 			var filteredEmployee = this.props.payments.filter(item => {
@@ -72,16 +72,16 @@ class PaymentsPage extends React.Component {
 	}
 
 
-	
-	
+
+
 	render() {
 		var { totaldata, caddata } = this.prepareTable();
-		var { previewHtml }  = this.props;
-		var {showModel}=this.state;
+		var { previewHtml } = this.props;
+		var { showModel } = this.state;
 		return (
 			<main className="col-xs-12 col-sm-8 col-lg-9 col-xl-10 pt-3 pl-4 ml-auto">
 				<h3 className="admin-title">Payments</h3>
-				
+
 				<section className="row">
 					<div className="col-sm-12">
 						<section className="row">
@@ -98,12 +98,12 @@ class PaymentsPage extends React.Component {
 				</section>
 				<Modal visible={showModel} dialogClassName="modal-lg">
 					{previewHtml && <Markup content={previewHtml} />}
-		            <div className="modal-footer">
-			          <button type="button" className="btn btn-secondary" onClick={this.hideModel}>
-			            Cancel
+					<div className="modal-footer">
+						<button type="button" className="btn btn-secondary" onClick={this.hideModel}>
+							Cancel
 			          </button>
-		        </div>
-		      </Modal>
+					</div>
+				</Modal>
 			</main>
 		);
 	}
@@ -117,8 +117,8 @@ class PaymentsPage extends React.Component {
 					payentId: payment.paymentID,
 					paidOn: this.createdDate(payment.createdOn),
 					amount: "$" + payment.amount,
-					headline: "<Link to=''>"+payment.template && payment.template.length > 0 ? payment.template[0].headline : ""+"</Link>",
-					agentName: payment.users && payment.users.length > 0 && payment.users[0] ? payment.users[0].firstName+' '+payment.users[0].lastName : "",
+					headline: payment.template && payment.template.length > 0 ? "<Link to=''>" + payment.template[0].headline + "</Link>" : "",
+					agentName: payment.users && payment.users.length > 0 && payment.users[0] ? payment.users[0].firstName + ' ' + payment.users[0].lastName : "",
 					email: payment.users && payment.users.length > 0 && payment.users[0] ? payment.users[0].email : "",
 					company: payment.users && payment.users.length > 0 && payment.users[0] ? payment.users[0].companyName : "",
 					sentOn: payment.blast && payment.blast.length > 0 ? this.createdDate(payment.blast[0].selected_template_date) : "",

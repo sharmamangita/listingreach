@@ -641,7 +641,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 			switch (flag) {
 				case "agents":
 					var _userBusiness = new UserBusiness();
-					var match: Object = { $and: [{ roles: /agents/ }, { isDeleted: { $eq: false } }] }
+					var match: Object = { $and: [{ roles: /agents/ }, { isDeleted: { $ne: true } }] }
 					var group: Object = { _id: '$roles', total: { $sum: 1 } };
 					_userBusiness.customaggregate("", match, group, (error, result) => {
 						if (error) {
@@ -682,7 +682,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 						},
 						{
 							$group: {
-								_id: "$_id",
+								_id: "_id", // the _id will not group by $_id will this will sum whole collection
 								paidBlasts: { $sum: 1 },
 								totalAmount: { $sum: "$amount" }
 							}

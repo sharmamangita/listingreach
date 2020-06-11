@@ -4,10 +4,6 @@
 
 import express = require("express");
 import UserBusiness = require("./../app/business/UserBusiness");
-
-
-
-
 import IBaseController = require("./BaseController");
 import IUserModel = require("./../app/model/interfaces/IUserModel");
 import AdminUserBusiness = require("./../app/business/AdminUserBusiness");
