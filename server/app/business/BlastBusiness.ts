@@ -407,18 +407,14 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   }
 
                   if (property.propertyImages && (property.propertyImages.length == 2)) {
-                    image += `<div class="row" style="display: flex;-ms-flex-wrap: wrap;flex-wrap: wrap;">
-                                                      <div class="col-md-6 pr-1" style="padding-right: 0.25rem !important;flex: 0 0 50%;max-width: 50%;">
+                    image += `<div style="width:100%;overflow: hidden;">
+                                                      <div style="width:50%;overflow: hidden;float:left">
                                                         <img
-                                                          src=${
-                      Common.SITE_URL +
-                      "/uploads/" +
-                      property.propertyImages[0].imageUrl
-                      }
+                                                          src=${Common.SITE_URL +"/uploads/" +property.propertyImages[0].imageUrl}
                                                           style="width:100%;vertical-align: middle;border-style: none;"
                                                         />
                                                       </div>
-                                                      <div class="col-md-6 pl-1" style="padding-right: 0.25rem !important;flex: 0 0 50%;max-width: 50%;">
+                                                      <div style="width:50%;overflow: hidden;float:left">
                                                         <img
                                                           src=${
                       Common.SITE_URL +
@@ -434,21 +430,21 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
 
                   if (property.propertyImages && property.propertyImages.length == 3) {
-                    image += `<div class="row" style="display: flex; -ms-flex-wrap: wrap;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;">
-                                         <div class="col-md-8 pr-0" style="padding-right: 0 !important">
+                    image += `<div style="height: 560px;overflow: hidden;">
+                                         <div style="width: 60%;overflow: hidden; float: left;">
                                          <img src=${Common.SITE_URL +
                       "/uploads/" +
                       property.propertyImages[0].imageUrl
-                      } alt="image" style="width:100%;height: 100%;vertical-align: middle;border-style: none;">
+                      } alt="image" style="vertical-align: middle;border-style: none;">
                                             </div> 
-                                            <div class="col-md-4 pl-0 pr-0" style="padding-left: 0 !important;">
-                                         <div class="col-md-12 pl-0">
+                                            <div style="width: 40%;overflow: hidden;float: left;">
+                                         <div>
                                          <img src=${Common.SITE_URL +
                       "/uploads/" +
                       property.propertyImages[1].imageUrl
                       } alt="image" style=" vertical-align: middle;border-style: none;">
                                             </div>
-                                            <div class="col-md-12 pl-0">
+                                            <div>
                                          <img src=${Common.SITE_URL +
                       "/uploads/" +
                       property.propertyImages[2].imageUrl
@@ -460,26 +456,26 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
 
                   if (property.propertyImages && property.propertyImages.length == 4) {
-                    image += `<div class="row">
-                                             <div class="col-md-6 pr-1 mb-1">
+                    image += `<div style="width:100%;overflow: hidden;">
+                                             <div style="width:50%;overflow: hidden;float:left">
                                              <img src=${Common.SITE_URL +
                       "/uploads/" +
                       property.propertyImages[0].imageUrl
                       } alt="image" style="width:100%;height: 250px;">
                                                 </div> 
-                                                <div class="col-md-6 pl-0 mb-1">
+                                                <div style="width:50%;overflow: hidden;float:left">
                                              <img src=${Common.SITE_URL +
                       "/uploads/" +
                       property.propertyImages[1].imageUrl
                       } alt="image" style="width:100%;height: 250px;">
                                                 </div>
-                                                 <div class="col-md-6 pr-1">
+                                                 <div style="width:50%;overflow: hidden;float:left">
                                              <img src=${Common.SITE_URL +
                       "/uploads/" +
                       property.propertyImages[2].imageUrl
                       } alt="image" style="width:100%;height: 250px;">
                                                 </div> 
-                                                <div class="col-md-6 pl-0">
+                                                <div style="width:50%;overflow: hidden;float:left">
                                              <img src=${Common.SITE_URL +
                       "/uploads/" +
                       property.propertyImages[3].imageUrl

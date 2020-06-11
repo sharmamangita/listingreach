@@ -246,8 +246,8 @@ class RegisterPage extends React.Component {
                                         <div className="col-md-12 mb-3">
 
                                             <div className="form-group">
-                                              <label className="check">Please confirm that you agree to our <a href="javascript:void(0);" className="" data-toggle-state="hidden" data-toggle-show="Show privacy policy" data-toggle-hide="Hide privacy policy">
-                                              privacy policy</a>
+                                              <label className="check">Please confirm that you agree to our <Link to="PrivacyPage" target="_blank" className="" data-toggle-state="hidden" data-toggle-show="Show privacy policy" data-toggle-hide="Hide privacy policy">
+                                              privacy policy</Link>
                                               <input type="checkbox"   defaultChecked={this.state.isChecked} onChange={this.handleCheck}/>
                                               <span className="checkmark"></span>
                                                <div className="validation">{msg}</div>
