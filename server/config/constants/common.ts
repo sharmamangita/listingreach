@@ -1453,11 +1453,7 @@ static PREVIEW_EMAIL_UPLOAD_BLAST:string= Common.PREVIEW_EMAIL_UPLOAD_BLAST_HEAD
                   <div class="" style="background: #f1f1f1;width:100%">
 					 #pricePerSquareFoot# 
                      <div class="" style="">
-                        <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
-                           <label class="flyer-label" style="color: #EE8C3A;
-         font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
-                           <p>#streetAddress#, #city#, #zipCode#</p>
-                        </div>
+                     	#propertyAdress#
                         <div class="text-center" style="width:100%;text-align: center !important;">
                            #openData#
                         </div>
@@ -1503,11 +1499,7 @@ static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ `
                   <div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc;">
                   	#pricePerSquareFoot#
                      <div class="" style="">
-                        <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
-                           <label class="flyer-label" style="color: #EE8C3A;
-         font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
-                           <p>#streetAddress#, #city#, #zipCode#</p>
-                        </div>
+                     	#propertyAdress#
                         <div class="text-center" style="width:100%;text-align: center !important;">
                            #openData#
                         </div>
