@@ -9,6 +9,9 @@
 # dependencies
 /frontend/node_modules
 /server/node_modules
+/server/public/upload
+/frontend/dist.zip
+/server/node.zip
 # IDEs and editors
 /.idea
 .project
