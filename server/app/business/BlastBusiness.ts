@@ -100,10 +100,9 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
               if (template && template.template_type == 'MultipleProperties') {
                 console.log("multiple properties....",properties);
                 var html = '';
-                properties.forEach(function (property: IPropertyModel) {
-                  html += `<div style="display: flex;flex-wrap: wrap;">
+                html +=`<div style="display: flex;flex-wrap: wrap;">
                      <div style="width:100%">
-                                <div class="flyer-header" style="display: block;overflow: hidden;
+                      <div class="flyer-header" style="display: block;overflow: hidden;
                  background-color: #EE8C3A;
                  color: #fff;
                  box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(20, 19, 18, 0.1);
@@ -116,9 +115,9 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                    #blastHeadline#
                                 </div>
                              </div>
-                  </div>
-         
-                                             <div class="" style="display: block;display: flex;border-top: 2px solid #ccc;">
+                  </div>`;
+                properties.forEach(function (property: IPropertyModel) {
+                  html += ` <div class="" style="display: block;display: flex;border-top: 2px solid #ccc;">
                                                 <div style="display: block; background:#f1f1f1;height:auto;overflow: hidden;width:50%">`;
                   if (property.propertyImages && property.propertyImages.length == 1) {
                       html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl} />`;
@@ -127,7 +126,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     }
 
                   html += `</div><div style="width:50%;display: block; background:#f1f1f1; height:auto;">
-                                                   <div class="" style="display: flex;flex-wrap: wrap;">
+                                                   <div class="" style="display: flex;flex-wrap: wrap;margin-left: 5%;">
                                                       <div style="width:100%;margin-bottom: 1rem !important;margin-top: 1rem !important;">
                                                          <h4 style=" background: #f1f1f1;font-size: 1.5rem;margin-top: 0;
                                                             margin-bottom: 1rem;">Price: ${property.price} per Square Foot</h4>
@@ -184,7 +183,8 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                        </div>
                                                    </div>
                                                 </div>
-                                             </div>`;
+                                               </div>
+                                            `;
                   html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
                                                 <div>
                                                    <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
@@ -223,7 +223,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   property.linksToWebsites && property.linksToWebsites.forEach(function (resut) {
                     html += `<br><a href=${resut.url} style="color: #000000;transition: all .5s ease;"><u> ${resut.text}</a></u>`;
                   });
-                  html += ` </div>
+                  html += ` 
                                                 </div>
                                              </div>
                                         </div>`;
@@ -570,7 +570,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#city#/g, property.city || " ")
                     .replace(/#zipCode#/g, property.zipcode ||  " ")
                     .replace(/#propertyType#/g, property_type)
-                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="`+Common.SITE_URL+`uploads/previewimages/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
+                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="`+Common.SITE_URL+`/uploads/previewimages/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
                     .replace(/#propertyStyle#/g, property_style)
                     .replace(/#numberOfStories#/g, number_stories)
                     .replace(/#garageSize#/g,garageSize)
