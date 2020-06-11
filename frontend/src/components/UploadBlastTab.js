@@ -136,7 +136,7 @@ class UploadBlastTab extends React.Component {
     $("#imgupload").trigger("click");
   }
 
-  to12hourTime(time) {submitForm
+  to12hourTime(time) {
     // Check correct time format and split into components
     time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
 
