@@ -2,6 +2,8 @@
 
 # compiled output
 /frontend/dist
+/frontend/dist.zip
+/server/node.zip
 /server/node
 /server/tmp
 /out-tsc
