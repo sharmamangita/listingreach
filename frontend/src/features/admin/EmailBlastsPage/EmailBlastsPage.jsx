@@ -16,29 +16,29 @@ class EmailBlastsPage extends React.Component {
 			blasts: this.props.blasts,
 			prefrences: {},
 			totalblasts: [],
-			showModel:false
+			showModel: false
 		};
 		this.handleShow = this.handleShow.bind(this);
 		this.deleteUsers = this.deleteUsers.bind(this);
 		this.createdDate = this.createdDate.bind(this);
-		
+
 		this.sendBlast = this.sendBlast.bind(this);
 		this.userStatus = this.userStatus.bind(this);
 		this.getById = this.getById.bind(this);
 		this.deletelink = this.deletelink.bind(this);
-		this.hideModel= this.hideModel.bind(this);
-		this.getEmailTemplate= this.getEmailTemplate.bind(this);
-		
+		this.hideModel = this.hideModel.bind(this);
+		this.getEmailTemplate = this.getEmailTemplate.bind(this);
+
 	}
 
-	hideModel(){
-		this.setState({showModel:false});
+	hideModel() {
+		this.setState({ showModel: false });
 	}
 
-	getEmailTemplate(event){
-		const {id} = event.target;
+	getEmailTemplate(event) {
+		const { id } = event.target;
 		this.props.dispatch(userActions.getPreviewhtml(id));
-		this.setState({showModel:true});
+		this.setState({ showModel: true });
 	}
 
 	handleShow() {
@@ -80,7 +80,7 @@ class EmailBlastsPage extends React.Component {
 		return created;
 	}
 
-	
+
 
 	userStatus(id) {
 		this.props.dispatch(adminActions.userStatus(id));
@@ -107,12 +107,12 @@ class EmailBlastsPage extends React.Component {
 
 	render() {
 		var { totaldata, caddata } = this.prepareTable();
-        var { previewHtml }  = this.props;
-		var {showModel}=this.state;
+		var { previewHtml } = this.props;
+		var { showModel } = this.state;
 		return (
 			<main className="col-xs-12 col-sm-8 col-lg-9 col-xl-10 pt-3 pl-4 ml-auto">
 				<h3 className="admin-title"> Paid Blasts</h3>
-				
+
 				<section className="row">
 					<div className="col-sm-12">
 						<section className="row">
@@ -127,15 +127,15 @@ class EmailBlastsPage extends React.Component {
 						</section>
 					</div>
 				</section>
-	 <Modal visible={showModel} dialogClassName="modal-lg">
+				<Modal visible={showModel} dialogClassName="modal-lg">
 
-				{previewHtml && <Markup content={previewHtml} />}
-            <div className="modal-footer">
-	          <button type="button" className="btn btn-secondary" onClick={this.hideModel}>
-	            Cancel
+					{previewHtml && <Markup content={previewHtml} />}
+					<div className="modal-footer">
+						<button type="button" className="btn btn-secondary" onClick={this.hideModel}>
+							Cancel
 	          </button>
-        </div>
-      </Modal>
+					</div>
+				</Modal>
 			</main>
 		);
 	}
@@ -143,12 +143,13 @@ class EmailBlastsPage extends React.Component {
 	prepareTable() {
 		if (this.props.blasts && this.props.blasts.length > 0) {
 			var totaldata = [];
-			for (var cad = 0; cad <= this.props.blasts.length - 1; cad++) {
-				var blast = this.props.blasts[cad];
+			//for (var cad = 0; cad <= this.props.blasts.length - 1; cad++) {
+			this.props.blasts.map((blast) => {
 				totaldata.push({
 					blasttype: (<a href="javascript:void(0)" onClick={this.getEmailTemplate} id={blast._id}>{blast.blast_type}</a>),
 					headline: blast.template && blast.template.length > 0 ? blast.template[0].headline : "",
-					agentName: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].firstName+' '+blast.users[0].lastName : "",
+					subject: blast.template && blast.template.length > 0 ? blast.template[0].email_subject : "",
+					agentName: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].firstName + ' ' + blast.users[0].lastName : "",
 					email: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].email : "",
 					company: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].companyName : "",
 					createddate: blast.selected_template_date ? this.createdDate(blast.selected_template_date) : "",
@@ -164,7 +165,7 @@ class EmailBlastsPage extends React.Component {
 						</button>
 					)
 				});
-			}
+			})
 		}
 		const caddata = {
 			columns: common.blastscolumns,
@@ -185,8 +186,8 @@ class EmailBlastsPage extends React.Component {
 			}
 		};
 	}
-	componentWillReceiveProps(props){
-		this.setState({ blasts: props.blasts,previewHtml:props.previewHtml });
+	componentWillReceiveProps(props) {
+		this.setState({ blasts: props.blasts, previewHtml: props.previewHtml });
 	}
 }
 

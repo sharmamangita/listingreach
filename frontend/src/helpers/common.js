@@ -129,6 +129,12 @@ export const common = {
       width: 270
     },
     {
+      label: 'Subject',
+      field: 'subject',
+      sort: 'asc',
+      width: 270
+    },
+    {
       label: 'Agent',
       field: 'agent',
       sort: 'asc',

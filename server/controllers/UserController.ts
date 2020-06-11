@@ -1124,7 +1124,8 @@ class UserController implements IBaseController<UserBusiness> {
 							createdon: obj.selected_template_date,
 							scheduledDate: obj.scheduledDate,
 							templateType: obj.templates.template_type,
-							templateId: obj.selected_template_id
+							templateId: obj.selected_template_id,
+							headline:obj.templates.headline
 						};
 
 					});

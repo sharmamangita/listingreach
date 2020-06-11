@@ -66,6 +66,7 @@ class FlyersPage extends React.Component {
                   <th>Flyer ID</th>
                   <th>Subject</th>
                   <th>Type</th>
+                  <th>Headline</th>
                   <th>Value</th>
                   <th>Created On</th>
                   <th>Status</th>
@@ -100,7 +101,10 @@ class FlyersPage extends React.Component {
                           {data.templateType ? data.templateType
                             : "---"}
                         </td>
-
+                        <td>
+                          {data.headline ? data.headline
+                            : "---"}
+                        </td>
                         <td>
                           {" "}
                           {data.payment ? "$" + data.payment
