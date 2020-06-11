@@ -35,7 +35,8 @@ class EmailBlastsPage extends React.Component {
 		this.setState({showModel:false});
 	}
 
-	getEmailTemplate(id){
+	getEmailTemplate(event){
+		const {id} = event.target;
 		this.props.dispatch(userActions.getPreviewhtml(id));
 		this.setState({showModel:true});
 	}
@@ -67,15 +68,7 @@ class EmailBlastsPage extends React.Component {
 			</a>)
 	}
 
-	deletelink(id) {
-		return (
-			<a href="javascript:void(0)" className="pl-1" onClick={() => {
-				if (window.confirm("Are you sure you wish to delete this users?"))
-					this.deleteUsers(id);
-			}
-			}><i className="fa fa-trash" aria-hidden="true"></i>
-			</a>)
-	}
+
 
 	deleteUsers(id) {
 		this.props.dispatch(adminActions.deleteusers(id));
@@ -153,7 +146,7 @@ class EmailBlastsPage extends React.Component {
 			for (var cad = 0; cad <= this.props.blasts.length - 1; cad++) {
 				var blast = this.props.blasts[cad];
 				totaldata.push({
-					blasttype: (<a href="javascript:void(0)" onClick={(event) => this.getEmailTemplate(blast._id)}>{blast.blast_type}</a>),
+					blasttype: (<a href="javascript:void(0)" onClick={this.getEmailTemplate} id={blast._id}>{blast.blast_type}</a>),
 					headline: blast.template && blast.template.length > 0 ? blast.template[0].headline : "",
 					agentName: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].firstName+' '+blast.users[0].lastName : "",
 					email: blast.users && blast.users.length > 0 && blast.users[0] ? blast.users[0].email : "",

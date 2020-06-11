@@ -2326,6 +2326,6 @@ font-color:black !important;
 .blast-box .text-right-row {
    margin-left: 36px;
 }
-
-
-    
+    .modal-dialog.modal-lg {
+      max-width: 860px
+    }

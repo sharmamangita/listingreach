@@ -16,8 +16,8 @@ class Common {
     static SEND_FROM_EMAIL: string ="info@76east.com";
     static ADMIN_EMAIL: string = "info@76east.com";
 
-    static SITE_URL: string = "http://66.235.194.119:3006"; 
-   // static SITE_URL: string = "http://localhost:3000"; 
+    //static SITE_URL: string = "http://66.235.194.119:3006"; 
+    static SITE_URL: string = "http://localhost:3000"; 
 	
 	//live details
 	static MAIL_CONFIG: any = {
@@ -1332,14 +1332,14 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                         <img src=${Common.PRAVIEW_LOGO} style="" class="img-a img-fluid">
                 <div style="text-align: right;">
                      <span class="" style="text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-                <a class="btn btn-primary" href="mailto:#agentEmail#" style="background: #ee8c3a !important;
+                <a  href="mailto:#agentEmail#" style="background: #ee8c3a !important;
     color: #fff;
     display: inline-block;
     font-weight: 400;
     padding: 8px 22px;
     border-radius: 8px;text-decoration: none;">Reply to Sender</a></span>
 	<span class="" style="text-align: right !important;margin-bottom: 1rem !important; margin-top: 1rem !important;text-align: right !important;">
-        <a class="btn btn-primary" href="mailto:#agentEmail#" style="background: #ee8c3a !important;
+        <a href="mailto:#agentEmail#" style="background: #ee8c3a !important;
     color: #fff;
     display: inline-block;
     font-weight: 400;
@@ -1422,14 +1422,14 @@ static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER:string =`
                         <img src=${Common.PRAVIEW_LOGO} style="" class="img-a img-fluid">
                 <div style="text-align: right;">
                      <span class="" style="text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-                <a class="btn btn-primary" href="mailto:mailto:#agentEmail#" style="background: #ee8c3a !important;
+                <a  href="mailto:mailto:#agentEmail#" style="background: #ee8c3a !important;
     color: #fff;
     display: inline-block;
     font-weight: 400;
     padding: 8px 22px;
     border-radius: 8px;text-decoration: none;">Reply to Sender</a></span>
 	<span class="" style="text-align: right !important;margin-bottom: 1rem !important; margin-top: 1rem !important;text-align: right !important;">
-        <a class="btn btn-primary" href="mailto:#agentEmail#" style="background: #ee8c3a !important;
+        <a  href="mailto:#agentEmail#" style="background: #ee8c3a !important;
     color: #fff;
     display: inline-block;
     font-weight: 400;
