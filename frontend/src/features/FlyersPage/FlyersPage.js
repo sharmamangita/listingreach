@@ -109,7 +109,7 @@ class FlyersPage extends React.Component {
                         <td>{this.createdDate(data.createdon)}</td>
                         <td> {data.status} </td>
                         <td>
-                          {data.status && data.status == "Draft" ? (
+                          {data.status && data.status == "Draft" && !data.payment ? (
                             <div>
                               <Link
                                 to={{
