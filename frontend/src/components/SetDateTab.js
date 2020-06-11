@@ -38,9 +38,6 @@ class SetDateTab extends React.Component {
   }
 
   handleDateClick(arg) {
-      this.setState({  // add new event data
-        calendarEvents:[]
-      });
     if (confirm('Would you like to add an blast to ' + arg.dateStr + ' ?')) {
       if (arg.dateStr) {
         this.setState({ scheduledDate: arg.dateStr, isSelected: true })
@@ -65,9 +62,9 @@ class SetDateTab extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.activeTab == "setDate") {
-      console.log("nextProps in Set Date", nextProps)
+    //  console.log("nextProps in Set Date", nextProps)
       var scheduledDateVal =moment(nextProps.scheduledDate).format('YYYY-MM-DD');
-      console.log("formatedate====",scheduledDateVal)
+      //console.log("formatedate====",scheduledDateVal)
       this.setState({
         blast_id: nextProps.blast_id,
         scheduledDate: nextProps.scheduledDate,

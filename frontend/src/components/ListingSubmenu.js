@@ -1,12 +1,6 @@
 import React from 'react';
-import { Link,Redirect } from 'react-router-dom';
-import { browserHistory } from 'react-router'
-import { userActions } from '../actions';
-import { Nav, Navbar, NavItem, NavDropdown, MenuItem, NavLink } from 'react-bootstrap';
-import { authHeader ,history} from '../helpers';
-const axios = require("axios");
-import config from 'config';
-import { Button,Modal } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { history} from '../helpers';
 
 
 class ListingSubmenu extends React.Component {
@@ -33,7 +27,7 @@ class ListingSubmenu extends React.Component {
        
 
     }
-    confirmbox(e){
+    confirmbox(){
        this.setState({show:true});
     }
     
@@ -42,11 +36,10 @@ class ListingSubmenu extends React.Component {
     }
     componentDidMount() {
         if(this.state.user){
-          const { dispatch } = this.state.user.userId;
         }
     }
     
-    resetForm(e){
+    resetForm(){
       history.push('/CreateFlyerPage');
       window.location.reload()
 
@@ -66,7 +59,7 @@ class ListingSubmenu extends React.Component {
                 <Link to="FlyersPage" className="nav-link"  >My Saved Flyers</Link>
 				        <Link to="DesignsPage" className="nav-link">Design Ideas</Link>
                 <Link to="BillingPage" className="nav-link">My Billing</Link>
-                <Link to="ProfilePage">Account Details</Link>
+                <Link to="ProfilePage" className="nav-link">Account Details</Link>
                 <a href="javascript:void(0);" className="icon">
                 <i className="fa fa-bars"></i>
                 </a>

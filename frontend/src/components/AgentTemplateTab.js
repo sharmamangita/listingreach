@@ -23,14 +23,14 @@ class AgentTemplateTab extends React.Component {
     console.log("template PROPS ",this.props)
     if (designTemplate) {
       const { dispatch } = this.props.dispatchval.dispatch;
-      if (this.props.blastId) {
-        dispatch(userActions.designTemplate(designTemplate, this.props.blastId, this.props.templateId));
+      if (this.props.blast._id) {
+        dispatch(userActions.designTemplate(designTemplate, this.props.blast._id, this.props.templateId));
       }
     }
   }
 
   render() {
-    const { blastType } = this.props;
+    const { blast } = this.props;
     return (
       <div className="tab-pane fade mt-2" id="temp"
         role="tabpanel" aria-labelledby="group-dropdown2-tab" aria-expanded="false"
@@ -43,9 +43,8 @@ class AgentTemplateTab extends React.Component {
           method="post"
           role="form"
         >
-          {blastType &&
-            blastType.blastData &&
-            blastType.blastData.blast_type == "RealEstateBrokerage" ? (
+          {blast &&
+           blast.blast_type == "RealEstateBrokerage" ? (
               <div className="row">
                 <div className="col-md-4 mb-3">
                   <div

@@ -148,7 +148,7 @@ class CreateFlyerPage extends React.Component {
                         <AgentTemplateTab
                           activeTab={moveTab}
                           dispatchval={this.dispatchval}
-                          blastId={blast && blast._id}
+                          blast={blast}
                           templateId={blast && blast.selected_template_id}
                         />
                       </Tab>
