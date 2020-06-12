@@ -334,17 +334,19 @@ class UploadBlastTab extends React.Component {
           console.log("validation failed for email fields ");
         }
 
-        if (!prop.pricingInfo || !prop.pricingInfo.price || !prop.pricingInfo.priceType) {
-          isvalid = false;
-          console.log("validation failed property pricing", prop.pricingInfo);
-        }
-        if (!prop.display_method || !prop.street_address || !prop.state || !prop.city) {
-          isvalid = false;
-          console.log("validation failed property address");
-        }
-        if (prop.displayMls && (!prop.board || !prop.mls_number)) {
-          isvalid = false;
-          console.log("validation failed property MLS Number", prop.mls_number);
+        if (template.template_type != "UploadYourOwnBlast") {
+          if (!prop.pricingInfo || !prop.pricingInfo.price || !prop.pricingInfo.priceType) {
+            isvalid = false;
+            console.log("validation failed property pricing", prop.pricingInfo);
+          }
+          if (!prop.display_method || !prop.street_address || !prop.state || !prop.city) {
+            isvalid = false;
+            console.log("validation failed property address");
+          }
+          if (prop.displayMls && (!prop.board || !prop.mls_number)) {
+            isvalid = false;
+            console.log("validation failed property MLS Number", prop.mls_number);
+          }
         }
         if (!prop.property_type) {
           isvalid = false;
@@ -444,7 +446,7 @@ class UploadBlastTab extends React.Component {
                   {(submitted &&
                     !template.address &&
                     "Form Reply Line is required")}
-                      {submitted && template.address && !this.isValidEmail(template.address) && "Invalid email address."}
+                  {submitted && template.address && !this.isValidEmail(template.address) && "Invalid email address."}
                 </div>
               </div>
             </div>
@@ -600,362 +602,364 @@ class UploadBlastTab extends React.Component {
             </div>
             <hr />
             <br />
-            <h5>Is this an Open House?</h5>
-            <div className="row">
-              <div className="col-md-12 mb-3">
-                <div className="form-group">
-                  <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("openHouse", property, true)}   >
-                    Yes
-                    </a>
-                  <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.show("openHouse", property, false)} >
-                    No
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div
-              style={{
-                display:
-                  property.isOpenHouse && property.isOpenHouse.display
-                    ? "inline"
-                    : "none",
-              }}              >
-              <div className="row">
-                <div className="col-md-3 mb-3">
-                  <div className="form-group">
-                    <label className="required">Type</label>
+            {template && template.template_type != "UploadYourOwnBlast" &&
+              <div>
+                <h5>Is this an Open House?</h5>
+                <div className="row">
+                  <div className="col-md-12 mb-3">
                     <div className="form-group">
-                      <select className="form-control form-control-lg form-control-a"
-                        name="houseType"
-                        value={isOpenHouse.houseType}
-                        onChange={this.openHouseChange}                        >
-                        <option value="">Select</option>
-                        <option value="Open House">Open House</option>
-                        <option value="Broker Open">Broker Open</option>
-                        <option value="Agent Tour">Agent Tour</option>
+                      <a href="javascript:void(0)" className="btn btn-success"
+                        onClick={() => this.show("openHouse", property, true)}   >
+                        Yes
+                    </a>
+                      <a href="javascript:void(0)" className="btn btn-outline-danger"
+                        onClick={() => this.show("openHouse", property, false)} >
+                        No
+                  </a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display:
+                      property.isOpenHouse && property.isOpenHouse.display
+                        ? "inline"
+                        : "none",
+                  }}              >
+                  <div className="row">
+                    <div className="col-md-3 mb-3">
+                      <div className="form-group">
+                        <label className="required">Type</label>
+                        <div className="form-group">
+                          <select className="form-control form-control-lg form-control-a"
+                            name="houseType"
+                            value={isOpenHouse.houseType}
+                            onChange={this.openHouseChange}                        >
+                            <option value="">Select</option>
+                            <option value="Open House">Open House</option>
+                            <option value="Broker Open">Broker Open</option>
+                            <option value="Agent Tour">Agent Tour</option>
+                          </select>
+                        </div>
+                        <div className="validation">
+                          {openHouseAdd &&
+                            (!property.isOpenHouse ||
+                              !property.isOpenHouse.houseType) && "This field is required"}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3 mb-3">
+                      <div className="form-group">
+                        <label className="required">Date</label>
+                        <input className="form-control form-control-lg form-control-a" type="date"
+                          name="date" onChange={this.openHouseChange}
+                          value={isOpenHouse.date}
+                        />
+                      </div>
+                      <div className="validation">
+                        {openHouseAdd &&
+                          (!property.isOpenHouse ||
+                            !property.isOpenHouse.date) && "This field is required."}
+                      </div>
+                    </div>
+                    <div className="col-md-2 mb-3">
+                      <div className="form-group">
+                        <label>Start Time</label>
+                        <input className="form-control  form-control-lg form-control-a"
+                          type="time" name="startTime"
+                          onChange={this.openHouseChange}
+                          value={isOpenHouse.startTime}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-2 mb-3">
+                      <div className="form-group">
+                        <label>End Time</label>
+                        <input className="form-control  form-control-lg form-control-a"
+                          type="time" onChange={this.openHouseChange}
+                          name="endTime" value={isOpenHouse.endTime}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-2 mb-3">
+                      <div className="form-group pt-4">
+                        <a href="javascript:void(0)"
+                          className="btn btn-primary"
+                          onClick={() => this.addOpenHouse()}                      >
+                          Add
+                  </a>
+                      </div>
+                    </div>
+                  </div>
+                  <table
+                    className="table table-bordered"
+                    style={{ width: "100%" }}                >
+                    <thead>
+                      <tr>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {property.isOpenHouse &&
+                        property.isOpenHouse.length > 0 &&
+                        property.isOpenHouse.map(function (openHouse, openHouseIndex) {
+                          return (
+                            <tr key={openHouseIndex}>
+                              <td>  {openHouse.houseType}   </td>
+                              <td>  {openHouse.date}  </td>
+                              <td>
+                                {openHouse.startTime && this.to12hourTime(openHouse.startTime) + " to " + this.to12hourTime(openHouse.endTime)}
+                              </td>
+                              <td>
+                                <i className="fa fa-trash" aria-hidden="true"
+                                  title="openHoueDelete"
+                                  onClick={(e) => this.editOrDelete(e, "delete", property, openHouse)
+                                  }
+                                ></i>
+                              </td>
+                            </tr>
+                          );
+                        },
+                          this
+                        )}
+                    </tbody>
+                  </table>
+                </div>
+                <h5>Property Pricing Information</h5>
+                <div className="row">
+                  <div className="col-md-4 mb-3">
+                    <div className="form-group">
+                      <label className="required">Price</label>
+                      <div className="input-group mb-3">
+                        <div className="input-group-prepend">
+                          <span className="input-group-text">
+                            <i className="fa fa-usd"></i>
+                          </span>
+                        </div>
+                        <input type="text" name="price" onChange={(e) => this.handleChange(e, "propertyPricing")}
+                          value={property.pricingInfo && property.pricingInfo.price}
+                          className="form-control form-control-lg form-control-a"
+                        />
+                      </div>
+                      <div className="validation">
+                        {submitted &&
+                          (!property.pricingInfo ||
+                            !property.pricingInfo.price) &&
+                          "Price is required"}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-8 mb-3">
+                    <div className="form-group">
+                      <div className="form-group">
+                        <label className="required">Price Display Type</label>
+                        <select className="form-control form-control-lg form-control-a" name="priceType"
+                          value={property.pricingInfo && property.pricingInfo.priceType}
+                          onChange={(e) => this.handleChange(e, "propertyPricing")}>
+                          <option value="">Select Price Display Type</option>
+                          <option>Display Price Specified</option>
+                          <option>Replace Price with 'AUCTION'</option>
+                          <option>Replace Price with 'Call For Pricing'</option>
+                          <option>Replace Price with 'Call For Offers'</option>
+                          <option>Display Price per Square Foot</option>
+                          <option>Display Price per Month</option>
+                          <option>Display as Value Price Range</option>
+                        </select>
+                      </div>
+                      <div className="validation">
+                        {submitted &&
+                          (!property.pricingInfo ||
+                            !property.pricingInfo.priceType) &&
+                          "Price is required"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <hr />
+                <br />
+                <h5>Property Address</h5>
+                <div className="row">
+                  <div className="col-md-4 mb-3">
+                    <div className="form-group">
+                      <label className="required">Address Display Method:</label>
+                      <select className="form-control form-control-lg form-control-a" name="display_method"
+                        value={property && property.display_method}
+                        onChange={(e) => this.handleChange(e, property)}>
+                        <option>Select Address Display Method</option>
+                        <option>Show Entire Address</option>
+                        <option>Show City & State Only</option>
+                        <option>DO NOT Show Address</option>
                       </select>
                     </div>
                     <div className="validation">
-                      {openHouseAdd &&
-                        (!property.isOpenHouse ||
-                          !property.isOpenHouse.houseType) && "This field is required"}
+                      {submitted &&
+                        (!property ||
+                          !property.display_method) &&
+                        "Price is required"}
                     </div>
                   </div>
-                </div>
-                <div className="col-md-3 mb-3">
-                  <div className="form-group">
-                    <label className="required">Date</label>
-                    <input className="form-control form-control-lg form-control-a" type="date"
-                      name="date" onChange={this.openHouseChange}
-                      value={isOpenHouse.date}
-                    />
-                  </div>
-                  <div className="validation">
-                    {openHouseAdd &&
-                      (!property.isOpenHouse ||
-                        !property.isOpenHouse.date) && "This field is required."}
-                  </div>
-                </div>
-                <div className="col-md-2 mb-3">
-                  <div className="form-group">
-                    <label>Start Time</label>
-                    <input className="form-control  form-control-lg form-control-a"
-                      type="time" name="startTime"
-                      onChange={this.openHouseChange}
-                      value={isOpenHouse.startTime}
-                    />
-                  </div>
-                </div>
-                <div className="col-md-2 mb-3">
-                  <div className="form-group">
-                    <label>End Time</label>
-                    <input className="form-control  form-control-lg form-control-a"
-                      type="time" onChange={this.openHouseChange}
-                      name="endTime" value={isOpenHouse.endTime}
-                    />
-                  </div>
-                </div>
-                <div className="col-md-2 mb-3">
-                  <div className="form-group pt-4">
-                    <a href="javascript:void(0)"
-                      className="btn btn-primary"
-                      onClick={() => this.addOpenHouse()}                      >
-                      Add
-                  </a>
-                  </div>
-                </div>
-              </div>
-              <table
-                className="table table-bordered"
-                style={{ width: "100%" }}                >
-                <thead>
-                  <tr>
-                    <th>Type</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {property.isOpenHouse &&
-                    property.isOpenHouse.length > 0 &&
-                    property.isOpenHouse.map(function (openHouse, openHouseIndex) {
-                      return (
-                        <tr key={openHouseIndex}>
-                          <td>  {openHouse.houseType}   </td>
-                          <td>  {openHouse.date}  </td>
-                          <td>
-                            {openHouse.startTime && this.to12hourTime(openHouse.startTime) + " to " + this.to12hourTime(openHouse.endTime)}
-                          </td>
-                          <td>
-                            <i className="fa fa-trash" aria-hidden="true"
-                              title="openHoueDelete"
-                              onClick={(e) => this.editOrDelete(e, "delete", property, openHouse)
-                              }
-                            ></i>
-                          </td>
-                        </tr>
-                      );
-                    },
-                      this
-                    )}
-                </tbody>
-              </table>
-            </div>
-            <h5>Property Pricing Information</h5>
-            <div className="row">
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="required">Price</label>
-                  <div className="input-group mb-3">
-                    <div className="input-group-prepend">
-                      <span className="input-group-text">
-                        <i className="fa fa-usd"></i>
-                      </span>
+                  <div className="col-md-8 mb-3">
+                    <div className="form-group">
+                      <label className="required">Street Address</label>
+                      <input type="text" name="street_address" className="form-control form-control-lg form-control-a" placeholder="Street Address"
+                        value={property && property.street_address}
+                        onChange={(e) => this.handleChange(e, property)} />
                     </div>
-                    <input type="text" name="price" onChange={(e) => this.handleChange(e, "propertyPricing")}
-                      value={property.pricingInfo && property.pricingInfo.price}
-                      className="form-control form-control-lg form-control-a"
-                    />
-                  </div>
-                  <div className="validation">
-                    {submitted &&
-                      (!property.pricingInfo ||
-                        !property.pricingInfo.price) &&
-                      "Price is required"}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-8 mb-3">
-                <div className="form-group">
-                  <div className="form-group">
-                    <label className="required">Price Display Type</label>
-                    <select className="form-control form-control-lg form-control-a" name="priceType"
-                      value={property.pricingInfo && property.pricingInfo.priceType}
-                      onChange={(e) => this.handleChange(e, "propertyPricing")}>
-                      <option value="">Select Price Display Type</option>
-                      <option>Display Price Specified</option>
-                      <option>Replace Price with 'AUCTION'</option>
-                      <option>Replace Price with 'Call For Pricing'</option>
-                      <option>Replace Price with 'Call For Offers'</option>
-                      <option>Display Price per Square Foot</option>
-                      <option>Display Price per Month</option>
-                      <option>Display as Value Price Range</option>
-                    </select>
-                  </div>
-                  <div className="validation">
-                    {submitted &&
-                      (!property.pricingInfo ||
-                        !property.pricingInfo.priceType) &&
-                      "Price is required"}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <hr />
-            <br />
-            <h5>Property Address</h5>
-            <div className="row">
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="required">Address Display Method:</label>
-                  <select className="form-control form-control-lg form-control-a" name="display_method"
-                    value={property && property.display_method}
-                    onChange={(e) => this.handleChange(e, property)}>
-                    <option>Select Address Display Method</option>
-                    <option>Show Entire Address</option>
-                    <option>Show City & State Only</option>
-                    <option>DO NOT Show Address</option>
-                  </select>
-                </div>
-                <div className="validation">
-                  {submitted &&
-                    (!property ||
-                      !property.display_method) &&
-                    "Price is required"}
-                </div>
-              </div>
-              <div className="col-md-8 mb-3">
-                <div className="form-group">
-                  <label className="required">Street Address</label>
-                  <input type="text" name="street_address" className="form-control form-control-lg form-control-a" placeholder="Street Address"
-                    value={property && property.street_address}
-                    onChange={(e) => this.handleChange(e, property)} />
-                </div>
-                <div className="validation">
-                  {submitted &&
-                    (!property ||
-                      !property.street_address) &&
-                    "Price is required"}
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="required">City</label>
-                  <input type="text" name="city" className="form-control form-control-lg form-control-a"
-                    placeholder="City"
-                    value={property && property.city}
-                    onChange={(e) => this.handleChange(e, property)}
-                  />
-                </div>
-                <div className="validation">
-                  {submitted &&
-                    (!property || !property.city) && "Price is required"}
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label className="required">State</label>
-                  <select className="form-control form-control-lg form-control-a" name="state"
-                    value={property && property.state}
-                    onChange={(e) => this.handleChange(e, property)}>
-                    <option value="">Select State</option>
-                    {globalData.USstates.map((st) =>
-                      <option key={st}>{st}</option>
-                    )}
-                  </select>
-                  <div className="validation">
-                    {submitted &&
-                      (!property ||
-                        !property.state) && "Price is required"}
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-4 mb-3">
-                <div className="form-group">
-                  <label>Zip Code</label>
-                  <input type="text" name="zipcode" className="form-control form-control-lg form-control-a"
-                    placeholder="Zip Code"
-                    value={property && property.zipcode}
-                    onChange={(e) => this.handleChange(e, property)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <hr />
-            <br />
-            <h5>Do you have a MLS Number?</h5>
-            <div className="row">
-              <div className="col-md-12 mb-3">
-                <div className="form-group">
-                  <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("mlsNumber", true)} >
-                    Yes
-                </a>
-                  <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.show("mlsNumber", false)}>
-                    No
-                </a>
-                </div>
-              </div>
-            </div>
-            <div className="row" style={{
-              display:
-                property.displayMls
-                  ? "flex"
-                  : "none"
-            }}  >
-              <div className="col-md-6 mb-3">
-                <div className="form-group">
-                  <label className="required">MLS Number</label>
-                  <input type="text" name="mls_number" className="form-control form-control-lg form-control-a"
-                    placeholder="Enter the MLS Number for Property" onChange={(e) => this.handleChange(e, property)}
-                    value={property && property.mls_number}
-                  />
-                </div>
-                <div className="validation">
-                  {submitted && (!property || !property.mls_number) && "This field is required."}
-                </div>
-              </div>
-              <div className="col-md-12 mb-3">
-                <div className="form-group">
-                  <label>
-                    Which 'board / association' represents the Realtors
-                    where this property is located?
-                </label>
-                  <p className="red required">
-                    Attention: This is NOT a 'database step'. Click
-                    INSTRUCTIONS on the left for more details
-                </p>
-                  <div className="form-group">
-                    <select className="form-control form-control-lg form-control-a" name="board"
-                      value={property && property.board}
-                      onChange={(e) => this.handleChange(e, property)}
-                    >
-                      <option value="">
-                        -- Please Select a board / association for our
-                        'Internal Sourcing' --
-                    </option>
-                      <option>
-                        Amelia Island-Nassau County Real Estate Agent List
-                    </option>
-                      <option>Bartow Real Estate Agent List</option>
-                      <option>
-                        Bonita Springs-Estero Real Estate Agent List
-                    </option>
-                      <option>
-                        Broward, Palm Beaches, and St. Lucie Real Estate
-                        Agent List (includes Ft Lauderdale)
-                    </option>
-                      <option>
-                        Central Panhandle Real Estate Agent List
-                    </option>
-                      <option>Citrus County Real Estate Agent List</option>
-                      <option>
-                        Daytona Beach Area Real Estate Agent List
-                    </option>
-                      <option>
-                        Dixie Gilchrist Levy Counties Real Estate Agent List
-                    </option>
-                      <option>East Pasco Real Estate Agent List</option>
-                      <option>
-                        East Polk County Real Estate Agent List
-                    </option>
-                      <option>Emerald Coast Real Estate Agent List</option>
-                      <option>Englewood Area Real Estate Agent List</option>
-                      <option>Flagler County Real Estate Agent List</option>
-                      <option>Florida Keys Real Estate Agent List</option>
-                      <option>
-                        Fort Myers/Cape Coral Merger(Royal Palm Coast Real
-                        Estate Agent List)
-                    </option>
-                      <option>
-                        Franklin &amp; Gulf Counties Real Estate Agent List
-                    </option>
-                    </select>
                     <div className="validation">
                       {submitted &&
-                        (!property && !property.board) && "Price is required"}
+                        (!property ||
+                          !property.street_address) &&
+                        "Price is required"}
+                    </div>
+                  </div>
+                  <div className="col-md-4 mb-3">
+                    <div className="form-group">
+                      <label className="required">City</label>
+                      <input type="text" name="city" className="form-control form-control-lg form-control-a"
+                        placeholder="City"
+                        value={property && property.city}
+                        onChange={(e) => this.handleChange(e, property)}
+                      />
+                    </div>
+                    <div className="validation">
+                      {submitted &&
+                        (!property || !property.city) && "Price is required"}
+                    </div>
+                  </div>
+                  <div className="col-md-4 mb-3">
+                    <div className="form-group">
+                      <label className="required">State</label>
+                      <select className="form-control form-control-lg form-control-a" name="state"
+                        value={property && property.state}
+                        onChange={(e) => this.handleChange(e, property)}>
+                        <option value="">Select State</option>
+                        {globalData.USstates.map((st) =>
+                          <option key={st}>{st}</option>
+                        )}
+                      </select>
+                      <div className="validation">
+                        {submitted &&
+                          (!property ||
+                            !property.state) && "Price is required"}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-4 mb-3">
+                    <div className="form-group">
+                      <label>Zip Code</label>
+                      <input type="text" name="zipcode" className="form-control form-control-lg form-control-a"
+                        placeholder="Zip Code"
+                        value={property && property.zipcode}
+                        onChange={(e) => this.handleChange(e, property)}
+                      />
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
+                <hr />
+                <br />
+                <h5>Do you have a MLS Number?</h5>
+                <div className="row">
+                  <div className="col-md-12 mb-3">
+                    <div className="form-group">
+                      <a href="javascript:void(0)" className="btn btn-success"
+                        onClick={() => this.show("mlsNumber", true)} >
+                        Yes
+                </a>
+                      <a href="javascript:void(0)" className="btn btn-outline-danger"
+                        onClick={() => this.show("mlsNumber", false)}>
+                        No
+                </a>
+                    </div>
+                  </div>
+                </div>
+                <div className="row" style={{
+                  display:
+                    property.displayMls
+                      ? "flex"
+                      : "none"
+                }}  >
+                  <div className="col-md-6 mb-3">
+                    <div className="form-group">
+                      <label className="required">MLS Number</label>
+                      <input type="text" name="mls_number" className="form-control form-control-lg form-control-a"
+                        placeholder="Enter the MLS Number for Property" onChange={(e) => this.handleChange(e, property)}
+                        value={property && property.mls_number}
+                      />
+                    </div>
+                    <div className="validation">
+                      {submitted && (!property || !property.mls_number) && "This field is required."}
+                    </div>
+                  </div>
+                  <div className="col-md-12 mb-3">
+                    <div className="form-group">
+                      <label>
+                        Which 'board / association' represents the Realtors
+                        where this property is located?
+                </label>
+                      <p className="red required">
+                        Attention: This is NOT a 'database step'. Click
+                        INSTRUCTIONS on the left for more details
+                </p>
+                      <div className="form-group">
+                        <select className="form-control form-control-lg form-control-a" name="board"
+                          value={property && property.board}
+                          onChange={(e) => this.handleChange(e, property)}
+                        >
+                          <option value="">
+                            -- Please Select a board / association for our
+                            'Internal Sourcing' --
+                    </option>
+                          <option>
+                            Amelia Island-Nassau County Real Estate Agent List
+                    </option>
+                          <option>Bartow Real Estate Agent List</option>
+                          <option>
+                            Bonita Springs-Estero Real Estate Agent List
+                    </option>
+                          <option>
+                            Broward, Palm Beaches, and St. Lucie Real Estate
+                            Agent List (includes Ft Lauderdale)
+                    </option>
+                          <option>
+                            Central Panhandle Real Estate Agent List
+                    </option>
+                          <option>Citrus County Real Estate Agent List</option>
+                          <option>
+                            Daytona Beach Area Real Estate Agent List
+                    </option>
+                          <option>
+                            Dixie Gilchrist Levy Counties Real Estate Agent List
+                    </option>
+                          <option>East Pasco Real Estate Agent List</option>
+                          <option>
+                            East Polk County Real Estate Agent List
+                    </option>
+                          <option>Emerald Coast Real Estate Agent List</option>
+                          <option>Englewood Area Real Estate Agent List</option>
+                          <option>Flagler County Real Estate Agent List</option>
+                          <option>Florida Keys Real Estate Agent List</option>
+                          <option>
+                            Fort Myers/Cape Coral Merger(Royal Palm Coast Real
+                            Estate Agent List)
+                    </option>
+                          <option>
+                            Franklin &amp; Gulf Counties Real Estate Agent List
+                    </option>
+                        </select>
+                        <div className="validation">
+                          {submitted &&
+                            (!property && !property.board) && "Price is required"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>}
             <hr />
             <br />
             <h5>General Property Information</h5>
@@ -1008,7 +1012,7 @@ class UploadBlastTab extends React.Component {
               </button>
           </div>
         </form>
-      </div>
+      </div >
     );
   }
 
