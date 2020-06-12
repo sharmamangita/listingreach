@@ -103,6 +103,7 @@ class UploadBlastTab extends React.Component {
     this.openUpload = this.openUpload.bind(this);
     this.imageChange = this.imageChange.bind(this);
     this.nextPage = this.nextPage.bind(this);
+    this.isValidEmail = this.isValidEmail.bind(this);
   }
   componentWillMount() {
     this.initialize();
@@ -313,11 +314,14 @@ class UploadBlastTab extends React.Component {
     }
     this.setState(states)
   }
-
+  isValidEmail(email) {
+    return (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email));
+  }
   saveProperty(event) {
     event.preventDefault();
     const { property, template } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
+    const validemail = this.isValidEmail(template.address);
     this.setState({ submitted: true });
     let isvalid = true;
     let properties = [];
@@ -325,7 +329,7 @@ class UploadBlastTab extends React.Component {
     if (properties && properties.length > 0) {
       properties.forEach(function (prop) {
         console.log(prop);
-        if (!template.email_subject || !template.from_line || !template.address) {
+        if (!template.email_subject || !template.from_line || (!template.address || !validemail)) {
           isvalid = false;
           console.log("validation failed for email fields ");
         }
@@ -440,6 +444,7 @@ class UploadBlastTab extends React.Component {
                   {(submitted &&
                     !template.address &&
                     "Form Reply Line is required")}
+                      {submitted && template.address && !this.isValidEmail(template.address) && "Invalid email address."}
                 </div>
               </div>
             </div>

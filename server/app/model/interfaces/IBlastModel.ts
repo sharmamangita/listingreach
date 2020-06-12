@@ -22,7 +22,8 @@ interface IBlastModel extends mongoose.Document {
         other_information: string,
         image_url: string,
         logo_url: string
-
+        display_profile_image: Boolean,
+        display_logo: Boolean
     },
     associations: {
         association: {

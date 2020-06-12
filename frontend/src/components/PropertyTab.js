@@ -22,7 +22,7 @@ class PropertyTab extends React.Component {
     this.openHouseArrayChange = this.openHouseArrayChange.bind(this);
     this.addProperty = this.addProperty.bind(this);
     this.deleteProperty = this.deleteProperty.bind(this);
-
+    this.isValidEmail = this.isValidEmail.bind(this);
   }
 
   initializeState() {
@@ -66,6 +66,8 @@ class PropertyTab extends React.Component {
         other_information: "",
         image_url: "",
         logo_url: "",
+        display_logo: true,
+        display_profile_image: true
       }, this.props.agentData),
       template: {
         _id: null,
@@ -301,9 +303,12 @@ class PropertyTab extends React.Component {
     this.setState({ template });
   }
   handleAgentChange(event) {
-    const { name, value } = event.target;
+    const { name, value, type, checked } = event.target;
     let agentData = this.state.agentData;
     agentData[name] = value;
+    if (type == "checkbox") {
+      agentData[name] = checked;
+    }
     this.setState({ agentData });
   }
   handleChange(event, property, category) {
@@ -325,35 +330,36 @@ class PropertyTab extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.activeTab=="property"){
-    console.log("nextPros in Property ", nextProps)
-    if (nextProps.properties && nextProps.properties.length > 0) {
-      let props = nextProps.properties;
-      props.forEach(function (prop) {
-        if (prop.isOpenHouse) {
-          prop.isOpenHouse["display"] = prop.isOpenHouse.length > 0;
-        }
-        if (prop.linksToWebsites) {
-          prop.linksToWebsites["display"] = prop.linksToWebsites.length > 0;
-        }
-        if (prop.mls_number) {
-          prop["displayMls"] = typeof (prop.mls_number) != "undefined";
-        }
-      })
-      this.setState({ properties: nextProps.properties });
+    if (nextProps.activeTab == "property") {
+      console.log("nextPros in Property ", nextProps)
+      if (nextProps.properties && nextProps.properties.length > 0) {
+        let props = nextProps.properties;
+        props.forEach(function (prop) {
+          if (prop.isOpenHouse) {
+            prop.isOpenHouse["display"] = prop.isOpenHouse.length > 0;
+          }
+          if (prop.linksToWebsites) {
+            prop.linksToWebsites["display"] = prop.linksToWebsites.length > 0;
+          }
+          if (prop.mls_number) {
+            prop["displayMls"] = typeof (prop.mls_number) != "undefined";
+          }
+        })
+        this.setState({ properties: nextProps.properties });
+      }
+      if (nextProps.agentData) {
+        this.setState({ agentData: nextProps.agentData });
+      }
+      if (nextProps.template) {
+        this.setState({ template: nextProps.template });
+      }
     }
-    if (nextProps.agentData) {
-      this.setState({ agentData: nextProps.agentData });
-    }
-    if (nextProps.template) {
-      this.setState({ template: nextProps.template });
-    }
-  }
   }
 
   saveProperty(event) {
     event.preventDefault();
     const { properties, agentData, template } = this.state;
+    const validemail = this.isValidEmail(template.address);
     const { dispatch } = this.props.dispatchval.dispatch;
     this.setState({ submitted: true });
     let isvalid = true;
@@ -364,7 +370,8 @@ class PropertyTab extends React.Component {
     if (properties && properties.length > 0) {
       properties.forEach(function (prop) {
         console.log(prop);
-        if (!template.email_subject || !template.from_line || !template.headline || !template.address) {
+        if (!template.email_subject || !template.from_line || !template.headline ||
+          (!template.address || !validemail)) {
           isvalid = false;
           console.log("validation failed for email fields ");
         }
@@ -401,12 +408,15 @@ class PropertyTab extends React.Component {
     }
 
   }
-
+  isValidEmail(email) {
+    return (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(email));
+  }
   render() {
     const {
       submitted,
       template
     } = this.state;
+
     console.log("STATE In Property Render", this.state);
     return (
       <div className="tab-pane fade mt-2" id="details" role="tabpanel" aria-labelledby="group-dropdown2-tab" aria-expanded="false"      >
@@ -455,6 +465,7 @@ class PropertyTab extends React.Component {
                     (submitted &&
                       !template.address &&
                       "Form Reply Line is required")}
+                  {submitted && template.address && !this.isValidEmail(template.address) && "Invalid email address."}
                 </div>
               </div>
             </div>
@@ -476,7 +487,7 @@ class PropertyTab extends React.Component {
                 <div className="validation">
                   {
                     (submitted &&
-                      (!template || template.headline) &&
+                      (!template || !template.headline) &&
                       "Blast headline Line is required")}
                 </div>
               </div>
@@ -628,7 +639,9 @@ class PropertyTab extends React.Component {
               <div className="form-group">
                 <div className="form-group">
                   <label className="check">Use Agent Photo
-                          <input type="checkbox" />
+                          <input type="checkbox" name="display_profile_image"
+                      checked={agentData && agentData.display_profile_image}
+                      onChange={(e) => this.handleAgentChange(e)} />
                     <span className="checkmark"></span>
                   </label>
                   <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id="profileimg" data-target="#profileimg" onClick={modalproimageOpen}>
@@ -647,7 +660,8 @@ class PropertyTab extends React.Component {
                   Use Logo
               <input
                     type="checkbox"
-                    name="useLogo"
+                    name="display_logo"
+                    checked={agentData && agentData.display_logo}
                     onChange={(e) => this.handleAgentChange(e)}
                   />
                   <span className="checkmark"></span>

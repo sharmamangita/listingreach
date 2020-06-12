@@ -59,6 +59,12 @@ class BlastSchema {
                 },
                 logo_url: {
                     type: String
+                },
+                display_profile_image: {
+                    type: Boolean
+                },
+                display_logo: {
+                    type: Boolean
                 }
             },
             status: {

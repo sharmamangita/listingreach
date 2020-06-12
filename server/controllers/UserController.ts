@@ -1036,7 +1036,6 @@ class UserController implements IBaseController<UserBusiness> {
 				} else {
 
 					let _templateBusiness = new AgentTemplateBusiness();
-					console.log("ddddd", blastId.selected_template_id)
 					_templateBusiness.findById(blast.selected_template_id, (templateError: any, template: IAgentTemplateModel) => {
 						if (templateError) {
 							console.log("error in getting template :", templateError);

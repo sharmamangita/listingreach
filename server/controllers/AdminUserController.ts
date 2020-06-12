@@ -16,7 +16,7 @@ import Common = require("./../config/constants/common");
 import IBlastSettingsModel = require("./../app/model/interfaces/IBlastSettingsModel");
 import PaymentBusiness = require("./../app/business/PaymentBusiness");
 import AgentTemplateBusiness = require("./../app/business/AgentTemplateBusiness");
-import IAgentTemplateModel= require("./../app/model/interfaces/IAgentTemplateModel";)
+import IAgentTemplateModel = require("./../app/model/interfaces/IAgentTemplateModel";)
 const request = require('request');
 const querystring = require('querystring');
 var mongoose = require('mongoose');
@@ -295,7 +295,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 						return;
 					}
 					const templateBusiness = new AgentTemplateBusiness();
-					templateBusiness.findById(blast.selected_template_id, (templateError, template:IAgentTemplateModel) => {
+					templateBusiness.findById(blast.selected_template_id, (templateError, template: IAgentTemplateModel) => {
 						if (templateError) {
 							res.send({ templateError });
 						} else {
@@ -307,9 +307,9 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 								api_output: 'json',
 								format: "html",
 								subject: template.email_subject,
-								fromemail: blast.agentData.email || template.address,
+								fromemail: template.address,
 								fromname: template.from_line,
-								reply2: blast.agentData.email || template.address,
+								reply2: template.address,
 								priority: "3",
 								charset: "utf-8",
 								encoding: "UTF-8",
