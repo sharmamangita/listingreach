@@ -97,6 +97,8 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
               let formReply = template.address;
               let headline = template.headline;
               let agent = blast.agentData;
+
+
               if (template && template.template_type == 'MultipleProperties') {
                 console.log("multiple properties....",properties);
                 var html = '';
@@ -211,7 +213,6 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                      </div>`;
                  }
 
-                  let openhousehtml = '';
                   property.isOpenHouse && property.isOpenHouse.forEach(function (resut) {
                     //console.log("startTime=====",startTime);
                     let startTime = resut.startTime || "";
@@ -219,7 +220,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     let date =moment(resut.date).format('DD-MMM-YYYY');
                     let newStartdateval= new Date(date+" "+startTime);
                     let newEnddateval= new Date(date+" "+endTime);
-                    openhousehtml += `<div class="text-center" style="width:100%;text-align: center !important;">
+                    html += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
                                                        <span>${moment(resut.date).format('ddd DD-MMM-YYYY')} ${startTime && moment(newStartdateval).format('HH:mm A')}  - ${endTime && moment(newEnddateval).format('HH:mm A')}  </span><br>
@@ -248,12 +249,12 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                         </div>`;
                                          });
                   let agentimgurl = "";
-                  if(agent.image_url!=undefined && agent.image_url){
+                  if(agent.image_url!=undefined && agent.image_url && (agent.display_profile_image==undefined || agent.display_profile_image)){
                      agentimgurl = Common.SITE_URL+"/uploads/"+agent.image_url;
                   }
 
                    let agentlogourl = "";
-                  if(agent.logo_url!=undefined && agent.logo_url){
+                  if(agent.logo_url!=undefined && agent.logo_url && (agent.display_logo==undefined || agent.display_logo)){
                      agentlogourl = Common.SITE_URL+"/uploads/"+agent.logo_url;
                   }
                   var previewTemplatememail = Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;
@@ -261,8 +262,10 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#multiproperty#/g, html)
                     .replace(/#agentName#/g, agent.name)
                     .replace(/#agentEmail#/g, agent.email || " ")
+
                     .replace(/#agentImage#/g, agentimgurl ||  Common.SITE_URL+"/uploads/previewimages/dummy-profile.png")
                     .replace(/#companyLogo#/g, agentlogourl ||  Common.SITE_URL+"/uploads/previewimages/dummy-logo.png")
+
                     .replace(/#WebsiteUrl#/g, agent.website_url || " ")
                     .replace(/#phone_number#/g, agent.phone_number || " ")
                     .replace(/#companyDetail#/g, agent.company_details || " ")
@@ -437,18 +440,18 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                       property.propertyImages[0].imageUrl
                       } alt="image" style="vertical-align: middle;border-style: none;">
                                             </div> 
-                                            <div style="width: 40%;overflow: hidden;float: left;">
+                                            <div style="width: 40%;overflow: hidden;float: left;width:100%;height: 560px;">
                                          <div>
                                          <img src=${Common.SITE_URL +
                       "/uploads/" +
                       property.propertyImages[1].imageUrl
-                      } alt="image" style=" vertical-align: middle;border-style: none;">
+                      } alt="image" style=" vertical-align: middle;border-style: none;height:280px;width:100%">
                                             </div>
                                             <div>
                                          <img src=${Common.SITE_URL +
                       "/uploads/" +
                       property.propertyImages[2].imageUrl
-                      } alt="image" style="vertical-align: middle;border-style: none;">
+                      } alt="image" style="vertical-align: middle;border-style: none;height:280px;width:100%">
                                             </div>
                                             </div>
                                             </div>`;
@@ -571,15 +574,15 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   }
 
                   let agentimgurl = "";
-                  if(agent.image_url!=undefined && agent.image_url){
+                  if(agent.image_url!=undefined && agent.image_url && (agent.display_profile_image==undefined || agent.display_profile_image)){
                      agentimgurl = Common.SITE_URL+"/uploads/"+agent.image_url;
                   }
 
                    let agentlogourl = "";
-                  if(agent.logo_url!=undefined && agent.logo_url){
+                  if(agent.logo_url!=undefined && agent.logo_url && (agent.display_logo==undefined || agent.display_logo)){
                      agentlogourl = Common.SITE_URL+"/uploads/"+agent.logo_url;
                   }
-
+                  
                 let display_method = property.display_method.replace(/\s/g, "");
                 let propertyAdress = ``;
                   switch (display_method) {

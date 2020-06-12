@@ -343,10 +343,6 @@ class ProfilePage extends React.Component {
                       <div className="row">
                         <div className="col-md-6 mb-3">
                           <div className="form-group">
-                            <label className="check">Use Agent Photo
-                          <input type="checkbox" />
-                              <span className="checkmark"></span>
-                            </label>
                             <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id="profileimg" data-target="#profileimg" onClick={modalproimageOpen}>
                               <img src={profilepc} alt="Image" className="profile-img img-fluid" />
                             </a>
@@ -358,10 +354,6 @@ class ProfilePage extends React.Component {
                         </div>
                         <div className="col-md-6 mb-3">
                           <div className="form-group">
-                            <label className="check">Use Logo
-                          <input type="checkbox" />
-                              <span className="checkmark"></span>
-                            </label>
                             <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id="logoimg" data-target="#logoimg" onClick={modallogoimageOpen}>
                               <img src={profilelogo} alt="Image" className="profile-img img-fluid" />
                             </a>
