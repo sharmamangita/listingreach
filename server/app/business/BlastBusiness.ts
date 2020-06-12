@@ -440,7 +440,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                       property.propertyImages[0].imageUrl
                       } alt="image" style="vertical-align: middle;border-style: none;">
                                             </div> 
-                                            <div style="width: 40%;overflow: hidden;float: left;width:100%;height: 560px;">
+                                            <div style="width:40%;overflow: hidden;float: left;height: 560px;">
                                          <div>
                                          <img src=${Common.SITE_URL +
                       "/uploads/" +
