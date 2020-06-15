@@ -11,6 +11,8 @@ interface IAgentTemplateModel extends mongoose.Document {
     from_line: String,
     address: String,
     headline: String,
+    headlineTextColor: String,
+    headlineBackgroundColor: String,
     database_id: String,
     paid: string,
     image_id: mongoose.Types.ObjectId,

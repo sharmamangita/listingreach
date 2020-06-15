@@ -26,6 +26,12 @@ class AgentTemplateSchema {
             headline : {
                 type: String
             },
+            headlineTextColor : {
+                type: String
+            },
+            headlineBackgroundColor : {
+                type: String
+            },
             database_id: {
                 type: String
             },

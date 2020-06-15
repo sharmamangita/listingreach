@@ -4,7 +4,7 @@ import config from 'config';
 import { globalData } from '../constants/data.constants';
 import ProfileimageModal from '../components/ProfileimageModal';
 import ProfilelogoModal from '../components/ProfilelogoModal';
-
+import { ChromePicker } from 'react-color';
 class PropertyTab extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +23,7 @@ class PropertyTab extends React.Component {
     this.addProperty = this.addProperty.bind(this);
     this.deleteProperty = this.deleteProperty.bind(this);
     this.isValidEmail = this.isValidEmail.bind(this);
+    this.coloChanged = this.coloChanged.bind(this);
   }
 
   initializeState() {
@@ -71,11 +72,13 @@ class PropertyTab extends React.Component {
       }, this.props.agentData),
       template: {
         _id: null,
-        template_type: null,
-        address: null,
-        email_subject: null,
-        from_line: null,
-        headline: null
+        template_type: "",
+        address: "",
+        email_subject: "",
+        from_line: "",
+        headline: "",
+        headlineTextColor: "#ffffff",
+        headlineBackgroundColor: "#ee8c3a"
       },
       isOpenHouse,
       openHouseAdd: false,
@@ -328,7 +331,12 @@ class PropertyTab extends React.Component {
 
     this.setState({ properties });
   }
-
+  coloChanged(e, type) {
+    console.log("target ", e)
+    let { template } = this.state;
+    template[type] = e.hex;
+    this.setState({ template })
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.activeTab == "property") {
       console.log("nextPros in Property ", nextProps)
@@ -490,6 +498,20 @@ class PropertyTab extends React.Component {
                       (!template || !template.headline) &&
                       "Blast headline Line is required")}
                 </div>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-4 mb-3">
+              <div className="form-group">
+                <label >Headline Text Color</label>
+                <ChromePicker color={template.headlineTextColor} onChange={(e) => this.coloChanged(e, "headlineTextColor")} />
+              </div>
+            </div>
+            <div className="col-md-4 mb-3">
+              <div className="form-group">
+                <label >Headline Background Color</label>
+                <ChromePicker color={template.headlineBackgroundColor} onChange={(e) => this.coloChanged(e, "headlineBackgroundColor")} />
               </div>
             </div>
           </div>
