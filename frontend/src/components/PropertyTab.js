@@ -275,13 +275,13 @@ class PropertyTab extends React.Component {
 
     switch (flag) {
       case "openHouse":
-        properties[index].isOpenHouse.display = value;
+        properties[index].isOpenHouse["display"] = value;
         break;
       case "mlsNumber":
         properties[index].displayMls = value;
         break;
       case "linksToWebsites":
-        properties[index].linksToWebsites.display = value;
+        properties[index].linksToWebsites["display"] = value;
         break;
       case "garage":
         properties[index].garage = value;
@@ -757,10 +757,12 @@ class PropertyTab extends React.Component {
                 <div className="col-md-12 mb-3">
                   <div className="form-group">
                     <a href="javascript:void(0)" className="btn btn-success"
+                      className={(property.isOpenHouse && property.isOpenHouse.display) ? "btn btn-primary" : "btn btn-outline-primary"}
                       onClick={() => this.show("openHouse", property, true)}   >
                       Yes
                     </a>
                     <a href="javascript:void(0)" className="btn btn-outline-danger"
+                      className={(!property.isOpenHouse || !property.isOpenHouse.display) ? "btn btn-danger" : "btn btn-outline-danger"}
                       onClick={() => this.show("openHouse", property, false)} >
                       No
                   </a>
@@ -1012,10 +1014,13 @@ class PropertyTab extends React.Component {
                 <div className="col-md-12 mb-3">
                   <div className="form-group">
                     <a href="javascript:void(0)" className="btn btn-success"
+                      className={property.displayMls ? "btn btn-primary" : "btn btn-outline-primary"}
                       onClick={() => this.show("mlsNumber", property, true)} >
                       Yes
                 </a>
                     <a href="javascript:void(0)" className="btn btn-outline-danger"
+                      className={!property.displayMls ? "btn btn-danger" : "btn btn-outline-danger"}
+
                       onClick={() => this.show("mlsNumber", property, false)}>
                       No
                 </a>
@@ -1296,10 +1301,12 @@ class PropertyTab extends React.Component {
                     <label>Garage</label>
                     <div className="form-group">
                       <a href="javascript:void(0)" className="btn btn-success"
+                        className={property.garage ? "btn btn-primary" : "btn btn-outline-primary"}
                         onClick={() => this.show("garage", property, true)}                      >
                         Yes
                   </a>
                       <a href="javascript:void(0)" className="btn btn-outline-danger"
+                        className={!property.garage ? "btn btn-danger" : "btn btn-outline-danger"}
                         onClick={() => this.show("garage", property, false)}                      >
                         No
                   </a>
@@ -1356,10 +1363,12 @@ class PropertyTab extends React.Component {
                 <div className="col-md-12 mb-3">
                   <div className="form-group">
                     <a href="javascript:void(0)" className="btn btn-success"
+                      className={property.linksToWebsites && property.linksToWebsites.display ? "btn btn-primary" : "btn btn-outline-primary"}
                       onClick={() => this.show("linksToWebsites", property, true)}                    >
                       Yes
                 </a>
                     <a href="javascript:void(0)" className="btn btn-outline-danger"
+                      className={(!property.linksToWebsites || !property.linksToWebsites.display) ? "btn btn-danger" : "btn btn-outline-danger"}
                       onClick={() => this.show("linksToWebsites", property, false)}                    >
                       No
                 </a>

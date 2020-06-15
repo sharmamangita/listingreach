@@ -263,9 +263,7 @@ class UploadBlastTab extends React.Component {
   }
 
   show(flag, value) {
-    // let states = Object.assign({}, this.state);
-    let { property } = this.state;
-
+    let { property, linksToWebsites } = this.state;
     switch (flag) {
       case "openHouse":
         property.isOpenHouse.display = value;
@@ -274,7 +272,7 @@ class UploadBlastTab extends React.Component {
         property.displayMls = value;
         break;
       case "linksToWebsites":
-        property.linksToWebsites.display = value;
+        property.linksToWebsites["display"] = value;
         break;
       case "garage":
         property.generalPropertyInformation.garage = value;
@@ -459,12 +457,14 @@ class UploadBlastTab extends React.Component {
             <div className="row">
               <div className="col-md-12 mb-3">
                 <div className="form-group">
-                  <a href="javascript:void(0)" className="btn btn-success"
-                    onClick={() => this.show("linksToWebsites", property, true)}                    >
+                  <a href="javascript:void(0)"
+                    className={property.linksToWebsites && property.linksToWebsites.display ? "btn btn-primary" : "btn btn-outline-primary"}
+                    onClick={() => this.show("linksToWebsites", true)}>
                     Yes
                 </a>
-                  <a href="javascript:void(0)" className="btn btn-outline-danger"
-                    onClick={() => this.show("linksToWebsites", property, false)}                    >
+                  <a href="javascript:void(0)"
+                    className={(!property.linksToWebsites || !property.linksToWebsites.display) ? "btn btn-danger" : "btn btn-outline-danger"}
+                    onClick={() => this.show("linksToWebsites", false)}>
                     No
                 </a>
                 </div>

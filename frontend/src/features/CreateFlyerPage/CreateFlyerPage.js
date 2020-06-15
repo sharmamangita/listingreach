@@ -194,8 +194,6 @@ class CreateFlyerPage extends React.Component {
                               activeTab={moveTab}
                               properties={blast && blast.properties}
                               blast_id={blast && blast._id}
-                              resetState={this.resetState}
-                              newState={this.newState}
                               moveTab={this.moveTab} />
                           </Tab>
                         )}
