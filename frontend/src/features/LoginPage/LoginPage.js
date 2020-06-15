@@ -94,7 +94,7 @@ class LoginPage extends React.Component {
                       <form className="form-a contactForm"  onSubmit={this.handleSubmit}>
                         
                         {this.alermsg.message &&
-                        <div id="errormessage"><div className="{`alert ${this.alermsg.type}`}">{this.alermsg.message}</div>
+                       <div className={`alert ${this.alermsg.type}`}>{this.alermsg.message}
                         </div>}
                         <div className="row">
                             
