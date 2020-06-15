@@ -2326,6 +2326,30 @@ font-color:black !important;
 .blast-box .text-right-row {
    margin-left: 36px;
 }
-    .modal-dialog.modal-lg {
+ .modal-dialog.modal-lg {
       max-width: 860px
-    }
+ }
+
+ .alert-success {
+    color: #155724 !important
+  }
+
+.database-page .list-group {
+    box-shadow: none;
+}
+
+.database-page  ul.list-group-ordered {
+    -moz-column-gap: 20px;
+    -moz-columns: 6 230px;
+    -webkit-column-gap: 20px;
+    -webkit-columns: 6 230px;
+    column-gap: 20px;
+    columns: 6 230px;
+    display: block;
+}
+
+.database-page .list-group-item {
+    border: none;
+    padding: 5px;
+
+}

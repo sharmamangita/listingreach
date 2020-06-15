@@ -6,27 +6,24 @@ import config from "config";
 import { Alert } from "reactstrap";
 import ReactHtmlParser, { processNodes, convertNodeToElement, htmlparser2 } from 'react-html-parser';
 import { userActions } from "../../actions";
+import { adminActions } from "../../actions";
 const Entities = require('html-entities').XmlEntities;
 const entities = new Entities();
 class DatabasesPage extends React.Component {
   constructor(props) {
     super(props);
+
   }
 
   componentDidMount(){
   const { dispatch } = this.props;
-//  this.props.dispatch(userActions.getapagecontent({page:'Privacy'})); 
+  dispatch(adminActions.getActiveCampaignAssociations());
   window.scrollTo(0,0);
   }
 
   render() {
-	  if(this.props.users && this.props.users.items){
-		  console.log("test",this.props.users);
-       if(this.props.users.items[0]){
-		  var privacytitle = entities.decode(this.props.users.items[0].page);
-		  var privacypage = entities.decode(this.props.users.items[0].content);
-		  }
-    }
+  	console.log("this.props=12===",this.props);
+  		const {activeCampaign,loading} = this.props;
     return (
 		<div>
 			<section className="intro-single">
@@ -53,15 +50,23 @@ class DatabasesPage extends React.Component {
 				  </div>
 				</div>
 			</section>
-			<section className="contact">
+			<section className="contact database-page">
 				<div className="container">
-				  <div className="row">       
+				  <div className="row ml-1">       
 					<div className="col-sm-12 section-t2">
 					  <div className="row">
 						<div className="col-md-12">
 						 
 						  <p className="color-text-a">
-						  Content awaited... 
+						 {loading ? 
+						  <h3 className="text-center">Loading ...</h3>:null}
+						    <ul className="list-group row list-group-ordered">
+                                {
+                                    activeCampaign && activeCampaign.associations.map((st) => (
+                                        <li className="list-group-item" key={st.id} value={st.id}>{st.name}</li>
+                                    ))
+                                }
+                                 </ul>
 						  </p>
 						</div>
 					   
@@ -76,12 +81,16 @@ class DatabasesPage extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { alert,users } = state;
+  const { alert,users,admins } = state;
+  const { activeCampaign, loading } = admins;
   return {
     alert,
-    users
+    users,
+    activeCampaign,
+    loading
   };
 }
+
 
 const connectedDatabasesPage = connect(mapStateToProps)(DatabasesPage);
 export { connectedDatabasesPage as DatabasesPage };

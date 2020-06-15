@@ -235,7 +235,7 @@ function register(user) {
                         dispatch(alertActions.error('This email address is already used, please try with another email.'));
                     } else {
                         history.push('/login');
-                        dispatch(alertActions.success('Thank you for registration.Please check your inbox for password and login link.'));
+                        dispatch(alertActions.success('Thank you for registration. Please check your inbox for password and login link.'));
                     }
                 },
                 error => {

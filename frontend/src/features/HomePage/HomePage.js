@@ -27,7 +27,8 @@ class HomePage extends React.Component {
     // });
   }
   render() {
-    const { alert } = this.props;
+    const { alert} = this.props;
+     let user = JSON.parse(localStorage.getItem('user'));
     return (
       <div>
 
@@ -95,9 +96,8 @@ class HomePage extends React.Component {
                   <div className="card-body">
                     <h5 className="card-title">Send Listing</h5>
                     <p className="card-text">Send modern and professional marketing emails to real estate agents in any US market.</p>
-                    <a href="#" className="link-c link-icon">Register now
-                <span className="ion-ios-arrow-forward"></span>
-                    </a>
+                   {user==undefined ? <Link to="/register" className="link-c link-icon"> Register now  <span className="ion-ios-arrow-forward"></span> </Link>:''}
+
                   </div>
                 </div>
               </div>
@@ -109,9 +109,8 @@ class HomePage extends React.Component {
                   <div className="card-body">
                     <h5 className="card-title">Receive Offer</h5>
                     <p className="card-text" style={{ height: "71px" }}>Join our Mailing List to receive listings in your area</p>
-                    <a href="#" className="link-c link-icon">Register now
-                <span className="ion-ios-arrow-forward"></span>
-                    </a>
+                    {!user ? <Link to="/register" className="link-c link-icon"> Register now  <span className="ion-ios-arrow-forward"></span> </Link>:''}
+
                   </div>
                 </div>
               </div>
@@ -121,9 +120,7 @@ class HomePage extends React.Component {
                   <div className="card-body">
                     <h5 className="card-title">Templates</h5>
                     <p className="card-text">Use professionally designed templates to make the greatest impact possible</p>
-                    <a href="#" className="link-c link-icon">Register now
-                <span className="ion-ios-arrow-forward"></span>
-                    </a>
+                    {!user ? <Link to="/register" className="link-c link-icon"> Register now  <span className="ion-ios-arrow-forward"></span> </Link>:''}
                   </div>
                 </div>
               </div>
