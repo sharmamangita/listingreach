@@ -1332,7 +1332,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                         <img src=${Common.PRAVIEW_LOGO} style="" class="img-a img-fluid">
                 <div style="text-align: right;">
                      <span class="" style="text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-                <a  href="mailto:#agentEmail#" style="background: #ee8c3a !important;
+                <a  href="mailto:#formReply#" style="background: #ee8c3a !important;
     color: #fff;
     display: inline-block;
     font-weight: 400;
@@ -1422,7 +1422,7 @@ static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER:string =`
                         <img src=${Common.PRAVIEW_LOGO} style="" class="img-a img-fluid">
                 <div style="text-align: right;">
                      <span class="" style="text-align: right !important;margin-bottom: 1rem !important;margin-top: 1rem !important;text-align: right !important;">
-                <a  href="mailto:mailto:#agentEmail#" style="background: #ee8c3a !important;
+                <a  href="mailto:mailto:#formReply#" style="background: #ee8c3a !important;
     color: #fff;
     display: inline-block;
     font-weight: 400;
