@@ -1015,8 +1015,6 @@ class UserController implements IBaseController<UserBusiness> {
 						}
 					});
 				});
-
-
 			});
 		}
 		catch (e) {

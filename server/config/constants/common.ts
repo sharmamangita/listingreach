@@ -1482,10 +1482,10 @@ static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ `
                   <div style="display: flex;flex-wrap: wrap;">
                      <div style="width:100%">
                         <div class="flyer-header" style="display: block;overflow: hidden;
-         background-color: #EE8C3A;
-         color: #fff;
+         background-color: #headlineBackgroundColor#;
+         color: #headlineTextColor#;
          box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(20, 19, 18, 0.1);
-         border-top: 4px solid #EE8C3A;
+         border-top: 4px solid #headlineBackgroundColor#;
          height: 80px;
          text-align: center;
          font-size: 28px;

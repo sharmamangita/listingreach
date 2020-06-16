@@ -38,6 +38,10 @@ class SetDateTab extends React.Component {
   }
 
   handleDateClick(arg) {
+    if (moment(arg.dateStr).isBefore(moment())) {
+      alert("Pleae select future dates only.");
+      return false;
+    }
     if (confirm('Would you like to add an blast to ' + arg.dateStr + ' ?')) {
       if (arg.dateStr) {
         this.setState({ scheduledDate: arg.dateStr, isSelected: true })
@@ -46,7 +50,7 @@ class SetDateTab extends React.Component {
             title: arg.dateStr,
             start: arg.date
           })
-        }) 
+        })
       }
     }
   }
@@ -62,8 +66,8 @@ class SetDateTab extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.activeTab == "setDate") {
-    //  console.log("nextProps in Set Date", nextProps)
-      var scheduledDateVal =moment(nextProps.scheduledDate).format('YYYY-MM-DD');
+      //  console.log("nextProps in Set Date", nextProps)
+      var scheduledDateVal = moment(nextProps.scheduledDate).format('YYYY-MM-DD');
       //console.log("formatedate====",scheduledDateVal)
       this.setState({
         blast_id: nextProps.blast_id,
@@ -73,9 +77,9 @@ class SetDateTab extends React.Component {
       this.setState({  // add new event data
         calendarEvents: this.state.calendarEvents.concat({ // creates a new array
           title: scheduledDateVal,
-          start:scheduledDateVal
+          start: scheduledDateVal
         })
-      }) 
+      })
     }
   }
   render() {

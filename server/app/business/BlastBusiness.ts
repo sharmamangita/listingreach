@@ -66,7 +66,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
   findOne(query: any, callback: (error: any, result: IBlastModel) => void) {
     this._blastRepository.findOne(query, callback);
   }
-  async  getEmailHTML(blastId: string): Promise<any> {
+  async getEmailHTML(blastId: string): Promise<any> {
     // console.log("getting HTML.........", blastId);
     return new Promise<any>((resolve, reject) => {
       try {
@@ -100,15 +100,15 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
 
               if (template && template.template_type == 'MultipleProperties') {
-                console.log("multiple properties....",properties);
+                console.log("multiple properties....", properties);
                 var html = '';
-                html +=`<div style="display: flex;flex-wrap: wrap;">
+                html += `<div style="display: flex;flex-wrap: wrap;">
                      <div style="width:100%">
                       <div class="flyer-header" style="display: block;overflow: hidden;
-                 background-color: #EE8C3A;
-                 color: #fff;
+                 background-color: ${template.headlineBackgroundColor || "#EE8C3A"};
+                 color: ${template.headlineTextColor || "#fff"};
                  box-shadow: 0 2px rgba(17, 16, 15, 0.1), 0 2px 10px rgba(20, 19, 18, 0.1);
-                 border-top: 4px solid #EE8C3A;
+                 border-top: 4px solid ${template.headlineBackgroundColor || "#EE8C3A"};
                  height: 80px;
                  text-align: center;
                  font-size: 28px;
@@ -122,10 +122,10 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   html += ` <div class="" style="display: block;display: flex;border-top: 2px solid #ccc;">
                                                 <div style="display: block; background:#f1f1f1;height:auto;overflow: hidden;width:50%">`;
                   if (property.propertyImages && property.propertyImages.length == 1) {
-                      html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl} />`;
-                    } else {
-                      html += `<img src=${Common.SITE_URL+ "/uploads/previewimages/img2.jpg"}  />`;
-                    }
+                    html += `<img src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl} />`;
+                  } else {
+                    html += `<img src=${Common.SITE_URL + "/uploads/previewimages/img2.jpg"}  />`;
+                  }
 
                   html += `</div><div style="width:50%;display: block; background:#f1f1f1; height:auto;">
                                                    <div class="" style="display: flex;flex-wrap: wrap;margin-left: 5%;">
@@ -139,47 +139,47 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                          <ul>`;
 
 
-                                                    if(property.property_type!=undefined && property.property_type){
-                                                        html +=`<li>Property Type: ${property.property_type} </li>`;
-                                                    }
+                  if (property.property_type != undefined && property.property_type) {
+                    html += `<li>Property Type: ${property.property_type} </li>`;
+                  }
 
-                                                    if(property.property_style!=undefined && property.property_style){
-                                                        html +=`<li>Property Style: ${property.property_style} </li>`;
-                                                    }
+                  if (property.property_style != undefined && property.property_style) {
+                    html += `<li>Property Style: ${property.property_style} </li>`;
+                  }
 
-                                                    if(property.number_bedrooms!=undefined && property.number_bedrooms){
-                                                        html +=`<li>${property.number_bedrooms} Bedrooms</li>`;
-                                                    }
+                  if (property.number_bedrooms != undefined && property.number_bedrooms) {
+                    html += `<li>${property.number_bedrooms} Bedrooms</li>`;
+                  }
 
-                                                    if(property.number_bathrooms.full!=undefined && property.number_bathrooms.full || property.number_bathrooms.half!=undefined && property.number_bathrooms.half){
-                                                      html +=`<li>${property.number_bathrooms.full+' Full'}  ${property.number_bathrooms.half+' Half'} Bathrooms</li>`;
-                                                    }
+                  if (property.number_bathrooms.full != undefined && property.number_bathrooms.full || property.number_bathrooms.half != undefined && property.number_bathrooms.half) {
+                    html += `<li>${property.number_bathrooms.full + ' Full'}  ${property.number_bathrooms.half + ' Half'} Bathrooms</li>`;
+                  }
 
-                                                    if(property.building_size!=undefined && property.building_size){
-                                                        html +=`<li>${property.building_size} square feet</li>`;
-                                                    }
+                  if (property.building_size != undefined && property.building_size) {
+                    html += `<li>${property.building_size} square feet</li>`;
+                  }
 
-                                                    if(property.price!=undefined && property.price){
-                                                        html +=`<li>${property.price}  /sqft</li>`;
-                                                    }
+                  if (property.price != undefined && property.price) {
+                    html += `<li>${property.price}  /sqft</li>`;
+                  }
 
-                                                    if(property.lot_size!=undefined && property.lot_size){
-                                                        html +=`Lot Size: ${property.lot_size} sqft</li>`;
-                                                    }
+                  if (property.lot_size != undefined && property.lot_size) {
+                    html += `Lot Size: ${property.lot_size} sqft</li>`;
+                  }
 
-                                                    if(property.year_built!=undefined && property.year_built){
-                                                        html +=`<li>  Built ${property.year_built} </li>`;
-                                                    }
+                  if (property.year_built != undefined && property.year_built) {
+                    html += `<li>  Built ${property.year_built} </li>`;
+                  }
 
-                                                    if(property.garageSize!=undefined && property.garageSize){
-                                                        html +=`<li>${property.garageSize} Garage</li>`;
-                                                    }
+                  if (property.garageSize != undefined && property.garageSize) {
+                    html += `<li>${property.garageSize} Garage</li>`;
+                  }
 
-                                                    if(property.number_stories!=undefined && property.number_stories){
-                                                        html +=`<li>${property.number_stories}</li>`;
-                                                    }
+                  if (property.number_stories != undefined && property.number_stories) {
+                    html += `<li>${property.number_stories}</li>`;
+                  }
 
-                                                 html +=`
+                  html += `
                                                          </ul>
                                                       </div>
                                                        </div>
@@ -190,20 +190,20 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
                   let display_method = property.display_method.replace(/\s/g, "");
                   switch (display_method) {
-                  case "DONOTShowAddress":
-                   html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
+                    case "DONOTShowAddress":
+                      html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
                                 <div>`;
-                    break;
-                  case "ShowCity&StateOnly":
-                   html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
+                      break;
+                    case "ShowCity&StateOnly":
+                      html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
                       <div>
                      <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
                         <label class="flyer-label" style="color: #EE8C3A;
                            font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
                         <p>${property.city}, ${property.state}</p>
                      </div>`;
-                    break;
-                 default:
+                      break;
+                    default:
                       html += `<div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc; padding-top:30px;">
                       <div>
                      <div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
@@ -211,15 +211,15 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                            font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
                         <p>${property.street_address}, ${property.city}, ${property.zipcode}</p>
                      </div>`;
-                 }
+                  }
 
                   property.isOpenHouse && property.isOpenHouse.forEach(function (resut) {
                     //console.log("startTime=====",startTime);
                     let startTime = resut.startTime || "";
                     let endTime = resut.endTime || "";
-                    let date =moment(resut.date).format('DD-MMM-YYYY');
-                    let newStartdateval= new Date(date+" "+startTime);
-                    let newEnddateval= new Date(date+" "+endTime);
+                    let date = moment(resut.date).format('DD-MMM-YYYY');
+                    let newStartdateval = new Date(date + " " + startTime);
+                    let newEnddateval = new Date(date + " " + endTime);
                     html += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
@@ -247,40 +247,41 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                                                 </div>
                                              </div>
                                         </div>`;
-                                         });
-                  let agentimgurl = "";
-                  if(agent.image_url!=undefined && agent.image_url && (agent.display_profile_image==undefined || agent.display_profile_image)){
-                     agentimgurl = Common.SITE_URL+"/uploads/"+agent.image_url;
-                  }
+                });
+                let agentimgurl = "";
+                if (agent.image_url != undefined && agent.image_url && (agent.display_profile_image == undefined || agent.display_profile_image)) {
+                  agentimgurl = Common.SITE_URL + "/uploads/" + agent.image_url;
+                }
 
-                   let agentlogourl = "";
-                  if(agent.logo_url!=undefined && agent.logo_url && (agent.display_logo==undefined || agent.display_logo)){
-                     agentlogourl = Common.SITE_URL+"/uploads/"+agent.logo_url;
-                  }
-                  var previewTemplatememail = Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;
-                  var emailtemplate = previewTemplatememail
-                    .replace(/#multiproperty#/g, html)
-                    .replace(/#agentName#/g, agent.name)
-                    .replace(/#agentEmail#/g, agent.email || " ")
+                let agentlogourl = "";
+                if (agent.logo_url != undefined && agent.logo_url && (agent.display_logo == undefined || agent.display_logo)) {
+                  agentlogourl = Common.SITE_URL + "/uploads/" + agent.logo_url;
+                }
+                var previewTemplatememail = Common.PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE;
+                var emailtemplate = previewTemplatememail
+                  .replace(/#multiproperty#/g, html)
+                  .replace(/#agentName#/g, agent.name)
+                  .replace(/#agentEmail#/g, agent.email || " ")
 
-                    .replace(/#agentImage#/g, agentimgurl ||  Common.SITE_URL+"/uploads/previewimages/dummy-profile.png")
-                    .replace(/#companyLogo#/g, agentlogourl ||  Common.SITE_URL+"/uploads/previewimages/dummy-logo.png")
+                  .replace(/#agentImage#/g, agentimgurl || Common.SITE_URL + "/uploads/previewimages/dummy-profile.png")
+                  .replace(/#companyLogo#/g, agentlogourl || Common.SITE_URL + "/uploads/previewimages/dummy-logo.png")
 
-                    .replace(/#WebsiteUrl#/g, agent.website_url || " ")
-                    .replace(/#phone_number#/g, agent.phone_number || " ")
-                    .replace(/#companyDetail#/g, agent.company_details || " ")
-                    .replace(/#subject#/g, subject || " ")
-                    .replace(/#formLine#/g, formLine || " ")
-                    .replace(/#formReply#/g, formReply || " ")
-                    .replace(/#blastHeadline#/g, headline || " ");
-                  resolve(emailtemplate);
-               
+                  .replace(/#WebsiteUrl#/g, agent.website_url || " ")
+                  .replace(/#phone_number#/g, agent.phone_number || " ")
+                  .replace(/#companyDetail#/g, agent.company_details || " ")
+                  .replace(/#subject#/g, subject || " ")
+                  .replace(/#formLine#/g, formLine || " ")
+                  .replace(/#formReply#/g, formReply || " ")
+                  .replace(/#blastHeadline#/g, headline || " ");
+
+                resolve(emailtemplate);
+
               } else if (template && template.template_type == 'UploadBlast') {
                 console.log("UploadBlast ....");
 
                 let image = '';
                 properties.forEach(function (property: IPropertyModel) {
-                 // console.log("property====", property);
+                  // console.log("property====", property);
                   if (property.propertyImages && property.propertyImages.length == 1) {
                     image += `<div class="row">
                                       <div class="col-md-12">
@@ -301,9 +302,9 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     //console.log("startTime=====",startTime);
                     let startTime = resut.startTime || "";
                     let endTime = resut.endTime || "";
-                    let date =moment(resut.date).format('DD-MMM-YYYY');
-                    let newStartdateval= new Date(date+" "+startTime);
-                    let newEnddateval= new Date(date+" "+endTime);
+                    let date = moment(resut.date).format('DD-MMM-YYYY');
+                    let newStartdateval = new Date(date + " " + startTime);
+                    let newEnddateval = new Date(date + " " + endTime);
                     openhousehtml += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
@@ -313,38 +314,38 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
 
 
                   let number_bedrooms = "";
-                  if(property.number_bedrooms!=undefined && property.number_bedrooms){
-                    number_bedrooms=`<li> ${property.number_bedrooms} Bedrooms</li>`;
+                  if (property.number_bedrooms != undefined && property.number_bedrooms) {
+                    number_bedrooms = `<li> ${property.number_bedrooms} Bedrooms</li>`;
                   }
 
                   let price = "";
-                    if(property.pricingInfo.price!=undefined && property.pricingInfo.price){
-                      price=`<div class="row" style="display: flex;flex-wrap: wrap;">
+                  if (property.pricingInfo.price != undefined && property.pricingInfo.price) {
+                    price = `<div class="row" style="display: flex;flex-wrap: wrap;">
                         <div class="mt-3 mb-3 ml-3" style="position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
                            <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $ ${property.pricingInfo.price} per Square Foot</h4>
                         </div>
                      </div>`;
-                   }
+                  }
                   let display_method = property.display_method.replace(/\s/g, "");
                   let propertyAdress = ``;
                   switch (display_method) {
-                  case "DONOTShowAddress":
-                   propertyAdress += ``;
-                    break;
-                  case "ShowCity&StateOnly":
-                   propertyAdress += `<div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
+                    case "DONOTShowAddress":
+                      propertyAdress += ``;
+                      break;
+                    case "ShowCity&StateOnly":
+                      propertyAdress += `<div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
                            <label class="flyer-label" style="color: #EE8C3A;
          font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
                            <p>${property.city}, ${property.state}</p>
                         </div>`;
-                    break;
-                 default:
+                      break;
+                    default:
                       propertyAdress += `<div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
                            <label class="flyer-label" style="color: #EE8C3A;
          font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
                            <p>${property.street_address}, ${property.city},  ${property.state},${property.zipcode}</p>
                         </div>`;
-                 }
+                  }
 
 
                   var previewTemplatememail = Common.PREVIEW_EMAIL_UPLOAD_BLAST;
@@ -360,7 +361,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#propertyAdress#/g, propertyAdress || " ")
                     //.replace(/#zipCode#/g, property.zipcode || " ")
                     .replace(/#openData#/g, openhousehtml)
-                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="`+Common.SITE_URL+`/uploads/previewimages/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
+                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="` + Common.SITE_URL + `/uploads/previewimages/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
                   resolve(emailtemplate);
                 });
               } else if (blast && blast.blast_type == "RealEstateBrokerage") {
@@ -385,7 +386,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#subject#/g, subject)
                     .replace(/#formLine#/g, formLine)
                     .replace(/#formReply#/g, formReply)
-                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="`+Common.SITE_URL+`/uploads/previewimages/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
+                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="` + Common.SITE_URL + `/uploads/previewimages/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
                   resolve(emailtemplate);
                 });
               } else {
@@ -393,7 +394,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                 let html: string = '';
                 properties.forEach(function (property: IPropertyModel) {
                   let image = "";
-                 // console.log("property.propertyImages===",property); 
+                  // console.log("property.propertyImages===",property); 
                   if (property.propertyImages && property.propertyImages.length == 1) {
                     image += `<div class="row">
                                       <div class="col-md-12">
@@ -413,7 +414,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     image += `<div style="width:100%;overflow: hidden;">
                                                       <div style="width:50%;overflow: hidden;float:left">
                                                         <img
-                                                          src=${Common.SITE_URL +"/uploads/" +property.propertyImages[0].imageUrl}
+                                                          src=${Common.SITE_URL + "/uploads/" + property.propertyImages[0].imageUrl}
                                                           style="width:100%;vertical-align: middle;border-style: none;"
                                                         />
                                                       </div>
@@ -493,9 +494,9 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     //console.log("startTime=====",startTime);
                     let startTime = resut.startTime || "";
                     let endTime = resut.endTime || "";
-                    let date =moment(resut.date).format('DD-MMM-YYYY');
-                    let newStartdateval= new Date(date+" "+startTime);
-                    let newEnddateval= new Date(date+" "+endTime);
+                    let date = moment(resut.date).format('DD-MMM-YYYY');
+                    let newStartdateval = new Date(date + " " + startTime);
+                    let newEnddateval = new Date(date + " " + endTime);
                     openhousehtml += `<div class="text-center" style="width:100%;text-align: center !important;">
                                                       <label class="flyer-label" style="color: #EE8C3A;
                                                           font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">${resut.houseType}:</label>
@@ -509,18 +510,18 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   });
 
 
-                   let price = "";
-                    if(property.price!=undefined && property.price){
-                      price=`<div class="row" style="display: flex;flex-wrap: wrap;">
+                  let price = "";
+                  if (property.price != undefined && property.price) {
+                    price = `<div class="row" style="display: flex;flex-wrap: wrap;">
                         <div class="mt-3 mb-3 ml-3" style="position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
                            <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $ ${property.price} per Square Foot</h4>
                         </div>
                      </div>`;
-                   }
+                  }
 
                   let property_details = "";
-                  if(property.property_details!=undefined && property.property_details){
-                    property_details=`<div class="ml-3" style="width:100%; margin-left: 1rem !important;">
+                  if (property.property_details != undefined && property.property_details) {
+                    property_details = `<div class="ml-3" style="width:100%; margin-left: 1rem !important;">
                            <label class="flyer-label" style="color: #EE8C3A;
                                font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Detail:</label>
                            <span>${property.property_details}</span>          
@@ -528,81 +529,81 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   }
 
                   let bathrooms = "";
-                  if(property.number_bathrooms.full!=undefined && property.number_bathrooms.full || property.number_bathrooms.half!=undefined && property.number_bathrooms.half){
-                    bathrooms=`<li>${property.number_bathrooms.full+' Full'}  ${property.number_bathrooms.half+' Half'} Bathrooms</li>`;
+                  if (property.number_bathrooms.full != undefined && property.number_bathrooms.full || property.number_bathrooms.half != undefined && property.number_bathrooms.half) {
+                    bathrooms = `<li>${property.number_bathrooms.full + ' Full'}  ${property.number_bathrooms.half + ' Half'} Bathrooms</li>`;
                   }
 
                   let year_built = "";
-                  if(property.year_built!=undefined && property.year_built){
-                    year_built=`<li>  Built ${property.year_built}</li>`;
+                  if (property.year_built != undefined && property.year_built) {
+                    year_built = `<li>  Built ${property.year_built}</li>`;
                   }
 
                   let lot_size = "";
-                  if(property.lot_size!=undefined && property.lot_size){
-                    lot_size=`<li>Lot Size: ${property.lot_size} sqft</li>`;
+                  if (property.lot_size != undefined && property.lot_size) {
+                    lot_size = `<li>Lot Size: ${property.lot_size} sqft</li>`;
                   }
 
 
                   let number_bedrooms = "";
-                  if(property.number_bedrooms!=undefined && property.number_bedrooms){
-                    number_bedrooms=`<li> ${property.number_bedrooms} Bedrooms</li>`;
+                  if (property.number_bedrooms != undefined && property.number_bedrooms) {
+                    number_bedrooms = `<li> ${property.number_bedrooms} Bedrooms</li>`;
                   }
 
                   let property_type = "";
-                  if(property.property_type!=undefined && property.property_type){
-                    property_type=`<li>Property Type: ${property.property_type} </li>`;
+                  if (property.property_type != undefined && property.property_type) {
+                    property_type = `<li>Property Type: ${property.property_type} </li>`;
                   }
-      
+
                   let property_style = "";
-                  if(property.property_style!=undefined && property.property_style){
-                    property_style=`<li>Property Style: ${property.property_style} </li>`;
+                  if (property.property_style != undefined && property.property_style) {
+                    property_style = `<li>Property Style: ${property.property_style} </li>`;
                   }
 
                   let number_stories = "";
-                  if(property.number_stories!=undefined && property.number_stories){
-                    number_stories=`<li>${property.number_stories} </li>`;
+                  if (property.number_stories != undefined && property.number_stories) {
+                    number_stories = `<li>${property.number_stories} </li>`;
                   }
 
                   let garageSize = "";
-                  if(property.garageSize!=undefined && property.garageSize){
-                    garageSize=`<li>Garage: ${property.garageSize} </li>`;
+                  if (property.garageSize != undefined && property.garageSize) {
+                    garageSize = `<li>Garage: ${property.garageSize} </li>`;
                   }
 
                   let building_size = "";
-                  if(property.building_size!=undefined && property.building_size){
-                    building_size=`<li>${property.building_size} square feet</li>`;
+                  if (property.building_size != undefined && property.building_size) {
+                    building_size = `<li>${property.building_size} square feet</li>`;
                   }
 
                   let agentimgurl = "";
-                  if(agent.image_url!=undefined && agent.image_url && (agent.display_profile_image==undefined || agent.display_profile_image)){
-                     agentimgurl = Common.SITE_URL+"/uploads/"+agent.image_url;
+                  if (agent.image_url != undefined && agent.image_url && (agent.display_profile_image == undefined || agent.display_profile_image)) {
+                    agentimgurl = Common.SITE_URL + "/uploads/" + agent.image_url;
                   }
 
-                   let agentlogourl = "";
-                  if(agent.logo_url!=undefined && agent.logo_url && (agent.display_logo==undefined || agent.display_logo)){
-                     agentlogourl = Common.SITE_URL+"/uploads/"+agent.logo_url;
+                  let agentlogourl = "";
+                  if (agent.logo_url != undefined && agent.logo_url && (agent.display_logo == undefined || agent.display_logo)) {
+                    agentlogourl = Common.SITE_URL + "/uploads/" + agent.logo_url;
                   }
-                  
-                let display_method = property.display_method.replace(/\s/g, "");
-                let propertyAdress = ``;
+
+                  let display_method = property.display_method.replace(/\s/g, "");
+                  let propertyAdress = ``;
                   switch (display_method) {
-                  case "DONOTShowAddress":
-                   propertyAdress += ``;
-                    break;
-                  case "ShowCity&StateOnly":
-                   propertyAdress += `<div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
+                    case "DONOTShowAddress":
+                      propertyAdress += ``;
+                      break;
+                    case "ShowCity&StateOnly":
+                      propertyAdress += `<div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
                            <label class="flyer-label" style="color: #EE8C3A;
          font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
                            <p>${property.city}, ${property.state}</p>
                         </div>`;
-                    break;
-                 default:
+                      break;
+                    default:
                       propertyAdress += `<div class="mt-3 text-center" style="width:100%;margin-top: 1rem !important;text-align: center !important;">
                            <label class="flyer-label" style="color: #EE8C3A;
          font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Property Address:</label>
                            <p>${property.street_address}, ${property.city},  ${property.state},${property.zipcode}</p>
                         </div>`;
-                 }
+                  }
 
 
 
@@ -610,35 +611,37 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   var emailtemplate = previewTemplatememail
                     .replace(/#agentName#/g, agent.name || " ")
                     .replace(/#agentEmail#/g, agent.email || "")
-                    .replace(/#agentImage#/g, agentimgurl || Common.SITE_URL+"/uploads/previewimages/dummy-profile.png")
-                    .replace(/#companyLogo#/g, agentlogourl || Common.SITE_URL+"/uploads/previewimages/dummy-logo.png")
+                    .replace(/#agentImage#/g, agentimgurl || Common.SITE_URL + "/uploads/previewimages/dummy-profile.png")
+                    .replace(/#companyLogo#/g, agentlogourl || Common.SITE_URL + "/uploads/previewimages/dummy-logo.png")
                     .replace(/#WebsiteUrl#/g, agent.website_url || " ")
                     .replace(/#phone_number#/g, agent.phone_number || " ")
-                    .replace(/#companyDetail#/g, agent.company_details ||" ") 
+                    .replace(/#companyDetail#/g, agent.company_details || " ")
                     .replace(/#subject#/g, subject || ' ')
                     .replace(/#formLine#/g, formLine || ' ')
                     .replace(/#formReply#/g, formReply || ' ')
                     //.replace(/#streetAddress#/g, property.street_address || " ")
                     .replace(/#mlsNumber#/g, property.mls_number || "--")
-                    .replace(/#numberOfBedrooms#/g,number_bedrooms)
+                    .replace(/#numberOfBedrooms#/g, number_bedrooms)
                     .replace(/#lotSize#/g, lot_size)
                     .replace(/#yearBuilt#/g, year_built)
                     .replace(/#bathrooms#/g, bathrooms)
                     .replace(/#openData#/g, openhousehtml)
                     .replace(/#links#/g, linkshtml)
                     .replace(/#blastHeadline#/g, headline || " ")
+                    .replace(/#headlineBackgroundColor#/g,template.headlineBackgroundColor as string)
+                    .replace(/#headlineTextColor#/g,template.headlineTextColor as string)
                     .replace(/#pricePerSquareFoot#/g, price)
                     .replace(/#propertDetails#/g, property_details)
                     .replace(/#propertyAdress#/g, propertyAdress || " ")
-                    
+
                     //.replace(/#city#/g, property.city || " ")
-                   // .replace(/#zipCode#/g, property.zipcode ||  " ")
+                    // .replace(/#zipCode#/g, property.zipcode ||  " ")
                     .replace(/#propertyType#/g, property_type)
-                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="`+Common.SITE_URL+`/uploads/previewimages/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
+                    .replace(/#propertyImage#/g, image || `<div class="row"><div class="col-md-12"><img src="` + Common.SITE_URL + `/uploads/previewimages/img1.jpg" style="width: 100%; height:400px"/></div></div>`)
                     .replace(/#propertyStyle#/g, property_style)
                     .replace(/#numberOfStories#/g, number_stories)
-                    .replace(/#garageSize#/g,garageSize)
-                    .replace(/#building_size#/g,building_size)
+                    .replace(/#garageSize#/g, garageSize)
+                    .replace(/#building_size#/g, building_size)
                   // console.log("emailtemplat23e====",emailtemplate);
 
                   resolve(emailtemplate);

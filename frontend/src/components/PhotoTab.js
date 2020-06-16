@@ -41,8 +41,24 @@ class PhotoTab extends React.Component {
     var { properties } = this.state;
     const { dispatch } = this.props.dispatchval.dispatch;
     if (properties) {
-      dispatch(userActions.saveImages(properties));
-      this.setState({ submited: true })
+      let imagesValid = true;
+      properties.forEach(property => {
+        if (!property.propertyImages || property.propertyImages.length < 1) {
+          imagesValid = false;
+        } else {
+          property.propertyImages.forEach(image => {
+            if (!image.imageUrl) {
+              imagesValid = false;
+            }
+          });
+        }
+      });
+      if (imagesValid) {
+        dispatch(userActions.saveImages(properties));
+        this.setState({ submited: true })
+      } else {
+        alert("Please uplaod required images.");
+      }
     }
   }
 
