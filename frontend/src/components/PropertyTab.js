@@ -505,13 +505,13 @@ class PropertyTab extends React.Component {
             <div className="col-md-4 mb-3">
               <div className="form-group">
                 <label >Headline Text Color</label>
-                <ChromePicker color={template.headlineTextColor} onChange={(e) => this.coloChanged(e, "headlineTextColor")} />
+                <ChromePicker color={template.headlineTextColor || "#ffffff"} onChange={(e) => this.coloChanged(e, "headlineTextColor")} />
               </div>
             </div>
             <div className="col-md-4 mb-3">
               <div className="form-group">
                 <label >Headline Background Color</label>
-                <ChromePicker color={template.headlineBackgroundColor} onChange={(e) => this.coloChanged(e, "headlineBackgroundColor")} />
+                <ChromePicker color={template.headlineBackgroundColor || "#ee8c3a"} onChange={(e) => this.coloChanged(e, "headlineBackgroundColor")} />
               </div>
             </div>
           </div>
