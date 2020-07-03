@@ -361,8 +361,8 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 												type: "single",
 												name: template.email_subject,
 												//sdate: "2020-05-23 1:25:00 AM",
-												sdate: testDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
-												//sdate: blast.scheduledDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+											//	sdate: testDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+												sdate: blast.scheduledDate.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
 												status: "1", //Active
 												public: "1", //Visible
 												priority: 3, //Medium
