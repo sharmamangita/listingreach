@@ -100,7 +100,7 @@ class App extends React.Component {
           <Route path="/FlyersPage" component={FlyersPage} />
           <Route path="/BillingPage" component={BillingPage} />
           <Route path="/DesignsPage" component={DesignsPage} />
-
+          <Route path="" component={HomePage} />
 
         </PublicLayout>
       } else if (this.state.user.roles == 'admin') {
