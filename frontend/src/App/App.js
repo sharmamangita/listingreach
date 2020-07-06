@@ -80,7 +80,7 @@ class App extends React.Component {
         return <PublicLayout >
           <Route path="/forgotpassword" component={ForgotPasswordPage} />
           <Route path="/register" component={RegisterPage} />
-          <Route path="/HomePage" component={HomePage} />
+          <Route path={"" || "/HomePage"} component={HomePage} />
           <Route path="/login" component={LoginPage} />
           <Route path="/verification/:token" component={VerificationPage} />
           <Route path="/changePassword" component={ChangePasswordPage} />
@@ -100,7 +100,6 @@ class App extends React.Component {
           <Route path="/FlyersPage" component={FlyersPage} />
           <Route path="/BillingPage" component={BillingPage} />
           <Route path="/DesignsPage" component={DesignsPage} />
-          <Route path="" component={AgentDashboardPage} />
 
         </PublicLayout>
       } else if (this.state.user.roles == 'admin') {
@@ -131,9 +130,8 @@ class App extends React.Component {
           <Route path="/PricingPage" component={PricingPage} />
           <Route path="/contact" component={ContactPage} />
           <Route path="/forgotpassword" component={ForgotPasswordPage} />
-          <Route path="/HomePage" component={HomePage} />
+          <Route path={"" || "/HomePage"} component={HomePage} />
           <Route path="/profilePage" component={ProfilePage} />
-          <Route path="" component={HomePage} />
 
         </PublicLayout >
       }
@@ -155,10 +153,9 @@ class App extends React.Component {
           <Route path="/DatabasesPage" component={DatabasesPage} />
           <Route path="/LegalPage" component={LegalPage} />
           <Route path="/PricingPage" component={PricingPage} />
-          <Route path="/HomePage" component={HomePage} />
+          <Route path={"" || "/HomePage"} component={HomePage} />
           <Route path="/profilePage" component={ProfilePage} />
           <Route path="/forgotpassword" component={ForgotPasswordPage} />
-          <Route path="" component={HomePage} />
 
         </PublicLayout >
       }
