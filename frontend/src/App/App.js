@@ -100,14 +100,14 @@ class App extends React.Component {
           <Route path="/FlyersPage" component={FlyersPage} />
           <Route path="/BillingPage" component={BillingPage} />
           <Route path="/DesignsPage" component={DesignsPage} />
-          <Route path="" component={HomePage} />
+          <Route path="" component={AgentDashboardPage} />
 
         </PublicLayout>
       } else if (this.state.user.roles == 'admin') {
         require('./App.css');
         require('./react-draft-wysiwyg.css');
         return <AdminLayout>
-          <Route path="/DashboardPage" component={DashboardPage} />
+          <Route path={"" || "/DashboardPage"} component={DashboardPage} />
           <Route path="/PricePage" component={PricePage} />
           <Route path="/AgentsPage" component={AgentsPage} />
           <Route path="/SubscriberPage" component={SubscriberPage} />
@@ -133,7 +133,7 @@ class App extends React.Component {
           <Route path="/forgotpassword" component={ForgotPasswordPage} />
           <Route path="/HomePage" component={HomePage} />
           <Route path="/profilePage" component={ProfilePage} />
-        
+          <Route path="" component={HomePage} />
 
         </PublicLayout >
       }
@@ -158,7 +158,7 @@ class App extends React.Component {
           <Route path="/HomePage" component={HomePage} />
           <Route path="/profilePage" component={ProfilePage} />
           <Route path="/forgotpassword" component={ForgotPasswordPage} />
-
+          <Route path="" component={HomePage} />
 
         </PublicLayout >
       }
