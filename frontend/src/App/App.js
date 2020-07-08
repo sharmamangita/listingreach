@@ -80,7 +80,6 @@ class App extends React.Component {
         return <PublicLayout >
           <Route path="/forgotpassword" component={ForgotPasswordPage} />
           <Route path="/register" component={RegisterPage} />
-          <Route path={"" || "/" || "/HomePage"} component={HomePage} />
           <Route path="/login" component={LoginPage} />
           <Route path="/verification/:token" component={VerificationPage} />
           <Route path="/changePassword" component={ChangePasswordPage} />
@@ -100,13 +99,13 @@ class App extends React.Component {
           <Route path="/FlyersPage" component={FlyersPage} />
           <Route path="/BillingPage" component={BillingPage} />
           <Route path="/DesignsPage" component={DesignsPage} />
+          <Route path={typevalue ? "/HomePage" : ""} component={HomePage} />
 
         </PublicLayout>
       } else if (this.state.user.roles == 'admin') {
         require('./App.css');
         require('./react-draft-wysiwyg.css');
         return <AdminLayout>
-          <Route path={"" || "/" || "/DashboardPage"} component={DashboardPage} />
           <Route path="/PricePage" component={PricePage} />
           <Route path="/AgentsPage" component={AgentsPage} />
           <Route path="/SubscriberPage" component={SubscriberPage} />
@@ -114,6 +113,7 @@ class App extends React.Component {
           <Route path="/PaymentsPage" component={PaymentsPage} />
           <Route path="/ContentPage" component={ContentPage} />
           <Route path="/ChangePassword" component={AdminChangePasswordPage} />
+          <Route path={typevalue ? "/DashboardPage" : "" } component={DashboardPage} />
         </AdminLayout>
       }
       else {
@@ -130,8 +130,8 @@ class App extends React.Component {
           <Route path="/PricingPage" component={PricingPage} />
           <Route path="/contact" component={ContactPage} />
           <Route path="/forgotpassword" component={ForgotPasswordPage} />
-          <Route path={"" || "/" || "/HomePage"} component={HomePage} />
           <Route path="/profilePage" component={ProfilePage} />
+          <Route path={typevalue ? "/HomePage" : ""} exact component={HomePage} />
 
         </PublicLayout >
       }
@@ -153,9 +153,9 @@ class App extends React.Component {
           <Route path="/DatabasesPage" component={DatabasesPage} />
           <Route path="/LegalPage" component={LegalPage} />
           <Route path="/PricingPage" component={PricingPage} />
-          <Route path={"" || "/" || "/HomePage"} component={HomePage} />
           <Route path="/profilePage" component={ProfilePage} />
           <Route path="/forgotpassword" component={ForgotPasswordPage} />
+          <Route path={typevalue ? "/HomePage" : ""} exact component={HomePage} />
 
         </PublicLayout >
       }
