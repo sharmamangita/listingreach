@@ -3,6 +3,7 @@ import SubscriberBusiness = require("../app/business/SubscriberBusiness");
 import IBaseController = require("./BaseController");
 import ISubscriberModel = require("../app/model/interfaces/ISubscriberModel");
 import UserBusiness = require("../app/business/UserBusiness");
+import SendInBlueBusiness = require("./../app/business/SendInBlueBusiness");
 class SubscriberController implements IBaseController<SubscriberBusiness> {
 	findById: express.RequestHandler;
 	getAgentDatabase(req: express.Request, res: express.Response): void {
@@ -47,6 +48,8 @@ class SubscriberController implements IBaseController<SubscriberBusiness> {
 
 		const subscriber: ISubscriberModel = <ISubscriberModel>req.body;;
 		//	console.log(subscriber);
+		var sendinBusiness: SendInBlueBusiness = new SendInBlueBusiness();
+		sendinBusiness.createContact(subscriber);
 		subscriber.createdOn = new Date();
 		var subscriberBusiness = new SubscriberBusiness();
 		subscriber.status = "unverified";

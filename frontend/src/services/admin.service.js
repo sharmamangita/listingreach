@@ -19,6 +19,7 @@ export const adminService = {
     subscriberStatus,
     sendBlast,
     getActiveCampaignAssociations,
+    getSendInBlueLists,
     getPayments
 };
 
@@ -55,7 +56,13 @@ function getActiveCampaignAssociations() {
     const requestOptions = {
         method: 'GET'
     };
-    return fetch(`${config.apiUrl}/adminusers/activecampaignassociations`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/adminusers/getassociations`, requestOptions).then(handleResponse);
+}
+function getSendInBlueLists(folderId) {
+    const requestOptions = {
+        method: 'GET'
+    };
+    return fetch(`${config.apiUrl}/adminusers/getsegments/${folderId}`, requestOptions).then(handleResponse);
 }
 
 function getBlasts() {

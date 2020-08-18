@@ -27,8 +27,8 @@ import AgentBusiness = require("./../app/business/AgentBusiness");
 import IAgentModel = require("./../app/model/interfaces/IAgentModel");
 import IBlastImageModel = require("./../app/model/interfaces/IBlastImageModel");
 import BlastImageBusiness = require("./../app/business/BlastImageBusiness");
-var BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
-
+import BlastSettingsBusiness = require("./../app/business/BlastSettingsBusiness");
+import SendInBlueBusiness = require("./../app/business/SendInBlueBusiness");
 
 var mongoose = require('mongoose');
 var async = require('async');
@@ -190,6 +190,12 @@ class UserController implements IBaseController<UserBusiness> {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.verifyToken(req, res, () => {
 				var _user: IUserModel = <IUserModel>req.body.user;
+
+				var sendibusiness: any = new SendInBlueBusiness();
+				if(_user.state && _user.city){
+
+					sendibusiness.createList(_user.state,_user.city);
+				}
 				var _id: string = _user.id.toString();
 				_userBusiness.update(mongoose.Types.ObjectId(_id), _user, (error: any) => {
 					if (error) {
@@ -772,7 +778,7 @@ class UserController implements IBaseController<UserBusiness> {
 			var _userBusiness = new UserBusiness();
 			_userBusiness.verifyToken(req, res, (userData) => {
 				var _agent: IAgentModel = <IAgentModel>req.body;
-				console.log("_agent====", _agent);
+				//console.log("_agent====", _agent);
 				_agent.createdOn = new Date();
 
 				_agent.user_id = userData._id;
@@ -781,6 +787,7 @@ class UserController implements IBaseController<UserBusiness> {
 				_agentBusiness.findOne({ 'userId': userData._id }, (error: any, agentresult: any) => {
 
 					if (agentresult) {
+					
 						var _id: string = agentresult._id.toString();
 						_agentBusiness.update(_id, _agent, (error: any, resultUpdate: any) => {
 							if (error) {
@@ -825,7 +832,6 @@ class UserController implements IBaseController<UserBusiness> {
 								return;
 							}
 						});
-
 					} else {
 						prop.blast_id = req.body.blastId;
 						_propertyBusiness.create(prop, (error) => {
@@ -847,7 +853,7 @@ class UserController implements IBaseController<UserBusiness> {
 				});
 				let agentData = req.body.agentData;
 				let blast: IBlastModel = <IBlastModel>{
-					agentData=agentData
+					agentData: agentData
 				};
 				let blastId = req.body.blastId;
 
@@ -866,7 +872,6 @@ class UserController implements IBaseController<UserBusiness> {
 			res.send({ "error": e });
 		}
 	}
-
 
 	savePropertyImages(data: any, id: any, res: express.Response): void {
 		var _blastimageBusiness = new BlastImageBusiness();
@@ -926,7 +931,6 @@ class UserController implements IBaseController<UserBusiness> {
 		}
 
 	}
-
 
 	getPreviewhtml(req: express.Request, res: express.Response): void {
 		try {
@@ -1122,7 +1126,7 @@ class UserController implements IBaseController<UserBusiness> {
 							scheduledDate: obj.scheduledDate,
 							templateType: obj.templates.template_type,
 							templateId: obj.selected_template_id,
-							headline:obj.templates.headline
+							headline: obj.templates.headline
 						};
 
 					});
@@ -1219,13 +1223,11 @@ class UserController implements IBaseController<UserBusiness> {
 									res.send({ "success": "success", data: _blastform.scheduledDate, dataBaseData: dataBaseData, blastsettingData: result });
 								}
 							});
-
-
 						}
 					});
 				});
-			}
-	 	}
+			});
+		}
 		catch (e) {
 			console.log(e);
 			res.send({ "error": "error in your request" });

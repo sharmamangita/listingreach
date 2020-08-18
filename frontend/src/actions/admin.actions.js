@@ -24,6 +24,7 @@ export const adminActions = {
     getBlasts,
     sendBlast,
     getActiveCampaignAssociations,
+    getSendInBlueLists,
     getPayments,
 };
 
@@ -75,6 +76,25 @@ function getActiveCampaignAssociations() {
     function request(activeCampaign) { return { type: adminConstants.GET_ASSOCIATIONS_REQUEST, activeCampaign } }
     function success(activeCampaign) { return { type: adminConstants.GET_ASSOCIATIONS_SUCCESS, activeCampaign } }
     function failure(error) { return { type: adminConstants.GET_ASSOCIATIONS_FAILURE, error } }
+}
+function getSendInBlueLists(folderId) {
+    return dispatch => {
+        dispatch(request());
+        adminService.getSendInBlueLists(folderId)
+            .then(
+                sendInBlueLists => {
+                    dispatch(success(sendInBlueLists));
+                    dispatch(alertActions.success(''));
+                },
+                error => {
+                    dispatch(failure(error.toString()));
+                    dispatch(alertActions.error('Not updated, please try again.'));
+                }
+            );
+    };
+    function request(sendInBlueLists) { return { type: adminConstants.GET_SENDINBLUELISTS_REQUEST, sendInBlueLists } }
+    function success(sendInBlueLists) { return { type: adminConstants.GET_SENDINBLUELISTS_SUCCESS, sendInBlueLists } }
+    function failure(error) { return { type: adminConstants.GET_SENDINBLUELISTS_FAILURE, error } }
 }
 
 function sendBlast(id) {

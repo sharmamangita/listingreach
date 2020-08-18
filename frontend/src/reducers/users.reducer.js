@@ -7,7 +7,7 @@ export function users(state = initialState, action) {
   switch (action.type) {
     case userConstants.GETALL_REQUEST:
       newState = objectAssign({}, state, {
-        loading: true,
+        loading: true,FV
       });
       return newState;
     case userConstants.GETALL_SUCCESS:

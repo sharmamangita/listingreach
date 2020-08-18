@@ -23,7 +23,9 @@ class AdminUserRoutes {
         router.get("/adminusers/subscribers", controller.getSubscribers);
         router.get("/adminusers/blasts", controller.getBlasts);
         router.get("/adminuser/sendblast/:id", controller.sendBlast);
-        router.get("/adminusers/activecampaignassociations", controller.getActiveCampaignAssociations);
+        //   router.get("/adminusers/getassociations", controller.getActiveCampaignAssociations);
+        router.get("/adminusers/getassociations", controller.getSendiBlueFolders);
+        router.get("/adminusers/getsegments/:folderId", controller.getSendInBlueLists);
         router.put("/adminusers/", controller.update);
         router.delete("/adminusers/:_id", controller.deleteusers);
         router.put("/adminusers/deleteagents/:_id", controller.deleteagents);

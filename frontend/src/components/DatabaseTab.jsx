@@ -77,8 +77,11 @@ class DatabaseTab extends React.Component {
     console.log("assoid:", associationid);
     var index = e.nativeEvent.target.selectedIndex;
     const { activeCampaign } = this.state;
+    // const filteredSegments = activeCampaign.segments.filter(
+    //   (segment) => segment.lists[associationid]
+    // );
     const filteredSegments = activeCampaign.segments.filter(
-      (segment) => segment.lists[associationid]
+      (segment) => segment.folderId == associationid
     );
     const selectedAssocaition = activeCampaign.associations.filter(
       (asso) => asso.id == associationid

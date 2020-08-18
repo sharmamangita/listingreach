@@ -69,14 +69,18 @@ class SubscribeNewsLetter extends React.Component {
         this.props.dispatch(adminActions.getActiveCampaignAssociations());
         this.setState({ show: true });
     }
+    // FOR ACTIVE CAMPAIGN
     handleStateChange(e) {
         const associationid = e.target.value;
         const { activeCampaign } = this.state;
-        const filteredSegments = activeCampaign.segments.filter((segment) => (
-            segment.lists[associationid]
-        ));
+        // const filteredSegments = activeCampaign.segments.filter((segment) => (
+        //     segment.lists[associationid]
+        // ));
+        const filteredSegments = activeCampaign.segments.filter(
+            (segment) => segment.folderId == associationid
+        );
         const selectedAssocaition = activeCampaign.associations.filter(
-              (asso) => asso.id == associationid
+            (asso) => asso.id == associationid
         )[0];
         //console.log(filteredSegments)
         activeCampaign.segment = [];
@@ -88,6 +92,22 @@ class SubscribeNewsLetter extends React.Component {
 
     }
 
+    // FOR SEND IN BLUE
+    // handleStateChange(e) {
+    //     const folderId = e.target.value;
+    //     this.props.dispatch(adminActions.getSendInBlueLists(folderId));
+    //     const { activeCampaign } = this.state;
+    //     const selectedAssocaition = activeCampaign.associations.filter(
+    //           (asso) => asso.id == folderId
+    //     )[0];
+    //     console.log(filteredSegments)
+    //     activeCampaign.segment = [];
+    //     this.setState({
+    //         selectedAssocaition,
+    //         activeCampaign
+    //     });
+
+    // }
     componentDidMount() {
         var subscribeButton = document.querySelector('#sub-button')
         if (subscribeButton) {
@@ -102,7 +122,6 @@ class SubscribeNewsLetter extends React.Component {
                 document.body.classList.add('box-collapse-closed');
             });
         }
-
     }
 
     deleteAssociation(e, item) {
@@ -114,7 +133,7 @@ class SubscribeNewsLetter extends React.Component {
 
     handleChange(e, selectedItem) {
         const { name, value, checked } = e.target;
-        var { subscriber, isFormValid,selectedAssocaition,associations} = this.state;
+        var { subscriber, isFormValid, selectedAssocaition, associations } = this.state;
         switch (name) {
             case "name":
                 subscriber.name = value;
@@ -180,26 +199,28 @@ class SubscribeNewsLetter extends React.Component {
             default:
                 break;
         }
+        if (name == "agentdatabase") {
             if (checked) {
-              let asso = {
-                association: { id: selectedAssocaition.id, name: selectedAssocaition.name },
-                segment: { id: selectedItem.id, lists: selectedItem.lists,name:selectedItem.name }
-              }
-              associations.push(asso);
-             // console.log("this.associations=====", associations);
-            } else {
-              var indexToRemove;
-              associations.forEach(function (item, index) {
-                if (item.segment.id == selectedItem.id) {
-                  indexToRemove = index;
+                let asso = {
+                    association: { id: selectedAssocaition.id, name: selectedAssocaition.name },
+                    segment: { id: selectedItem.id, lists: selectedItem.lists, name: selectedItem.name }
                 }
-              });
-              if (indexToRemove > -1) {
-                associations.splice(indexToRemove, 1);
-              }
+                associations.push(asso);
+                // console.log("this.associations=====", associations);
+            } else {
+                var indexToRemove;
+                associations.forEach(function (item, index) {
+                    if (item.segment.id == selectedItem.id) {
+                        indexToRemove = index;
+                    }
+                });
+                if (indexToRemove > -1) {
+                    associations.splice(indexToRemove, 1);
+                }
             }
+        }
         //console.log("eeeeeeee", e.target);
-        this.setState({ subscriber: subscriber,associations:associations });
+        this.setState({ subscriber: subscriber, associations: associations });
     }
     handleSubmit(e) {
         e.preventDefault();
@@ -218,56 +239,56 @@ class SubscribeNewsLetter extends React.Component {
             this.props.dispatch(subscriberActions.register(this.state.subscriber));
         }
 
-        $(".close-box-collapse.right-boxed.fa.fa-close.fa-2x").trigger( "click" );
+        $(".close-box-collapse.right-boxed.fa.fa-close.fa-2x").trigger("click");
 
-        
+
     }
     renderdataBaseModal() {
         const { show, activeCampaign, filteredSegments, loading } = this.state;
-        console.log("state in model ", this.state)      
+        console.log("state in model ", this.state)
         return (
             <Modal show={show} onHide={this.handleClose} size="lg">;
                 <Modal.Header >
                     <h4 className="modal-title">Select Databases</h4>
                 </Modal.Header>
                 <Modal.Body>
-                    {!loading?
-                    <React.Fragment>
-                    <form className="form">
-                        <div className="form-group col-md-6">
-                            <select className="form-control form-control-a" onChange={(event) => this.handleStateChange(event)} >
-                                <option>Select State</option>
-                                {
-                                    activeCampaign && activeCampaign.associations.map((st) => (
-                                        <option key={st.id} value={st.id}>{st.name}</option>
-                                    ))
-                                }
-                            </select>
-                        </div>
-
-                        {filteredSegments && filteredSegments.length > 0 ?
-                            <div className="form-group">
-                                <label htmlFor="property"><b>City wise Agents</b></label>
-                                <div className="row">
-                                    <div className="col-md-6 mb-2">
+                    {!loading ?
+                        <React.Fragment>
+                            <form className="form">
+                                <div className="form-group col-md-6">
+                                    <select className="form-control form-control-a" onChange={(event) => this.handleStateChange(event)} >
+                                        <option>Select State</option>
                                         {
-                                            filteredSegments.map((segment) => (
-                                                <div className="form-check" key={segment.id} >
-                                                    <label className="form-check-label">
-                                                        <input type="checkbox" name="agentdatabase" value={segment.id} onChange={(event) => this.handleChange(event, segment)} className="form-check-input" />
-                                                        {segment.name}
-                                                    </label>
-                                                </div>)
-                                            )
+                                            activeCampaign && activeCampaign.associations.map((st) => (
+                                                <option key={st.id} value={st.id}>{st.name}</option>
+                                            ))
                                         }
-                                    </div>
+                                    </select>
                                 </div>
-                            </div>
-                            : null
-                        }
-                    </form>
-                    </React.Fragment>
-                :<h4>Loading....</h4>}
+
+                                {filteredSegments && filteredSegments.length > 0 ?
+                                    <div className="form-group">
+                                        <label htmlFor="property"><b>City wise Agents</b></label>
+                                        <div className="row">
+                                            <div className="col-md-6 mb-2">
+                                                {
+                                                    filteredSegments.map((segment) => (
+                                                        <div className="form-check" key={segment.id} >
+                                                            <label className="form-check-label">
+                                                                <input type="checkbox" name="agentdatabase" value={segment.id} onChange={(event) => this.handleChange(event, segment)} className="form-check-input" />
+                                                                {segment.name}
+                                                            </label>
+                                                        </div>)
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    : null
+                                }
+                            </form>
+                        </React.Fragment>
+                        : <h4>Loading....</h4>}
                 </Modal.Body>
                 <Modal.Footer>
                     <button type="button" className="btn btn-b" onClick={this.clearAgentDataBase}>Cancel</button>
@@ -280,7 +301,7 @@ class SubscribeNewsLetter extends React.Component {
 
     render() {
         var that = this;
-        var { subscriber, submitted, propertyTypes, priceFilters,preferedVendors,associations} = this.state;
+        var { subscriber, submitted, propertyTypes, priceFilters, preferedVendors, associations } = this.state;
         console.log("state in render", this.state)
         return (
             <React.Fragment>
@@ -424,28 +445,28 @@ class SubscribeNewsLetter extends React.Component {
                                                     <div className="help-block text-danger">Select aleast 1 Database</div>
                                                 }
                                             </div>
-                                              <table
+                                            <table
                                                 id="example"
                                                 className="table table-bordered"
                                                 style={{ width: "100%" }}
-                                              >
+                                            >
                                                 <tbody>
-                                                  {associations &&
-                                                    associations.map(function (asso, i) {
-                                                      return (
-                                                        <tr key={i}>
-                                                          <td>
-                                                            {asso.association.name} --  {asso.segment.name}
-                                                            <span>
-                                                              <i className="fa fa-trash pull-right" aria-hidden="true" title="Delete"
-                                                                onClick={(e) => that.deleteAssociation(e, asso)}
-                                                              ></i></span>
-                                                          </td>
-                                                        </tr>
-                                                      );
-                                                    })}
+                                                    {associations &&
+                                                        associations.map(function (asso, i) {
+                                                            return (
+                                                                <tr key={i}>
+                                                                    <td>
+                                                                        {asso.association.name} --  {asso.segment.name}
+                                                                        <span>
+                                                                            <i className="fa fa-trash pull-right" aria-hidden="true" title="Delete"
+                                                                                onClick={(e) => that.deleteAssociation(e, asso)}
+                                                                            ></i></span>
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        })}
                                                 </tbody>
-                                              </table>
+                                            </table>
                                             <div className="col-md-12 mb-3">
                                                 <div className="form-group">
                                                     <label className="check">Do NOT send Properties Out of my Area
@@ -472,7 +493,7 @@ class SubscribeNewsLetter extends React.Component {
         );
     };
     componentWillReceiveProps(props) {
-        this.setState({ activeCampaign: props.activeCampaign,loading:props.loading })
+        this.setState({ activeCampaign: props.activeCampaign, loading: props.loading })
         if (props.clearForm) {
             var defaultstate = this.resetState();
             this.setState(defaultstate);
