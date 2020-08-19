@@ -14,7 +14,7 @@ var partnerKey = defaultClient.authentications['partner-key'];
 partnerKey.apiKey = "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"
 // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
 //partnerKey.apiKeyPrefix['partner-key'] = "Token"
-
+ 
 //var contactsApi = new SibApiV3Sdk.ContactsApi();
 // api.getAccount().then(function (data) {
 //   console.log('API called successfully. Returned data: ' + data);
