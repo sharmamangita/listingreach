@@ -2,6 +2,6 @@
   "connectionString": "mongodb://localhost/listingreach",
   "secret": "THIS IS USED TO SIGN AND VERIFY JWT TOKENS, REPLACE IT WITH YOUR OWN SECRET, IT CAN BE ANY STRING",
  
-  "SERVER_URL":"http://localhost:8080"
+  "SERVER_URL":"http://localhost:4000"
 }
 
