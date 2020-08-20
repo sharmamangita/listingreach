@@ -308,12 +308,12 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 								name: template.headline,
 								sender: {
 									name: template.from_line,
-									email: template.address
+									email: template.address || blast.agentData.email
 								},
 								htmlContent: HTML,
 								scheduledAt: blast.scheduledDate,
 								subject: template.email_subject,
-								replyTo: template.address,
+								replyTo:  template.address || blast.agentData.email,
 								recipients: {
 									listIds: listids
 								}
