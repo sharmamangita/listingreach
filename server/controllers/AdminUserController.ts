@@ -295,54 +295,67 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 						return;
 					}
 					const templateBusiness = new AgentTemplateBusiness();
+					const sendInBlueBusiness = new SendInBlueBusiness();
 					templateBusiness.findById(blast.selected_template_id, async (templateError, template: IAgentTemplateModel) => {
 						if (templateError) {
 							res.send({ templateError });
 						} else {
-							console.log("template..... ", blast.agentData.email || template.address)
 							var listids: Number[] = [];
 							blast.associations.forEach(aso => {
 								listids.push(Number.parseInt(aso.segment.id.toString()));
 							});
-							var campaign = {
-								name: template.headline,
-								sender: {
-									name: template.from_line,
+							if (listids.length > 0) {
+								var sender = {
+									name: blast.agentData.name,
 									email: template.address || blast.agentData.email
-								},
-								htmlContent: HTML,
-								scheduledAt: blast.scheduledDate,
-								subject: template.email_subject,
-								replyTo:  template.address || blast.agentData.email,
-								recipients: {
-									listIds: listids
-								}
-							};
-							var sendInBlueBusiness = new SendInBlueBusiness();
-							await sendInBlueBusiness.createCampaign(campaign).then(function (result) {
-								//UPDATE BLAST//
-								let update = {
-									$set: {
-										status: "Sent",
-										sentOn: new Date()
-									}
-								}
-
-								blastBusiness.findOneAndUpdate(blast._id, update, (updateBlastError, updatedBlast) => {
-									if (updateBlastError) {
-										console.log("updateBlastError", updateBlastError);
-										res.send(updateBlastError);
-										return;
-									} else {
-										console.log("Blast Status updated");
-										res.send({ message: "success" });
-										return;
-									};
+								};
+								await sendInBlueBusiness.createSender(sender).then(function (sender: any) {
+								}, function (senderError: any) {
+									console.log("sender create error ", senderError);
 								});
-							}, function (error) {
-								console.log("Campaign Create Error", error);
-								res.send({ error });
-							});
+
+								var campaign = {
+									name: template.headline,
+									sender: {
+										name: template.from_line,
+										email: template.address || blast.agentData.email
+									},
+									htmlContent: HTML,
+									scheduledAt: blast.scheduledDate,
+									subject: template.email_subject,
+									replyTo: template.address || blast.agentData.email,
+									recipients: {
+										listIds: listids
+									}
+								};
+
+								await sendInBlueBusiness.createCampaign(campaign).then(function (result) {
+									//UPDATE BLAST//
+									let update = {
+										$set: {
+											status: "Sent",
+											sentOn: new Date()
+										}
+									}
+
+									blastBusiness.findOneAndUpdate(blast._id, update, (updateBlastError, updatedBlast) => {
+										if (updateBlastError) {
+											console.log("updateBlastError", updateBlastError);
+											res.send(updateBlastError);
+											return;
+										} else {
+											console.log("Blast Status updated");
+											res.send({ message: "success" });
+											return;
+										};
+									});
+								}, function (error) {
+									console.log("Campaign Create Error", error);
+									res.send({ error });
+								});
+							} else {
+								console.log("Assocaitions not found ..");
+							}
 						};
 					});
 				}
