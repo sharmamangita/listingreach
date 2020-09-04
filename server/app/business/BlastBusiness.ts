@@ -83,6 +83,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
               reject(error);
             }
             console.log("template", template);
+
             const propertyBusiness = new PropertyBusiness();
             const query = { blast_id: blast.id }
             propertyBusiness.retrieve(query, (error, properties) => {
@@ -119,6 +120,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                              </div>
                   </div>`;
                 properties.forEach(function (property: IPropertyModel) {
+
                   html += ` <div class="" style="display: block;display: flex;border-top: 2px solid #ccc;">
                                                 <div style="display: block; background:#f1f1f1;height:auto;overflow: hidden;width:50%">`;
                   if (property.propertyImages && property.propertyImages.length == 1) {
@@ -126,18 +128,20 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   } else {
                     html += `<img src=${Common.SITE_URL + "/uploads/previewimages/img2.jpg"}  />`;
                   }
-
+                   if (property.pricingInfo.price != undefined && property.pricingInfo.price) {
                   html += `</div><div style="width:50%;display: block; background:#f1f1f1; height:auto;">
                                                    <div class="" style="display: flex;flex-wrap: wrap;margin-left: 5%;">
                                                       <div style="width:100%;margin-bottom: 1rem !important;margin-top: 1rem !important;">
                                                          <h4 style=" background: #f1f1f1;font-size: 1.5rem;margin-top: 0;
-                                                            margin-bottom: 1rem;">Price: ${property.price} per Square Foot</h4>
+                                                            margin-bottom: 1rem;">Price: $ ${property.pricingInfo.price}</h4>`;
+                  }
+
                                                  
-                                                      <div class="ml-3" style="width:100%;">
+                   html += `<div class="ml-3" style="width:100%;">
                                                          <label class="flyer-label" style="color: #EE8C3A;
                                                             font-size: 1rem;display: inline-block;margin-bottom: 0.5rem;">Key Features:</label>
                                                          <ul>`;
-
+                    
 
                   if (property.property_type != undefined && property.property_type) {
                     html += `<li>Property Type: ${property.property_type} </li>`;
@@ -160,7 +164,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   }
 
                   if (property.price != undefined && property.price) {
-                    html += `<li>${property.price}  /sqft</li>`;
+                    html += `<li>$ ${property.price}  /sqft</li>`;
                   }
 
                   if (property.lot_size != undefined && property.lot_size) {
@@ -322,7 +326,7 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   if (property.pricingInfo.price != undefined && property.pricingInfo.price) {
                     price = `<div class="row" style="display: flex;flex-wrap: wrap;">
                         <div class="mt-3 mb-3 ml-3" style="position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
-                           <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $ ${property.pricingInfo.price} per Square Foot</h4>
+                           <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $ ${property.pricingInfo.price}</h4>
                         </div>
                      </div>`;
                   }
@@ -390,9 +394,10 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   resolve(emailtemplate);
                 });
               } else {
-                console.log("single property....");
+                
                 let html: string = '';
                 properties.forEach(function (property: IPropertyModel) {
+                  console.log("single property....",property);
                   let image = "";
                   // console.log("property.propertyImages===",property); 
                   if (property.propertyImages && property.propertyImages.length == 1) {
@@ -510,14 +515,17 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                   });
 
 
-                  let price = "";
-                  if (property.price != undefined && property.price) {
+                  let price= "";
+                  if (property.pricingInfo.price != undefined && property.pricingInfo.price) {
                     price = `<div class="row" style="display: flex;flex-wrap: wrap;">
                         <div class="mt-3 mb-3 ml-3" style="position: relative; width: 100%;min-height: 1px;padding-right: 15px;padding-left: 15px;">
-                           <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $ ${property.price} per Square Foot</h4>
+                           <h4 style="background: #f1f1f1;font-size: 1.5rem;">Price: $ ${property.pricingInfo.price}</h4>
                         </div>
                      </div>`;
                   }
+
+
+
 
                   let property_details = "";
                   if (property.property_details != undefined && property.property_details) {
@@ -543,6 +551,12 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     lot_size = `<li>Lot Size: ${property.lot_size} sqft</li>`;
                   }
 
+
+
+                  let pricePerSquareFoot= "";
+                  if (property.price != undefined && property.price) {
+                    pricePerSquareFoot = `<li>Price: $ ${property.price} per Square Foot</li>`;
+                  }
 
                   let number_bedrooms = "";
                   if (property.number_bedrooms != undefined && property.number_bedrooms) {
@@ -630,7 +644,8 @@ class BlastBusiness implements BaseBusiness<IBlastModel> {
                     .replace(/#blastHeadline#/g, headline || " ")
                     .replace(/#headlineBackgroundColor#/g,template.headlineBackgroundColor as string)
                     .replace(/#headlineTextColor#/g,template.headlineTextColor as string)
-                    .replace(/#pricePerSquareFoot#/g, price)
+                    .replace(/#price#/g, price)
+                    .replace(/#pricePerSquareFoot#/g, pricePerSquareFoot)
                     .replace(/#propertDetails#/g, property_details)
                     .replace(/#propertyAdress#/g, propertyAdress || " ")
 

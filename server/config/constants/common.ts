@@ -1497,7 +1497,7 @@ static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ `
                   </div>
                   #propertyImage#
                   <div class="flyer-bg" style="background: #f1f1f1;border-bottom: 2px solid #ccc;">
-                  	#pricePerSquareFoot#
+                  	#price#
                      <div class="" style="">
                      	#propertyAdress#
                         <div class="text-center" style="width:100%;text-align: center !important;">
@@ -1516,6 +1516,7 @@ static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ `
                            <ul>
                                 #propertyType#
 								#propertyStyle# 
+								#pricePerSquareFoot#
 								#numberOfBedrooms#
 								#bathrooms#
 								#lotSize#
