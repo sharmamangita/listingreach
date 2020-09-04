@@ -667,7 +667,7 @@ class PropertyTab extends React.Component {
                     <span className="checkmark"></span>
                   </label>
                   <a href="javascript:void(0)" className="pb-2 pr-2 pl-0" data-toggle="modal" data-id="profileimg" data-target="#profileimg" onClick={modalproimageOpen}>
-                    <img src={profilepc} alt="Image" className="profile-img img-fluid" />
+                    <img src={profilepc} alt="Image" className="profile-img img-fluid img-circle" style={{ width: "120px" }} />
                   </a>
                   <br></br>
                   <span>
