@@ -14,7 +14,7 @@ var partnerKey = defaultClient.authentications['partner-key'];
 partnerKey.apiKey = "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"
 // Uncomment the following line to set a prefix for the API key, e.g. "Token" (defaults to null)
 //partnerKey.apiKeyPrefix['partner-key'] = "Token"
- 
+
 //var contactsApi = new SibApiV3Sdk.ContactsApi();
 // api.getAccount().then(function (data) {
 //   console.log('API called successfully. Returned data: ' + data);
@@ -134,7 +134,7 @@ class SendInBlueBusiness {
   async createList(folderName: string, listName: string) {
     var sendiBlueInstance = this;
     sendiBlueInstance.createFolderIfDoesNotExist(folderName).then(async function (folder: any) {
-      //  console.log("folder ... ", folder);
+      console.log("folder ... ", folder);
       sendiBlueInstance.createListIfDoesNotExist(folder.id, listName).then(async function (data: any) {
         console.log('API called successfully. Returned data: ', data);
       }, function (error: any) {
@@ -144,14 +144,14 @@ class SendInBlueBusiness {
   }
 
   async createListIfDoesNotExist(folderId: number, listName: string): Promise<any> {
-    console.log("List name : ", listName);
+  //  console.log("List name : ", listName);
     var apiInstance = new SibApiV3Sdk.ContactsApi();
     var lists: any[] = await this.getAllLists();
     if (lists && lists.length > 0) {
       var existingList = lists.find((f: any) => f.name == listName);
       //  console.log("existing ", existingfolder);
       if (existingList) {
-        console.log("folder already exists ", existingList);
+       // console.log("folder already exists ", existingList);
         return existingList;
       }
     }
@@ -160,7 +160,7 @@ class SendInBlueBusiness {
     createList.name = listName
     createList.folderId = folderId;
     apiInstance.createList(createList).then(function (data: any) {
-      console.log('List Created. Returned data: ', data);
+    //  console.log('List Created. Returned data: ', data);
       return data;
     }, function (error: any) {
       console.error(error);
@@ -173,6 +173,55 @@ class SendInBlueBusiness {
     // CreateEmailCampaign | Values to create a campaign
     return apiInstance.createEmailCampaign(emailCampaigns);
   }
+  async getAllSenders() {
+    var apiInstance = new SibApiV3Sdk.SendersApi();
+    var senders: any[] = [];
+    var limit = 10; // Number | Number of documents per page
+    var offset = 0; // Number | Index of the first document of the page
+    let count = 0;
+    do {
+      console.log("Loop... count " + count + " offset " + offset);
+      await apiInstance.getSenders(limit, offset).then(function (data: any) {
+        console.log(' Returned Lists: ', data);
+        count = data.senders.length;
+        if (count < limit) {
+          count = 0;
+        }
+        data.senders.forEach((List: any) => {
+          senders.push(List);
+        });
+        //   console.log(folders);
+        offset += 10;
+      }, function (error: any) {
+        console.error(error);
+        count = 0;
+      });
+    } while (count > 0);
+    return senders;
+  }
+  async createSender(sender: any): Promise<any> {
+    var apiInstance = new SibApiV3Sdk.SendersApi();
+    var lists: any[] = await this.getAllSenders();
+    if (lists && lists.length > 0) {
+      var existinSender = lists.find((f: any) => f.name == sender.name && f.email==sender.email);
+      //  console.log("existing ", existingfolder);
+      if (existinSender) {
+        console.log("sender already exists ", existinSender);
+        return existinSender;
+      }
+    }
+    var Sender = new SibApiV3Sdk.CreateSender() // CreateSender | sender's name
+    Sender = sender;
+    var opts = {
+      'sender': Sender
+    };
+    apiInstance.createSender(opts).then(function (data: any) {
+      console.log('Sender Created : ');
+    }, function (error: any) {
+      console.error(error);
+    });
+  }
+
 }
 Object.seal(SendInBlueBusiness);
 export = SendInBlueBusiness;

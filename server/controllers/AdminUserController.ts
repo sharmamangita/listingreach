@@ -305,14 +305,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 								listids.push(Number.parseInt(aso.segment.id.toString()));
 							});
 							if (listids.length > 0) {
-								var sender = {
-									name: blast.agentData.name,
-									email: template.address || blast.agentData.email
-								};
-								await sendInBlueBusiness.createSender(sender).then(function (sender: any) {
-								}, function (senderError: any) {
-									console.log("sender create error ", senderError);
-								});
+							
 
 								var campaign = {
 									name: template.headline,
@@ -354,7 +347,7 @@ class AdminUserController implements IBaseController<AdminUserBusiness> {
 									res.send({ error });
 								});
 							} else {
-								console.log("Assocaitions not found ..");
+								res.send("Assocaitions not found ..");
 							}
 						};
 					});

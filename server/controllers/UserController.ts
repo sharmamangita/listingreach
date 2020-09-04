@@ -171,8 +171,6 @@ class UserController implements IBaseController<UserBusiness> {
 		}
 	}
 
-
-
 	updateStatus(res: express.Response): void {
 		try {
 
@@ -192,9 +190,9 @@ class UserController implements IBaseController<UserBusiness> {
 				var _user: IUserModel = <IUserModel>req.body.user;
 
 				var sendibusiness: any = new SendInBlueBusiness();
-				if(_user.state && _user.city){
+				if (_user.state && _user.city) {
 
-					sendibusiness.createList(_user.state,_user.city);
+					sendibusiness.createList(_user.state, _user.city);
 				}
 				var _id: string = _user.id.toString();
 				_userBusiness.update(mongoose.Types.ObjectId(_id), _user, (error: any) => {
@@ -787,7 +785,7 @@ class UserController implements IBaseController<UserBusiness> {
 				_agentBusiness.findOne({ 'userId': userData._id }, (error: any, agentresult: any) => {
 
 					if (agentresult) {
-					
+
 						var _id: string = agentresult._id.toString();
 						_agentBusiness.update(_id, _agent, (error: any, resultUpdate: any) => {
 							if (error) {
@@ -805,7 +803,7 @@ class UserController implements IBaseController<UserBusiness> {
 							}
 						});
 					}
-
+				
 				});
 			});
 		}
@@ -844,7 +842,7 @@ class UserController implements IBaseController<UserBusiness> {
 					}
 				});
 				let _template: IAgentTemplateModel = <IAgentTemplateModel>req.body.template;
-				console.log("Template ", _template)
+			//	console.log("Template ", _template)
 				_templateBusiness.update(_template._id.toString(), _template, (error) => {
 					if (error) {
 						console.log("template update error ", error);
@@ -862,6 +860,17 @@ class UserController implements IBaseController<UserBusiness> {
 						if (error) {
 							res.send({ "blast update error": error });
 						}
+					});
+					console.log("SAVING AGENT ON SENDINBLUE");
+					var sender = {
+						name: agentData.name,
+						email: agentData.email
+					};
+					var SendInBlueBusiness = require("./../app/business/SendInBlueBusiness");
+					var sendInBlueBusiness = new SendInBlueBusiness();
+					sendInBlueBusiness.createSender(sender).then(function (sender: any) {
+					}, function (senderError: any) {
+						console.log("sender create error ", senderError);
 					});
 				}
 				res.send({ template: _template });
