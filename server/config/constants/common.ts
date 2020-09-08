@@ -2,38 +2,38 @@
 var nodemailer = require("nodemailer");
 
 class Common {
-    
-  static ActiveCampaignUrl:string= "https://listingreach.api-us1.com/admin/api.php";
-  static ActiveCampaignLey:string="99471542c0366492af8ba8f2c475901bd799d068ba41a903dbb80f7d737c5eabd79ea57a";
-	static STRIPEPUBLICKEY: string = 'pk_test_W3AWlvrzo3jtQnDsKtyCGCUS';
-	static STRIPESECRETKEY: string = 'sk_test_aediX53shAzQkRvioEKu6CXV';
-	static STRIPEWEBHOOKKEY: string ='whsec_4qQvss7pZ1TRBO8NDuQjPHndTN84r3W4';
-	static STRIPEFREEPLANAPPLICATIONS: number=10;
-	static STRIPEFREEPLANUSERS: number=3;
-	static STUDYING_ID: string ='599a92797c086869cba64408';
-	static INTERCOM_ACCESS_TOKEN: string = process.env.INTERCOM_ACCESS_TOKEN || 'dG9rOmJmNGQ2ZWViX2I1ZmVfNDE2Zl9iZGFlXzY3ODNiY2UxZGYzMzoxOjA=';
 
-    static SEND_FROM_EMAIL: string ="info@76east.com";
-    static ADMIN_EMAIL: string = "info@76east.com";
+  static ActiveCampaignUrl: string = "https://listingreach.api-us1.com/admin/api.php";
+  static ActiveCampaignLey: string = "99471542c0366492af8ba8f2c475901bd799d068ba41a903dbb80f7d737c5eabd79ea57a";
+  static STRIPEPUBLICKEY: string = 'pk_test_W3AWlvrzo3jtQnDsKtyCGCUS';
+  static STRIPESECRETKEY: string = 'sk_test_aediX53shAzQkRvioEKu6CXV';
+  static STRIPEWEBHOOKKEY: string = 'whsec_4qQvss7pZ1TRBO8NDuQjPHndTN84r3W4';
+  static STRIPEFREEPLANAPPLICATIONS: number = 10;
+  static STRIPEFREEPLANUSERS: number = 3;
+  static STUDYING_ID: string = '599a92797c086869cba64408';
+  static INTERCOM_ACCESS_TOKEN: string = process.env.INTERCOM_ACCESS_TOKEN || 'dG9rOmJmNGQ2ZWViX2I1ZmVfNDE2Zl9iZGFlXzY3ODNiY2UxZGYzMzoxOjA=';
 
-    static SITE_URL: string = "http://listingreach.com"; 
-    //static SITE_URL: string = "http://localhost:3000"; 
-	
-	//live details
-	static MAIL_CONFIG: any = {
-		service: "76east",
-        host: "mail.76east.com",
-        port: 587,
-        auth: {
-        user: 'info@76east.com',
-           pass: '76#Phase7!@#'
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-		
-	};
-	
+  static SEND_FROM_EMAIL: string = "info@76east.com";
+  static ADMIN_EMAIL: string = "info@76east.com";
+
+  static SITE_URL: string = "http://listingreach.com";
+  //static SITE_URL: string = "http://localhost:3000"; 
+
+  //live details
+  static MAIL_CONFIG: any = {
+    service: "76east",
+    host: "smtp.gmail.com",
+    port: 587,
+    auth: {
+      user: 'gurpreet76east@gmail.com',
+      pass: "hcokkwpiphzxtovr"
+    },
+    tls: {
+      rejectUnauthorized: true
+    }
+
+  };
+
 	/*static MAIL_CONFIG: any = {
 		service: "gmail",
 		host: "smtp.gmail.com",
@@ -42,8 +42,8 @@ class Common {
 			pass: "9418850287"
 		}
 	};*/
-    
-    static EMAIL_TEMPLATE_HEADER: string = `<!doctype html>
+
+  static EMAIL_TEMPLATE_HEADER: string = `<!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 	<head>
 		
@@ -1187,7 +1187,7 @@ class Common {
                       <td class="comment_body_td content-td" style="-webkit-background-clip: padding-box; -webkit-border-radius: 0 0 3px 3px; background-clip: padding-box; border-radius: 0 0 3px 3px; color: #525252; font-family: 'Helvetica Neue',Arial,sans-serif; font-size: 15px; line-height: 22px; overflow: hidden; padding: 40px 40px 30px; background-color: white;">
 `;
 
-    static EMAIL_TEMPLATE_FOOTER: string = `
+  static EMAIL_TEMPLATE_FOOTER: string = `
 <p>Feel free to reply to this email if you have questions!</p>
 </td>
     </tr>
@@ -1264,7 +1264,7 @@ class Common {
     </body>
 </html>
 `;
-static EMAIL_FOR_NEW_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
+  static EMAIL_FOR_NEW_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER + `
 	<h2>You've been invited!</h2>
 	<p></p>
 	<p>Hi #first_lastname#,</p>
@@ -1275,11 +1275,11 @@ static EMAIL_FOR_NEW_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
 		</ul> 
 		<p></p>
         <p></p>
-        <p><a href="`+Common.SITE_URL+`/register?ref=#autotoken#">Post Reference</a> to see the application.</p>
-` +Common.EMAIL_TEMPLATE_FOOTER;
+        <p><a href="`+ Common.SITE_URL + `/register?ref=#autotoken#">Post Reference</a> to see the application.</p>
+` + Common.EMAIL_TEMPLATE_FOOTER;
 
 
-static EMAIL_FOR_LOGIN_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
+  static EMAIL_FOR_LOGIN_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER + `
 	<h2>You've been invited!</h2>
 	<p></p>
 	<p>Hi #first_lastname#,</p>
@@ -1290,12 +1290,12 @@ static EMAIL_FOR_LOGIN_USER_INVITATION: string = Common.EMAIL_TEMPLATE_HEADER+`
 		</ul> 
 		<p></p>
         <p></p>
-        <p><a href="`+Common.SITE_URL+`/login?ref=#autotoken#">Post Reference</a> to see the application.</p>
-` +Common.EMAIL_TEMPLATE_FOOTER;
+        <p><a href="`+ Common.SITE_URL + `/login?ref=#autotoken#">Post Reference</a> to see the application.</p>
+` + Common.EMAIL_TEMPLATE_FOOTER;
 
-static PRAVIEW_LOGO = Common.SITE_URL+'/uploads/previewimages/listing-reach-logo.png';
+  static PRAVIEW_LOGO = Common.SITE_URL + '/uploads/previewimages/listing-reach-logo.png';
 
-static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
+  static PREVIEW_EMAIL_TEMPLATE_HEADER: string = `
 <html>
    <head>
       <meta charset='UTF-8'>
@@ -1348,7 +1348,7 @@ static PREVIEW_EMAIL_TEMPLATE_HEADER:string =`
                      </span>
                   </div>
                      </div></div>`;
-static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
+  static PREVIEW_EMAIL_TEMPLATE_FOOTER: string = `<div class="flyer-footer">
                      <div class="mt-3" style="margin-top: 1rem !important; display: flex;flex-wrap: wrap;">
                         <div class="text-center" style="width:20%;text-align: center !important;overflow:hidden">
                            <img alt="Photo" class="img-square" style="width:70%;border-radius: 50%;" src="#companyLogo#">
@@ -1383,9 +1383,9 @@ static PREVIEW_EMAIL_TEMPLATE_FOOTER:string =`<div class="flyer-footer">
          </div>
       </div>
    </body>
-</html> `;	
+</html> `;
 
-static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER:string =`
+  static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER: string = `
 <html>
    <head>
       <meta charset='UTF-8'>
@@ -1439,16 +1439,16 @@ static PREVIEW_EMAIL_UPLOAD_BLAST_HEADER:string =`
                   </div>
                      </div></div>`;
 
-static PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER:string =`<div class="flyer-btm" style="background: #8c8c8c;padding: 10px;font-size: 0.8rem; color: #fff;">
+  static PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER: string = `<div class="flyer-btm" style="background: #8c8c8c;padding: 10px;font-size: 0.8rem; color: #fff;">
                      <div style="display: flex;flex-wrap: wrap;">
                         <div style="width:100%">
                            This e-blast was delivered by ListingReach.com, a real estate email marketing service. The ListingReach.com service and information provided therein, while believed to be accurate, are provided "as is". ListingReach.com disclaims any and all representations, warranties, or guarantees of any kind. ListingReach.com assumes no liability for errors or omissions.
                         </div>
                      </div>
-                  </div>`;				
+                  </div>`;
 
 
-static PREVIEW_EMAIL_UPLOAD_BLAST:string= Common.PREVIEW_EMAIL_UPLOAD_BLAST_HEADER+` 
+  static PREVIEW_EMAIL_UPLOAD_BLAST: string = Common.PREVIEW_EMAIL_UPLOAD_BLAST_HEADER + ` 
                   #propertyImage#
                   <div class="" style="background: #f1f1f1;width:100%">
 					 #pricePerSquareFoot# 
@@ -1469,16 +1469,16 @@ static PREVIEW_EMAIL_UPLOAD_BLAST:string= Common.PREVIEW_EMAIL_UPLOAD_BLAST_HEAD
 `+ Common.PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER;
 
 
-static PREVIEW_EMAIL_REAL_ESTATE_BROKERAGE:string=Common.PREVIEW_EMAIL_UPLOAD_BLAST_HEADER+`
+  static PREVIEW_EMAIL_REAL_ESTATE_BROKERAGE: string = Common.PREVIEW_EMAIL_UPLOAD_BLAST_HEADER + `
                   </div>
                   #propertyImage#
-`+Common.PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER;
+`+ Common.PREVIEW_EMAIL_UPLOAD_BLAST_FOOTER;
 
-static PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE:string= Common.PREVIEW_EMAIL_TEMPLATE_HEADER+`
+  static PREVIEW_EMAIL_MULTIPROPERTY_TEMPLATE: string = Common.PREVIEW_EMAIL_TEMPLATE_HEADER + `
 #multiproperty#
 `+ Common.PREVIEW_EMAIL_TEMPLATE_FOOTER;
 
-static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ ` 
+  static PREVIEW_EMAIL_TEMPLATE: string = Common.PREVIEW_EMAIL_TEMPLATE_HEADER + ` 
                   <div style="display: flex;flex-wrap: wrap;">
                      <div style="width:100%">
                         <div class="flyer-header" style="display: block;overflow: hidden;
@@ -1537,7 +1537,7 @@ static PREVIEW_EMAIL_TEMPLATE:string =  Common.PREVIEW_EMAIL_TEMPLATE_HEADER+ `
 
 
 
-static CONTACT_FORM:string = Common.EMAIL_TEMPLATE_HEADER+`
+  static CONTACT_FORM: string = Common.EMAIL_TEMPLATE_HEADER + `
     <h1>Contact form </h1>
 <ul>
   <li>Name: #fullname#</li>
@@ -1547,10 +1547,10 @@ static CONTACT_FORM:string = Common.EMAIL_TEMPLATE_HEADER+`
   <li>Date:#date#</li>
 </ul>
 <p>Thank you for using listingreach</p>      
-`+Common.EMAIL_TEMPLATE_FOOTER;
+`+ Common.EMAIL_TEMPLATE_FOOTER;
 
 
-static EMAIL_TEMPLATE_RESET_USER_PASSWORD: string = Common.EMAIL_TEMPLATE_HEADER+`
+  static EMAIL_TEMPLATE_RESET_USER_PASSWORD: string = Common.EMAIL_TEMPLATE_HEADER + `
     <h1>Forgot your password? Let's get you a new one.</h1>
         <p>We got a request to change the password for your account.</p>
 <p>Here is your new one:</p>
@@ -1559,10 +1559,10 @@ static EMAIL_TEMPLATE_RESET_USER_PASSWORD: string = Common.EMAIL_TEMPLATE_HEADER
 </ul>
 <p>To change your temporary password, please go to Settings &gt; My Account and choose a new password that is easy to remember.</p>
 <p>Thank you for using Listingreach.</p>  
-<p><a href="`+Common.SITE_URL+`/login">Login Now</a> to see the application.</p>          
-`+Common.EMAIL_TEMPLATE_FOOTER;
+<p><a href="`+ Common.SITE_URL + `/login">Login Now</a> to see the application.</p>          
+`+ Common.EMAIL_TEMPLATE_FOOTER;
 
-static EMAIL_TEMPLATE_RESET_ADMIN_PASSWORD: string = Common.EMAIL_TEMPLATE_HEADER+`
+  static EMAIL_TEMPLATE_RESET_ADMIN_PASSWORD: string = Common.EMAIL_TEMPLATE_HEADER + `
     <h1>Forgot your password? Let's get you a new one.</h1>
         <p>We got a request to change the password for your account.</p>
 <p>Here is your new one:</p>
@@ -1571,9 +1571,9 @@ static EMAIL_TEMPLATE_RESET_ADMIN_PASSWORD: string = Common.EMAIL_TEMPLATE_HEADE
 </ul>
 <p>To change your temporary password, please go to Settings &gt; My Account and choose a new password that is easy to remember.</p>
 <p>Thank you for using Listingreach.</p>  
-<p><a href="`+Common.SITE_URL+`/#/admin/login">Admin Login Now</a> to see the application.</p>          
-`+Common.EMAIL_TEMPLATE_FOOTER;
-static SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER: string = Common.EMAIL_TEMPLATE_HEADER+`
+<p><a href="`+ Common.SITE_URL + `/#/admin/login">Admin Login Now</a> to see the application.</p>          
+`+ Common.EMAIL_TEMPLATE_FOOTER;
+  static SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER: string = Common.EMAIL_TEMPLATE_HEADER + `
     <h2>Congrats for setting up your account on Listingreach</h2><br/><br/>
     Here are your login details:  <br/>
     <b></b><br/>
@@ -1588,10 +1588,10 @@ static SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_USER: string = Common.EMAIL_TEMPLATE_
     The Listingreach Team
 <p></p>
 <p></p>
-<p><a href="`+Common.SITE_URL+`/login">Click here to login to your account.</a></p>
-`+Common.EMAIL_TEMPLATE_FOOTER;
+<p><a href="`+ Common.SITE_URL + `/login">Click here to login to your account.</a></p>
+`+ Common.EMAIL_TEMPLATE_FOOTER;
 
-static SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_ADMIN: string = Common.EMAIL_TEMPLATE_HEADER+`
+  static SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_ADMIN: string = Common.EMAIL_TEMPLATE_HEADER + `
     Here are the details of your new registered company: <br/>
     <b></b><br/>
     <ul>
@@ -1605,46 +1605,46 @@ static SIGNUP_EMAIL_TEMPLATE_TO_REGISTERED_ADMIN: string = Common.EMAIL_TEMPLATE
     The Inteleagent Team
 <p></p>
 <p></p>
-<p><a href="`+Common.SITE_URL+`/#/login">Click here to login to your account.</a></p>
-`+Common.EMAIL_TEMPLATE_FOOTER;
-static sendMailWithAttachment(to: string,from: string, subject: string, message: string, html: string,attachmentfilename: string, 
-						attachmentfilepath: string, callback:any): void {
-        console.log('sending mail');
-		console.log('Common.SEND_FROM_EMAIL : ',Common.SEND_FROM_EMAIL);
-        var mailOptions={
-            to : to,
-            from : Common.SEND_FROM_EMAIL,
-            subject : subject,
-            text :  message,
-            html: html,
-			attachments: [
-			{   // utf-8 string as an attachment
-				filename: attachmentfilename,
-				 path: attachmentfilepath
-			}]
-        }
-        var smtpTransport = nodemailer.createTransport(Common.MAIL_CONFIG);
-        smtpTransport.sendMail(mailOptions, callback);
+<p><a href="`+ Common.SITE_URL + `/#/login">Click here to login to your account.</a></p>
+`+ Common.EMAIL_TEMPLATE_FOOTER;
+  static sendMailWithAttachment(to: string, from: string, subject: string, message: string, html: string, attachmentfilename: string,
+    attachmentfilepath: string, callback: any): void {
+    console.log('sending mail');
+    console.log('Common.SEND_FROM_EMAIL : ', Common.SEND_FROM_EMAIL);
+    var mailOptions = {
+      to: to,
+      from: Common.SEND_FROM_EMAIL,
+      subject: subject,
+      text: message,
+      html: html,
+      attachments: [
+        {   // utf-8 string as an attachment
+          filename: attachmentfilename,
+          path: attachmentfilepath
+        }]
     }
+    var smtpTransport = nodemailer.createTransport(Common.MAIL_CONFIG);
+    smtpTransport.sendMail(mailOptions, callback);
+  }
 
-    static sendMail(to: string,from: string, subject: string, message: string, html: string, callback:any): void {
-        console.log('sending application for subject ',subject);
-		console.log('Common.SEND_FROM_EMAIL : ',Common.SEND_FROM_EMAIL);
-        var mailOptions={
-            to : to,
-			cc : 'gurvinder1902@gmail.com',
-            from : Common.SEND_FROM_EMAIL,
-            subject : subject,
-            text :  message,
-            html: html,
-		}
-        var smtpTransport = nodemailer.createTransport(Common.MAIL_CONFIG);
-        var mailsent = smtpTransport.sendMail(mailOptions, callback);
-        console.log('Check Mail Sent: ',mailsent);
-        if(mailsent){
-        	console.log('mailsent: ',mailsent);
-        }
+  static sendMail(to: string, from: string, subject: string, message: string, html: string, callback: any): void {
+    console.log('sending application for subject ', subject);
+    console.log('Common.SEND_FROM_EMAIL : ', Common.SEND_FROM_EMAIL);
+    var mailOptions = {
+      to: to,
+      cc: 'gurvinder1902@gmail.com',
+      from: Common.SEND_FROM_EMAIL,
+      subject: subject,
+      text: message,
+      html: html,
     }
+    var smtpTransport = nodemailer.createTransport(Common.MAIL_CONFIG);
+    var mailsent = smtpTransport.sendMail(mailOptions, callback);
+    console.log('Check Mail Sent: ', mailsent);
+    if (mailsent) {
+      console.log('mailsent: ', mailsent);
+    }
+  }
 }
 Object.seal(Common);
 export = Common;
