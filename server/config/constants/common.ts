@@ -25,8 +25,8 @@ class Common {
     host: "smtp.gmail.com",
     port: 587,
     auth: {
-      user: 'gurpreet76east@gmail.com',
-      pass: "hcokkwpiphzxtovr"
+      user: 'listingreach@gmail.com',
+      pass: "Listingreach@12"
     },
     tls: {
       rejectUnauthorized: true
