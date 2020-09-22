@@ -49,8 +49,8 @@ module.exports = {
     externals: {
         // global app config object
         config: JSON.stringify({
-            apiUrl: 'http://66.235.194.119:3006/api',
-            uploadapiUrl: 'http://66.235.194.119:3006',
+            apiUrl: 'http://66.235.194.119:3008/api',
+            uploadapiUrl: 'http://66.235.194.119:3008',
             assets: 'public/assets'
         })
     }
