@@ -13,11 +13,11 @@ class Common {
   static STUDYING_ID: string = '599a92797c086869cba64408';
   static INTERCOM_ACCESS_TOKEN: string = process.env.INTERCOM_ACCESS_TOKEN || 'dG9rOmJmNGQ2ZWViX2I1ZmVfNDE2Zl9iZGFlXzY3ODNiY2UxZGYzMzoxOjA=';
 
-  static SEND_FROM_EMAIL: string = "info@76east.com";
-  static ADMIN_EMAIL: string = "info@76east.com";
+  static SEND_FROM_EMAIL: string = "listingreach@gmail.com";
+  static ADMIN_EMAIL: string = "listingreach@gmail.com";
 
-  //static SITE_URL: string = "http://66.235.194.119:3008";
-  static SITE_URL: string = "http://localhost:3000"; 
+  static SITE_URL: string = "http://66.235.194.119:3008";
+  //static SITE_URL: string = "http://localhost:3000"; 
 
   //live details
   static MAIL_CONFIG: any = {
