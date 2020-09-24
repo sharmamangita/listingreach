@@ -251,7 +251,7 @@ class SubscribeNewsLetter extends React.Component {
                 <Modal.Header >
                     <h4 className="modal-title">Select Databases</h4>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{overflowY:"auto",height:300,overflowX:"hidden"}}>
                     {!loading ?
                         <React.Fragment>
                             <form className="form">
