@@ -35,7 +35,7 @@
         "file-type": "^10.11.0",
         "fs": "0.0.1-security",
         "jsonwebtoken": "^8.5.1",
-        "lodash": "^4.17.15",
+        "lodash": "^4.17.21",
         "mammoth": "^1.4.9",
         "moment": "^2.25.3",
         "mongodb": "^3.5.7",
